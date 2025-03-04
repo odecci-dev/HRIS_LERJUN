@@ -1,0 +1,14 @@
+.fc .fc-daygrid-event-harness {
+    margin-top: 0px;
+    display: flex !important;
+    justify-content: flex-end !important;
+    background-color: #102B3C !important;
+}
+.fc-direction-ltr .fc-daygrid-event .fc-event-title {
+    color: yellow;
+}
+.fc-daygrid-event {
+    display: flex !important;
+    flex-direction: column !important;
+    color:white;
+}

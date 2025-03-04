@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "B7k4u9AiLJBJG/tMwS/x65k2xaaMfC7muBLl1YNaRN8=",
+  "Source": "API_HRIS",
+  "BasePath": "_content/API_HRIS",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

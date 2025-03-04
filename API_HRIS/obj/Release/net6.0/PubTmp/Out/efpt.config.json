@@ -1,0 +1,106 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "ODC_HRISContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "API_HRIS",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[tbl_AddressInfo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_ApiTokenModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_audittrail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_DeparmentModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_PayrollType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_PositionModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_SalaryType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_StatusModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_TaskModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_TimeLogs]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_UsersModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[tbl_UserType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TblModulesModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[GetAllUserDetails]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[GetUserLogIn]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[sp_timelogs]",
+         "ObjectType": 1
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

@@ -1,0 +1,202 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document with Footer</title>
+    <style>
+
+        /* .sub-content-mv {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                }
+
+                .print-page-md {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    flex-direction: column;
+                }
+
+                .text-regular {
+                    font-weight: normal !important;
+                }
+
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                footer {
+                    background-color: #f1f1f1;
+                    color: #333;
+                    text-align: center;
+                    padding: 10px 0;
+                    position: fixed;
+                    bottom: 0;
+                    width: 100%;
+                }
+
+                /* .print-page-md {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    flex-direction: column;
+                } */
+
+        /*#add-time-in-form{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                    flex-direction: column;
+                }
+                .mod-inputs-nw {
+                    font-size: 1.2rem;
+                    height: 35px;
+                    padding: 10px;
+                    outline: none;
+                    border: 1px solid #e7e6e6;
+                    box-shadow: inset 1px 2px 1px 1px rgba(116, 113, 113, 0.5);
+                    border-radius: 5px;
+                    color: var(--secondary-dark);
+                }
+                .input-container-2
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+                .mod-form span {
+                    font-size: 13px;
+                    font-weight: 900;
+                    color: var(--secondary-dark);
+                }
+
+                #remarks
+                /*{
+                    /* Ensure the text starts at the top-left */
+        /* text-align: left; /* Align text to the left */
+        /* vertical-align: top; /* Align text to the top (not strictly needed for textarea but good practice) */
+        /* padding: 5px; /* Add some padding for better visual appearance, adjust as needed */
+        /* box-sizing: border-box; /* Ensure padding and border are included in the width and height */
+        /*resize: both; /* Allow the user to resize the textarea (optional) */
+        /* overflow: auto;
+                    width:100%;
+                    resize: none;
+                    height:150px;
+                }
+                #mode-inputs
+                {
+                    display:flex;
+                } */
+    </style>
+</head>
+<body>
+    <header>
+    </header>
+    <div class="print-page-md" id="printableArea">
+        @* <div class="timelogsmodal" id="printableArea"> *@
+        <form id="add-time-in-form">
+            <div class="mod-form">
+                <span class="text-left">Date</span>
+                <div class="input-container-2">
+                    <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" id="dateto" class="mod-inputs-nw" placeholder="Date" disabled />
+                </div>
+            </div>
+            <div class="mod-form">
+                <span class="text-left">Task</span>
+                <div class="input-container-2">
+                    <div id="mode-inputs">
+                        <select id="task" style="width: 100%;margin-top:10px" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="mod-form">
+                    <span class="text-left">Task Description</span>
+                    <div class="input-container-2">
+                        <div id="mode-inputs">
+                            @* <input type="textarea" value="" id="remarks" class="mod-input" required style="width:100%;" rows="10" cols="30" /> *@
+                            <textarea id="remarks" rows="10" cols="30" class="mod-input" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="mod-form" style="margin-top:25px">
+                    <div class="input-container-2">
+                        <div id="mode-inputs">
+                            <input type="submit" value="Time In" id="btn-timein" class="btn-footer" style="width: 100%;" />
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            fetchtaskselect();
+        });
+
+        $('#add-time-in-form').on('submit', function (event) {
+            event.preventDefault();
+            var data = {
+                userid: @Accessor.HttpContext.Session.GetString("Id")
+
+                                        };
+            $.ajax({
+                url: '/TimeLogs/TimeOut',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+
+                    // notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    // window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    // notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            var data = {
+                TaskId: $("#task").val(),
+                userid: @Accessor.HttpContext.Session.GetString("Id"),
+                Remarks: $("#remarks").val(),
+                StatusId: 1
+
+            };
+            $.ajax({
+                url: '/TimeLogs/TimeIn',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+        });
+
+    </script>
+</body>
+</html>

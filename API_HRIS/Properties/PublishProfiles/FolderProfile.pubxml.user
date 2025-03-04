@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\DEVELOPMENT\API_HRIS\API_HRIS\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2024-08-29T20:54:47.8392413Z;True|2024-07-03T23:09:42.9916894+08:00;True|2024-07-03T23:09:06.3672948+08:00;True|2024-07-03T23:07:40.2071690+08:00;True|2024-07-03T22:17:58.0477251+08:00;True|2024-07-03T22:17:23.2159832+08:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

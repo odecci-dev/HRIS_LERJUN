@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "User Registration Approval";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+<div class="register-main-container">
+    <div class="btype-data">
+        <div class="list-title">
+            <h4 style="font-size: 26px;" class="text-left"><i class="fas fa-user-tie"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+        <div>
+        </div>
+    </div>
