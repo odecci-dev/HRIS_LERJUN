@@ -92,7 +92,7 @@
     <header>
     </header>
     <div>
-        <form>
+        <form id="otsumbit">
             <div class="d-flex-col h-100 gap-20">
                 <div class="d-flex-row w-100 gap-20">
                     <label class="label-color" for="shiftdate" style="width:20%">Shift Date:</label>
@@ -101,23 +101,23 @@
                 </div>
                 <div class="d-flex-row w-100 gap-20">
                     <label class="label-color" for="email" style="width:20%" >Start Date:</label>
-                    <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                    <input type="date" id="startdate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
                 </div>
                 <div class="d-flex-row w-100 gap-20">
                     <label class="label-color" for="email" style="width:20%">End Date:</label>
-                    <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                    <input type="date" id="enddate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
                 </div>
                 <div class="d-flex-row w-100 gap-20">
                     <label class="label-color" for="email" style="width:20%">Start Time:</label>
-                    <input type="time" id="breakEnd" class="mod-input" style="width:80%" required>
+                    <input type="time" id="starttime" class="mod-input" style="width:80%" required oninput="calculateTimeDifference()">
                 </div>
                 <div class="d-flex-row w-100 gap-20">
                     <label class="label-color" for="email" style="width:20%" >End Time:</label>
-                    <input type="time" id="breakEnd" class="mod-input" style="width:80%" required>
+                    <input type="time" id="endtime" class="mod-input" style="width:80%" required oninput="calculateTimeDifference()">
                 </div>
                 <div class="d-flex-row w-100 gap-20">
-                    <label class="label-color" for="email" style="width:20%">Hours Filed:</label>
-                    <input type="number" value="" id="email" class="mod-input" style="width:80%" step="any" onkeydown="return preventInvalidInput(event)"
+                    <label class="label-color" for="hoursfiled" style="width:20%">Hours Filed:</label>
+                    <input type="number" value="" id="hoursfiled" class="mod-input" style="width:80%" step="any" onkeydown="return preventInvalidInput(event)"
                             required />
                 </div>
                 <div class="d-flex-row w-100 gap-20">
@@ -146,9 +146,12 @@
 
     <script>
         $(document).ready(function () {
+            let today = new Date().toISOString().split("T")[0];
+            document.getElementById("shiftdate").setAttribute("max", today);
+            document.getElementById("startdate").setAttribute("max", today);
+            document.getElementById("endate").setAttribute("max", today);
         });
         function preventInvalidInput(event) {
-            // Prevent 'e', 'E', '+', '-'
             if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
                 event.preventDefault();
             }
@@ -170,6 +173,36 @@
                 hiddenValue.value = "0";
             }
         }
+        function calculateTimeDifference() {
+            let startTime = document.getElementById("starttime").value;
+            let endTime = document.getElementById("endtime").value;
+            let hoursFiled = document.getElementById("hoursfiled");
+
+            if (!startTime || !endTime) {
+                hoursFiled.value = ""; // Clear the field if inputs are empty
+                return;
+            }
+
+            let start = new Date(`1970-01-01T${startTime}:00`);
+            let end = new Date(`1970-01-01T${endTime}:00`);
+
+            let diffInMinutes = (end - start) / (1000 * 60);
+
+            if (diffInMinutes < 0) {
+                hoursFiled.value = ""; // Clear the field if the end time is earlier
+                alert("End time must be greater than start time.");
+                return;
+            }
+
+            let totalHours = (diffInMinutes / 60).toFixed(2); // Convert to decimal format
+
+            hoursFiled.value = totalHours; // Update the input field with the computed value
+        }
+ 
+        $('#otsumbit').submit(function (e) {
+            e.preventDefault();
+           
+        });
     </script>
 </body>
 </html>

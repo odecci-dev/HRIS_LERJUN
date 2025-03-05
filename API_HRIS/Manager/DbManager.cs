@@ -75,9 +75,10 @@ namespace API_HRIS.Manager
         //}
         public void ConnectioStr()
         {
-           // cnnstr = "Data Source=DESKTOP-9P0BJ07;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
+            // cnnstr = "Data Source=DESKTOP-9P0BJ07;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
+             cnnstr = "Data Source=LAPTOP-SULGD5RQ;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
 
-            cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
+            //cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
             conn = new SqlConnection(cnnstr);
         }
         public DataSet SelectDb(string value)

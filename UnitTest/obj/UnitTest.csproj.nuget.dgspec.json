@@ -1,21 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\02-28-2025\\ODC-HRIS-V2\\UnitTest\\UnitTest.csproj": {}
+    "C:\\DEVELOPMENT\\HRIS_LERJUN\\UnitTest\\UnitTest.csproj": {}
   },
   "projects": {
-    "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\02-28-2025\\ODC-HRIS-V2\\UnitTest\\UnitTest.csproj": {
+    "C:\\DEVELOPMENT\\HRIS_LERJUN\\UnitTest\\UnitTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\02-28-2025\\ODC-HRIS-V2\\UnitTest\\UnitTest.csproj",
+        "projectUniqueName": "C:\\DEVELOPMENT\\HRIS_LERJUN\\UnitTest\\UnitTest.csproj",
         "projectName": "UnitTest",
-        "projectPath": "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\02-28-2025\\ODC-HRIS-V2\\UnitTest\\UnitTest.csproj",
+        "projectPath": "C:\\DEVELOPMENT\\HRIS_LERJUN\\UnitTest\\UnitTest.csproj",
         "packagesPath": "C:\\Users\\Lerjun\\.nuget\\packages\\",
-        "outputPath": "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\02-28-2025\\ODC-HRIS-V2\\UnitTest\\obj\\",
+        "outputPath": "C:\\DEVELOPMENT\\HRIS_LERJUN\\UnitTest\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
           "C:\\Users\\Lerjun\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -84,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

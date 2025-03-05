@@ -14,8 +14,8 @@
         private static string GetHttpString()
         {
             //return "http://ec2-54-251-135-135.ap-southeast-1.compute.amazonaws.com:8089"; // live AOPC
-           // return "http://localhost:64181"; // local live
-           return "http://localhost:8089"; // local live
+            return "http://localhost:64181"; // local live
+          // return "http://localhost:8089"; // local live
             //return "http://ec2-54-251-135-135.ap-southeast-1.compute.amazonaws.com:8089"; //ODC-HRIS
         }
 

@@ -493,7 +493,7 @@ namespace MVC_HRIS.Controllers
             string result = "";
             var list = new List<TimelogsVM>();
             try
-            {
+            {//
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/TimeLogs/TimeLogsListManager";
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
