@@ -124,18 +124,20 @@ namespace AOPC.Controllers
             {
                 //var pass3 = Cryptography.Encrypt("odecciaccounting2025!");
                 string sql = $@"SELECT    ODC_HRIS.dbo.tbl_UsersModel.Id, ODC_HRIS.dbo.tbl_UsersModel.Username, ODC_HRIS.dbo.tbl_UsersModel.Password, ODC_HRIS.dbo.tbl_UsersModel.Fullname, ODC_HRIS.dbo.tbl_UsersModel.Fname, ODC_HRIS.dbo.tbl_UsersModel.Lname, 
-                             ODC_HRIS.dbo.tbl_UsersModel.Mname, ODC_HRIS.dbo.tbl_UsersModel.Email, ODC_HRIS.dbo.tbl_UsersModel.Gender, ODC_HRIS.dbo.tbl_UsersModel.EmployeeID, ODC_HRIS.dbo.tbl_UsersModel.JWToken, 
-                             ODC_HRIS.dbo.tbl_UsersModel.FilePath, ODC_HRIS.dbo.tbl_UsersModel.Active as ActiveStatusId, ODC_HRIS.dbo.tbl_UsersModel.Cno, ODC_HRIS.dbo.tbl_UsersModel.Address, ODC_HRIS.dbo.tbl_StatusModel.id AS StatusId, 
-                             ODC_HRIS.dbo.tbl_StatusModel.Status, ODC_HRIS.dbo.tbl_UsersModel.Date_Created, ODC_HRIS.dbo.tbl_UsersModel.Date_Updated, ODC_HRIS.dbo.tbl_UsersModel.Delete_Flag, ODC_HRIS.dbo.tbl_UsersModel.Created_By, 
-                             ODC_HRIS.dbo.tbl_UsersModel.Updated_By, ODC_HRIS.dbo.tbl_UsersModel.Date_Deleted, ODC_HRIS.dbo.tbl_UsersModel.Deleted_By, ODC_HRIS.dbo.tbl_UsersModel.Restored_By, 
-                             ODC_HRIS.dbo.tbl_UsersModel.Date_Restored, ODC_HRIS.dbo.tbl_UsersModel.Department, ODC_HRIS.dbo.tbl_UsersModel.AgreementStatus, ODC_HRIS.dbo.tbl_UsersModel.RememberToken, 
-                             ODC_HRIS.dbo.tbl_SalaryType.SalaryType, ODC_HRIS.dbo.tbl_SalaryType.Rate, ODC_HRIS.dbo.tbl_PayrollType.PayrollType, tbl_UsersModel.UserType, tbl_UserType.UserType as UserTypeName
+                                    ODC_HRIS.dbo.tbl_UsersModel.Mname, ODC_HRIS.dbo.tbl_UsersModel.Email, ODC_HRIS.dbo.tbl_UsersModel.Gender, ODC_HRIS.dbo.tbl_UsersModel.EmployeeID, ODC_HRIS.dbo.tbl_UsersModel.JWToken, 
+                                    ODC_HRIS.dbo.tbl_UsersModel.FilePath, ODC_HRIS.dbo.tbl_UsersModel.Active as ActiveStatusId, ODC_HRIS.dbo.tbl_UsersModel.Cno, ODC_HRIS.dbo.tbl_UsersModel.Address, ODC_HRIS.dbo.tbl_StatusModel.id AS StatusId, 
+                                    ODC_HRIS.dbo.tbl_StatusModel.Status, ODC_HRIS.dbo.tbl_UsersModel.Date_Created, ODC_HRIS.dbo.tbl_UsersModel.Date_Updated, ODC_HRIS.dbo.tbl_UsersModel.Delete_Flag, ODC_HRIS.dbo.tbl_UsersModel.Created_By, 
+                                    ODC_HRIS.dbo.tbl_UsersModel.Updated_By, ODC_HRIS.dbo.tbl_UsersModel.Date_Deleted, ODC_HRIS.dbo.tbl_UsersModel.Deleted_By, ODC_HRIS.dbo.tbl_UsersModel.Restored_By, 
+                                    ODC_HRIS.dbo.tbl_UsersModel.Date_Restored, ODC_HRIS.dbo.tbl_UsersModel.Department, ODC_HRIS.dbo.tbl_UsersModel.AgreementStatus, ODC_HRIS.dbo.tbl_UsersModel.RememberToken, 
+                                    ODC_HRIS.dbo.tbl_SalaryType.SalaryType, ODC_HRIS.dbo.tbl_SalaryType.Rate, ODC_HRIS.dbo.tbl_PayrollType.PayrollType, tbl_UsersModel.UserType, tbl_UserType.UserType as UserTypeName, 
+		                            ODC_HRIS.dbo.tbl_EmployeeType.Id as EmployeeTypeId, ODC_HRIS.dbo.tbl_EmployeeType.Title as EmployeeTypeName
 
-                            FROM            ODC_HRIS.dbo.tbl_UsersModel INNER JOIN
-                             ODC_HRIS.dbo.tbl_StatusModel ON ODC_HRIS.dbo.tbl_UsersModel.Status = ODC_HRIS.dbo.tbl_StatusModel.id INNER JOIN
-                             ODC_HRIS.dbo.tbl_SalaryType ON ODC_HRIS.dbo.tbl_UsersModel.SalaryType = ODC_HRIS.dbo.tbl_SalaryType.Id INNER JOIN
-                             ODC_HRIS.dbo.tbl_PayrollType ON ODC_HRIS.dbo.tbl_UsersModel.PayrollType = ODC_HRIS.dbo.tbl_PayrollType.Id inner join
-						     ODC_HRIS.dbo.tbl_UserType on ODC_HRIS.dbo.tbl_UsersModel.UserType = ODC_HRIS.dbo.tbl_UserType .Id
+                                FROM            ODC_HRIS.dbo.tbl_UsersModel INNER JOIN
+                                    ODC_HRIS.dbo.tbl_StatusModel ON ODC_HRIS.dbo.tbl_UsersModel.Status = ODC_HRIS.dbo.tbl_StatusModel.id INNER JOIN
+                                    ODC_HRIS.dbo.tbl_SalaryType ON ODC_HRIS.dbo.tbl_UsersModel.SalaryType = ODC_HRIS.dbo.tbl_SalaryType.Id INNER JOIN
+                                    ODC_HRIS.dbo.tbl_PayrollType ON ODC_HRIS.dbo.tbl_UsersModel.PayrollType = ODC_HRIS.dbo.tbl_PayrollType.Id inner join
+		                            ODC_HRIS.dbo.tbl_UserType on ODC_HRIS.dbo.tbl_UsersModel.UserType = ODC_HRIS.dbo.tbl_UserType .Id left join
+		                            ODC_HRIS.dbo.tbl_EmployeeType on ODC_HRIS.dbo.tbl_EmployeeType.Id = ODC_HRIS.dbo.tbl_UsersModel.EmployeeType
                      
                             WHERE        ( ODC_HRIS.dbo.tbl_UsersModel.Username = '" + data.username + "' COLLATE Latin1_General_CS_AS) and ( ODC_HRIS.dbo.tbl_UsersModel.Password = '" + Cryptography.Encrypt(data.password) + "' COLLATE Latin1_General_CS_AS) AND ( ODC_HRIS.dbo.tbl_UsersModel.Active = 1)";
                 DataTable dt = db.SelectDb(sql).Tables[0];
@@ -150,6 +152,7 @@ namespace AOPC.Controllers
                     HttpContext.Session.SetString("EmployeeID", dt.Rows[0]["EmployeeID"].ToString());
                     HttpContext.Session.SetString("UserType", dt.Rows[0]["UserType"].ToString());
                     HttpContext.Session.SetString("UserTypeName", dt.Rows[0]["UserTypeName"].ToString());
+                    HttpContext.Session.SetString("EmployeeTypeName", dt.Rows[0]["EmployeeTypeName"].ToString());
                     //HttpContext.Session.SetString("CorporateID", dt.Rows[0]["CorporateID"].ToString());StatusId
                     HttpContext.Session.SetString("Id", dt.Rows[0]["Id"].ToString());
                     //HttpContext.Session.SetString("MembershipName", dt.Rows[0]["MembershipName"].ToString());

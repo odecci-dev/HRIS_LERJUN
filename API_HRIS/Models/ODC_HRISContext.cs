@@ -63,7 +63,19 @@ public partial class ODC_HRISContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TblTimeLog>(entity =>
+        {
+            entity.ToTable("tbl_TimeLogs");
 
+            entity.Property(e => e.Date).HasColumnType("date");
+            entity.Property(e => e.RenderedHours).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.TimeIn)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.TimeOut)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
         modelBuilder.Entity<TblTimeLogStatus>(entity =>
         {
             entity.ToTable("tbl_TimeLogStatus");
@@ -246,19 +258,7 @@ public partial class ODC_HRISContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("StatusId");
         });
-        modelBuilder.Entity<TblTimeLog>(entity =>
-        {
-            entity.ToTable("tbl_TimeLogs");
-
-            entity.Property(e => e.Date).HasColumnType("date");
-            entity.Property(e => e.RenderedHours).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.TimeIn)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.TimeOut)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-        });
+        
         modelBuilder.Entity<TblEmergencyContactsModel>(entity =>
         {
             entity.ToTable("tbl_EmergencyContactsModel");

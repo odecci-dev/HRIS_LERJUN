@@ -513,6 +513,42 @@ namespace API_HRIS.Controllers
 
                 if (lastTimein.TimeOut.IsNullOrEmpty())
                 {
+                    if (lastTimein.LunchIn == null)
+                    {
+                        lastTimein.LunchIn = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+
+                    }
+                    if (lastTimein.LunchOut == null)
+                    {
+                        lastTimein.LunchOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        // Parse the string to DateTime
+                        DateTime Breakdate = DateTime.Parse(lastTimein.LunchIn);
+                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                        lastTimein.TotalLunchHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                    }
+                    if (lastTimein.BreakInAm == null)
+                    {
+                        lastTimein.BreakInAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+
+                    }
+                    if (lastTimein.BreakOutAm == null)
+                    {
+                        lastTimein.BreakOutAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        // Parse the string to DateTime
+                        DateTime Breakdate = DateTime.Parse(lastTimein.BreakInAm);
+                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                        lastTimein.TotalBreakAmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                    }
                     if (lastTimein.BreakInPm == null)
                     {
                         lastTimein.BreakInPm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
@@ -562,19 +598,21 @@ namespace API_HRIS.Controllers
         [HttpPost]
         public async Task<ActionResult<TblTimeLog>> getLastTimeIn(User tblTimeLog)
         {
-            bool lastTimein = true;
-            var validation = _context.TblTimeLogs.Where(a => a.UserId == tblTimeLog.UserId).ToList();
-            if (validation.Count() != 0)
-            {
-                lastTimein = _context.TblTimeLogs.AsNoTracking().Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeOut == null && timeLogs.StatusId != 5).OrderByDescending(timeLogs => timeLogs.UserId).ToList().Count() > 0;
+            bool lastTimeIn = false; // Default value
 
-            }
-            else
-            {
-                lastTimein = false;
+            // Get the last active TimeLog entry for the user
+            var lastLog = await _context.TblTimeLogs
+                .AsNoTracking()
+                .Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeOut == null && timeLogs.StatusId != 5)
+                .OrderByDescending(timeLogs => timeLogs.TimeIn) // Assuming TimeIn stores the timestamp
+                .FirstOrDefaultAsync(); // Fetch the latest record
 
+            if (lastLog != null)
+            {
+                lastTimeIn = true;
             }
-            return Ok(lastTimein);
+
+            return Ok(lastTimeIn);
         }
         [HttpPost]
         public async Task<ActionResult<TblTimeLog>> save(string type, TblTimeLog tblTimeLog)

@@ -237,6 +237,7 @@
     <script>
         var uid = "@Accessor.HttpContext.Session.GetString("UserID")";
         var empType = "@Accessor.HttpContext.Session.GetString("EmployeeTypeName")";
+        console.log(empType);
         if (empType == "Regular") {
             document.getElementById('add-timein').style.display = "none";
             document.getElementById('show-timeout-modal').style.display = "none";
@@ -427,7 +428,7 @@
                 type: "POST",
                 datatype: "json"
             }).done(function (data) { // @* //  *@
-                // console.log(data);
+                console.log(data);
                 if (data.status == 'true') {
                     // $("#add-timeout").prop("disabled", false);
                     $("#show-timeout-modal").prop("disabled", false);
@@ -683,10 +684,12 @@
             var userid = $(this).data('userid');
 
             // Extract the date and time part from the string
-            let dateParts = dateString.split(" ")[0].split("/"); // Get "05/01/2025"
-            let month = dateParts[0].padStart(2, '0'); // Ensure two digits
-            let day = dateParts[1].padStart(2, '0');   // Ensure two digits
-            let year = dateParts[2];
+            let dateParts = dateString.split(" ")[0].split("-"); // Get "05/01/2025"
+
+            console.log(dateParts);
+            let month = dateParts[1].padStart(2, '0'); // Ensure two digits
+            let day = dateParts[2].padStart(2, '0');   // Ensure two digits
+            let year = dateParts[0];
             // Format the Date object to YYYY-MM-DD
             let formattedDate = "";
             // console.log("Date: "+ dateString);
