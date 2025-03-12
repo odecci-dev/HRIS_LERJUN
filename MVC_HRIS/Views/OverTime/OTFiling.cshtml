@@ -1,0 +1,257 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document with Footer</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+
+    <style>
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 34px;
+        }
+
+            .toggle-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(36px);
+            }
+
+        /* Text inside toggle */
+        .slider span {
+            position: absolute;
+            width: 50%;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            transition: .4s;
+        }
+
+        .toggle-text-left {
+            left: 5px;
+        }
+
+        .toggle-text-right {
+            right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+    </header>
+    <div>
+        <form id="otsumbit">
+            <div class="d-flex-col h-100 gap-20">
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="shiftdate" style="width:20%">Shift Date:</label>
+                    <input type="hidden" id="otid" class="mod-inputs-nw" placeholder="Date" value="0" style="width:80%" required />
+                    <input type="date" id="shiftdate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">Start Date:</label>
+                    <input type="date" id="startdate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">End Date:</label>
+                    <input type="date" id="enddate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">Start Time:</label>
+                    <input type="time" id="starttime" class="mod-input" style="width:80%" required oninput="calculateTimeDifference()">
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">End Time:</label>
+                    <input type="time" id="endtime" class="mod-input" style="width:80%" required oninput="calculateTimeDifference()">
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="hoursfiled" style="width:20%">Hours Filed:</label>
+                    <input type="number" value="" id="hoursfiled" class="mod-input" style="width:80%" step="any" onkeydown="return preventInvalidInput(event)"
+                           required />
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">Remarks</label>
+                    <textarea id="remarks" rows="10" cols="30" class="mod-input" required style="width:80%"></textarea>
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleCheckbox" onclick="updateToggleText()">
+                        <span class="slider"><span id="toggleText">NO</span></span>
+                    </label>
+                    <label for="myCheckbox" style="margin-top: 5px; text-align: center;width:80%">Convert to Compensatory Time-Off</label>
+                    <input type="hidden" id="toggleValue" value="0">
+                </div>
+            </div>
+
+            <div class="mod-form">
+                <div class="input-container-2">
+                    <div id="mode-inputs">
+                        <input type="submit" value="Submit" id="btn-timein" class="btn-footer" style="width: 100%;" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
+        var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
+        $(document).ready(function () {
+            let today = new Date().toISOString().split("T")[0];
+            document.getElementById("shiftdate").setAttribute("max", today);
+            document.getElementById("startdate").setAttribute("max", today);
+            document.getElementById("endate").setAttribute("max", today);
+        });
+        function preventInvalidInput(event) {
+            if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+                event.preventDefault();
+            }
+        }
+        function updateToggleText() {
+            var checkbox = document.getElementById("toggleCheckbox");
+            var text = document.getElementById("toggleText");
+            var hiddenValue = document.getElementById("toggleValue");
+            console.log(hiddenValue.value);
+            if (checkbox.checked) {
+                text.innerText = "YES";
+                text.classList.remove("toggle-text-right");
+                text.classList.add("toggle-text-left");
+                hiddenValue.value = "1";
+            } else {
+                text.innerText = "NO";
+                text.classList.remove("toggle-text-left");
+                text.classList.add("toggle-text-right");
+                hiddenValue.value = "0";
+            }
+        }
+        function calculateTimeDifference() {
+            let startTime = document.getElementById("starttime").value;
+            let endTime = document.getElementById("endtime").value;
+            let hoursFiled = document.getElementById("hoursfiled");
+
+            if (!startTime || !endTime) {
+                hoursFiled.value = ""; // Clear the field if inputs are empty
+                return;
+            }
+
+            let start = new Date(`1970-01-01T${startTime}:00`);
+            let end = new Date(`1970-01-01T${endTime}:00`);
+
+            let diffInMinutes = (end - start) / (1000 * 60);
+
+            if (diffInMinutes < 0) {
+                hoursFiled.value = ""; // Clear the field if the end time is earlier
+                alert("End time must be greater than start time.");
+                return;
+            }
+
+            let totalHours = (diffInMinutes / 60).toFixed(2); // Convert to decimal format
+
+            hoursFiled.value = totalHours; // Update the input field with the computed value
+        }
+
+        $('#otsumbit').submit(function (e) {
+            e.preventDefault();
+            var otid = document.getElementById('otid').value;
+            var shiftdate = document.getElementById('shiftdate').value;
+            var startdate = document.getElementById('startdate').value;
+            var enddate = document.getElementById('enddate').value;
+            var starttime = document.getElementById('starttime').value;
+            var endtime = document.getElementById('endtime').value;
+            var hoursfiled = document.getElementById('hoursfiled').value;
+            var remarks = document.getElementById('remarks').value;
+            var isCheckbox = document.getElementById('toggleCheckbox');
+            var toggleCheckbox = 0;
+            if (isCheckbox.checked) {
+                toggleCheckbox = 1;
+            } else {
+                toggleCheckbox = 0;
+            }
+            var data = {};
+            data.Id = otid;
+            data.EmployeeNo = EmployeeID;
+            data.Date = shiftdate;
+            data.StartDate = startdate;
+            data.EndDate = startdate;
+            data.StartTime = starttime;
+            data.EndTime = endtime;
+            data.HoursFiled = hoursfiled;
+            data.Remarks = remarks;
+            data.ConvertToLeave = toggleCheckbox;
+            data.CreatedBy = defaultCreatedBy;
+
+
+            $.ajax({
+                url: '/OverTime/SaveOT',
+                data: data,
+                type: "POST",
+                dataType: "json"
+            }).done(function (data) {
+                var status = data.status;
+                console.log(status);
+                if (status === 'Entity already exists') {
+                    notifyMsg('Warning!', 'OT already exists', 'yellow', 'fas fa-check');
+                }
+                else {
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                }
+                modal = document.getElementById('defaultmodal');
+                modal.style.display = "none";
+                window.location.reload();
+            });
+
+        });
+    </script>
+</body>
+</html>

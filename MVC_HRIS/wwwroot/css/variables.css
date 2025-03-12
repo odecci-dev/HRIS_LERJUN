@@ -1,0 +1,50 @@
+/*:root {
+  --light: white;
+  --dark: Black;
+  --primary: black;
+  --secondary-light: #d7d2cb;
+  --secondary-dark: #979699;
+  --secondary-brown: #887861;
+  --accent: #c89328;
+  --shade: rgba(125, 125, 125, 0.5);
+  --shadow: rgba(200, 200, 200, 0.5);
+  --sidebarwidth: 200px;
+  --topbarheight: 100px;
+  --data-height: 300px;
+  --data-width: 600px;
+  --top-corp-graph-width: 60px;
+
+}
+*/
+:root {
+    --light: white;
+    --dark: #102B3C !important;
+    --primary: black;
+    --secondary-light: rgba(100, 150, 200, 0.5);
+    --secondary-dark: #979699;
+    --secondary-brown: #887861;
+    --accent: #c89328;
+    --shade: rgba(125, 125, 125, 0.5);
+    --shadow: rgba(200, 200, 200, 0.5);
+    --sidebarwidth: 60px;
+    --sidebarwidth-active: 250px;
+    /* --topbarheight: 100px;*/
+    --data-height: 300px;
+    --data-width: 600px;
+    --top-corp-graph-width: 60px;
+    --shade: #576a76;
+}
+
+.darkmode {
+  --light: black;
+  --dark: white;
+}
+
+@font-face {
+  font-family: "Montserrat-Reg";
+  src: url("../fonts/Montserrat/Montserrat-Regular.ttf");
+}
+@font-face {
+  font-family: "Montserrat-Bold";
+  src: url("../fonts/Montserrat/Montserrat-Bold.ttf");
+}

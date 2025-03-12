@@ -1,0 +1,190 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+@* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+<link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+<link href="~/css/iziToast.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/mod-input.css" />
+<link rel="stylesheet" href="~/css/timelogs.css" />
+<link rel="stylesheet" href="~/css/department.css" />
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+
+<style>
+    #overtime-table thead th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .action-navbar {
+        background-color: var(--dark);
+        padding: 10px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .action-navbar-2 {
+        border-top: 2px solid white;
+        background-color: var(--dark);
+        padding: 10px;
+    }
+
+    .circle-btn {
+        width: 40px; /* Adjust as needed */
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        color: white; /* Icon color */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .lbl {
+        display: flex;
+        color: white;
+        margin-top: 10px;
+        height: 100%;
+        align-items: center;
+        color: white;
+    }
+
+    .circle-btn:hover {
+        background: var(--accent);
+        color: white;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+        .btn:hover::before {
+            opacity: 1;
+            animation: shineEffect 1.5s infinite;
+        }
+
+    @@keyframes shineEffect {
+        0% {
+            left: -100%;
+        }
+
+        50% {
+            left: 100%;
+        }
+
+        100% {
+            left: -100%;
+        }
+    }
+</style>
+<div>
+    <div class="d-flex action-navbar">
+        <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
+            <label for="datefrom" class="lbl">From:</label>
+            <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <label for="dateto" class="lbl">To:</label>
+            <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <button class="circle-btn" id="filter" title="Time In">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+        <div id="time-btn-holder" class="time-btn-holder">
+        </div>
+    </div>
+    <div class="d-flex action-navbar-2">
+        <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
+            <button class="btn btn-info" id="otfile" title="Add New">
+                <i class="fa-solid fa-circle-plus"></i> Add New
+            </button>
+            <button class="btn btn-danger" id="show-timeout-modal" title="Delete">
+                <i class="fa-solid fa-circle-minus"></i> Delete
+            </button>
+            <button class="btn btn-warning" id="btn-refresh" title="Refresh">
+                <i class="fa-solid fa-arrows-rotate"></i> Refresh
+            </button>
+            <button class="btn btn-primary" id="add-timelogs" title="Import" onclick="myFunctionOpen()">
+                <i class="fa-solid fa-file-import"></i> Import
+            </button>
+            <button class="btn btn-success" id="add-timelogs" title="Export" onclick="myFunctionOpen()">
+                <i class="fa-solid fa-file-arrow-down"></i> Export
+            </button>
+        </div>
+
+        <div id="time-btn-holder" class="time-btn-holder">
+        </div>
+    </div>
+    <div>
+        <div>
+
+            <table id="overtime-table" class="table table-bordered table-hover w-100" style="margin-top:0px !important">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <div id="table-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/overtime.js"></script>
+<script>
+    var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
+    $(document).ready(function () {
+        var tableId = '#overtime-table';
+        if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().destroy();
+        }
+        FetchOvertimeList();
+        $("#checkAll").click(function () {
+            $("input:checkbox").not(this).prop("checked", this.checked);
+            if ($(this).prop("checked") == true) {
+                console.log("checkall");
+            } else {
+
+                console.log("uncheckall");
+            }
+        });
+    });
+
+
+
+    $("#otfile").on("click", function () {
+        loadModal('/OverTime/OTFiling', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> New Overtime ', 'l', false)
+    });
+    $("#btn-refresh").on("click", function () {
+        var tableId = '#overtime-table';
+        if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().destroy();
+        }
+        FetchOvertimeList();
+    });
+
+</script>

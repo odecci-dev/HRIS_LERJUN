@@ -1,0 +1,572 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @inject IHttpContextAccessor Accessor;
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* <link rel="icon" type="image/x-icon" href="~/image/favicon.ico" /> *@
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <link href="~/css/iziToast.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/mod-input.css" />
+    <link rel="stylesheet" href="~/css/timelogs.css" />
+    <link rel="stylesheet" href="~/css/department.css" />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+</head>
+
+<body>
+
+    
+    <div class="modal fade" id="defaultmodal" data-backdrop="static" data-bs-focus="false">
+        <div class="modal-dialog">
+            <div class="modal-content mat-modal-content">
+                <div class="modal-header p-3">
+                    <span class="modal-title text-secondary font-weight-bold p-0 m-0"></span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="overlay text-center bg-white">
+                    <label class="loader-label">
+                        <progress></progress>
+                    </label>
+                </div>
+                <div class="modal-body  mat-input-container">
+                    <div class="mt-5 mb-5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="alertmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="img-header">
+                    </div>
+                    @*  *@
+                    <h5 class="modal-title" id="modal-title"></h5>
+
+                </div>
+                <div class="modal-body">
+                    <div style="
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    ">
+                        <span id="validation">CONFIRMATION</span>
+                        <span id="message"></span>
+                    </div>
+
+                </div>
+                <div style="display: flex;gap: 10px;width: 100%;justify-content: center;margin:30px 0px">
+                    <div class="input-container-button">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="change-password-modal-holder" id="changePassModal">
+        <form id="changePasswordForm">
+            <div class="change-password-modal">
+                <svg height="100px" viewBox="0 0 522 223" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M54.5801 0C30.3718 9.92465 13.0028 28.5476 6.96158 41.8803C3.12832 49.3165 0.978027 57.6675 0.978027 66.4922C0.978027 97.6131 27.7202 122.842 60.7083 122.842C93.6964 122.842 120.439 97.6131 120.439 66.4922C120.439 35.3714 93.6964 10.1429 60.7083 10.1429C55.3405 10.1429 50.1381 10.8109 45.1894 12.0636L54.5801 0ZM60.7085 95.7939C77.5137 95.7939 91.1371 82.6751 91.1371 66.4922C91.1371 50.3094 77.5137 37.1906 60.7085 37.1906C43.9032 37.1906 30.2798 50.3094 30.2798 66.4922C30.2798 82.6751 43.9032 95.7939 60.7085 95.7939Z" fill="#0F2B3C"></path>
+                    <path d="M176.05 72.1271V42.8255C153.771 38.9377 133.179 52.1006 127.592 71.8388C119.392 102.52 145.673 126.822 176.05 122.842C201.216 118.672 210.871 101.006 212.116 81.143V14.6508H181.124V81.143C180.473 87.1315 179.262 90.5228 176.05 92.4129C152.435 101.304 148.676 67.2445 176.05 72.1271Z" fill="#0F2B3C"></path>
+                    <path d="M267.466 73.5099H248.307C248.655 71.0753 248.974 69.7512 250.569 67.8789C255.077 63.371 265.373 62.3755 270.292 73.5099C276.49 88.1647 263.889 106.194 250.006 93.7996L232.538 113.522C242.68 120.284 250.031 123.975 267.466 122.538C283.815 119.72 300.728 106.722 302.411 87.0337C304.665 70.1329 294.281 46.691 267.466 42.5178C248.685 38.532 215.43 48.4179 217.878 87.0337H262.958C269.254 83.4543 266.793 81.8541 262.958 79.7083C259.52 76.796 260.888 76.1165 267.466 73.5099Z" fill="#0F2B3C"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M367.263 73.8175H392.964C388.685 55.436 371.598 41.6985 351.17 41.6985C327.519 41.6985 308.345 60.1153 308.345 82.8335C308.345 105.552 327.519 123.968 351.17 123.968C372.629 123.968 390.401 108.809 393.513 89.0318H367.545C364.686 95.0201 358.429 99.1746 351.171 99.1746C341.212 99.1746 333.139 91.3538 333.139 81.7063C333.139 72.0589 341.212 64.238 351.171 64.238C358.199 64.238 364.288 68.1336 367.263 73.8175Z" fill="#0F2B3C"></path>
+                    <ellipse cx="351.171" cy="81.7065" rx="14.6508" ry="14.0873" fill="#ED1C24"></ellipse>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M441.973 123.968C463.432 123.968 481.204 108.809 484.316 89.0318H458.348C455.488 95.0201 449.231 99.1746 441.973 99.1746C432.014 99.1746 423.941 91.3538 423.941 81.7063C423.941 72.0589 432.014 64.238 441.973 64.238C449.002 64.238 455.091 68.1336 458.066 73.8175H483.767C479.488 55.436 462.401 41.6985 441.973 41.6985C418.321 41.6985 399.148 60.1153 399.148 82.8335C399.148 105.552 418.321 123.968 441.973 123.968ZM484.799 82.8335L484.799 82.7633V82.9037L484.799 82.8335Z" fill="#0F2B3C"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M456.042 85.651C454.268 91.5113 448.64 95.7938 441.973 95.7938C433.882 95.7938 427.322 89.4867 427.322 81.7065C427.322 73.9263 433.882 67.6191 441.973 67.6191C449.061 67.6191 454.973 72.4589 456.331 78.889H483.672V85.651H456.042Z" fill="#ED1C24"></path>
+                    <rect x="489.95" y="43.9527" width="31.5556" height="78.8891" fill="#0F2B3C"></rect>
+                    <ellipse cx="505.165" cy="25.9207" rx="15.2143" ry="14.6508" fill="#0F2B3C"></ellipse>
+                </svg>
+                <div class="title">
+                    <span>Welcome to Odecci @Accessor.HttpContext.Session.GetString("name")</span>
+                </div>
+                <span>
+                    Please reset your password to activate your account.
+                </span>
+                <div class="input-container-whole" style="gap:10px;margin-top:25px">
+                    <div style="display:flex">
+                        <label class="label-color" for="password2">Password</label>
+                        <label class="validation-label" for="password2" hidden>*Password does not match</label>
+
+                    </div>
+                    <input type="password" value="" id="password" class="mod-input" required />
+                </div>
+                <div class="input-container-whole" style="gap:10px;margin-top:25px">
+                    <div style="display:flex">
+                        <label class="label-color" for="password2">Retype Password</label>
+                        <div id="error-password" class="error">*Password does not match.</div>
+                    </div>
+                     
+                    <input type="password" value="" id="password2" class="mod-input" required />
+                </div>
+                <div id="message">
+                    <h3>Password must contain the following:</h3>
+                    <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+                    <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                    <p id="number" class="invalid">A <b>number</b></p>
+                    <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+                </div>
+                <div class="btn-footer">
+                    <li>
+                        <a href="../../LogIn/Logout" style="display: flex; align-items: center; gap: 5px;" class="nav-item" id="">
+                            <i class="fa-solid fa-right-from-bracket" style="font-size: 23px;margin-right:5px"></i>
+                            <span>LogOut</span>
+                        </a>
+                    </li>
+                    <button class="btn btn-info" id="add-info" title="" type="submit" disabled>
+                        <i class="fa-solid fa-floppy-disk"></i> Save Information
+                    </button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+
+    @Html.Partial("_TopBar")
+    @Html.Partial("_SideBar")
+    <main>
+    @* @Html.Partial("_Main") *@
+    @RenderBody()
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+            crossorigin="anonymous"></script>
+    @* <script src="~/js/site.js" asp-append-version="true"></script> *@
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables  & Plugins -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="~/js/iziToast.min.js"></script>
+    <script src="~/js/timelogs.js"></script>
+    <script src="~/js/position.js"></script>
+    <script src="~/js/employee.js"></script>
+    <script src="~/js/schedule.js"></script>
+    <script src="~/js/department.js"></script>
+    <script src="~/js/payroll.js"></script>
+    <script src="~/js/salary.js"></script>
+    <script src="~/js/employmenttype.js"></script>
+    <script src="~/js/approval.js"></script>
+    <div class="footer"></div>
+    <script type="text/javascript">
+
+
+        getStatus();
+        var email = "";
+        var empId = "";
+        var pass = "";
+        function getStatus() {
+            var status = "";
+            var changePassModal = document.getElementById("changePassModal");
+            var id = @Accessor.HttpContext.Session.GetString("Id");
+            var data = {};
+            data.id = id;
+            $.ajax({
+                url: '/Employee/GetEmployeeDetails',
+                data: data,
+                type: "POST",
+                dataType: "json"
+            }).done(function (response) {
+                status = response[0].status;
+                email = response[0].email;
+                empId = response[0].employeeId;
+                if (status == '6') {
+                    changePassModal.style.display = "none ";
+                }
+                else {
+                    changePassModal.style.display = "flex";
+                    document.addEventListener('contextmenu', function (e) {
+                        e.preventDefault();  // Disable right-click
+                        // alert("Right-click is disabled!");
+                        notifyMsg('Warning!', 'Right-click is disabled!', 'red', 'fa-solid fa-triangle-exclamation');
+                    });
+                    document.addEventListener('keydown', function (e) {
+                        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                            e.preventDefault();
+                            // alert("Developer tools are disabled!");
+                            notifyMsg('Warning!', 'Developer tools are disabled!', 'red', 'fa-solid fa-triangle-exclamation');
+                        }
+                    });
+
+                }
+
+            });
+        }
+        // Regex Password Variables
+
+        var errorMessage = document.getElementById("error-password");
+        var myInput = document.getElementById("password");
+        var cpass = document.getElementById("password2");
+        var letter = document.getElementById("letter");
+        var capital = document.getElementById("capital");
+        var number = document.getElementById("number");
+        var length = document.getElementById("length");
+        var submitButton = document.getElementById("add-info");
+
+        // Validate lowercase letters
+        var lowerCaseLetters = /[a-z]/g;
+        // Validate capital letters
+        var upperCaseLetters = /[A-Z]/g;
+        // Validate numbers
+        var numbers = /[0-9]/g;
+
+        $("#changePasswordForm").on("submit", function (event) {
+            const password = document.querySelectorAll('.validation-labels');
+            event.preventDefault();
+            // console.log($("#password").val());
+            // console.log($("#password2").val());
+            pass = $("#password2").val();
+            if (myInput.value.match(lowerCaseLetters) && myInput.value.match(upperCaseLetters) && myInput.value.match(numbers) && myInput.value.length >= 8) {
+
+                if ($("#password").val() === $("#password2").val()) {
+                    password.forEach(element => {
+                        element.style.display = 'none';
+                    });
+                    submitButton.disabled = false;
+                    // console.log(email);
+                    // console.log(empId);
+                    // console.log(pass);
+
+                    var data = {};
+                    data.password = pass;
+                    data.employeeId = empId;
+                    data.email = email;
+                    console.log(data);
+                    $.ajax({
+                        url: '/Registration/EmployeeRegistration',
+                        data: data,
+                        type: "POST",
+                        dataType: "json"
+                    }).done(function (data) {
+                        // console.log(data);
+                        // location.reload();
+                        window.location.href = '@Url.Action("Index", "Timelogs")';
+
+                    });
+                }
+                else {
+                    // alert('*Password does not match')
+                    notifyMsg('Warning!', 'Password does not match!', 'red', 'fa-solid fa-triangle-exclamation');
+                }
+
+            }
+            else {
+                // alert('*Invalid Input')
+                notifyMsg('Warning!', 'Invalid Input!', 'red', 'fa-solid fa-triangle-exclamation');
+            }
+        });
+
+        var usertype = @Accessor.HttpContext.Session.GetString("UserType");
+        if (usertype != "2") {
+            const htmlContent = `
+
+                                            <li>
+                                                <div>
+                                                    <a href="../../TimeLogs/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                        <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+                                                        <span style="color: white;">TimeSheet</span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                            <li class="filing">
+                                                <div>
+                                                    <a href="../../Filing/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+
+                                                        <i class="fas fa-file-signature" style="font-size: 20px;"></i>
+                                                        <span style="color: white;">Filing</span>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                          `;
+
+            // Insert the HTML content into the div with class content-item
+            $(".content-item").html(htmlContent);
+            $(".top-bar-content-item").html(htmlContent);
+        }
+        else {
+            const htmlContent = `
+                                             <li>
+                                                        <div>
+                                                            <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
+                                                             
+                                                                                <i class="fa-solid fa-chart-line" style="font-size: 20px;margin-right:5px"></i>
+                                                                <span style="color: white;">Dashboard</span>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                    <li class="maintenance" id="maintenance">
+                                                        <div>
+                                                            <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
+                                                                <i class="fa-sharp fa-solid fa-screwdriver-wrench" style="font-size: 20px;margin-right:5px"></i>
+                                                                <span style="color: white;">Maintenance</span>
+
+                                                                <i class="fa-solid fa-chevron-down" id="maintenanceArrow"></i>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                    <ul class="sub-nav" id="subnav">
+                                                        <li><a href="../../Employee/Index" style="display: flex; align-items: center; gap: 13px;"><i class="fa-solid fa-users"></i> Employee</a></li>
+                                                        <li><a href="../../Position/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-user"></i> Position</a></li>
+                                                        <li><a href="../../Department/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-sitemap"></i> Department</a></li>
+                                                        <li><a href="../../Payroll/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-hand-holding-dollar"></i> Payroll Type</a></li>
+                                                        <li><a href="../../Salary/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-money-bill-wave"></i> Salary Type</a></li>
+                                                        <li><a href="../../Schedule/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-clock"></i> Schedule</a></li>
+                                                                <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
+                                                    </ul>
+                                                    <li>
+                                                        <div>
+                                                            <a href="../../TimeLogs/ManagerIndex" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                                <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+                                                                <span style="color: white;">TimeSheet</span>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                    <li class="approval">
+                                                        <div>
+                                                            <a href="../../Approval/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                                <i class="fa-sharp fa-solid fa-check-to-slot" style="font-size: 20px;"></i>
+                                                                <span style="color: white;">Approvals</span>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                      <li class="filing">
+                                                        <div>
+                                                            <a href="../../Filing/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+
+                                                                <i class="fas fa-file-signature" style="font-size: 20px;"></i>
+                                                                <span style="color: white;">Filing</span>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                       <li class="reports">
+                                                        <div>
+                                                                    <a href="../../Report/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+
+                                                                        <i class="fa-solid fa-chart-column" style="font-size: 20px;"></i>
+                                                                <span style="color: white;">Reports</span>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                    <ul class="sub-nav-approval"></ul>
+                                                    `;
+            const topbarhtmlContent = `
+                                                            <li>
+                                                                <div>
+                                                                    <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
+                                                                        <i class="fa-solid fa-chart-column" style="font-size: 20px;margin-right:5px"></i>
+                                                                        <span style="color: white;">Dashboard</span>
+                                                                    </a>
+                                                                </div>
+                                                            </li>
+                                                                    <li class="maintenance" id="topbarmaintenance">
+                                                                <div>
+                                                                    <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
+                                                                        <i class="fa-sharp fa-solid fa-screwdriver-wrench" style="font-size: 20px;margin-right:5px"></i>
+                                                                        <span style="color: white;">Maintenance</span>
+                                                                        <i class="fa-solid fa-chevron-down" id="topbarmaintenanceArrow"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </li>
+                                                            <ul class="sub-nav" id="topbarsubnav">
+                                                                <li><a href="../../Employee/Index" style="display: flex; align-items: center; gap: 13px;"><i class="fa-solid fa-users"></i> Employee</a></li>
+                                                                <li><a href="../../Position/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-user"></i> Position</a></li>
+                                                                <li><a href="../../Department/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-sitemap"></i> Department</a></li>
+                                                                <li><a href="../../Payroll/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-hand-holding-dollar"></i> Payroll Type</a></li>
+                                                                <li><a href="../../Salary/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-money-bill-wave"></i> Salary Type</a></li>
+                                                                <li><a href="../../Schedule/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-clock"></i> Schedule</a></li>
+                                                                <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
+                                                            </ul>
+                                                            <li>
+                                                                <div>
+                                                                    <a href="../../TimeLogs/ManagerIndex" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                                        <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+                                                                        <span style="color: white;">TimeSheet</span>
+                                                                    </a>
+                                                                </div>
+                                                            </li>
+                                                            <li class="approval">
+                                                                <div>
+                                                                    <a href="#" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                                        <i class="fa-sharp fa-solid fa-check-to-slot" style="font-size: 20px;"></i>
+                                                                        <span style="color: white;">Approvals</span>
+                                                                    </a>
+                                                                </div>
+                                                            </li>
+                                                            <ul class="sub-nav-approval"></ul>
+                                                            `;
+
+            $(".content-item").html(htmlContent);
+            $(".top-bar-content-item").html(topbarhtmlContent);
+
+        }
+        const listItems = document.querySelectorAll("#mysidebar li");
+
+        listItems.forEach((item, index) => {
+            item.addEventListener("click", function () {
+                // Remove the 'selected' class from all items
+                listItems.forEach(li => li.classList.remove("selected"));
+
+                // Add the 'selected' class to the clicked item
+                this.classList.add("selected");
+
+                // Get the index of the clicked item
+                // console.log("Selected index:", index);
+
+                // Store the index in local storage (optional)
+                localStorage.setItem('selectedIndex', index);
+
+                // Example: Log the icon element inside the clicked <li>
+                var icon = this.querySelector("i");
+                // console.log(icon);
+            });
+        });
+        window.addEventListener('DOMContentLoaded', (event) => {
+            // Predefined text to match on load
+            const defaultText = 'Services';
+
+            // Find and highlight the item based on inner text
+            document.querySelectorAll('#mysidebar li').forEach((el, index) => {
+                // Compare the index with the stored value in localStorage
+                if (index === parseInt(localStorage.getItem('selectedIndex'))) {
+                    el.classList.add('selected');
+                }
+            });
+        });
+
+        showsubnav();
+        $(".sub-nav a").on("click", function () {
+            // Remove the highlight class from all sub-navs first
+            $(".sub-nav").removeClass("sub-nav-highlight");
+
+            // Add highlight class to the sub-nav of the clicked item
+            $(this).closest(".sub-nav").addClass("sub-nav-highlight");
+        });
+
+        /*Change Password Regex Validation*/
+
+        // When the user clicks on the password field, show the message box
+        myInput.onfocus = function () {
+            document.getElementById("message").style.display = "block";
+        }
+
+        // When the user clicks outside of the password field, hide the message box
+        myInput.onblur = function () {
+            document.getElementById("message").style.display = "none";
+        }
+
+        // When the user starts to type something inside the password field
+        myInput.onkeyup = function () {
+            if (myInput.value.match(lowerCaseLetters)) {
+                letter.classList.remove("invalid");
+                letter.classList.add("valid");
+            } else {
+                letter.classList.remove("valid");
+                letter.classList.add("invalid");
+            }
+
+            if (myInput.value.match(upperCaseLetters)) {
+                capital.classList.remove("invalid");
+                capital.classList.add("valid");
+            } else {
+                capital.classList.remove("valid");
+                capital.classList.add("invalid");
+            }
+            if (myInput.value.match(numbers)) {
+                number.classList.remove("invalid");
+                number.classList.add("valid");
+            } else {
+                number.classList.remove("valid");
+                number.classList.add("invalid");
+            }
+
+            // Validate length
+            if (myInput.value.length >= 8) {
+                length.classList.remove("invalid");
+                length.classList.add("valid");
+            } else {
+                length.classList.remove("valid");
+                length.classList.add("invalid");
+            }
+            if (myInput.value.match(lowerCaseLetters) && myInput.value.match(upperCaseLetters) && myInput.value.match(numbers) && myInput.value.length >= 8) {
+                if ($("#password").val() === $("#password2").val()) {
+                    errorMessage.style.display = "none";
+                    submitButton.disabled = false;
+                }
+                else {
+                    submitButton.disabled = true;
+                    errorMessage.style.display = "block";
+                }
+            }
+            else {
+                submitButton.disabled = true;
+                if ($("#password").val() === $("#password2").val()) {
+                    errorMessage.style.display = "none";
+                }
+                else {
+                    submitButton.disabled = true;
+                    errorMessage.style.display = "block";
+                }
+            }
+        }
+
+
+        cpass.onkeyup = function () {
+
+            if ($("#password").val() === $("#password2").val()) {
+                errorMessage.style.display = "none";
+                if (myInput.value.match(lowerCaseLetters) && myInput.value.match(upperCaseLetters) && myInput.value.match(numbers) && myInput.value.length >= 8) {
+                    submitButton.disabled = false;
+                }
+                else {
+                    submitButton.disabled = true;
+                }
+            }
+            else {
+                submitButton.disabled = true;
+                errorMessage.style.display = "block";
+            }
+
+        }
+
+        topBarDOM();
+
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

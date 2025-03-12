@@ -1,0 +1,764 @@
+﻿  @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+@{
+    ViewData["Title"] = "Manager - Time Sheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+<style>
+
+</style>
+<div id="dashboard-main-container">
+    <div class="title-main-container" id="timelogs-table">
+        <div class="content-container" style="display:flex;flex-direction: row;justify-content: space-between;align-items: center;">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-clock" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+            <a href="../../TimeLogs/ManagerNotification" style="font-size: 18px;" class="m-notification" id="m-notification"><span class="mnoticount" id="mnoticount"></span>  <i class="fa-solid fa-bell" style="margin: 10px;"></i> Notification</a>
+
+        </div>
+        <div class="top-main-container ">
+        </div>
+        <div class="main-container">
+            <div class="content-filter">
+                <div class="sub-content">
+                    <div class="mod-form">
+
+                        <div class="action-navbar">
+                            <div class="layer">
+                                <div class="input-holder">
+                                    <span class="text-left text-dark">From:</span>
+                                    <div class="date-input">
+                                        <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                        @* <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" /> *@
+                                    </div>
+                                </div>
+                                <div class="input-holder">
+                                    <span class="text-left text-dark">To:</span>
+                                    <div class="date-input">
+                                        @* <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" /> *@
+                                        <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layer">
+                                <div class="input-holder">
+                                    <select id="selectDay">
+                                        <option value="x" selected disabled> Select Filter Day</option>
+                                        <option value="1">Today</option>
+                                        <option value="7">Last 7 days</option>
+                                        <option value="30">Last 30 days</option>
+                                        <option value="0">Month Today</option>
+                                    </select>
+                                </div>
+                                <div class="input-holder">
+                                    <select id="selectDap">
+                                        <option value="" selected disabled> Select Department</option>
+
+                                    </select>
+                                </div>
+                                <div class="input-holder">
+                                    <select id="selectUser">
+                                        <option value="" selected disabled> Select User</option>
+
+                                    </select>
+                                </div>
+                                <div class="input-holder">
+                                    <button class="btn btn-success" id="export-timelogs" title="Time Out" onclick="ExportFunction()">
+                                        <i class="fa-solid fa-file-arrow-down"></i> Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-container">
+                            <div class="time-btn">
+                                <button class="btn btn-info" id="add-timein" title="Time In">
+                                    <i class="fa-solid fa-clock"></i> Time In
+                                </button>
+                                <button class="btn btn-info" id="add-timeout" title="Time Out">
+                                    <i class="fa-solid fa-clock"></i> Time Out
+                                </button>
+                                <button class="btn btn-info" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
+                                    <i class="fa-solid fa-plus"></i> Manual Entry
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="content-filter-tbl">
+                    <table id="time-table" class="table table-bordered table-hover w-100">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                    <div id="table-footer">
+                    </div>
+
+                </div>
+            </div>
+            <div style="display:flex;width:100%;margin-bottom:20px;">
+
+                <div style=" width: 100%; text-align: right;margin-right: 90px;">
+
+                    <label class="text-left" id="totalamount" style="
+                        font-size: 25px;
+                        font-weight: bolder;
+                        color: #17a2b8;
+                    "></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="title-main-container" id="timelogs-table-notification" style="display:none">
+        <div class="content-container" style="display:flex;flex-direction: row;justify-content: space-between;align-items: center;">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-bell" style="margin: 10px;"></i> Manager - Notification</h4>
+            <a style="font-size: 18px;" class="m-notification" id="m-timelogs">  <i class="fa-solid fa-clock" style="margin: 10px;"></i> Timelogs</a>
+        </div>
+        <div class="top-main-container ">
+        </div>
+        <div class="main-container">
+            <div class="content-filter-tbl">
+                <table id="noti-table" class="table table-bordered table-hover w-100">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+                </table>
+                <div id="table-footer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-holder" id="tlmodal">
+        <div class="timelogsmodal">
+            <div class="header">
+                <h3>Timelogs Details</h3>
+                <button class="closemodal" id="closemodal" aria-label="Close" onclick="myFunction()"></button>
+            </div>
+            <form id="add-time-logs-form">
+                <div class="input-holder">
+                    <span class="label">Date</span>
+                    <div class="input-container">
+                        <input type="hidden" id="mtlid" class="mod-inputs-nw" placeholder="Date" required value="0" disabled />
+                        <input type="date" id="mtldate" class="mod-inputs-nw" placeholder="Date" required disabled />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Time In</span>
+                    <div class="input-container">
+                        <input type="datetime-local" id="mtltimein" class="mod-inputs-nw" placeholder="Date" required disabled />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Time Out</span>
+                    <div id="error-message" class="error">Error: Time Out cannot be earlier than Time In.</div>
+                    <div class="input-container">
+                        <!-- Error message container placed above the timeout field -->
+
+                        <input type="datetime-local" id="mtltimeout" class="mod-inputs-nw" placeholder="Date" required disabled />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Task</span>
+                    <div class="input-container">
+                        <select id="manualtask" required disabled>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Remarks</span>
+                    <div class="input-container">
+                        <textarea id="mtlremarks" rows="10" disabled></textarea>
+                    </div>
+                </div>
+                @* <div class="input-holder">
+                <div class="input-container">
+                <input type="submit" value="Save" id="add-time-logs" disabled/>
+                </div>
+                </div> *@
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        fetchdepartmentselect();
+        document.getElementById("selectUser").onchange = function () {
+            initializeDataTable();
+            renderedHours();
+        }
+        document.getElementById("selectDap").onchange = function () {
+            initializeDataTable();
+            renderedHours();
+        }
+        document.getElementById("selectDay").onchange = function () {
+            var days = document.getElementById("selectDay").value;
+            // alert("Selected Day: " + days);
+            // Get today's date
+            const today = new Date();
+            // Calculate the date for the last 7 days
+            const last7Days = new Date();
+            last7Days.setDate(today.getDate() - 7);
+            const last30Days = new Date();
+            last30Days.setDate(today.getDate() - 30);
+            // Format the date as YYYY-MM-DD
+            const formattedDateTo = today.toISOString().split('T')[0];
+            switch (days) {
+                case '1':
+
+                    // Set the value of the input field
+                    document.getElementById('datefrom').value = formattedDateTo;
+                    document.getElementById('dateto').value = formattedDateTo;
+                    break;
+                case '7':
+                    var formattedDateFrom = last7Days.toISOString().split('T')[0];
+                    // Set the value of the input field
+                    document.getElementById('datefrom').value = formattedDateFrom;
+                    document.getElementById('dateto').value = formattedDateTo;
+                    break;
+                case '30':
+                    var formattedDateFrom = last30Days.toISOString().split('T')[0];
+                    // Set the value of the input field
+                    document.getElementById('datefrom').value = formattedDateFrom;
+                    document.getElementById('dateto').value = formattedDateTo;
+                    break;
+                case '0':
+                    const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+                    const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+                    const formatDate = (date) => {
+                        let year = date.getFullYear();
+                        let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+                        let day = date.getDate();
+
+                        // Ensure month and day are always two digits
+                        if (month < 10) month = '0' + month;
+                        if (day < 10) day = '0' + day;
+
+                        return `${year}-${month}-${day}`;
+                    };
+                    document.getElementById('datefrom').value = formatDate(firstDayOfMonth);
+                    document.getElementById('dateto').value = formatDate(lastDayOfMonth);
+                    break;
+
+            }
+
+
+            initializeDataTable();
+            renderedHours();
+
+        };
+        var uid = "@Accessor.HttpContext.Session.GetString("UserID")";
+        var tlmodal = document.getElementById('tlmodal')
+        defaultdate();
+        modalDom();
+        $(document).ready(function () {
+            timeLogs();
+            fetchtaskselect();
+            fetchtimlogsuserselect();
+            const timbtn = document.querySelectorAll('.time-btn');
+            const dateinput = document.querySelectorAll('.date-input');
+            var type = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
+
+            if (type == 'Admin') {
+                timbtn.forEach(element => {
+                    element.style.display = 'none';
+                });
+                dateinput.forEach(element => {
+                    element.style.display = 'block';
+                });
+            }
+            else {
+                timbtn.forEach(element => {
+                    element.style.display = 'block';
+                });
+
+            }
+            $("#add-timeout").prop("disabled", true);
+            $("#add-timein").prop("disabled", true);
+            const data = { UserId: @Accessor.HttpContext.Session.GetString("Id")};
+            $.ajax({
+                url: '/TimeLogs/GetLastTimeIn',
+                data: { data },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) { // @* //  *@
+                // console.log(data);
+                if (data.status == 'true') {
+                    $("#add-timeout").prop("disabled", false);
+                    $("#add-timein").prop("disabled", true);
+                }
+                else {
+                    $("#add-timeout").prop("disabled", true);
+                    $("#add-timein").prop("disabled", false);
+                }
+            });
+            fetchpendingnotificationcount();
+            initializeDataTable();
+            renderedHours();
+        });
+        setInterval(fetchpendingnotificationcount, 3000);
+        function defaultdate() {
+
+            const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+            // Format the dates as YYYY-MM-DD
+            const formatDate = (date) => {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = date.getDate();
+
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+
+                return `${year}-${month}-${day}`;
+            };
+
+            // Set the values for the date inputs
+            document.getElementById('datefrom').value = formatDate(firstDayOfMonth);
+            document.getElementById('dateto').value = formatDate(lastDayOfMonth);
+        }
+
+        function initializeDataTable() {
+            var tableId = '#time-table';
+            var lastSelectedRow = null;
+            var img = "/img/OPTION.webp";
+            var department = document.getElementById('selectDap').value;
+            // Check if DataTable is already initialized
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                // Destroy the existing DataTable instance
+                $(tableId).DataTable().clear().destroy();
+            }
+            var depart = $('#selectDap').val() ? $('#selectDap').val() : 0;
+            var user = $('#selectUser').val() ? $('#selectUser').val() : 0;
+            const data = {
+                Usertype: '',
+                UserId: user,
+                datefrom: $('#datefrom').val(),
+                dateto: $('#dateto').val(),
+                Department: depart
+            };
+            // console.log(data);
+            var dtProperties = {
+                ajax: {
+                    url: '/TimeLogs/GetTimelogsListManager',
+                    type: "POST",
+                    data: {
+                        data: data
+                    },
+                    dataType: "json",
+                    processing: true,
+                    serverSide: true,
+                    complete: function (xhr) {
+                        var url = new URL(window.location.href);
+                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                        // console.log('table1', _currentPage);
+                        table.page(_currentPage - 1).draw('page');
+
+                        // Compute total rendered hours after data is loaded
+                        computeTotalRenderedHours();
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                },
+                columns: [
+                    {
+                        "title": "Profile",
+                        "data": "id", "orderable": false,
+                        "render": function (data, type, row) {
+                            var images = row['filePath'] == null ? img : row['filePath'];
+                            //var images = img;
+                            var fullname = row.fname + " " + row.lname;
+                            var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                                                    <div class="data-img">
+                                                                        <img src='${images}' width="100%" />
+                                                                    </div>
+                                                                    <div style="align-items: center;">
+                                                                        <h6 style="text-align: left; margin: 0; font-size: 16px;">${fullname}</h6>
+                                                                        <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                                                    </div>
+                                                                </div>`;
+                            return btn;
+                        }
+                    },
+                    // {
+                    //     "title": "Employee ID #",
+                    //     "data": "employeeID"
+                    // },
+
+                    {
+                        "title": "Date",
+                        "data": "date",
+                        "render": function (data) {
+                            const parts = data.split(' ');
+                            const part = parts[0].split('/');
+                            //console.log(part);
+                            if (part.length === 3) {
+                                // Convert to `YYYY-MM-DD`
+                                const formattedDate = `${part[1]}-${part[0]}-${part[2]}`;
+                                return formattedDate;
+                            }
+                            return data;
+                        },
+                        type: "date" // Ensures proper sorting by date
+                    },
+                    {
+                        "title": "Task",
+                        "data": "task", "orderable": false
+                    },
+                    {
+                        "title": "Task Decription",
+                        "data": "remarks", "orderable": false
+                    },
+                    {
+                        "title": "Time In",
+                        "data": "timeIn", "orderable": false,
+                        "render": function (data, type, row) {
+                            var timein = new Date(data).toLocaleTimeString('en-US');
+                            return timein;
+                        }
+                    },
+                    {
+                        "title": "Time Out",
+                        "data": "timeOut", "orderable": false,
+                        "render": function (data, type, row) {
+                            if (data == '') {
+
+                                var noValue = "";
+                                return noValue;
+                            }
+                            else {
+                                var timeout = new Date(data).toLocaleTimeString('en-US');
+
+                                return timeout;
+                            }
+
+                        }
+                    },
+                    {
+                        "title": "Rendered Hours",
+                        "data": "renderedHours", "orderable": false
+                    },
+                    {
+                        "title": "Status",
+                        "data": "statusName", "orderable": false
+                    }
+                ], responsive: true
+                // , columnDefs:  columnDefsConfig
+                , columnDefs: [
+                    { targets: 1, className: 'left-align' },
+                    { responsivePriority: 10010, targets: 6 },
+                    { responsivePriority: 10008, targets: 0 },
+                    { targets: 3, className: 'none' },
+                    { targets: 4, className: 'none' },
+                    { targets: 5, className: 'none' },
+                    { "type": "date", "targets": 0 },
+                    {
+                        targets: [0],
+                        width: "20%",
+                        className: 'left-align'
+                    },
+                    {
+                        targets: [1],
+                        width: "15%",
+                        className: 'dt-body-right'
+                    },
+                    {
+                        targets: [2],
+                        width: "15%",
+                        className: 'left-align'
+                    },
+                    {
+                        targets: [6],
+                        width: "15%",
+                        className: 'dt-body-right'
+                    },
+                    {
+                        targets: [7],
+                        width: "15%",
+                        className: 'left-align'
+                    },
+
+                ],
+                order: [[1, 'desc']] // Sort the second column (index 1) by descending order
+                , rowCallback: function (row, data, dataIndex) {
+                    console.log(data); // Debugging step
+
+                    if (data.employeeType === "1") {
+                        if (data.timelogStatus === "Late" && data.isUnderTime === "0") {
+                            $(row).css('background-color', '#ffcc00'); // Yellow
+                        }
+                        else if (data.timelogStatus === "ONTIME" && data.isUnderTime === "1") {
+
+                            $(row).css('background-color', '#ff9966'); // Light Red
+                        }
+                        else if (data.timelogStatus === "Late" && data.isUnderTime === "1") {
+
+                            $(row).css('background-color', '#cc3300'); // Red
+                        }
+
+                    }
+                    // else if (data.statusName === "Approved") {
+                    //     $(row).css('background-color', '#cce5ff'); // Light Blue
+                    // } else if (data.statusName === "Rejected") {
+                    //     $(row).css('background-color', '#ccffcc'); // Light Green
+                    // }
+                }
+            };
+
+            var table = $(tableId).DataTable(dtProperties);
+
+            // Attach computeTotalRenderedHours to the search event
+            $(tableId + '_filter input').on('keyup', function () {
+                computeTotalRenderedHours();
+            });
+
+            $('#time-table').on('page.dt', function () {
+                var info = table.page.info();
+                var url = new URL(window.location.href);
+                url.searchParams.set('page01', (info.page + 1));
+                window.history.replaceState(null, null, url);
+            });
+
+            $(tableId + '_filter input').attr('placeholder', 'Search anything here...');
+
+            $(tableId + ' tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                // console.log(data);
+                // Remove highlight from the previously selected row
+                if (lastSelectedRow) {
+                    $(lastSelectedRow).removeClass('selected-row');
+                }
+
+                // Highlight the currently selected row
+                $(this).addClass('selected-row');
+                lastSelectedRow = this;
+                // console.log(data);
+
+            });
+            // France Function
+            $(tableId).on('mouseenter', 'tbody tr', function () {
+                var data = table.row(this).data();
+
+                if (data) {
+                    // Get the column index where the hover occurred
+
+                    var descId = "taskDesc" + data.id;
+                    var descTask = document.getElementById(descId);
+                    // console.log(data);
+                    var columnIndexs = $(this).index(); // Get the column index of the cell
+                    if (descTask) {
+                        descTask.style.display = "flex"; // Hide the popup
+                    }
+
+                    $(this).on('mouseenter', 'td', function (e) {
+                        var columnIndex = $(this).index(); // Get the column index of the cell
+                        if (columnIndex === 6) { // Column 6 has zero-based index 5
+                            if (descTask) {
+                                descTask.style.display = "none"; // Hide the popup
+                            }
+                        }
+                        else {
+                            if (descTask) {
+                                descTask.style.display = "flex"; // Hide the popup
+                            }
+                        }
+                    });
+                }
+
+            });
+            // France Function
+
+            $(tableId).on('mouseleave', 'tbody tr', function (event) {
+                var data = table.row(this).data();
+                if (data) {
+
+                    var descId = "taskDesc" + data.id;
+                    var descTask = document.getElementById(descId);
+                    // console.log(data);
+
+                    if (descTask) {
+                        descTask.style.display = "none";
+                    }
+                }
+            });
+            $(tableId).on('mouseenter', 'tbody tr td .action', function () {
+                var data = table.row(this).data();
+                if (data) {
+                    var descId = "taskDesc" + data.id;
+                    var descTask = document.getElementById(descId);
+                    // console.log(data);
+
+                    if (descTask) {
+                        descTask.style.display = "none";
+                    }
+                }
+            });
+
+            // Function to compute total rendered hours
+            function computeTotalRenderedHours() {
+                var totalHours = 0;
+
+                // Get all visible rows after searching
+                var rows = table.rows({ search: 'applied' }).nodes(); // Use 'applied' to get visible rows
+
+                // Iterate over each visible row and sum the rendered hours
+                $(rows).each(function () {
+                    var renderedHours = parseFloat($(this).find('td:nth-child(7)').text()) || 0; // 7th column (0-based index)
+                    var status = $(this).find('td:nth-child(8)').text(); // 7th column (0-based index)
+                    if (status == 'Approved') {
+                        totalHours += renderedHours;
+                    }
+                    // console.log(status);
+                    // console.log(renderedHours);
+                });
+
+                // Display the total hours with spaces
+                $('#totalamount').html("Total Rendered Hours: " + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + totalHours.toFixed(2));
+            }
+        }
+
+
+        $('#add-timein').on('click', function (event) {
+            event.preventDefault();
+            loadModal('/TimeLogs/TaskModal', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Time In', 'l', false)
+        });
+        $('#add-timeout').on('click', function (event) {
+
+            var data = {
+                userid: @Accessor.HttpContext.Session.GetString("Id")
+
+                                        };
+            $.ajax({
+                url: '/TimeLogs/TimeOut',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+        });
+
+        function isValidDate(dateString) {
+
+            return moment(dateString, 'DD-MM-YYYY', true).isValid() ||
+                moment(dateString, 'YYYY-MM-DD', true).isValid();
+        }
+        $('#datefrom, #dateto').on('change', function () {
+            var dateFrom = document.getElementById('datefrom').value;
+            var dateTo = document.getElementById('dateto').value;
+            // console.log(isValidDate(dateFrom));
+            if (!isValidDate(dateFrom) || !isValidDate(dateTo)) {
+                // console.log('Invalid date format. Please enter a valid date (dd-MM-yyyy).');
+                event.preventDefault(); // Prevent form submission
+            }
+            else {
+                document.getElementById("selectDay").value = "x";
+                initializeDataTable();
+                renderedHours();
+            }
+
+        });
+
+        function myFunction() {
+            tlmodal.style.display = "none";
+        }
+        function myFunctionOpen() {
+            document.getElementById('mtlid').value = 0;
+            document.getElementById('mtldate').value = "";
+            document.getElementById('mtltimein').value = "";
+            document.getElementById('mtltimeout').value = "";
+            document.getElementById('manualtask').value = "";
+            document.getElementById('mtlremarks').value = "";
+            tlmodal.style.display = "flex";
+        }
+        async function ExportFunction() {
+            var btnexport = document.getElementById('export-timelogs');
+
+            var depart = $('#selectDap').val() ? $('#selectDap').val() : 0;
+            var user = $('#selectUser').val() ? $('#selectUser').val() : 0;
+            const requestData = {
+                Usertype: '',
+                UserId: user,
+                datefrom: $('#datefrom').val(),
+                dateto: $('#dateto').val(),
+                Department: depart
+            };
+            // console.log(requestData);
+            // fetch('/TimeLogs/DLExportTimelogsListManager', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(requestData)
+            // });
+            // var userType = "";
+            window.location = "/TimeLogs/DLExportTimelogsListManager?Usertype=" + "&UserId=" + user + "&datefrom=" + $('#datefrom').val() + "&dateto=" + $('#dateto').val() + "&Department=" + depart;
+
+            // console.log(data);
+            // $.ajax({
+            //         url: '/TimeLogs/DLExportTimelogsListManager',
+            //     data: {
+            //         data: data,
+            //     },
+            //         async : true,
+            //     type: "POST",
+            //     datatype: "json"
+            // });
+        }
+
+
+
+        // View Time Logs
+        $('#time-table').on('click', '.tbl-view', function () {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var task = $(this).data('task');
+            var dateString = $(this).data('date');
+            var timein = $(this).data('timein');
+            var timeout = $(this).data('timeout');
+            var remarks = $(this).data('remarks');
+            var userid = $(this).data('userid');
+
+            // Extract the date and time part from the string
+            let dateParts = dateString.split(" ")[0].split("/"); // Get "05/01/2025"
+            let day = dateParts[0];
+            let month = dateParts[1];
+            let year = dateParts[2];
+            // Format the Date object to YYYY-MM-DD
+            let formattedDate = year + '-' + month + '-' + day;
+            document.getElementById('mtlid').value = id;
+            document.getElementById('mtldate').value = formattedDate;
+            document.getElementById('mtltimein').value = timein;
+            document.getElementById('mtltimeout').value = timeout;
+            document.getElementById('manualtask').value = task;
+            document.getElementById('mtlremarks').value = remarks;
+            tlmodal.style.display = "flex";
+        });
+
+        renderedHours();
+    </script>
+}

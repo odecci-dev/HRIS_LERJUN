@@ -1,0 +1,26 @@
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+
+
+<div class="top-bar">
+    <div class="logo-box"></div>
+    <div class="navigation">
+        <i id="open-nav" class="fa-solid fa-bars"></i>
+        <i id="close-nav" class="fa-solid fa-close"></i>
+    </div>
+    <div class="menu" id="top-bar-menu">
+        <div class="emp-info">
+            <span style="color: white;font-weight:bolder">@Accessor.HttpContext.Session.GetString("Name")</span>
+            <span style="color: white;">@Accessor.HttpContext.Session.GetString("UserTypeName")</span>
+            <span style="color: white;">@Accessor.HttpContext.Session.GetString("EmployeeID")</span>
+        </div>
+        <div class="top-bar-content-item">
+        </div>
+        <li style="width: 100%;">
+            <a href="../../LogIn/Logout" style="display: flex; align-items: center; gap: 5px;" class="nav-item" id="logout">
+                <i class="fa-solid fa-right-from-bracket" style="font-size: 23px;margin-right:5px"></i>
+                <span>LogOut</span>
+            </a>
+        </li>
+    </div>
+</div>

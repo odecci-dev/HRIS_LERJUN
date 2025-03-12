@@ -1,0 +1,234 @@
+﻿@inject IHttpContextAccessor Accessor;
+@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+@* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+<link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+<link href="~/css/iziToast.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/mod-input.css" />
+<link rel="stylesheet" href="~/css/timelogs.css" />
+<link rel="stylesheet" href="~/css/department.css" />
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+
+<style>
+    #loadingOverlay {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+        z-index: 9999; /* Make sure it's above other content */
+        display: none;
+        pointer-events: auto; /* Prevent interaction with the background */
+    }
+
+    /* Center the spinner */
+    #loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+        /* Make the spinner smaller */
+        #loading-spinner img {
+            width: 50px; /* Adjust size */
+            height: 50px; /* Adjust size */
+        }
+
+        #overtime-table thead th {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .action-navbar
+        {
+            background-color: var(--dark);
+            padding: 10px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .action-navbar-2 {
+            border-top:2px solid white;
+            background-color: var(--dark);
+            padding: 10px;
+        }
+        .circle-btn {
+            width: 40px; /* Adjust as needed */
+            height: 40px;
+            border-radius: 50%;
+            border:none;
+            background: transparent;
+            color: white; /* Icon color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+        .lbl
+        {
+            display: flex;
+            color: white;
+            margin-top: 10px;
+            height: 100%;
+            align-items: center;
+            color: white;
+        }
+
+        .circle-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+       .btn:hover::before {
+        opacity: 1;
+        animation: shineEffect 1.5s infinite;
+    }
+
+    @@keyframes shineEffect {
+        0% {
+            left: -100%;
+        }
+        50% {
+            left: 100%;
+        }
+        100% {
+            left: -100%;
+        }
+    }
+</style>
+
+<div>
+    <div class="d-flex action-navbar">
+        <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
+            <label for="datefrom" class="lbl">From:</label>
+            <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <label for="dateto" class="lbl">To:</label>
+            <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <button class="circle-btn" id="filter" title="Time In">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+        <div id="time-btn-holder" class="time-btn-holder">
+        </div>
+    </div>
+    <div class="d-flex action-navbar-2">
+        <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
+            <button class="btn btn-info" id="generate" title="Time In">
+                <i class="fas fa-print"></i>Generate
+            </button>
+            @*    <button class="btn btn-danger" id="show-timeout-modal" title="Time Out">
+            <i class="fa-solid fa-circle-minus"></i> Delete
+            </button> *@
+            <button class="btn btn-warning" id="btn-refresh" title="Time Out">
+                <i class="fa-solid fa-arrows-rotate"></i> Refresh
+            </button>
+            <button class="btn btn-primary" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
+                <i class="fa-solid fa-file-import"></i> Import
+            </button>
+            <button class="btn btn-success" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
+                <i class="fa-solid fa-file-arrow-down"></i> Export
+            </button>
+        </div>
+
+        <div id="time-btn-holder" class="time-btn-holder">
+        </div>
+    </div>
+    <div>
+        <div id="loadingOverlay" style="display: none;">
+            <div id="loading-spinner">
+                <img src="/img/loading-gif.gif" alt="Loading..." />
+            </div>
+        </div>
+        <div id="targetDiv">
+
+            @*   <table id="overtime-table" class="table table-bordered table-hover w-100" style="margin-top:0px !important">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+
+            </table>
+            <div id="table-footer">
+            </div> *@
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/overtime.js"></script>
+<script>
+    $(document).ready(function () {
+       
+    });
+
+
+
+    $("#generate").on("click", function () {
+        var data = {
+            employeeID: 3066,
+            // employeeID: @Accessor.HttpContext.Session.GetString("Id"),
+            datefrom: $("#datefrom").val(),
+            dateto: $("#dateto").val()
+        };
+
+        $.ajax({
+            url: "/Payroll/Payslip",
+            type: "GET",
+            data: data,
+            beforeSend: function () {
+                // Show loading indicator
+                showloadingoverlay();
+                $("#targetDiv").hide();
+            },
+            success: function (data) {
+                $("#targetDiv").html(data);
+                $("#targetDiv").show();
+            },
+            error: function () {
+                alert("Failed to load content.");
+            },
+            complete: function () {
+                // Hide loading indicator after completion
+                hideloadingoverlay();
+            }
+        });
+    });
+     $("#btn-refresh").on("click", function () {
+        var tableId = '#overtime-table';
+        if ($.fn.DataTable.isDataTable(tableId)) {
+            $(tableId).DataTable().clear().destroy();
+        }
+        FetchOvertimeList();
+    });
+
+</script>

@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "Filing";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+<style>
+   .tab {
+        display: flex;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 5px;
+        gap: 10px;
+        justify-content: flex-start;
+        }
+
+        /* Tab buttons */
+        .tablinks {
+            background: #f8f9fa;
+            border: none;
+            padding: 12px 18px;
+            font-size: 16px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            outline: none;
+            font-weight: 500;
+            border-top-left-radius: 30px;
+            color: #333;
+        }
+
+        /* Hover effect */
+        .tablinks:hover {
+
+            background: var(--dark);
+            color: white;
+        }
+
+        /* Active tab */
+        .tablinks.active {
+            border-top-left-radius: 30px;
+            background: var(--dark);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0px -3px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Tab content */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            background: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Active tab content */
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Fade-in effect */
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+</style>
+
+<div id="dashboard-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left">   <i class="fas fa-file-signature" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+    </div>
+    <div class="top-main-container ">
+    </div>
+    <div class="main-container">
+        <div class="content-filter">
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'Tab1')">OverTime Filing</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab2')">Leave Filing</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab3')">Leave Balance</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab4')">Leave Ledger</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab5')">Leave Maintenance</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab6')">Leave Ledger Maintenance</button>
+            </div>
+            <div id="Tab1" class="tab-content active">
+                @await Html.PartialAsync("~/Views/OverTime/_OverTime.cshtml")
+            </div>
+
+            <div id="Tab2" class="tab-content">
+              
+            </div>
+
+            <div id="Tab3" class="tab-content">
+              
+            </div>
+            <div id="Tab4" class="tab-content">
+              
+
+            </div>
+            <div id="Tab5" class="tab-content">
+              
+                @await Html.PartialAsync("~/Views/Leave/_LeaveTypeMaintenance.cshtml")
+            </div>
+            <div id="Tab6" class="tab-content">
+               
+                @await Html.PartialAsync("~/Views/Leave/_LeaveTypeMaintenance.cshtml")
+            </div>
+        </div>
+        <div class="content-filter-tbl">
+            <table id="filing-table" class="table table-bordered table-hover w-100">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <div id="table-footer">
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+
+        });
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            // Remove active class from all tab buttons
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            // Show the current tab and add active class
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active");
+        }
+     
+    </script>
+}

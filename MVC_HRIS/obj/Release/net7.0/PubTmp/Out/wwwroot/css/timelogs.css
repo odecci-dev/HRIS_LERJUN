@@ -1,0 +1,578 @@
+.mod-inputs-nw {
+    font-size: 1.2rem;
+    height: 35px;
+    padding: 10px;
+    outline: none;
+    border: 1px solid #e7e6e6;
+    box-shadow: inset 1px 2px 1px 1px rgba(116, 113, 113, 0.5);
+    border-radius: 5px;
+    /*    color: var(--secondary-dark);*/
+}
+/* Modal */
+.modal-holder {
+    background-color: rgba(0,0,0, .3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    /*    width: calc(100vw - var(--sidebarwidth-active));*/
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    display: none;
+}
+
+.timelogsmodal {
+    background-color: #fff;
+    width: 700px;
+    box-shadow: 10px 10px 10px grey;
+    border-radius: 15px;
+    padding: 25px 50px;
+    gap: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
+}
+/* Close Button */
+.closemodal {
+    vertical-align: middle;
+    border: none;
+    color: inherit;
+    border-radius: 50%;
+    background: transparent;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+}
+
+    .closemodal:focus,
+    .closemodal:hover {
+        opacity: 1;
+        background: rgba(128, 128, 128, 0.5);
+    }
+
+    .closemodal:active {
+        background: rgba(128, 128, 128, 0.9);
+    }
+    /* tines of the X */
+    .closemodal::before,
+    .closemodal::after {
+        content: " ";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 20px;
+        width: 4px;
+        background-color: currentColor;
+    }
+
+    .closemodal::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .closemodal::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+/* Text Fiel */
+.input-holder {
+    margin: 20px 0;
+}
+
+    .input-holder .input-container {
+        margin-top: 5px;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+        .input-holder .input-container input,
+        .input-holder .input-container textarea,
+        .input-holder .input-container select {
+            width: 100% !important;
+            /* padding: 10px 5px; */
+            margin: 0;
+        }
+/* Style for the error message */
+.error {
+    color: red;
+    font-size: 14px;
+    display: none; /* Hidden by default */
+}
+
+/* Style for the submit button when disabled */
+button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+/*Task Description Modal*/
+.taskDesc {
+    background: RGBA(0, 63, 136, .9);
+    color: white;
+    position: absolute;
+    width: 30%;
+    min-height: 200px;
+    padding: 15px;
+    text-align: center;
+    display: none;
+    flex-direction: column;
+    margin-left: -20px;
+    border-radius: 8px;
+    z-index: 1
+}
+
+.m-notification {
+    cursor: pointer;
+    position: relative;
+}
+
+    .m-notification span {
+        background-color: red !important;
+        color: white !important;
+        padding: 8px;
+        border-radius: 100%;
+        font-size: 15px;
+        position: absolute;
+        top: -10px;
+        right: 85%;
+    }
+
+.timeout-modal-holder {
+    background-color: rgba(0,0,0, .3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    /*    width: calc(100vw - var(--sidebarwidth-active));*/
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    display: none;
+}
+
+    .timeout-modal-holder #timeoutreasonholder {
+        display: none;
+    }
+
+.sub-content-mv {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/*.print-page-md {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+}*/
+
+.text-regular {
+    font-weight: normal !important;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+footer {
+    background-color: #f1f1f1;
+    color: #333;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.print-page-md {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+    padding: 0
+}
+
+#add-time-in-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*    height: 50%;*/
+    flex-direction: column;
+}
+
+.mod-inputs-nw {
+    font-size: 1.2rem;
+    height: 35px;
+    padding: 10px;
+    outline: none;
+    border: 1px solid #e7e6e6;
+    box-shadow: inset 1px 2px 1px 1px rgba(116, 113, 113, 0.5);
+    border-radius: 5px;
+    /*    color: var(--secondary-dark);*/
+}
+
+.input-container-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mod-form span {
+    font-size: 13px;
+    font-weight: 900;
+    /*    color: var(--secondary-dark);*/
+}
+
+#remarks {
+    /* Ensure the text starts at the top-left */
+    text-align: left; /* Align text to the left */
+    vertical-align: top; /* Align text to the top (not strictly needed for textarea but good practice) */
+    padding: 5px; /* Add some padding for better visual appearance, adjust as needed */
+    box-sizing: border-box; /* Ensure padding and border are included in the width and height */
+    resize: both; /* Allow the user to resize the textarea (optional) */
+    overflow: auto;
+    width: 100%;
+    resize: none;
+    height: 150px;
+}
+
+#mode-inputs {
+    display: flex;
+}
+
+.float-btn {
+    display: none;
+}
+
+table span {
+    color: var(--dark) !important;
+}
+
+.left-align {
+    text-align: left;
+}
+
+table .child ul li .dtr-title:after {
+    content: ": ";
+}
+
+table .child ul li {
+    display: flex;
+}
+
+.child {
+    text-align: left
+}
+
+table .child ul li .dtr-data .action {
+    flex-wrap: wrap;
+}
+#time-table_wrapper .row:first-of-type,
+#pending-timelogs-table_wrapper .row:first-of-type,
+#emp-table_wrapper .row:first-of-type,
+#pos-table_wrapper .row:first-of-type,
+#dep-table_wrapper .row:first-of-type,
+#payroll-table_wrapper .row:first-of-type,
+#salary-table_wrapper .row:first-of-type,
+#schedule-table_wrapper .row:first-of-type,
+#etype-table_wrapper .row:first-of-type {
+    background-color: var(--dark);
+    padding: 10px;
+    color: white;
+    margin: 0;
+    align-items: center;
+    margin-bottom: -5px
+}
+
+    #time-table_wrapper .row:first-of-type label,
+    #pending-timelogs-table_wrapper .row:first-of-type label,
+    #time-table_wrapper .row:first-of-type label select,
+    #pending-timelogs-table_wrapper .row:first-of-type label select,
+    #emp-table_wrapper .row:first-of-type label,
+    #emp-table_wrapper .row:first-of-type label select,
+    #pos-table_wrapper .row:first-of-type label,
+    #pos-table_wrapper .row:first-of-type label select,
+    #dep-table_wrapper .row:first-of-type label,
+    #dep-table_wrapper .row:first-of-type label select,
+    #payroll-table_wrapper .row:first-of-type label,
+    #payroll-table_wrapper .row:first-of-type label select,
+    #salary-table_wrapper .row:first-of-type label,
+    #salary-table_wrapper .row:first-of-type label select,
+    #schedule-table_wrapper .row:first-of-type label,
+    #schedule-table_wrapper .row:first-of-type label select,
+    #etype-table_wrapper .row:first-of-type label,
+    #etype-table_wrapper .row:first-of-type label select {
+        margin: 0 !important;
+    }
+
+.action-navbar {
+    background-color: var(--dark);
+    padding: 20px !important;
+    border-radius: 20px 20px 0 0;
+}
+
+.layer {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 0 0
+}
+
+.action-navbar select {
+    margin: 0;
+}
+
+.action-navbar .input-holder {
+    display: flex;
+    gap: 5px;
+    min-height: 0;
+    align-items: center
+}
+
+    .action-navbar .input-holder input {
+        color: #000;
+    }
+
+    .action-navbar .input-holder span {
+        color: white !important;
+        height: 100% !important;
+        font-weight: 700;
+    }
+@media only screen and (max-width: 1024px) {
+    #dashboard-main-container.active {
+        width: 100vw !important;
+    }
+
+    .main-container {
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .title-main-container {
+        padding: 0 25px;
+    }
+
+    .content-container {
+        margin: 0;
+    }
+
+        .content-container h4 {
+            font-size: 22px !important;
+        }
+    /*.date-input,
+    .time-btn {
+        width: 100% !important;
+    }*/
+    .date-input input {
+        width: 150px !important;
+    }
+
+    #close-float-btn {
+        display: none;
+    }
+
+    .modal-holder {
+        position: fixed;
+        top: 0;
+        left: 0;
+        /*    width: calc(100vw - var(--sidebarwidth-active));*/
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        display: none;
+        overflow: scroll;
+    }
+
+    .timelogsmodal {
+        width: 70%;
+        padding: 25px;
+    }
+
+        .timelogsmodal h3 {
+            font-size: 22px;
+        }
+
+        .timelogsmodal input,
+        .timelogsmodal select,
+        .timelogsmodal textarea {
+            font-size: 16px;
+            padding: 5px !important;
+            width: 100px !important;
+        }
+
+        .timelogsmodal textarea {
+            height: 100px;
+        }
+}
+
+@media only screen and (max-width: 790px) {
+
+    .timelogsmodal {
+        width: 95%;
+        margin: 5%;
+        padding: 25px;
+    }
+
+    .date-input,
+    .time-btn {
+        width: 100% !important;
+    }
+
+    .title-main-container {
+        padding: 0;
+    }
+
+    .time-btn-holder {
+        flex-direction: column !important;
+        gap: 20px;
+        background-color: var(--light);
+        padding: 25px;
+        box-shadow: 2px 2px 5px 5px rgba(0,0,0,.2);
+        border-radius: 15px;
+        width: 250px !important;
+        position: fixed;
+        right: 30px;
+        z-index: 1;
+        bottom: 100px;
+    }
+
+    #time-btn-holder {
+        display: none;
+    }
+
+    .float-btn {
+        display: flex;
+        position: fixed;
+        right: 30px;
+        padding: 15px;
+        bottom: 30px;
+        border-radius: 100%;
+        box-shadow: 2px 2px 2px 2px rgba(0,0,0,.2);
+        font-size: 30px;
+        background-color: var(--dark);
+        text-align: center;
+    }
+
+    #open-float-btn,
+    #close-float-btn {
+        color: var(--light);
+        width: 30px;
+    }
+
+    #time-table_wrapper .row {
+        flex-direction: row !important;
+        flex-wrap: nowrap;
+    }
+
+    #time-table_wrapper .col-sm-12 {
+        flex: auto;
+    }
+
+    #time-table_wrapper .row div .dataTables_length,
+    #time-table_wrapper .row div #time-table_filter {
+        width: 50% !important;
+        display: flex;
+        align-items: center;
+    }
+
+    div.dataTables_wrapper div.dataTables_info {
+        text-align: left;
+    }
+
+    .div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: right !important;
+    }
+
+    .taskDesc {
+        display: block !important;
+        position: static !important;
+        color: var(--dark);
+        background: transparent;
+        width: 100%;
+        margin: 0;
+        text-align: center !important;
+    }
+
+        .taskDesc h4 {
+            font-size: 16px;
+            text-align: center !important;
+        }
+
+    .date-input input,
+    #time-table_wrapper .row div .dataTables_length,
+    #time-table_wrapper .row div #time-table_filter,
+    #time-table_wrapper .row div #time-table_filter label,
+    #time-table_wrapper .row div .dataTables_length label {
+        width: 100px !important;
+        font-size: 13px !important;
+        padding: 5px;
+        margin: 0 !important;
+    }
+
+        #time-table_wrapper .row div .dataTables_length select {
+            font-size: 13px !important;
+            margin: 0 !important;
+            height: 40px;
+        }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        font-size: 13px !important;
+        padding: 5px;
+        height: 40px !important;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #time-table_wrapper .row {
+        flex-wrap: nowrap
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        width: 100% !important;
+        font-size: 13px !important;
+        padding: 5px;
+    }
+
+    #time-table_wrapper .row .dataTables_info {
+        text-align: center;
+    }
+
+    #time-table_wrapper .row .dataTables_paginate .pagination {
+        margin-top: 15px;
+        justify-content: center !important;
+    }
+
+    .total-hrs {
+        color: red !important;
+        text-align: center !important;
+    }
+
+        .total-hrs label {
+            text-align: center !important;
+            font-size: 18px !important;
+        }
+
+    #time-table_filter input {
+        max-width: 180px;
+    }
+
+    #time-table span {
+        color: var(--dark) !important;
+    }
+}

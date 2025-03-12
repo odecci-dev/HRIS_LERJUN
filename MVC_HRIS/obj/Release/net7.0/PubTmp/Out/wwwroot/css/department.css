@@ -1,0 +1,12 @@
+.add-modal-holder {
+    background-color: rgba(0,0,0, .3);
+    position: fixed;
+    top: 0;
+    width: calc(100vw - var(--sidebarwidth-active));
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    display: none;
+}

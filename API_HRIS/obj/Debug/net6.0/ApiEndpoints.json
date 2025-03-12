@@ -1,0 +1,1795 @@
+[
+  {
+    "ContainingType": "API_PCC.Controllers.AuditTrailController",
+    "Method": "list",
+    "RelativePath": "AuditTrail/list",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "searchFilter",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BCommonSearchFilterModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Manager.DBMethods\u002BAuditTrailModel, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "delete",
+    "RelativePath": "Department/delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deletionModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BDeletionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "DepartmentList",
+    "RelativePath": "Department/DepartmentList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "DepartmentPaginationList",
+    "RelativePath": "Department/DepartmentPaginationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BFilterDepartment",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "restore",
+    "RelativePath": "Department/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "restorationModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BRestorationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "save",
+    "RelativePath": "Department/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblDeparmentModel",
+        "Type": "API_HRIS.Models.TblDeparmentModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblDeparmentModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "search",
+    "RelativePath": "Department/search/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblDeparmentModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "update",
+    "RelativePath": "Department/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "tblDepartmentModel",
+        "Type": "API_HRIS.Models.TblDeparmentModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.DepartmentController",
+    "Method": "view",
+    "RelativePath": "Department/view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblDeparmentModel, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "delete",
+    "RelativePath": "Employee/delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BDeletionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "ECEmployeeFilteredById",
+    "RelativePath": "Employee/ECEmployeeFilteredById",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.IdFilter",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "EmailUnregisterUser",
+    "RelativePath": "Employee/EmailUnregisterUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.EmployeeController\u002BUnregisteredUserEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "EmergencyContact",
+    "RelativePath": "Employee/EmergencyContact",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblEmergencyContactsModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblEmergencyContactsModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "EmployeeFilteredById",
+    "RelativePath": "Employee/EmployeeFilteredById",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.IdFilter",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "EmployeePaginationList",
+    "RelativePath": "Employee/EmployeePaginationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BFilterEmployee",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "EmployeeRegistration",
+    "RelativePath": "Employee/EmployeeRegistration",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.EmployeeController\u002BEmployeeRegistrationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "eTypeList",
+    "RelativePath": "Employee/eTypeList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "GetEmployeeTypeCount",
+    "RelativePath": "Employee/GetEmployeeTypeCount",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "GetManager",
+    "RelativePath": "Employee/GetManager",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "GetPositionLevels",
+    "RelativePath": "Employee/GetPositionLevels",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "GetTotalRenderedHoursList",
+    "RelativePath": "Employee/GetTotalRenderedHoursList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.EmployeeController\u002BParams",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "restore",
+    "RelativePath": "Employee/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "restorationModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BRestorationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "saveemployee",
+    "RelativePath": "Employee/saveemployee",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.EmployeeController\u002BEmployeeViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "saveemploymentstatus",
+    "RelativePath": "Employee/saveemploymentstatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblEmploymentStatusModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "saveEType",
+    "RelativePath": "Employee/saveEType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblEmployeeTypeModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "search",
+    "RelativePath": "Employee/search/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblUsersModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "StatusTypeList",
+    "RelativePath": "Employee/StatusTypeList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "update",
+    "RelativePath": "Employee/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "tblUserModel",
+        "Type": "API_HRIS.Models.TblUsersModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "updateEmployeeDetails",
+    "RelativePath": "Employee/updateEmployeeDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.EmployeeController\u002BEmployeeViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeController",
+    "Method": "view",
+    "RelativePath": "Employee/view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblUsersModel, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeTypeController",
+    "Method": "eTypeList",
+    "RelativePath": "EmployeeType/eTypeList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.EmployeeTypeController",
+    "Method": "saveEType",
+    "RelativePath": "EmployeeType/saveEType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblEmployeeTypeModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.LeaveController",
+    "Method": "BreakList",
+    "RelativePath": "Leave/BreakList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.LeaveController",
+    "Method": "TaskList",
+    "RelativePath": "Leave/TaskList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.ModuleController",
+    "Method": "ModuleList",
+    "RelativePath": "Module/ModuleList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.OvertimeController",
+    "Method": "OvertTimeList",
+    "RelativePath": "Overtime/OvertTimeList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.OvertimeController\u002BEmployeeIdFilter",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.OvertimeController",
+    "Method": "PendingOvertTimeList",
+    "RelativePath": "Overtime/PendingOvertTimeList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.OvertimeController\u002BEmployeeIdFilter",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.OvertimeController",
+    "Method": "save",
+    "RelativePath": "Overtime/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblOvertimeModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblOvertimeModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.OvertimeController",
+    "Method": "updateStatus",
+    "RelativePath": "Overtime/updateStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.OvertimeController\u002BOTUpdateStatus",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblOvertimeModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollController",
+    "Method": "ComputePayslip",
+    "RelativePath": "Payroll/ComputePayslip",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.PayrollController\u002BEmployeeFilters",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollController",
+    "Method": "PayrollGenerate",
+    "RelativePath": "Payroll/PayrollGenerate",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollController",
+    "Method": "PayrollGenerate2",
+    "RelativePath": "Payroll/PayrollGenerate2",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.IdFilter",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollTypeController",
+    "Method": "PayrollTypeList",
+    "RelativePath": "PayrollType/PayrollTypeList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollTypeController",
+    "Method": "PayrollTypePaginationList",
+    "RelativePath": "PayrollType/PayrollTypePaginationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BFilterPayrollType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollTypeController",
+    "Method": "save",
+    "RelativePath": "PayrollType/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblPayrollType",
+        "Type": "API_HRIS.Models.TblPayrollType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblPayrollType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollTypeController",
+    "Method": "search",
+    "RelativePath": "PayrollType/search/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblUserType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollTypeController",
+    "Method": "update",
+    "RelativePath": "PayrollType/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "tblPayrollType",
+        "Type": "API_HRIS.Models.TblPayrollType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PayrollTypeController",
+    "Method": "view",
+    "RelativePath": "PayrollType/view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblPayrollType, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "delete",
+    "RelativePath": "Position/delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deletionModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BDeletionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "deletePosition",
+    "RelativePath": "Position/deletePosition",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblPositionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblPositionModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "PositionList",
+    "RelativePath": "Position/PositionList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "PositionPaginationList",
+    "RelativePath": "Position/PositionPaginationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BFilterPosition",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "restore",
+    "RelativePath": "Position/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "restorationModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BRestorationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "save",
+    "RelativePath": "Position/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblPositionModel",
+        "Type": "API_HRIS.Models.TblPositionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblPositionModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "search",
+    "RelativePath": "Position/search/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblPositionModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "update",
+    "RelativePath": "Position/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "tblPositionModel",
+        "Type": "API_HRIS.Models.TblPositionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.PositionController",
+    "Method": "view",
+    "RelativePath": "Position/view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblPositionModel, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "delete",
+    "RelativePath": "SalaryType/delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deletionModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BDeletionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "restore",
+    "RelativePath": "SalaryType/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "restorationModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BRestorationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "SalaryTypeList",
+    "RelativePath": "SalaryType/SalaryTypeList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "SalaryTypePaginationList",
+    "RelativePath": "SalaryType/SalaryTypePaginationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BFilterSalaryType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "save",
+    "RelativePath": "SalaryType/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblSalaryType",
+        "Type": "API_HRIS.Models.TblSalaryType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblSalaryType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "search",
+    "RelativePath": "SalaryType/search/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblUserType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "update",
+    "RelativePath": "SalaryType/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "tblSalaryType",
+        "Type": "API_HRIS.Models.TblSalaryType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.SalaryTypeController",
+    "Method": "view",
+    "RelativePath": "SalaryType/view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblSalaryType, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.ScheduleController",
+    "Method": "saveschedule",
+    "RelativePath": "Schedule/saveschedule",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblScheduleModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.ScheduleController",
+    "Method": "ScheduleList",
+    "RelativePath": "Schedule/ScheduleList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TaskController",
+    "Method": "BreakList",
+    "RelativePath": "Task/BreakList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TaskController",
+    "Method": "TaskList",
+    "RelativePath": "Task/TaskList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "BreakTime",
+    "RelativePath": "TimeLogs/BreakTime",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblTimeLog",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BBreakTimeParam",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "CheckBreakTime",
+    "RelativePath": "TimeLogs/CheckBreakTime",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblTimeLog",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BCheckBreakTimeParameter",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "getLastTimeIn",
+    "RelativePath": "TimeLogs/getLastTimeIn",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblTimeLog",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BUser",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "LogsNotification",
+    "RelativePath": "TimeLogs/LogsNotification",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblNotification",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "ManualLogs",
+    "RelativePath": "TimeLogs/ManualLogs",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "NotificationList",
+    "RelativePath": "TimeLogs/NotificationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblNotification",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "NotificationUnreadCount",
+    "RelativePath": "TimeLogs/NotificationUnreadCount",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "RegularTimeIn",
+    "RelativePath": "TimeLogs/RegularTimeIn",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "RegularTimeLogList",
+    "RelativePath": "TimeLogs/RegularTimeLogList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BTimeLogsParam",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "RegularTimeOut",
+    "RelativePath": "TimeLogs/RegularTimeOut",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblTimeLog",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BUser",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "save",
+    "RelativePath": "TimeLogs/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "tblTimeLog",
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "TimeIn",
+    "RelativePath": "TimeLogs/TimeIn",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "TimeLogsList",
+    "RelativePath": "TimeLogs/TimeLogsList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BTimeLogsParam",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "TimeLogsListManager",
+    "RelativePath": "TimeLogs/TimeLogsListManager",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BTimeLogsParam",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "TimeLogsPending",
+    "RelativePath": "TimeLogs/TimeLogsPending",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BTimeLogsParam",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "TimeOut",
+    "RelativePath": "TimeLogs/TimeOut",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblTimeLog",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BUser",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeLogsController",
+    "Method": "UpdateLogStatus",
+    "RelativePath": "TimeLogs/UpdateLogStatus",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Controllers.TimeLogsController\u002BTimeLogId",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblTimeLog",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeSchedulerController",
+    "Method": "Create",
+    "RelativePath": "TimeScheduler/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "schedule",
+        "Type": "API_HRIS.Models.TblCalendarModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeSchedulerController",
+    "Method": "Delete",
+    "RelativePath": "TimeScheduler/Delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeSchedulerController",
+    "Method": "Edit",
+    "RelativePath": "TimeScheduler/Edit",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "schedule",
+        "Type": "API_HRIS.Models.TblCalendarModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.TimeSchedulerController",
+    "Method": "GetSchedules",
+    "RelativePath": "TimeScheduler/GetSchedules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserController",
+    "Method": "login",
+    "RelativePath": "User/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.Models.loginCredentials",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblUsersModel, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "delete",
+    "RelativePath": "UserType/delete",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "deletionModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BDeletionModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "restore",
+    "RelativePath": "UserType/restore",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "restorationModel",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BRestorationModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "save",
+    "RelativePath": "UserType/save",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tblUserType",
+        "Type": "API_HRIS.Models.TblUserType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblUserType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "search",
+    "RelativePath": "UserType/search/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "API_HRIS.Models.TblUserType",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "update",
+    "RelativePath": "UserType/update/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "tblUserType",
+        "Type": "API_HRIS.Models.TblUserType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "UserTypeList",
+    "RelativePath": "UserType/UserTypeList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "UserTypePaginationList",
+    "RelativePath": "UserType/UserTypePaginationList",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "API_HRIS.ApplicationModel.EntityModels\u002BFilterUserType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API_HRIS.Controllers.UserTypeController",
+    "Method": "view",
+    "RelativePath": "UserType/view",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[API_HRIS.Models.TblUserType, API_HRIS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  }
+]

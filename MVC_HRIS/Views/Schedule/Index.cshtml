@@ -1,0 +1,382 @@
+﻿  @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+@{
+    ViewData["Title"] = "Schedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+<style>
+
+</style>
+<div id="dashboard-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+        <div class="top-main-container ">
+        </div>
+        <div class="main-container">
+            <div class="content-filter">
+                <div class="sub-content">
+                    <div class="mod-form action-navbar" style="margin-bottom: 1px;">
+                        <div class="input-container">
+                            <button class="btn btn-info" id="add-timelogs" title="Time Out" onclick="openScheduleModal()">
+                                <i class="fa-solid fa-plus"></i> Create Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-filter-tbl">
+                    <table id="schedule-table" class="table table-bordered table-hover w-100">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                    <div id="table-footer">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-schedule-holder" id="schedmodal" style="display: none">
+        <div class="schedulemodal">
+            <div class="header">
+                <h3>Add Schedule</h3>
+                <button class="closemodal" id="closemodal" aria-label="Close" onclick="closeScheduleModal()"></button>
+            </div>
+            <form id="add-schedule-form">
+                <div class="input-time-holder">
+                    <h4 class="label">Title</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <div class="input-container">
+                                <input type="hidden" id="schedId" class="mod-inputs-nw" placeholder="Title" value="0" />
+                                <input type="text" id="schedtitle" class="mod-inputs-nw" placeholder="Title" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Description</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <div class="input-container">
+                                <textarea id="scheddescription" class="mod-inputs-nw" placeholder="Description" style="min-height: 100px;" required /></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Monday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="mondays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="mondaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="monday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Tuesday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="tuesdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="tuesdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="tuesday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Wednesday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="wednesdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="wednesdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="wednesday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Thursday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="thursdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="thursdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="thursday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Friday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="fridays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="fridaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="friday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Saturday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="saturdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="saturdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="saturday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-time-holder">
+                    <h4 class="label">Sunday</h4>
+                    <div class="input-holder-time">
+                        <div class="input-holder">
+                            <span class="label">Start</span>
+                            <div class="input-container">
+                                <input type="time" id="sundays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                            </div>
+                        </div>
+                        <div class="input-holder">
+                            <span class="label">End</span>
+                            <div class="input-container">
+                                <input type="time" id="sundaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <div class="input-container">
+                                    <span class="label">idle</span>
+                                    <input type="checkbox" id="sunday" class="" placeholder="Date" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-holder">
+                    <div class="input-container">
+                        <input type="submit" value="Save" id="add-schedule" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+@section Scripts {
+    <script>
+        var uid = "@Accessor.HttpContext.Session.GetString("UserID")";
+        scheduleDOM();
+        $(document).ready(function () {
+
+            initializeDataTable();
+        });
+        function initializeDataTable() {
+            var tableId = '#schedule-table';
+            var lastSelectedRow = null;
+
+            // Check if DataTable is already initialized
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                // Destroy the existing DataTable instance
+                $(tableId).DataTable().clear().destroy();
+            }
+
+            var dtProperties = {
+                ajax: {
+                    url: '/Schedule/GetScheduleList',
+                    type: "GET",
+                    data: {
+                    },
+                    dataType: "json",
+                    processing: true,
+                    serverSide: true,
+                    complete: function (xhr) {
+
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                },
+                columns: [
+                    {
+                        "title": "Name",
+                        "data": "title"
+                    },
+                    {
+                        "title": "Description",
+                        "data": "description"
+                    },
+
+                    {
+                        "title": "Action",
+                        "data": "id",
+                        "render": function (data, type, row) {
+
+                            var button = `<div class="action">
+                                                                <button class="tbl-view btn btn-info" id="" title="view"
+                                                                            data-id="${data}"
+                                                                            data-title="${row.title}"
+                                                                            data-description="${row.description}"
+                                                                            data-mondays="${row.mondayS}"
+                                                                            data-mondaye="${row.mondayE}"
+                                                                            data-tuesdays="${row.tuesdayS}"
+                                                                            data-tuesdaye="${row.tuesdayE}"
+                                                                            data-wednesdays="${row.wednesdayS}"
+                                                                            data-wednesdaye="${row.wednesdayE}"
+                                                                            data-thursdays="${row.thursdayS}"
+                                                                            data-thursdaye="${row.thursdayE}"
+                                                                            data-fridays="${row.fridayS}"
+                                                                            data-fridaye="${row.fridayE}"
+                                                                            data-saturdays="${row.saturdayS}"
+                                                                            data-saturdaye="${row.saturdayE}"
+                                                                            data-sundays="${row.sundayS}"
+                                                                            data-sundaye="${row.sundayE}"
+                                                                            >
+                                                                            <i class="fa-solid fa-info"></i> view
+                                                                </button>
+                                                                        <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
+                                                                            data-id="${data}"
+                                                                            data-title="${row.title}"
+                                                                            data-description="${row.description}"
+                                                                            data-mondays="${row.mondayS}"
+                                                                            data-mondaye="${row.mondayE}"
+                                                                            data-tuesdays="${row.tuesdayS}"
+                                                                            data-tuesdaye="${row.tuesdayE}"
+                                                                            data-wednesdays="${row.wednesdayS}"
+                                                                            data-wednesdaye="${row.wednesdayE}"
+                                                                            data-thursdays="${row.thursdayS}"
+                                                                            data-thursdaye="${row.thursdayE}"
+                                                                            data-fridays="${row.fridayS}"
+                                                                            data-fridaye="${row.fridayE}"
+                                                                            data-saturdays="${row.saturdayS}"
+                                                                            data-saturdaye="${row.saturdayE}"
+                                                                            data-sundays="${row.sundayS}"
+                                                                            data-sundaye="${row.sundayE}"
+                                                                            >
+                                                                            <i class="fa-solid fa-pen-to-square"></i> edit
+                                                                        </button>
+                                                                        </button>
+                                                                        <button class="tbl-delete btn btn-danger" id="add-timeout" title="Time Out"
+                                                                            data-id="${data}"
+                                                                            data-title=""
+                                                                            >
+                                                                            <i class="fa-solid fa-trash"></i> delete
+                                                                        </button>
+                                                            </div>`;
+
+                            return button;
+                        }
+                    }
+                ],
+                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
+                columnDefs: [{ width: '10%', targets: 2 }, { width: '30%', targets: 0 }]
+
+            };
+
+            var table = $(tableId).DataTable(dtProperties);
+
+            // Attach computeTotalRenderedHours to the search event
+            $(tableId + '_filter input').on('keyup', function () {
+                computeTotalRenderedHours();
+            });
+
+            $(tableId).on('page.dt', function () {
+                var info = table.page.info();
+                var url = new URL(window.location.href);
+                url.searchParams.set('page01', (info.page + 1));
+                window.history.replaceState(null, null, url);
+            });
+
+            $(tableId + '_filter input').attr('placeholder', 'Search anything here...');
+
+            $(tableId + ' tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                // console.log(data);
+                // Remove highlight from the previously selected row
+                if (lastSelectedRow) {
+                    $(lastSelectedRow).removeClass('selected-row');
+                }
+
+                // Highlight the currently selected row
+                $(this).addClass('selected-row');
+                lastSelectedRow = this;
+            });
+        }
+        $('#schedule-table').on('click', '.tbl-delete', function () {
+            var id = $(this).data('id');
+            localStorage.setItem('schedid', id);
+
+            deletemodalSchedule();
+            $("#alertmodal").modal('show');
+        });
+    </script>
+}

@@ -1,0 +1,58 @@
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+<style>
+    .selected {
+        background-color: #17a2b8;
+        color: var(--light);
+    }
+
+    .sub-nav-highlight {
+        background-color: #17a2b8;
+        color: var(--light);
+    }
+</style>
+
+<div class="sidebar" id="mysidebar">
+    <div>
+        <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item" id="toggle-sidebar">
+            <i class="fa-solid fa-bars"></i>
+        </a>
+    </div>
+
+    <div class="img-container">
+
+        <div class="image-box">
+        </div>
+        <div class="emp-info">
+            <span style="color: white;font-weight:bolder">@Accessor.HttpContext.Session.GetString("Name")</span>
+            <span style="color: white;">@Accessor.HttpContext.Session.GetString("UserTypeName")</span>
+            <span style="color: white;">@Accessor.HttpContext.Session.GetString("EmployeeID")</span>
+        </div>
+
+
+    </div>
+    <ul class="sidebar-content">
+        <div class="content-item">
+        </div>
+    </ul>
+    <div class="footer-end">
+        <div style="display: flex; flex-direction: column; align-items: flex-start; width: 100%;">
+            @* <li style="width: 100%;">
+            <a href="#" style="display: flex; align-items: center; gap: 5px;" class="nav-item">
+            <i class="fa-solid fa-gear" style="font-size: 25px;margin-right:5px"></i>
+            <span>Settings</span>
+            </a>
+            </li> *@
+            <li style="width: 100%;">
+                <a href="../../LogIn/Logout" style="display: flex; align-items: center; gap: 5px;" class="nav-item" id="logout">
+                    <i class="fa-solid fa-right-from-bracket" style="font-size: 23px;margin-right:5px"></i>
+                    <span>LogOut</span>
+                </a>
+            </li>
+        </div>
+    </div>`;
+</div>
+
+
+<script>
+</script>

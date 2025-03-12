@@ -1,0 +1,41 @@
+
+.input-time-holder{
+    margin: 20px 0;
+    border-bottom: 1px solid black;
+}
+.input-holder-time {
+    display: flex;
+    justify-content: space-between;
+    gap: 0 20px;
+}
+.input-holder-time .input-holder {
+    margin-top: 0;
+    width: 100%;
+}
+.input-holder-time .input-holder .input-container{
+/*    background: red;*/
+}
+.input-holder-time input {
+    width: 50%
+}
+.modal-schedule-holder {
+    background-color: rgba(0,0,0, .3);
+    position: absolute;
+    padding: 100px;
+    top: 0;
+    width: calc(100vw - var(--sidebarwidth-active));
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    display: none;
+}
+.schedulemodal {
+    background-color: #fff;
+    width: 700px;
+    box-shadow: 10px 10px 10px grey;
+    border-radius: 15px;
+    padding: 25px 50px;
+    gap: 20px;
+}

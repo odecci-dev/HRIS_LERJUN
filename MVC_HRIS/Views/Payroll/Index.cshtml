@@ -1,0 +1,195 @@
+﻿@{
+    ViewData["Title"] = "Payroll Maintenance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+@inject IHttpContextAccessor Accessor;
+<div id="dashboard-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="mod-form action-navbar" style="margin-bottom: 2px;">
+            <div class="input-container">
+                <button class="btn btn-info" id="" title="Add New Deapartment" onclick="payrollModalOpen()">
+                    <i class="fas fa-user-plus"></i> Create New Payroll
+                </button>
+            </div>
+        </div>
+
+        @* </div style=" display: flex;flex-direction: column;> *@
+        <div id="register-table_wrapper" class="dataTables_wrapper no-footer" style="width:100%">
+            <table id="payroll-table" class="myTableLarge">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="add-modal-holder" id="payroll-modal">
+        <div class="timelogsmodal">
+            <div class="header">
+                <h3>Add Payroll</h3>
+                <button class="closemodal" id="closemodal" aria-label="Close" onclick="payrollModalClose()"></button>
+            </div>
+            <form id="add-payroll-form">
+                <div class="input-holder">
+
+                    <div class="input-holder" id="">
+                        <span class="label">Payroll Type</span>
+                        <div class="input-container">
+                            <input type="hidden" id="payrollid" class="mod-inputs-nw" value="0" required />
+                            <input type="hidden" id="payrollcreatedby" class="mod-inputs-nw" value="@Accessor.HttpContext.Session.GetString("UserID")" required />
+                            <input type="text" id="payrolltype" class="mod-inputs-nw" placeholder="" required />
+                        </div>
+                    </div>
+                    <div class="input-holder" id="">
+                        <span class="label">Description</span>
+                        <div class="input-container">
+                            <input type="text" id="payrolldescription" class="mod-inputs-nw" placeholder="" required />
+                        </div>
+                    </div>
+                    @* <div class="input-holder">
+                    <span class="label" for="">Rate</span>
+
+                    <div class="input-container">
+                    <input type="number" id="rate" class="mod-inputs-nw" placeholder="" required />
+                    </div>
+                    </div> *@
+                    <div class="input-holder">
+                        <div class="input-container">
+                            <input type="submit" value="Submit" id="add-timeout" />
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
+        $(document).ready(function () {
+
+            initializeDataTable();
+            // fetchmanagerselect();
+            payrollDOM();
+        });
+        function initializeDataTable() {
+            var tableId = '#payroll-table';
+            var lastSelectedRow = null;
+            // Check if DataTable is already initialized
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                // Destroy the existing DataTable instance
+                $(tableId).DataTable().clear().destroy();
+            }
+            var dtProperties = {
+                ajax: {
+                    url: '/Payroll/GetPayrollTypeList',
+                    type: "GET",
+                    data: {
+
+                    },
+                    dataType: "json",
+                    processing: true,
+                    serverSide: true,
+                    complete: function (xhr) {
+                        var url = new URL(window.location.href);
+                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                        // console.log('table1', _currentPage);
+                        table.page(_currentPage - 1).draw('page');
+
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                },
+                columns: [
+                    {
+                        "title": "Payroll Type",
+                        "data": "payrollType"
+                    },
+                    {
+                        "title": "Description",
+                        "data": "description"
+                    }
+                    ,
+                    {
+                        "title": "Action",
+                        "data": "id",
+                        "render": function (data, type, row) {
+                            var button = `<div class="action">
+                                                                    <button class="tbl-delete btn btn-danger" id="" title="Delete"
+                                                                        data-id="${data}"
+                                                                        data-payrolltype="${row.payrollType}"
+                                                                        data-description="${row.description}"
+                                                                        data-createdby="${row.createdBy}"
+                                                                        data-deleteflag="${row.deleteFlag}"
+                                                                    >
+                                                                    <i class="fa-solid fa-trash"></i> delete
+                                                                </button>
+                                                                    <button class="tbl-edit btn btn-info" id="" title="Time Out"
+                                                                        data-id="${data}"
+                                                                        data-payrolltype="${row.payrollType}"
+                                                                        data-description="${row.description}"
+                                                                        data-createdby="${row.createdBy}"
+                                                                        data-deleteflag="${row.deleteFlag}"
+                                                                    >
+                                                                        <i class="fa-solid fa-pen-to-square"></i> edit
+                                                                    </button>
+                                                        </div>`;
+                            return button;
+                        }
+                    }
+                ],
+                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
+                columnDefs: [
+                    {
+                        targets: 1,
+                        type: 'date' // Ensure DataTables recognizes this column as date type
+                    },
+                    {
+
+                        width: '50%', targets: 0
+                    }
+                ]
+            };
+
+            var table = $(tableId).DataTable(dtProperties);
+
+            $('#payroll-table').on('page.dt', function () {
+                var info = table.page.info();
+                var url = new URL(window.location.href);
+                url.searchParams.set('page01', (info.page + 1));
+                window.history.replaceState(null, null, url);
+            });
+
+            $(tableId + '_filter input').attr('placeholder', 'Search Here');
+
+            $(tableId + ' tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                // console.log(data);
+                // Remove highlight from the previously selected row
+                if (lastSelectedRow) {
+                    $(lastSelectedRow).removeClass('selected-row');
+                }
+                // Highlight the currently selected row
+                $(this).addClass('selected-row');
+                lastSelectedRow = this;
+            });
+
+        }
+
+
+    </script>
+}

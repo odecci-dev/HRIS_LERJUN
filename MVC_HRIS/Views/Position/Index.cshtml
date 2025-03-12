@@ -1,0 +1,237 @@
+﻿@{
+    ViewData["Title"] = "Position Maintenance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+<div id="dashboard-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+    </div>
+    <div class="main-container">
+
+        <div class="mod-form action-navbar" style="margin-bottom: 2px;">
+            <div class="input-container">
+                <button class="btn btn-info" id="add-pos" title="Add New Employee" onclick="myFunctionOpenModal()">
+                    <i class="fas fa-user-plus"></i> Create Position
+                </button>
+            </div>
+        </div>
+
+        @* </div style=" display: flex;flex-direction: column;> *@
+        <div id="register-table_wrapper" class="dataTables_wrapper no-footer" style="width:100%">
+            <table id="pos-table" class="myTableLarge">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal" id="positionmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
+     aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
+
+    <div class="modal-dialog modal-error-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-name">Position Details Form</h4>
+                <button type="button" id="h-close" class="close" data-dismiss="modal" aria-hidden="false" onclick="myFunction()">x</button>
+            </div>
+            <div class="" style="margin:10px">
+
+                <form action="" class="mod-form" id="submitpos">
+
+                    <div class="mod-form-row">
+                        <div class="input-container-whole">
+                            <label for="employeeID">Position Name<span class="req">*</span></label>
+
+                            <input type="hidden" value="" id="posid" class="mod-input" />
+                            <input type="hidden" value="" id="posdate" class="mod-input" />
+                            <input type="text" value="" id="posname" class="mod-input" required />
+                        </div>
+
+                    </div>
+                    <div class="mod-form-row">
+                        <div class="input-container-whole">
+                            <label for="email">Position Description</label>
+                            <input type="text" value="" id="desc" class="mod-input" />
+                        </div>
+                    </div>
+
+
+                    <div class="actions" style="align-items: center;">
+                        <div class="actionss">
+                            @* <button class="register" type="button" style ="margin-bottom: 5px;font-size: 13px;    padding: 5px 15px 5px 5px;height: 25px;font-size: clamp(0.5rem, 2vw, 0.7rem);" title="Add New" id="add Mechanics"><i class="fas fa-id-card"></i>Add Mechanics</button> *@
+                            @* <input type="button" value="Add Mechanics" id="btn-register"/> <i class="fas fa-cogs"></i> *@
+
+                        </div>
+
+                        <a data-dismiss="modal" aria-hidden="false" style="cursor:pointer" class="cancel"><u>Cancel</u></a>
+                        <input type="submit" value="Submit" id="btn-save" />
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script>
+        var pmodal = document.getElementById('positionmodal');
+        position();
+        $(document).ready(function () {
+
+            initializeDataTable();
+            // alert(tableId);
+
+        });
+        function initializeDataTable() {
+            var tableId = '#pos-table';
+            var lastSelectedRow = null;
+            // Check if DataTable is already initialized
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                // Destroy the existing DataTable instance
+                $(tableId).DataTable().clear().destroy();
+            }
+            var dtProperties = {
+                ajax: {
+                    url: '/Position/GetPositionList',
+                    type: "GET",
+                    data: {
+
+                    },
+                    dataType: "json",
+                    processing: true,
+                    serverSide: true,
+                    complete: function (xhr) {
+                        var url = new URL(window.location.href);
+                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                        // console.log('table1', _currentPage);
+                        table.page(_currentPage - 1).draw('page');
+
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                },
+                columns: [
+                    {
+                        "title": "Description",
+                        "data": "description"
+                    },
+                    {
+                        "title": "Date Created",
+                        "data": "dateCreated"
+                    },
+                    {
+                        "title": "Action",
+                        "data": "id",
+                        "render": function (data, type, row) {
+
+                            var button = `<div class="action">
+                                                            <button class="tbl-delete btn btn-danger" id="" title="Delete"
+                                                                data-id="${data}"
+                                                                data-status="${row.status}"
+                                                                data-name="${row.name}"
+                                                                data-description="${row.description}"
+                                                                data-date="${row.dateCreated}"
+                                                                data-positionid="${row.positionId}"
+                                                            >
+                                                            <i class="fa-solid fa-trash"></i> delete
+                                                        </button>
+                                                            <button class="edit-table btn btn-info" id="" title="Time Out"
+                                                                data-id="${data}"
+                                                                data-status="${row.status}"
+                                                                data-name="${row.name}"
+                                                                data-description="${row.description}"
+                                                                data-date="${row.dateCreated}"
+                                                                data-positionid="${row.positionId}"
+                                                            >
+                                                                <i class="fa-solid fa-pen-to-square"></i> edit
+                                                            </button>
+                                                </div>`;
+                            return button;
+                        }
+                    }
+                ],
+                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
+                columnDefs: [
+                    {
+                        targets: 1,
+                        type: 'date' // Ensure DataTables recognizes this column as date type
+                    },
+                    {
+
+                        width: '10%', targets: 2
+                    },
+                    {
+
+                        width: '50%', targets: 0
+                    }
+                ]
+            };
+
+            var table = $(tableId).DataTable(dtProperties);
+
+            $('#time-table').on('page.dt', function () {
+                var info = table.page.info();
+                var url = new URL(window.location.href);
+                url.searchParams.set('page01', (info.page + 1));
+                window.history.replaceState(null, null, url);
+            });
+
+            $(tableId + '_filter input').attr('placeholder', 'Search Here');
+
+            $(tableId + ' tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                // console.log(data);
+                // Remove highlight from the previously selected row
+                if (lastSelectedRow) {
+                    $(lastSelectedRow).removeClass('selected-row');
+                }
+                // Highlight the currently selected row
+                $(this).addClass('selected-row');
+                lastSelectedRow = this;
+            });
+
+        }
+
+        $('#pos-table').on('click', '.tbl-delete', function () {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var description = $(this).data('name');
+
+            //var status = $(this).data('status');
+            //var task = $(this).data('task');
+            //var dateString = $(this).data('date');
+            //var timein = $(this).data('timein');
+            //var timeout = $(this).data('timeout');
+            //var remarks = $(this).data('remarks');
+            //var userid = $(this).data('userid');
+            localStorage.setItem('posid', id);
+            localStorage.setItem('posname', name);
+            localStorage.setItem('posdesc', description);
+            //localStorage.setItem('status', status);
+            //localStorage.setItem('task', task);
+            //localStorage.setItem('dateString', dateString);
+            //localStorage.setItem('timein', timein);
+            //localStorage.setItem('timeout', timeout);
+            //localStorage.setItem('remarks', remarks);
+            //localStorage.setItem('userid', userid);
+
+            deletemodal();
+            $("#alertmodal").modal('show');
+        });
+    </script>
+}

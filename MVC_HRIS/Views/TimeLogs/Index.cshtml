@@ -1,0 +1,823 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+@{
+    ViewData["Title"] = "Time Sheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+<style>
+
+</style>
+<div id="dashboard-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+        <div class="top-main-container ">
+        </div>
+        <div class="main-container">
+            <div class="content-filter">
+                <div class="sub-content">
+                    <div class="mod-form">
+                        <div class="action-navbar">
+                            @* <span class="text-left text-dark">Online Queue</span> *@
+
+                            @*<d iv class="date-input">
+                            <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" />
+                            <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" />
+                            </div> *@
+                            <div class="layer">
+                                <div class="input-holder">
+                                    <span class="text-left text-dark">From:</span>
+                                    <div class="date-input">
+                                        <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                        @* <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" /> *@
+                                    </div>
+                                </div>
+                                <div class="input-holder">
+                                    <span class="text-left text-dark">To:</span>
+                                    <div class="date-input">
+                                        @* <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" /> *@
+                                        <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layer">
+                                @* <div class="input-container"> *@
+                                <div id="time-btn-holder" class="time-btn-holder" style="display: flex; gap: 10px;">
+                                    @* Not Regular clock in/out button Start*@
+
+                                    <button class="btn btn-info" id="add-timein" title="Time In">
+                                        <i class="fa-solid fa-clock"></i> Time In
+                                    </button>
+                                    <button class="btn btn-info" id="show-timeout-modal" title="Time Out">
+                                        <i class="fa-solid fa-clock"></i> Time Out
+                                    </button>
+                                    @* Not Regular clock in/out button End*@
+                                    @* Regular clock in/out button Start*@
+                                    <button class="btn btn-info" id="add-timein-regular" title="Time In">
+                                        <i class="fa-solid fa-clock"></i> Time In
+                                    </button>
+                                    <button class="btn btn-info" id="add-timeout-regular" title="Time Out">
+                                        <i class="fa-solid fa-clock"></i> Time Out
+                                    </button><button class="btn btn-info" id="break-regular" title="Time Out">
+                                        <i class="fa-solid fa-clock"></i> Break
+                                    </button>
+                                    @* Regular clock in/out button End*@
+                                    <button class="btn btn-info" id="add-timelogs" title="Manual Entry" onclick="myFunctionOpen()">
+                                        <i class="fa-solid fa-plus"></i> Manual Entry
+                                    </button>
+                                </div>
+                                @* </div> *@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="content-filter-tbl">
+                    <table id="time-table" class="table table-bordered table-hover w-100">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                    <div id="table-footer">
+                    </div>
+
+                </div>
+            </div>
+            <div class="total-hrs-holder" style="display:flex;width:100%;margin-bottom:20px;">
+
+                <div class="total-hrs" style=" width: 100%; text-align: right;">
+
+                    <label class="text-left" id="totalamountEmp" style="
+                        font-size: 25px;
+                        font-weight: bolder;
+                        color: #17a2b8;
+                    "></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-holder" id="tlmodal" style="display: none">
+        <div class="timelogsmodal">
+            <div class="header">
+                <h3>Add Timelogs</h3>
+                <button class="closemodal" id="closemodal" aria-label="Close" onclick="myFunction()"></button>
+            </div>
+            <form id="add-time-logs-form">
+                <div class="input-holder">
+                    <span class="label">Date</span>
+                    <div class="input-container">
+                        <input type="hidden" id="mtlid" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                        <input type="date" id="mtldate" class="mod-inputs-nw" placeholder="Date" required />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Time In</span>
+                    <div class="input-container">
+                        <input type="datetime-local" id="mtltimein" class="mod-inputs-nw" placeholder="Date" required />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Time Out</span>
+                    <div id="error-message" class="error">Error: Time Out cannot be earlier than Time In.</div>
+                    <div class="input-container">
+                        <!-- Error message container placed above the timeout field -->
+                        <input type="datetime-local" id="mtltimeout" class="mod-inputs-nw" placeholder="Date" required />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Task</span>
+                    <div class="input-container">
+                        <select id="manualtask" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Task Description</span>
+                    <div class="input-container">
+                        <textarea id="mtlremarks" rows="10" required></textarea>
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <div class="input-container">
+                        <input type="submit" value="Save" id="add-time-logs" disabled />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    @* <div class="modal-holder" id="timodal" style="display: none">
+    <div class="timelogsmodal">
+    <div class="header">
+    <h3>Time In</h3>
+    <button class="closemodal" id="closemodal" aria-label="Close" onclick="myFunction()"></button>
+    </div>
+    <form id="add-time-in-form">
+    <div class="mod-form">
+    <span class="text-left">Date</span>
+    <div class="input-container-2">
+    <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" id="dateto" class="mod-inputs-nw" placeholder="Date" disabled />
+    </div>
+    </div>
+    <div class="mod-form">
+    <span class="text-left">Task</span>
+    <div class="input-container-2">
+    <div id="mode-inputs">
+    <select id="task" style="width: 100%;margin-top:10px" required>
+    </select>
+    </div>
+    </div>
+    <div class="mod-form">
+    <span class="text-left">Task Description</span>
+    <div class="input-container-2">
+    <div id="mode-inputs">
+    @* <input type="textarea" value="" id="remarks" class="mod-input" required style="width:100%;" rows="10" cols="30" />
+    <textarea id="remarks" rows="10" cols="30" class="mod-input" required></textarea>
+    </div>
+    </div>
+    </div>
+    <div class="mod-form" style="margin-top:25px">
+    <div class="input-container-2">
+    <div id="mode-inputs">
+    <input type="submit" value="Time In" id="btn-timein" class="btn-footer" style="width: 100%;" />
+    </div>
+    </div>
+    </div>
+    </form>
+    </div>
+    </div> *@
+    <div class="timeout-modal-holder" id="timeoutModal">
+        <div class="timelogsmodal">
+            <div class="header">
+                <h3>Timeout</h3>
+                <button class="closemodal" id="closemodal" aria-label="Close" onclick="myFunction()"></button>
+            </div>
+            <form id="add-time-out-form">
+                <div class="input-holder">
+                    <span class="label">Time Out Reason:</span>
+                    <div class="input-container">
+                        <select id="timeoutreason" required>
+                            <option value="0" disabled selected>Select time out reason</option>
+                            <option value="15 minutes break">15 minutes break</option>
+                            <option value="Lunch break">Lunch break</option>
+                            <option value="End of shift">End of shift</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="input-holder" id="timeoutreasonholder">
+                        <span class="label">Specify Other Reason:</span>
+                        <div class="input-container">
+                            <textarea id="otherreason" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="input-holder">
+                        <div class="input-container">
+                            <input type="submit" value="Submit" id="add-timeout" />
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="float-btn">
+        <i id="open-float-btn" class="fa-solid fa-plus"></i>
+        <i id="close-float-btn" class="fa-solid fa-close"></i>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var uid = "@Accessor.HttpContext.Session.GetString("UserID")";
+        var empType = "@Accessor.HttpContext.Session.GetString("EmployeeTypeName")";
+        if (empType == "Regular") {
+            document.getElementById('add-timein').style.display = "none";
+            document.getElementById('show-timeout-modal').style.display = "none";
+            document.getElementById('add-timein-regular').style.display = "block";
+            document.getElementById('add-timeout-regular').style.display = "block";
+            document.getElementById('break-regular').style.display = "block";
+        }
+        else {
+            document.getElementById('add-timein').style.display = "block";
+            document.getElementById('show-timeout-modal').style.display = "block";
+            document.getElementById('add-timein-regular').style.display = "none";
+            document.getElementById('add-timeout-regular').style.display = "none";
+            document.getElementById('break-regular').style.display = "none";
+        }
+
+        $('#add-timeout-regular').on('click', function () {
+            $('#add-timeout-regular').attr('disabled', 'disabled');
+            event.preventDefault();
+            var data = {
+                userid: @Accessor.HttpContext.Session.GetString("Id")
+                                                };
+            $.ajax({
+                url: '/TimeLogs/RegularTimeOut',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            initializeDataTable();
+        });
+        $('#add-timein-regular').on('click', function () {
+            $('#add-timein-regular').attr('disabled', 'disabled');
+            const now = new Date();
+            const hours = now.getHours();
+
+            var clockIn = "";
+
+            if (hours < 12) {
+                clockIn = "Morning Click In";
+            }
+            else {
+                clockIn = "Afternoon Click In";
+            }
+            var data = {
+                TaskId: 13,
+                userid: @Accessor.HttpContext.Session.GetString("Id"),
+                Remarks: clockIn,
+                StatusId: 1
+            };
+            $.ajax({
+                url: '/TimeLogs/RegularTimeIn',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+        });
+        $('#break-regular').on('click', function () {
+            const now = new Date();
+            const hours = now.getHours();
+
+            var meridiem = 0;
+
+            if (hours >= 12 && hours < 13) {
+                meridiem = 2;
+            }
+            else if (hours < 12) {
+                meridiem = 0;
+            }
+            else {
+                meridiem = 1;
+            }
+
+            $('#break-regular').attr('disabled', 'disabled');
+            event.preventDefault();
+            var data = {
+                userid: @Accessor.HttpContext.Session.GetString("Id"),
+                Meridiem: meridiem
+            };
+            console.log(data);
+            $.ajax({
+                url: '/TimeLogs/RegularBreak',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            var data = {
+                TaskId: 10,
+                userid: @Accessor.HttpContext.Session.GetString("Id"),
+                Remarks: breakReason,
+                StatusId: 5
+
+            };
+            $.ajax({
+                url: '/TimeLogs/TimeIn',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            initializeDataTable();
+        });
+        var tlmodal = document.getElementById('tlmodal')
+        defaultdate();
+        modalDom();
+        $(document).ready(function () {
+            timeLogs();
+            fetchtaskselect();
+            fetchBreakselect();
+            checkBreakTime();
+            const timbtn = document.querySelectorAll('.time-btn');
+            const dateinput = document.querySelectorAll('.date-input');
+            var type = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
+
+            if (type == 'Admin') {
+                timbtn.forEach(element => {
+                    element.style.display = 'none';
+                });
+                dateinput.forEach(element => {
+                    element.style.display = 'block';
+                });
+            }
+            else {
+                timbtn.forEach(element => {
+                    element.style.display = 'block';
+                });
+
+            }
+            // $("#add-timeout").prop("disabled", true);
+
+            $("#show-timeout-modal").prop("disabled", true);
+            $("#add-timein").prop("disabled", true);
+            const data = { UserId: @Accessor.HttpContext.Session.GetString("Id")};
+            $.ajax({
+                url: '/TimeLogs/GetLastTimeIn',
+                data: { data },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) { // @* //  *@
+                // console.log(data);
+                if (data.status == 'true') {
+                    // $("#add-timeout").prop("disabled", false);
+                    $("#show-timeout-modal").prop("disabled", false);
+                    $("#add-timein").prop("disabled", true);
+                    // $("#add-timeout-regular").prop("disabled", false);
+                    // $("#add-timein-regular").prop("disabled", true);
+                    // $("#break-regular").prop("disabled", false);
+                }
+                else {
+                    // $("#add-timeout").prop("disabled", true);
+                    $("#show-timeout-modal").prop("disabled", true);
+                    $("#add-timein").prop("disabled", false);
+                    // $("#add-timeout-regular").prop("disabled", true);
+                    // $("#add-timein-regular").prop("disabled", false);
+                    // $("#break-regular").prop("disabled", true);
+                }
+            });
+
+            initializeDataTable();
+        });
+        function defaultdate() {
+
+            const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+            const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+            // Format the dates as YYYY-MM-DD
+            const formatDate = (date) => {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = date.getDate();
+
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+
+                return `${year}-${month}-${day}`;
+            };
+
+            // Set the values for the date inputs
+            document.getElementById('datefrom').value = formatDate(firstDayOfMonth);
+            document.getElementById('dateto').value = formatDate(lastDayOfMonth);
+        }
+        function emprenderedHours() {
+            const data = {
+                Usertype: '',
+                UserId: @Accessor.HttpContext.Session.GetString("Id"),
+                datefrom: $('#datefrom').val(),
+                dateto: $('#dateto').val(),
+                Department: ''
+            };
+
+            // console.log(data);
+            $.ajax({
+                url: '/Timelogs/GetTimelogsCount',
+                data: {
+                    data: data
+                },
+                type: "Post",
+                datatype: "json",
+                success: function (data) {
+                    var total = 0;
+                    var hours = 0;
+                    // console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        // console.log(data[i].statusId);
+                        if (data[i].statusId == 1) {
+
+                            hours = data[i].renderedHours;
+                        }
+                        else {
+                            hours = 0;
+                        }
+                        total += parseFloat(hours);
+                    }
+                    // console.log(total.toFixed(2));
+                    // $('#totalamount').html("Total Rendered Hours: " + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + total.toFixed(2));
+
+                }
+            });
+        }
+        var tableuserid = @Accessor.HttpContext.Session.GetString("Id");
+        localStorage.setItem('tableuserid', tableuserid);
+
+
+
+        $('#add-timein').on('click', function (event) {
+            event.preventDefault();
+            loadModal('/TimeLogs/TaskModal', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Time In', 'l', false)
+            // document.getElementById('timodal').style.display = "flex";
+        });
+        // $('#add-time-in-form').on('submit', function (event) {
+        //     event.preventDefault();
+        //     var data = {
+        //         userid: @Accessor.HttpContext.Session.GetString("Id")
+
+        //                                 };
+        //     $.ajax({
+        //         url: '/TimeLogs/TimeOut',
+        //         data: {
+        //             data: data,
+        //         },
+        //         type: "POST",
+        //         datatype: "json"
+        //     }).done(function (data) {
+        //         // console.log(data);
+        //         if (data.status == '200') {
+
+        //             // notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+        //             // window.location.href = '@Url.Action("Index", "Timelogs")';
+        //         }
+        //         else {
+        //             // notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+        //         }
+
+        //     });
+        //     var data = {
+        //         TaskId: $("#task").val(),
+        //         userid: @Accessor.HttpContext.Session.GetString("Id"),
+        //         Remarks: $("#remarks").val(),
+        //         StatusId: 1
+
+        //     };
+        //     $.ajax({
+        //         url: '/TimeLogs/TimeIn',
+        //         data: {
+        //             data: data,
+        //         },
+        //         type: "POST",
+        //         datatype: "json"
+        //     }).done(function (data) {
+        //         console.log(data);
+        //         if (data.status == '200') {
+
+        //             notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+        //             window.location.href = '@Url.Action("Index", "Timelogs")';
+        //         }
+        //         else {
+        //             notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+        //         }
+
+        //     });
+        // });
+        $('#add-time-out-form').on('submit', function (event) {
+
+            $('#add-timeout').attr('disabled', 'disabled');
+            event.preventDefault();
+            var data = {
+                userid: @Accessor.HttpContext.Session.GetString("Id")
+                                                };
+            $.ajax({
+                url: '/TimeLogs/TimeOut',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            var data = {
+                TaskId: $("#timeoutreason").val(),
+                userid: @Accessor.HttpContext.Session.GetString("Id"),
+                Remarks: $("#otherreason").val(),
+                StatusId: 5
+
+            };
+            $.ajax({
+                url: '/TimeLogs/TimeIn',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                console.log(data);
+                if (data.status == '200') {
+
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            initializeDataTable();
+        });
+
+        function isValidDate(dateString) {
+
+            return moment(dateString, 'DD-MM-YYYY', true).isValid() ||
+                moment(dateString, 'YYYY-MM-DD', true).isValid();
+        }
+        $('#datefrom, #dateto').on('change', function () {
+            var dateFrom = document.getElementById('datefrom').value;
+            var dateTo = document.getElementById('dateto').value;
+            // console.log(isValidDate(dateFrom));
+            if (!isValidDate(dateFrom) || !isValidDate(dateTo)) {
+                // console.log('Invalid date format. Please enter a valid date (dd-MM-yyyy).');
+                event.preventDefault(); // Prevent form submission
+            }
+            else {
+                initializeDataTable();
+            }
+
+        });
+
+        function myFunction() {
+            var tomodal = document.getElementById('timeoutModal');
+            // var timodal = document.getElementById('timodal');
+            tlmodal.style.display = "none";
+            tomodal.style.display = "none";
+            // timodal.style.display = "none";
+        }
+        function myFunctiontimodal() {
+            var timodal = document.getElementById('timodal');
+            timodal.style.display = "none";
+        }
+        function myFunctionOpen() {
+            document.getElementById('mtlid').value = 0;
+            document.getElementById('mtldate').value = "";
+            document.getElementById('mtltimein').value = "";
+            document.getElementById('mtltimeout').value = "";
+            document.getElementById('manualtask').value = "";
+            document.getElementById('mtlremarks').value = "";
+            tlmodal.style.display = "flex";
+        }
+
+
+
+
+        // Edit Time Logs
+        $('#time-table').on('click', '.tbl-edit', function () {
+            var addLogBtn = document.getElementById('add-time-logs');
+            addLogBtn.removeAttribute('disabled');
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var task = $(this).data('task');
+            var dateString = $(this).data('date');
+            var timein = $(this).data('timein');
+            var timeout = $(this).data('timeout');
+            var remarks = $(this).data('remarks');
+            var userid = $(this).data('userid');
+
+            // Extract the date and time part from the string
+            let dateParts = dateString.split(" ")[0].split("/"); // Get "05/01/2025"
+            let month = dateParts[0].padStart(2, '0'); // Ensure two digits
+            let day = dateParts[1].padStart(2, '0');   // Ensure two digits
+            let year = dateParts[2];
+            // Format the Date object to YYYY-MM-DD
+            let formattedDate = "";
+            // console.log("Date: "+ dateString);
+            // console.log("Year: "+ year);
+            // console.log("day: "+ day);
+            // console.log("month: "+ month);
+            formattedDate = year + '-' + month + '-' + day;
+
+            document.getElementById('mtlid').value = id;
+            document.getElementById('mtldate').value = formattedDate;
+            document.getElementById('mtltimein').value = timein;
+            document.getElementById('mtltimeout').value = timeout;
+            document.getElementById('manualtask').value = task;
+            document.getElementById('mtlremarks').value = remarks;
+            tlmodal.style.display = "flex";
+        });
+        $('#time-table').on('click', '.tbl-delete', function () {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var task = $(this).data('task');
+            var dateString = $(this).data('date');
+            var timein = $(this).data('timein');
+            var timeout = $(this).data('timeout');
+            var remarks = $(this).data('remarks');
+            var userid = $(this).data('userid');
+            localStorage.setItem('id', id);
+            localStorage.setItem('status', status);
+            localStorage.setItem('task', task);
+            localStorage.setItem('dateString', dateString);
+            localStorage.setItem('timein', timein);
+            localStorage.setItem('timeout', timeout);
+            localStorage.setItem('remarks', remarks);
+            localStorage.setItem('userid', userid);
+
+            deletemodalTimelogs();
+            $("#alertmodal").modal('show');
+        });
+        emprenderedHours();
+        floatButtonDOM();
+        function checkBreakTime() {
+            const now = new Date();
+            var hours = now.getHours();
+
+            var clockIn = "";
+
+            if (hours < 12) {
+                clockIn = "AM";
+            }
+            else if (hours > 12 && hours < 13) {
+                clockIn = "LUNCH";
+            }
+            else {
+                clockIn = "PM";
+            }
+            const data = {
+                userId: @Accessor.HttpContext.Session.GetString("Id"),
+                TimeOfDay: clockIn
+            };
+            $.ajax({
+                url: '/TimeLogs/PostCheckBreakTime',
+                data: { data },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) { // @* //  *@
+                console.log(data);
+                console.log(data.length);
+                console.log(hours);
+                // hours = 12;
+                console.log(hours);
+                var timeinbtn = document.getElementById('add-timein-regular');
+                var timeoutbtn = document.getElementById('add-timeout-regular');
+                var breakbtn = document.getElementById('break-regular');
+                if (data.length == 0) {
+                    timeinbtn.disabled = false;
+                    timeoutbtn.disabled = true;
+                    breakbtn.disabled = true;
+                }
+                else {
+                    if (hours < 12) {
+                        if (data[0].breakInAm != null && data[0].breakOutAm != null) {
+                            timeinbtn.disabled = true;
+                            timeoutbtn.disabled = false;
+                            breakbtn.disabled = true;
+                        }
+                        else if (data[0].breakInAm != null && data[0].breakOutAm == null) {
+                            timeinbtn.disabled = false;
+                            timeoutbtn.disabled = true;
+                            breakbtn.disabled = true;
+                        }
+                        else {
+                            timeinbtn.disabled = true;
+                            timeoutbtn.disabled = false;
+                            breakbtn.disabled = false;
+                        }
+                    }
+                    else if (hours == 12) {
+                        if (data[0].lunchIn != null && data[0].lunchOut != null) {
+                            timeinbtn.disabled = true;
+                            timeoutbtn.disabled = false;
+                            breakbtn.disabled = true;
+                        }
+                        else if (data[0].lunchIn != null && data[0].lunchOut == null) {
+                            timeinbtn.disabled = false;
+                            timeoutbtn.disabled = true;
+                            breakbtn.disabled = true;
+                        }
+                        else {
+                            timeinbtn.disabled = true;
+                            timeoutbtn.disabled = false;
+                            breakbtn.disabled = false;
+                        }
+                    }
+                    else {
+                        if (data[0].breakInPm != null && data[0].breakOutPm != null) {
+                            timeinbtn.disabled = true;
+                            timeoutbtn.disabled = false;
+                            breakbtn.disabled = true;
+                        }
+                        else if (data[0].breakInPm != null && data[0].breakOutPm == null) {
+                            timeinbtn.disabled = false;
+                            timeoutbtn.disabled = true;
+                            breakbtn.disabled = true;
+                        }
+                        else {
+                            timeinbtn.disabled = true;
+                            timeoutbtn.disabled = false;
+                            breakbtn.disabled = false;
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+<div>
+    <div>
+        @* <div>
+        <h1>Pending Timelogs</h1>
+        </div> *@
+        <div class="content-filter">
+            <div class="sub-content">
+                <div class="mod-form">
+
+                    <div class="action-navbar">
+                        <div class="input-holder">
+                            <span class="text-left">Filter User:</span>
+                            <select id="selectUserOTPending">
+                                <option value="" selected disabled> Select User</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="content-filter-tbl">
+                <table id="pending-overtime-table" class="table table-bordered table-hover w-100">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+                </table>
+                <div id="table-footer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+        });
+
+
+    </script>
+}

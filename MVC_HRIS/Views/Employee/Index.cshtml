@@ -1,0 +1,258 @@
+﻿@{
+    ViewData["Title"] = "Employee Maintenance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+<style>
+
+</style>
+
+<div id="dashboard-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+    </div>
+    <div class="top-main-container ">
+    </div>
+    <div class="main-container">
+        <div class="content-filter action-navbar">
+            <div class="sub-content">
+                <div class="mod-form ">
+                    <div class="">
+                        @*         <a href="@Url.Action("AddEmployee", "Employee")"> *@
+                        <button class="btn btn-info" id="add-employee" title="Add New Employee">
+                            <i class="fas fa-user-plus"></i> Create Employee
+                        </button>
+                        @* </a> *@
+                    </div>
+                </div>
+                <div class="mod-form-2">
+                </div>
+            </div>
+        </div>
+        <div class="content-filter-tbl">
+            @* <table id="myTable"> *@
+            <table id="emp-table" class="table table-bordered table-hover w-100">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <div id="table-footer">
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            var tableId = '#emp-table';
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().clear().destroy();
+            }
+            // localStorage.clear();
+            initializeDataTable();
+
+        });
+
+        function initializeDataTable() {
+            var tableId = '#emp-table';
+            var lastSelectedRow = null;
+            var img = "/img/OPTION.webp";
+            // Check if DataTable is already initialized
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                // Destroy the existing DataTable instance
+                $(tableId).DataTable().clear().destroy();
+            }
+
+            // Get date values
+            // var data = {
+            //     datefrom: $('#datefrom_ol').val(),
+            //     dateto: $('#dateto_ol').val() // Assuming this refers to the date input element
+            // };
+            const data = { Username: 'username', Department: 'department', page: 1 };
+            // DataTable properties
+            var dtProperties = {
+                ajax: {
+                    url: '@Url.Action("GetDataRegistrationList", "Employee")',
+                    type: "POST",
+                    data: {
+                        data: data
+                    },
+                    dataType: "json",
+                    processing: true,
+                    serverSide: true,
+                    complete: function (xhr) {
+                        var url = new URL(window.location.href);
+                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                        console.log('table1', _currentPage);
+                        table.page(_currentPage - 1).draw('page');
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                },
+                "columns": [
+
+                    {
+                        "title": "Action",
+                        "data": "id",
+                        "render": function (data, type, row) {
+
+                            var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
+                            let btnView = `
+
+                                                         <div class="data-img"> <img src='${images}' width="100%" /> </div>
+                                                         <div class="actions">
+                                                            <a class="tbl-edit" data-id="${data}">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                                <span>Edit</span>
+                                                            </a>
+                                                            <a class="tbl-delete" data-id="${data}">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                            <span>Delete</span>
+                                                            </a>
+        @*<a class="tbl-email"
+                                                                data-id="${data}"
+                                                                data-email="${row.email}"
+                                                                data-empid="${row.employeeID}"
+                                                                data-name="${row.fullname}"
+                                                                >
+                                                            <i class="fa-solid fa-envelope"></i>
+                                                            <span>Email</span>
+                                                        </a>*@
+                                                         </div>
+                                                          `
+                            return btnView;
+                        }
+                    },
+
+                    {
+                        "title": "Employee ID #",
+                        "data": "employeeID"
+                    },
+                    {
+                        "title": "Fullname",
+                        "data": "fullname"
+                    },
+                    {
+                        "title": "Email",
+                        "data": "email"
+                    },
+                    {
+                        "title": "Gender",
+                        "data": "gender"
+                    }
+                ],
+                pageLength: 5,
+                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
+                columnDefs: [
+                    {
+                        targets: 0,
+                        type: 'date' // Ensure DataTables recognizes this column as date type
+                    }
+                ]
+            };
+            $('#emp-table').on('page.dt', function () {
+
+                var info = table.page.info();
+                var url = new URL(window.location.href);
+                url.searchParams.set('page01', (info.page + 1));
+                window.history.replaceState(null, null, url);
+            });
+
+            var table = $(tableId).DataTable(dtProperties);
+            $(tableId + '_filter input').attr('placeholder', 'Searching...');
+            $(tableId + ' tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                // console.log(data);
+                // Remove highlight from the previously selected row
+                if (lastSelectedRow) {
+                    $(lastSelectedRow).removeClass('selected-row');
+                }
+
+                // Highlight the currently selected row
+                $(this).addClass('selected-row');
+                lastSelectedRow = this;
+
+            });
+        }
+        $('#emp-table').on('click', '.tbl-edit', function () {
+            var id = $(this).data('id');
+            localStorage.setItem('id', id);
+            window.location.href = '/employee/addemployee';
+        });
+        $('#emp-table').on('click', '.tbl-email', function () {
+            var id = $(this).data('id');
+            var empid = $(this).data('empid');
+            var email = $(this).data('email');
+            var name = $(this).data('name');
+            // alert(id + " " + empid + " " + email);
+            var data = {};
+            data.name = name;
+            data.employeeId = empid;
+            data.email = email;
+            data.companyId = "Odecci";
+            console.log(data);
+            $.ajax({
+                url: '/Employee/EmailUnregisterUser',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json",
+                success: function (response) {
+                    alert("Email Sent");
+                }
+            });
+        });
+        $('#emp-table').on('click', '.tbl-delete', function () {
+            var id = $(this).data('id');
+            localStorage.setItem('id', id);
+            deletemodal();
+            $("#alertmodal").modal('show');
+        });
+        $('#add-employee').click(function () {
+            window.location.href = '/employee/addemployee';
+            localStorage.removeItem('id');
+        });
+
+        function delete_item() {
+            console.log(localStorage.getItem('id'));
+            var data = {};
+            data.id = localStorage.getItem('id');
+            data.deletedBy = @Accessor.HttpContext.Session.GetString("Id");
+            $.ajax({
+                url: '/Employee/deleteemployee',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                console.log(data.stats);
+                if (data.stats == '200') {
+                    initializeDataTable();
+                    $("#alertmodal").modal('hide');
+                }
+                else {
+
+                }
+            });
+        }
+    </script>
+}

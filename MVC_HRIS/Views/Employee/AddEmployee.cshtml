@@ -1,0 +1,743 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+@{
+    ViewData["Title"] = "Add New Employee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+}
+
+<div id="emp-main-container">
+    <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left"> <a href="@Url.Action("Index", "Employee")"> <i class="fa-solid fa-arrow-left" style="margin: 25px;font-size: 25px;"></i></a> <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+    </div>
+    <div class="content-main">
+        <div id="grid-main-container">
+            <div class="title-main-container-2">
+                <div class="content-container" style="flex-direction: column; border-bottom: 1px solid var(--secondary-dark);">
+                    <span class="text-left">Employee Information</span>
+                </div>
+            </div>
+            <div class="top-main-container">
+                <div class="content-filter-nm">
+                    <div class="sub-content">
+                        <form action="" class="mod-form" id="employeeForm">
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <div class="mod-form-row2">
+                                        <div class="input-container-whole">
+
+                                            <div class="input-container-whole1">
+
+                                                <div class="upload-image-preview1" id="upload-image-preview" style="background-color: gainsboro;">
+                                                    <img width="100%"
+                                                         src="/img//emptypic.png"
+                                                         alt="" />
+                                                </div>
+                                                <div style="margin: 10px 0px 25px 0px;display: flex;">
+                                                    <label for="img">Upload Image</label>
+                                                    <input type="file"
+                                                           value=""
+                                                           id="img"
+                                                           class="mod-input img-choose"
+                                                           name="uploadimg" accept="image" />
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="boder-line-none">
+                                    <div class="mod-form-row">
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="empid">Employee ID #</label>
+                                            <input type="text" value="" id="empid" class="mod-input" disabled />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="department">Department </label>
+                                            <select id="department" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select Department</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="position">Postion  </label>
+                                            <select id="position" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select Position</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="emptype">Position Level  </label>
+                                            <select id="poslevel" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select Position Level</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mod-form-row">
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="emptype">User Type  </label>
+                                            <select id="emptype" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select Employee Type</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="gender">Employee Type</label>
+                                            <select id="uType" class="mod-input" required>
+                                                <option value="" disabled selected>Select Employee Type</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="manager">Manager </label>
+                                            <select id="manager" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select manager</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="datehired">Date Hired</label>
+                                            <input type="date" id="datehired" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="mod-form-row">
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="lname">Last Name</label>
+                                            <input type="text" value="" id="lname" class="mod-input" required />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="fname">First Name</label>
+                                            <input type="text" value="" id="fname" class="mod-input" required />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="mname">Middle Name</label>
+                                            <input type="text" value="" id="mname" class="mod-input" required />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="suffix">Suffix</label>
+                                            <input type="text" value="" id="suffix" class="mod-input" />
+                                        </div>
+                                    </div>
+
+                                    <div class="mod-form-row">
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="gender">Gender</label>
+                                            <select id="gender" class="mod-input" required>
+                                                <option value="" disabled selected>Select your option</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="email">Email</label>
+                                            <input type="text" value="" id="email" class="mod-input" required />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="doamin">Domain</label>
+                                            <input type="text" value="@@odecci.com" id="domain" class="mod-input" @*disabled*@ />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="cno">Contact #</label>
+                                            <input type="text" value="" id="cno" class="mod-input" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <p>Payroll Information</p>
+
+                                </div>
+
+                                <div class="boder-line">
+                                </div>
+
+                            </div>
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <div class="input-container-whole">
+                                        <label class="label-color" for="payrolltype">Payroll Type  </label>
+                                        <select id="payrolltype" class="mod-input" style="width:100%" required>
+                                            <option value="" disabled selected>Select Payroll Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="boder-line-none">
+                                    <div class="mod-form-row">
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="salarytype">Salary Type </label>
+                                            <select id="salarytype" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select Salary Type</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-container-whole">
+
+                                            <label class="label-color" for="rate">Rate</label>
+                                            <input type="number" value="" id="rate" class="mod-input" required />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="daysinmonth">Days in Month</label>
+                                            <input type="number" value="" id="daysinmonth" class="mod-input" required step="0.01" min="0" />
+                                        </div>
+                                        @* <div class="input-container-whole">
+                                        <label class="label-color" for="status">Status </label>
+                                        <select id="status" class="mod-input" style="width:100%" required>
+                                        <option value="" disabled selected>Select Status</option>
+                                        <option value="1">ACTIVE</option>
+                                        <option value="0">INACTIVE</option>
+                                        </select>
+                                        </div> *@
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <p>Address Information</p>
+
+                                </div>
+
+                                <div class="boder-line">
+                                </div>
+
+                            </div>
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <div class="input-container-whole">
+                                        <label class="label-color" for="cob">Country of Birth  </label>
+                                        <input type="text" value="" id="cob" class="mod-input" required />
+                                    </div>
+                                </div>
+
+                                <div class="boder-line-none">
+                                    <div class="mod-form-row">
+                                        @* <div class="input-container-whole">
+                                        <label class="label-color" for="region">Region</label>
+                                        <input type="text" value="" id="region" class="mod-input"required />
+                                        </div> *@
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="region">Region</label>
+                                            <select id="region" class="mod-input" style="width:100%" required>
+                                                <option value="0" disabled selected>Select Region</option>
+                                            </select>
+                                        </div>
+                                        @* <div class="input-container-whole">
+                                        <label class="label-color" for="province">Province</label>
+                                        <input type="text" value="" id="province" class="mod-input" required/>
+                                        </div> *@
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="province">Province</label>
+                                            <select id="province" class="mod-input" style="width:100%" required>
+                                                <option value="0" disabled selected>Select Province</option>
+                                            </select>
+                                        </div>
+                                        @* <div class="input-container-whole">
+                                        <label class="label-color" for="municipality">Municipality </label>
+                                        <input type="text" value="" id="municipality" class="mod-input" required/>
+                                        </div> *@
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="province">Municipality</label>
+                                            <select id="municipality" class="mod-input" style="width:100%" required>
+                                                <option value="0" disabled selected>Select Municipality</option>
+                                            </select>
+                                        </div>
+                                        @* <div class="input-container-whole">
+                                        <label class="label-color" for="barangay">Barangay </label>
+                                        <input type="text" value="" id="barangay" class="mod-input"required  />
+                                        </div> *@
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="province">Barangay</label>
+                                            <select id="barangay" class="mod-input" style="width:100%" required>
+                                                <option value="0" disabled selected>Select Barangay</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <p>Emergency Contact</p>
+
+                                </div>
+
+                                <div class="boder-line">
+                                </div>
+
+                            </div>
+                            <div class="body-container">
+                                <div class="emp_title">
+                                    <div class="input-container-whole">
+                                        <label class="label-color" for="ecname">Contact Name  </label>
+                                        <input type="text" value="" id="ecname" class="mod-input" required />
+                                        <input type="hidden" value="0" id="ecid" class="mod-input" />
+                                    </div>
+                                </div>
+
+                                <div class="boder-line-none">
+                                    <div class="mod-form-row">
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="relationship">Relationship</label>
+                                            <input type="text" value="" id="relationship" class="mod-input" required />
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <label class="label-color" for="ecnumber">Contact Number</label>
+                                            <input type="text" value="" id="ecnumber" class="mod-input" required />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="tbl-btn-container">
+                                <div class="btn-footer-container" style="margin-right:45px; gap:20px">
+                                    <button type="button" class="btn btn-danger" id="cancel-button" onclick="window.location.href='@Url.Action("Index", "Employee")'">
+                                        <i class="fa-solid fa-xmark"></i> Cancel
+                                    </button>
+                                    <button class="btn btn-primary" id="add-info" title="Add New Employee">
+                                        <i class="fa-solid fa-floppy-disk"></i> Save Information
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+</div>
+
+@section Scripts {
+    <script>
+
+        async function runFunction() {
+            await addressDOM();
+            getempdetails();
+        }
+        var img_edit = "";
+        $(document).ready(function () {
+            getRegionsData();
+            addressDOM();
+
+            getempdetails();
+            // runFunction();
+            $("input[name=uploadimg]").change(function () {
+
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = $('<img>').attr('src', e.target.result);
+                        img.attr('height', '100%');
+                        img.attr('width', '100%');
+                        $('.upload-image-preview1').html(img);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+        fetchpositionselect();
+        fetchdepartmentselect();
+        fetchusertypeselect();
+        fetchpayrolltypeselect();
+        fetchpositionlevelselect();
+        fetchmanagerselect();
+        fetchsalarytypeselect();
+        fetchstatusselect();
+        GetETypeListOption();
+        $('#employeeForm').submit(function (e) {
+            e.preventDefault();
+            filename = $("#img").val().replace(/.*(\/|\\)/, '');
+            // console.log(filename);
+            if (filename == "" || filename == null) {
+                filename = img_edit;
+            }
+            // console.log(filename);
+            var Id = localStorage.getItem('id');
+            var department = document.getElementById('department').value;
+            var position = document.getElementById('position').value;
+            var emptype = document.getElementById('emptype').value;
+            var uType = document.getElementById('uType').value;
+            var lname = document.getElementById('lname').value;
+            var fname = document.getElementById('fname').value;
+            var mname = document.getElementById('mname').value;
+            var suffix = document.getElementById('suffix').value;
+            var email = document.getElementById('email').value;
+            var domain = document.getElementById('domain').value;
+            var gender = document.getElementById('gender').value;
+            var datehired = document.getElementById('datehired').value;
+            var payrolltype = document.getElementById('payrolltype').value;
+            var salarytype = document.getElementById('salarytype').value
+            var rate = document.getElementById('rate').value;
+            var daysInMonth = document.getElementById('daysinmonth').value;
+            if (Id == null) {
+                var status = '1003'; //document.getElementById('status').value;
+            }
+            else {
+                var status = '6';
+            }
+
+            var address = document.getElementById('cob').value + ", " + document.getElementById('region').value + ", "
+                + document.getElementById('province').value + ", "
+                + document.getElementById('municipality').value
+                + ", " + document.getElementById('barangay').value;
+            var cno = document.getElementById('cno').value;
+            var createdby = @Accessor.HttpContext.Session.GetString("Id");
+            var username = email.toLowerCase();
+            var password = (Math.random() + 1).toString(36).substring(4);
+            var pass = password;
+            var positionlevel = document.getElementById('poslevel').value;
+            var manager = document.getElementById('manager').value;
+            // Emergency Contact
+            var ecid = document.getElementById('ecid').value;
+            var ecname = document.getElementById('ecname').value;
+            var relationship = document.getElementById('relationship').value;
+            var ecnumber = document.getElementById('ecnumber').value;
+            // Gather other fields similarly
+            // console.log(position);
+            // Prepare data object to send via AJAX
+            var data = {
+                Department: department,
+                FilePath: filename,
+                Id: Id,
+                UserType: emptype,
+                EmployeeType: uType,
+                Cno: cno,
+                Lname: lname,
+                Fname: fname,
+                Position: position,
+                Mname: mname,
+                Suffix: suffix,
+                Email: email + domain,
+                Gender: gender,
+                DateStarted: datehired,
+                SalaryType: salarytype,
+                Status: status,
+                Address: address,
+                PayrollType: payrolltype,
+                CreatedBy: createdby.toString(),
+                Username: username,
+                Password: pass,
+                PositionLevelId: positionlevel,
+                ManagerId: manager,
+                Rate: rate,
+                DaysInMonth: daysInMonth
+                // Add other fields as needed
+            };
+            // console.log(data);
+            var input = document.getElementById('img');
+            let formData = new FormData();
+            var fileUpload = $("#img").get(0);
+            var files = fileUpload.files;
+            var m_files = input.files;
+            for (var i = 0; i != m_files.length; i++) {
+                formData.append("file", m_files[i]); //loop through all files and append
+            }
+            formData.append('file', files[0]);
+            // console.log(data);
+            $.ajax({
+                url: '/Employee/SaveEmployee',
+                data: {
+                    data: data,
+                },
+                type: "POST",
+                datatype: "json"
+            }).done(function (data) {
+                // console.log(data);
+                if (data.status == '200') {
+                    $.ajax({
+                        url: '/Employee/UploadFile',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+
+                        success: function (result) {
+                            // console.log(result);
+                        }
+                    });
+                    successmodal(Id);
+                    $("#alertmodal").modal('show');
+                    if (Id == null) {
+                        var data = {};
+                        data.name = fname;
+                        data.email = email + domain;
+                        data.username = username;
+                        data.password = pass;
+                        // console.log(data);
+                        $.ajax({
+                            url: '/Employee/EmailUnregisterUser',
+                            data: {
+                                data: data,
+                            },
+                            type: "POST",
+                            datatype: "json",
+                            success: function (response) {
+
+                            }
+                        });
+                    }
+                    var ecdata = {};
+
+                    ecdata.id = ecid;
+                    ecdata.userId = Id;
+                    ecdata.name = ecname;
+                    ecdata.relationship = relationship;
+                    ecdata.phoneNumber = ecnumber;
+                    // console.log(ecdata);
+                    $.ajax({
+                        url: '/Employee/SaveEmergencyContact',
+                        data: {
+                            data: ecdata,
+                        },
+                        type: "POST",
+                        datatype: "json",
+                        success: function (response) {
+                            window.location.href = '/Employee/Index/';
+                        }
+                    });
+                    // getempdetails();
+                }
+                else {
+                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+
+
+        });
+
+        async function getempdetails() {
+            const data = { Id: localStorage.getItem('id') };
+            // console.log(data.Id);
+            if (data.Id != null) {
+                $.ajax({
+                    url: '/Employee/GetEmployeeDetails',
+                    data: {
+                        data: data,
+                    },
+                    type: "POST",
+                    beforeSend: function () {
+                        showloadingoverlay();
+                    },
+                    datatype: "json",
+                    success: function (response) {
+                        // console.log(response);
+                        var array = response[0].address.split(',');
+                        // console.log(array[1].replace(' ', ''));
+                        // console.log(array[2].replace(' ', ''));
+                        // console.log(array[3].replace(' ', ''));
+                        // console.log(array[4].replace(' ', ''));
+                        var prov = array[2].replace(' ', '').toString();
+                        var city = array[3].replace(' ', '').toString();
+                        var brgy = array[4].replace(' ', '').toString();
+                        // console.log(prov);
+                        // console.log(city);
+                        // console.log(brgy);
+                        if (array.length > 1) {
+
+                            $("#province").removeAttr('disabled');
+                            $("#municipality").removeAttr('disabled');
+                            $("#barangay").removeAttr('disabled');
+                            // GetAllDataAddress();
+                            $('#cob').val(array[0].replace(/\s+/g, '').replace(' ', ''));
+                            $('#region').val(array[1].replace(' ', ''));
+                            // getRegionsData();
+                            // getProvinceData();
+                            // document.getElementById('region').value = array[1].replace(' ', '');
+                            // console.log(array[2].replace('/t', '').replace(' ', ''));
+                            if ($('#region').val() != '0') {
+                                // alert($('#region').val());
+                                // getProvinceData();
+                                var region = $("#region option:selected").data('id').toString().trim();
+                                region = parseInt(region, 10);
+                                // alert(region);
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: "../../../excel/barangay_files/refprovince.csv",
+                                    dataType: "text",
+                                    success: function (data) {
+                                        const array = data.toString().split("\n"); // Split CSV file into lines
+                                        $("#province").empty();
+                                        $("#province").append('<option value="0" disabled selected>Select Province</option>');
+
+                                        for (var i = 0; i < array.length; i++) { // Start from 1 to skip the headers row
+                                            let row = array[i].replaceAll('"', '').split(","); // Split each row by comma
+                                            if (row[3] == region) { // Compare region with the 4th column
+                                                $("#province").append('<option value="' + row[2] + '"  data-id="' + row[4] + '">' + row[2] + "</option>");
+                                                // $("#province").append('<option value="' + row[2]?.replaceAll('"', '') + '"  data-id="' + row[4]?.replaceAll('"', '') + '">' + row[2]?.replaceAll('"', '') + "</option>");
+                                            }
+                                        }
+
+                                        $('#province').val(prov); // Assuming `prov` is already defined elsewhere
+                                        // var province = $("#province option:selected").data('id');
+                                        var province = $("#province option:selected").data('id').toString().trim();
+                                        province = parseInt(province, 10);
+                                        // alert(province);
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "../../../excel/barangay_files/refcitymun.csv",
+                                            dataType: "text",
+                                            success: function (data) {
+                                                const array = data.toString().split("\n");
+                                                $("#municipality").empty();
+                                                $("#municipality").append('<option value="0" disabled selected>Select City</option>');
+                                                for (var i = 0; i < array.length - 1; i++) {
+                                                    let row = array[i].replaceAll('"', '').split(","); // Split each row by comma
+                                                    //console.log(headers[2]);
+                                                    if (row[4] == province) {
+                                                        $("#municipality").append('<option value="' + row[2] + '"  data-id="' + row[5] + '">' + row[2] + "</option>");
+                                                    }
+                                                }
+                                                $('#municipality').val(city);
+                                                // var getselectedcity = $("#municipality option:selected").data('id');
+                                                var getselectedcity = $("#municipality option:selected").data('id').toString().trim();
+
+                                                getselectedcity = parseInt(getselectedcity, 10);
+                                                // alert(getselectedcity);
+                                                $.ajax({
+                                                    type: "GET",
+                                                    url: "../../../excel/barangay_files/refbrgy.csv",
+                                                    dataType: "text",
+                                                    success: function (data) {
+                                                        const array = data.toString().split("\n");
+                                                        $("#barangay").empty();
+                                                        $("#barangay").append('<option value="0" disabled selected>Select Barangay</option>');
+                                                        for (var i = 0; i < array.length - 1; i++) {
+                                                            let row = array[i].replaceAll('"', '').split(",");
+                                                            //console.log(headers[2]);
+                                                            if (row[5] == getselectedcity) {
+                                                                $("#barangay").append('<option value="' + row[2] + '">' + row[2].toUpperCase() + "</option>");
+                                                            }
+
+                                                        }
+                                                        $('#barangay').val(brgy);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+
+                            }
+                            // $('#province').val(array[2].replace('/t', '').replace(' ', ''));
+                            //document.getElementById('province').value = " PAMPANGA";//array[1].replace(' ', '');
+                            // getCityData();
+                            // $('#municipality').val(array[3].replace(' ', ''));
+                            // getBarangayData();
+                            // $('#barangay').val(array[4].replace(' ', ''));
+                        }
+                        else {
+                            $('#cob').val(array[0]);
+                        }
+                        let date = new Date(response[0].dateStarted);
+                        let formattedDate = date.toISOString().split('T')[0];
+                        $('#empid').val(response[0].employeeId);
+                        $('#position').val(response[0].position);
+                        $('#poslevel').val(response[0].positionLevelId);
+                        $('#manager').val(response[0].managerId);
+                        $('#department').val(response[0].department);
+                        $('#suffix').val(response[0].suffix);
+                        $('#emptype').val(response[0].userType);
+                        $('#uType').val(response[0].employeeType);
+                        $('#lname').val(response[0].lname);
+                        $('#fname').val(response[0].fname);
+                        $('#mname').val(response[0].mname);
+                        $('#email').val(response[0].username);
+                        $('#cno').val(response[0].cno);
+                        $('#gender').val(response[0].gender);
+                        $('#datehired').val(formattedDate);
+                        $('#payrolltype').val(response[0].payrollType);
+                        $('#position').val(response[0].position);
+                        $('#salarytype').val(response[0].salaryType);
+                        $('#status').val(response[0].status);
+                        $('#rate').val(response[0].rate);
+                        $('#daysinmonth').val(response[0].daysInMonth);
+                        img_edit = response[0].filePath;
+                        // console.log(img_edit);
+                        if (img_edit != "OPTION.webp") {
+                            var img = $('<img>').attr('src', '/img/' + img_edit);
+                            img.attr('height', '100%');
+                            img.attr('width', '100%');
+                            img.css({
+                                'object-fit': 'cover',  // Ensures the image covers the container
+                                'object-position': 'top',  // Centers the image
+                                'height': '100%',  // Sets height
+                                'width': '100%',   // Sets width
+                                'display': 'block'  // Ensures proper layout
+                            });
+                            $('.upload-image-preview1').html(img);
+                        }
+                        else {
+                            var img = $('<img>').attr('src', '/img/' + img_edit);
+                            img.attr('height', '100%');
+                            img.attr('width', '100%');
+                            $('.upload-image-preview1').html(img);
+
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        console.error(textStatus, errorThrown);
+                    },
+                    complete: function () {
+
+                        hideloadingoverlay();
+                    }
+                });
+                $.ajax({
+                    url: '/Employee/GetECEmployeeDetails',
+                    data: {
+                        data: data,
+                    },
+                    type: "POST",
+                    beforeSend: function () {
+                        showloadingoverlay();
+                    },
+                    datatype: "json",
+                    success: function (response) {
+                        // console.log(response);
+                        if (response.length != 0) {
+                            $('#ecid').val(response[0].id);
+                            $('#ecname').val(response[0].name);
+                            $('#relationship').val(response[0].relationship);
+                            $('#ecnumber').val(response[0].phoneNumber);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        console.error(textStatus, errorThrown);
+                    },
+                    complete: function () {
+
+                        hideloadingoverlay();
+                    }
+                });
+            }
+        }
+
+
+        // getProvinceData();
+        // getCityData();
+        // getBarangayData();
+    </script>
+}

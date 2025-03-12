@@ -1,0 +1,22 @@
+.btn-footer {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    flex-direction: column;
+    margin: 25px;
+}
+
+.btn-submit {
+    padding: 13px;
+    border: none;
+    background-color: var(--accent);
+    color: white;
+    border-bottom: 5px solid #102B3C;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    border-radius: 10px;
+}
+.btn-submit:hover {
+    transform: scale(1.1);
+
+}
