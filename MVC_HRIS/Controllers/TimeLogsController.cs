@@ -343,13 +343,13 @@ namespace MVC_HRIS.Controllers
             public string? RenderedHours { get; set; }
             public string? LunchIn { get; set; }
             public string? LunchOut { get; set; }
-            public decimal? TotalLunchHours { get; set; }
+            public string? TotalLunchHours { get; set; }
             public string? BreakInAm { get; set; }
             public string? BreakOutAm { get; set; }
-            public decimal TotalBreakAmHours { get; set; }
+            public string TotalBreakAmHours { get; set; }
             public string? BreakInPm { get; set; }
             public string? BreakOutPm { get; set; }
-            public decimal? TotalBreakPmHours { get; set; }
+            public string? TotalBreakPmHours { get; set; }
             public string? Username { get; set; }
             public string? Fname { get; set; }
             public string? Lname { get; set; }

@@ -595,25 +595,62 @@ namespace API_HRIS.Controllers
             //
 
         }
+        //[HttpPost]
+        //public async Task<ActionResult<TblTimeLog>> getLastTimeIn(User tblTimeLog)
+        //{
+        //    try { 
+        //        bool lastTimeIn = false; // Default value
+
+        //        // Get the last active TimeLog entry for the user
+        //        var lastLog = await _context.TblTimeLogs
+        //            .AsNoTracking()
+        //            .Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeOut == null && timeLogs.StatusId != 5)
+        //            .OrderByDescending(timeLogs => timeLogs.TimeIn) // Assuming TimeIn stores the timestamp
+        //            .FirstOrDefaultAsync(); // Fetch the latest record
+
+        //        if (lastLog != null)
+        //        {
+        //            lastTimeIn = true;
+        //        }
+        //        else
+        //        {
+        //            lastTimeIn = false;
+        //        }
+
+        //        return Ok(lastTimeIn);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
         [HttpPost]
-        public async Task<ActionResult<TblTimeLog>> getLastTimeIn(User tblTimeLog)
+        public async Task<ActionResult<bool>> getLastTimeIn(User tblTimeLog)
         {
-            bool lastTimeIn = false; // Default value
-
-            // Get the last active TimeLog entry for the user
-            var lastLog = await _context.TblTimeLogs
-                .AsNoTracking()
-                .Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeOut == null && timeLogs.StatusId != 5)
-                .OrderByDescending(timeLogs => timeLogs.TimeIn) // Assuming TimeIn stores the timestamp
-                .FirstOrDefaultAsync(); // Fetch the latest record
-
-            if (lastLog != null)
+            try
             {
-                lastTimeIn = true;
-            }
+                if (tblTimeLog == null || tblTimeLog.UserId == null)
+                {
+                    return BadRequest("UserId cannot be null.");
+                }
 
-            return Ok(lastTimeIn);
+                // Get the last active TimeLog entry for the user
+                var lastLog = await _context.TblTimeLogs
+                    .AsNoTracking()
+                    .Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeOut == null && timeLogs.StatusId != 5)
+                    .OrderByDescending(timeLogs => timeLogs.TimeIn)
+                    .FirstOrDefaultAsync();
+
+                bool lastTimeIn = lastLog != null;
+
+                return Ok(lastTimeIn);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
+
         [HttpPost]
         public async Task<ActionResult<TblTimeLog>> save(string type, TblTimeLog tblTimeLog)
         {
@@ -680,122 +717,225 @@ namespace API_HRIS.Controllers
                 return Problem(ex.GetBaseException().ToString());
             }
         }
+
+
+        public class ManagerTimelogsVM
+        {
+            public string? Id { get; set; }
+            public string? UserId { get; set; }
+            public string? Date { get; set; }
+            public string? TimeIn { get; set; }
+            public string? TimeOut { get; set; }
+            public string? RenderedHours { get; set; }
+            public string? LunchIn { get; set; }
+            public string? LunchOut { get; set; }
+            public string? TotalLunchHours { get; set; }
+            public string? BreakInAm { get; set; }
+            public string? BreakOutAm { get; set; }
+            public string TotalBreakAmHours { get; set; }
+            public string? BreakInPm { get; set; }
+            public string? BreakOutPm { get; set; }
+            public string? TotalBreakPmHours { get; set; }
+            public string? Username { get; set; }
+            public string? Fname { get; set; }
+            public string? Lname { get; set; }
+            public string? Mname { get; set; }
+            public string? Suffix { get; set; }
+            public string? Email { get; set; }
+            public string? EmployeeID { get; set; }
+            public string? JWToken { get; set; }
+            public string? FilePath { get; set; }
+            public string? UsertypeId { get; set; }
+            public string? UserType { get; set; }
+            public string? DeleteFlagName { get; set; }
+            public string? DeleteFlag { get; set; }
+            public string? StatusName { get; set; }
+            public string? StatusId { get; set; }
+            public string? Remarks { get; set; }
+            public string? TaskId { get; set; }
+            public string? Task { get; set; }
+            public string? Department { get; set; }
+            public string? TimelogStatus { get; set; }
+            public string? IsUnderTime { get; set; }
+            public string? EmployeeType { get; set; }
+        }
         [HttpPost]
         public async Task<IActionResult> RegularTimeLogList(TimeLogsParam data)
         {
+            
+            var result = (dynamic)null;
             try
             {
-                var result = _context.TblTimeLogs
-                                .Join(_context.TblUsersModels, tl => tl.UserId, um => um.Id, (tl, um) => new { tl, um })
-                                .Join(_context.TblEmployeeTypes, tlu => tlu.um.EmployeeType, et => et.Id, (tlu, et) => new { tlu.tl, tlu.um, et })
-                                .Join(_context.TblScheduleModels, tluet => tluet.et.ScheduleId, sched => sched.Id, (tluet, sched) => new { tluet.tl, tluet.um, tluet.et, sched })
-                                .Join(_context.TblTimeLogsStatus, tluets => tluets.tl.StatusId, tls => tls.StatusId, (tluets, tls) => new { tluets.tl, tluets.um, tluets.et, tluets.sched, tls })
-                                .Join(_context.TblTaskModels, tluetst => tluetst.tl.TaskId, tm => tm.Id, (tluetst, tm) => new { tluetst.tl, tluetst.um, tluetst.et, tluetst.sched, tluetst.tls, tm })
-                                .OrderByDescending(t => t.tl.Id)
-                                .AsEnumerable() // Forces LINQ to execute in memory
-                                .Select(t =>
-                                {
-                                    // Convert TimeIn to DateTime
-                                    bool isTimeInValid = DateTime.TryParse(t.tl.TimeIn, out DateTime timeIn);
-                                    // Convert MondayS to DateTime (Time-Only)
-                                    bool isMondaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime mschedTime);
-                                    bool isTuesdaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime tschedTime);
-                                    bool isWednesdaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime wschedTime);
-                                    bool isThusdaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime thschedTime);
-                                    bool isFridaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime fschedTime);
-                                    bool isSaturdaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime satschedTime);
-                                    bool isSundaySValid = DateTime.TryParseExact(t.sched.MondayS, "HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime sunschedTime);
+                string sql = $@"SELECT 
+	                        tl.*
+	                        ,t.Title as 'Task'
+	                        ,um.Username
+	                        ,um.Fname
+	                        ,um.Lname
+	                        ,um.Mname
+	                        ,um.Suffix
+	                        ,um.Email
+	                        ,um.EmployeeID
+	                        ,um.FilePath
+	                        ,um.UserType as 'UsertypeId'
+	                        ,ts.Status as 'StatusName'
+	                        ,um.EmployeeType
+	                        ,CASE
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Monday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.MondayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.MondayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Tuesday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.TuesdayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.TuesdayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Wednesday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.WednesdayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.WednesdayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Thursday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.ThursdayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.ThursdayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Friday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.FridayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.FridayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Saturday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.SaturdayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.SaturdayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Sunday' 
+		                        THEN 
+			                        CASE
+				                        WHEN sched.SundayS IS NULL THEN 'RestDayOverTime'
+				                        ELSE
+				
+				                        CASE
+					                        WHEN RIGHT(tl.TimeIn, 5) > sched.SundayS
+					                        THEN 'Late'
+					                        ELSE 'ONTIME'
+				                        END
+			                        END
+		                        ELSE NULL
+	                        END as TimeLogsStatus
+	                        ,CASE
+		                        WHEN tl.RenderedHours >= 8 THEN '0'
+		                        ELSE '1'
+	                        END as isUnderTime
+                        FROM tbl_TimeLogs tl WITH(NOLOCK)
+                        LEFT JOIN tbl_UsersModel um WITH(NOLOCK)
+                        ON tl.UserId = um.ID
+                        LEFT JOIN tbl_EmployeeType et WITH(NOLOCK)
+                        ON et.ID = um.EmployeeType
+                        LEFT JOIN tbl_ScheduleModel sched WITH(NOLOCK)
+                        ON sched.ID = et.ScheduleId
+                        LEFT JOIN tbl_TimeLogStatus ts WITH(NOLOCK)
+                        ON ts.StatusId = tl.StatusId
+                        LEFT JOIN tbl_TaskModel t WITH(NOLOCK)
+                        ON t.Id = tl.TaskId
+                        WHERE tl.Date between '" + data.datefrom + "' AND '" + data.dateto+"'";
 
-                                    return new
-                                    {
-                                        id = t.tl.Id,
-                                        userId = t.tl.UserId,
-                                        date = t.tl.Date,
-                                        timeIn = t.tl.TimeIn,
-                                        timeOut = t.tl.TimeOut,
-                                        renderedHours = t.tl.RenderedHours,
-                                        username = t.um.Username,
-                                        fname = t.um.Fname,
-                                        lname = t.um.Lname,
-                                        mname = t.um.Mname,
-                                        suffix = t.um.Suffix,
-                                        email = t.um.Email,
-                                        employeeID = t.um.EmployeeId,
-                                        JWToken = t.um.Jwtoken,
-                                        filePath = t.um.FilePath,
-                                        usertypeId = t.um.UserType,
-                                        lunchIn = t.tl.LunchIn,
-                                        lunchOut = t.tl.LunchOut,
-                                        totalLunchHours = t.tl.TotalLunchHours,
-                                        breakInAm = t.tl.BreakInAm,
-                                        breakOutAm = t.tl.BreakOutAm,
-                                        totalBreakAmHours = t.tl.TotalBreakAmHours,
-                                        breakInPm = t.tl.BreakInPm,
-                                        breakOutPm = t.tl.BreakOutPm,
-                                        totalBreakPmHours = t.tl.TotalBreakPmHours,
-                                        statusId = t.tl.StatusId,
-                                        statusName = t.tls.Status,
-                                        deleteFlag = t.tl.DeleteFlag,
-                                        identifier = t.tl.Identifier,
-                                        remarks = t.tl.Remarks,
-                                        taskId = t.tl.TaskId,
-                                        dateCreated = t.tl.DateCreated,
-                                        dateUpdated = t.tl.DateUpdated,
-                                        dateDeleted = t.tl.DateDeleted,
-                                        employeeType = t.um.EmployeeType,
-                                        task = t.tm.Title,
-                                        isUnderTime = t.tl.RenderedHours >= 8 ? "0" : "1",
-                                        timelogStatus = t.tl.Date.HasValue
-                                            ? t.tl.Date.Value.DayOfWeek switch
-                                            {
-                                                DayOfWeek.Monday => t.sched.MondayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isMondaySValid
-                                                        ? (timeIn.TimeOfDay > mschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                DayOfWeek.Tuesday => t.sched.TuesdayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isTuesdaySValid
-                                                        ? (timeIn.TimeOfDay > tschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                DayOfWeek.Wednesday => t.sched.WednesdayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isWednesdaySValid
-                                                        ? (timeIn.TimeOfDay > wschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                DayOfWeek.Thursday => t.sched.ThursdayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isThusdaySValid
-                                                        ? (timeIn.TimeOfDay > thschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                DayOfWeek.Friday => t.sched.FridayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isFridaySValid
-                                                        ? (timeIn.TimeOfDay > fschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                DayOfWeek.Saturday => t.sched.SaturdayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isSaturdaySValid
-                                                        ? (timeIn.TimeOfDay > satschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                DayOfWeek.Sunday => t.sched.SundayS == null
-                                                    ? "Rest day OT"
-                                                    : (isTimeInValid && isSundaySValid
-                                                        ? (timeIn.TimeOfDay > sunschedTime.TimeOfDay ? "Late" : "ONTIME")
-                                                        : "Invalid Time"),
-                                                _ => "Unknown"
-                                            }
-                                            : "Unknown"
-                                    };
-                                })
-                                .ToList(); // Convert to List to finalize processing
+                
+                if (data.Department != "0")
+                {
+                    sql += " AND um.Department = '" +data.Department +"'";
+                }
+                if (data.UserId != "0")
+                {
+                    sql += " AND um.Id = '" + data.UserId + "'";
+                }
 
 
+                sql += " ORDER BY tl.Id desc";
+                result = new List<ManagerTimelogsVM>();
+                DataTable table = db.SelectDb(sql).Tables[0];
+                foreach (DataRow dr in table.Rows)
+                {
+                    var item = new ManagerTimelogsVM();
+                    item.Id = dr["Id"].ToString();
+                    item.UserId = dr["UserId"].ToString();
+                    item.Date = Convert.ToDateTime(dr["Date"].ToString()).ToString("MM-dd-yyyy");
+                    item.TimeIn = dr["TimeIn"].ToString();
+                    item.TimeOut = dr["TimeOut"].ToString();
+                    item.RenderedHours = dr["RenderedHours"].ToString();
+                    item.LunchIn = dr["LunchIn"].ToString();
+                    item.LunchOut = dr["LunchOut"].ToString();
+                    item.TotalLunchHours = dr["TotalLunchHours"].ToString();
+                    item.BreakInAm = dr["BreakInAm"].ToString();
+                    item.BreakOutAm = dr["BreakOutAm"].ToString();
+                    item.TotalBreakAmHours = dr["TotalBreakAmHours"].ToString();
+                    item.BreakInPm = dr["BreakInPm"].ToString();
+                    item.BreakOutPm = dr["BreakOutPm"].ToString();
+                    item.Username = dr["Username"].ToString();
+                    item.Fname = dr["Fname"].ToString();
+                    item.Lname = dr["Lname"].ToString();
+                    item.Mname = dr["Mname"].ToString();
+                    item.Suffix = dr["Suffix"].ToString();
+                    item.Email = dr["Email"].ToString();
+                    item.FilePath = dr["FilePath"].ToString();
+                    //item.UsertypeId = dr["UserType"].ToString();
+                    item.StatusName = dr["StatusName"].ToString();
+                    item.Task = dr["Task"].ToString();
+                    item.EmployeeID = dr["EmployeeID"].ToString();
+                    item.EmployeeType = dr["EmployeeType"].ToString();
+                    item.TimelogStatus = dr["TimelogsStatus"].ToString();
+                    item.IsUnderTime = dr["IsUnderTime"].ToString();
+                    //item.DateCreated = Convert.ToDateTime(dr["DateCreated"].ToString()).ToString("MM-dd-yyyy");
 
 
+                    result.Add(item);
+                }
 
-                //var result = (dynamic)null;
-                //result = _context.TblOvertimeModel.Where(a => a.isDeleted == false && a.EmployeeNo == data.EmployeeNo).OrderByDescending(a => a.Id).ToList();
+
                 return Ok(result);
 
             }
