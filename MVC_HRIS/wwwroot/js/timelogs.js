@@ -504,7 +504,7 @@ function initializeDataTable() {
             // },
             {
                 "title": "Task",
-                "data": "task"
+                "data": "task", "orderable": false,
             },
             {
                 "title": "Task Description",
@@ -540,16 +540,30 @@ function initializeDataTable() {
             },
             {
                 "title": "Total Rendered Hours",
-                "data": "renderedHours"
+                "data": "renderedHours", "orderable": false,
             },
             {
-                "title": "Status",
-                "data": "statusName"
+                "title": "",
+                "data": "statusName", "orderable": false,
+                "render": function (data, type, row) {
+                    var badge = "";
+                    if (data == 'Approved') {
+                        badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
+                    }
+                    else if (data == 'Pending') {
+                        badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
+                    }
+                    else if (data == 'Declined') {
+                        badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
+                    }
+
+                    return badge;
+                }
             }
             ,
             {
                 "title": "Action",
-                "data": "id",
+                "data": "id", "orderable": false,
                 "render": function (data, type, row) {
                     var images = row['filePath'] == null ? img : row['filePath'];
                     var status = row.statusId;
@@ -645,8 +659,7 @@ function initializeDataTable() {
             },
             {
                 targets: [6],
-                width: "15%",
-                className: 'left-align'
+                width: "5%",
             },
             {
                 targets: [7],
