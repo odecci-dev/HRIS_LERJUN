@@ -1668,6 +1668,7 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="Libgdiplus.rntime.osx_arm64" Version="6.1.2" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="10.2.1" />
 
   </ItemGroup>
   <ItemGroup>

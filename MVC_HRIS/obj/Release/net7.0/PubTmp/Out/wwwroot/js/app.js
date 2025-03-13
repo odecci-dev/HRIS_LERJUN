@@ -277,7 +277,7 @@ function fetchtimlogsuserpendingselect() {
         type: "POST",
         datatype: "json",
         success: function (data) {
-            console.log(data);
+            //console.log(data);
             $("#selectUserPending").empty();
             $("#selectUserPending").append('<option value="" disabled selected>Select User</option>');
             $("#selectUserPending").append('<option value="0" >Select All</option>');

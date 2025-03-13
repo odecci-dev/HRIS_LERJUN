@@ -782,3 +782,16 @@ label[for="img"] {
         padding: 5px;
     }
 }
+/*#loadingOverlay {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+    #loadingOverlay img {
+        width: 100px;*/ /* Adjust size if needed */
+    /*}*/
+
+/* Overlay to cover the whole screen */

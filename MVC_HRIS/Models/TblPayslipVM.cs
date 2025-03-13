@@ -11,6 +11,7 @@ public partial class TblPayslipVM
 {
     public string EmployeeName { get; set; }
     public string EmployeeNumber { get; set; }
+    public string UserId { get; set; }
     public string Department { get; set; }
     public string TaxNumber { get; set; }
     public string PayPeriod { get; set; }

@@ -135,35 +135,7 @@ function delete_item_timelogs() {
         initializeDataTable();
     });
 }
-function decline_item() {
 
-    //console.log(localStorage.getItem('id'));
-    //alert("Declined");
-    var mtlid = localStorage.getItem('id');
-    var action = localStorage.getItem('action');
-    var data = {};
-    data.id = mtlid;
-    data.action = action;
-    //console.log(data);
-    $.ajax({
-        url: '/TimeLogs/UpdateLogStatus',
-        data: data,
-        type: "POST",
-        dataType: "json"
-    }).done(function (data) {
-        //console.log(data);
-        //alert("Declined");
-        $("#alertmodal").modal('hide');
-        if (action == 1) {
-            notifyMsg('Success!', 'Successfully Decline', 'red', 'fas fa-check');
-        }
-        else {
-            notifyMsg('Success!', 'Successfully Approve', 'green', 'fas fa-check');
-        }
-        initializeDataTable();
-        renderedHours();
-    });
-}
 
 async function modalDom() {
 

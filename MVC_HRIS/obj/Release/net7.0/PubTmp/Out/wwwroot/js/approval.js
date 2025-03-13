@@ -210,8 +210,8 @@ function initializeTimlogsDataTable() {
         // console.log(data);
 
     });
-  
-  
+
+
 }
 
 function timelogsTableMOD() {
@@ -219,7 +219,54 @@ function timelogsTableMOD() {
 
         initializeTimlogsDataTable();
     });
+    $('#pending-timelogs-table').on('click', '.tbl-decline', function () {
+        var id = $(this).data('id');
+        var action = 1;
+
+        localStorage.setItem('id', id);
+        localStorage.setItem('action', action);
+        declinemodal();
+        $("#alertmodal").modal('show');
+    });
+    $('#pending-timelogs-table').on('click', '.tbl-approve', function () {
+        var id = $(this).data('id');
+        var action = 0;
+
+        localStorage.setItem('id', id);
+        localStorage.setItem('action', action);
+        approvemodal();
+        $("#alertmodal").modal('show');
+    });
 }
+function decline_item() {
+
+    //console.log(localStorage.getItem('id'));
+    //alert("Declined");
+    var mtlid = localStorage.getItem('id');
+    var action = localStorage.getItem('action');
+    var data = {};
+    data.id = mtlid;
+    data.action = action;
+    //console.log(data);
+    $.ajax({
+        url: '/TimeLogs/UpdateLogStatus',
+        data: data,
+        type: "POST",
+        dataType: "json"
+    }).done(function (data) {
+        //console.log(data);
+        //alert("Declined");
+        $("#alertmodal").modal('hide');
+        if (action == 1) {
+            notifyMsg('Success!', 'Successfully Decline', 'green', 'fas fa-check');
+        }
+        else {
+            notifyMsg('Success!', 'Successfully Approve', 'green', 'fas fa-check');
+        }
+        initializeTimlogsDataTable();
+    });
+}
+
 function initializeOTDataTable() {
 
     var tableId = '#pending-overtime-table';
@@ -541,3 +588,4 @@ function changeStatus_item() {
         initializeOTDataTable();
     });
 }
+
