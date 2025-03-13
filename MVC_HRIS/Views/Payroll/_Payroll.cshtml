@@ -130,6 +130,13 @@
 <div>
     <div class="d-flex action-navbar">
         <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
+            <div>
+                <button onclick="setCutOffDates('first')">First Cut-off</button>
+                <button onclick="setCutOffDates('second')">Second Cut-off</button>
+            </div>
+            <label for="datefrom" class="lbl">Months:</label>
+            <select id="monthSelect" class="form-control" style="width: 200px;"></select>
+       
             <label for="datefrom" class="lbl">From:</label>
             <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
             <label for="dateto" class="lbl">To:</label>
@@ -152,7 +159,7 @@
             <button class="btn btn-warning" id="btn-refresh" title="Time Out">
                 <i class="fa-solid fa-arrows-rotate"></i> Refresh
             </button>
-            <button class="btn btn-primary" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
+            <button class="btn btn-primary" id="add-import" title="Time Out ">
                 <i class="fa-solid fa-file-import"></i> Import
             </button>
             <button class="btn btn-success" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
@@ -171,46 +178,134 @@
         </div>
         <div id="targetDiv">
 
-            @*   <table id="overtime-table" class="table table-bordered table-hover w-100" style="margin-top:0px !important">
-            <thead>
-            </thead>
-            <tbody>
-            </tbody>
-
-            </table>
-            <div id="table-footer">
-            </div> *@
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/js/overtime.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+@* <script src="~/js/site.js" asp-append-version="true"></script> *@
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="~/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/js/app.js"></script>
+<script src="~/js/iziToast.min.js"></script>
+<script src="~/js/timelogs.js"></script>
+<script src="~/js/position.js"></script>
+<script src="~/js/employee.js"></script>
+<script src="~/js/schedule.js"></script>
+<script src="~/js/department.js"></script>
+<script src="~/js/payroll.js"></script>
+<script src="~/js/salary.js"></script>
+<script src="~/js/employmenttype.js"></script>
+<script src="~/js/approval.js"></script>
 <script>
-    $(document).ready(function () {
-       
+    document.addEventListener("DOMContentLoaded", function () {
+        const monthSelect = document.getElementById("monthSelect");
+        const currentYear = new Date().getFullYear();
+
+        for (let month = 0; month < 12; month++) {
+            const monthName = new Date(currentYear, month).toLocaleString('default', { month: 'long' });
+            const option = document.createElement("option");
+            option.value = `${currentYear}-${String(month + 1).padStart(2, '0')}`;
+            option.text = `${monthName} ${currentYear}`;
+            monthSelect.appendChild(option);
+        }
+
+        // Set default to current month
+        monthSelect.value = `${currentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
     });
 
+    // Function to adjust to weekday if date falls on a weekend
+    function adjustToWeekday(date) {
+        const day = date.getDay();
+        if (day === 0) { // Sunday -> Move to Saturday
+            date.setDate(date.getDate()-1);
+        } else if (day === 6) { // Saturday -> Move to Friday
+            date.setDate(date.getDate()-1);
+        }
+        return date;
+    }
 
+    // Function to set the cut-off dates based on selected month
+    function setCutOffDates(cutOffType) {
+        const selectedMonth = document.getElementById("monthSelect").value;
+        const [year, month] = selectedMonth.split('-').map(Number);
+
+        let fromDate, toDate;
+
+        if (cutOffType === 'first') {
+            fromDate = new Date(year, month - 1, 11);
+            toDate = new Date(year, month - 1, 25);
+        } else if (cutOffType === 'second') {
+            fromDate = new Date(year, month - 1, 26);
+            toDate = new Date(year, month, 10);
+        }
+
+        // Adjust to weekday if falls on weekend
+        fromDate = adjustToWeekday(fromDate);
+        toDate = adjustToWeekday(toDate);
+
+        // Format as YYYY-MM-DD
+        document.getElementById('datefrom').value = fromDate.toISOString().split('T')[0];
+        document.getElementById('dateto').value = toDate.toISOString().split('T')[0];
+    }
+
+    // Event listener for filter button (optional, for filtering logic)
+    document.getElementById('filter').addEventListener('click', function () {
+        const dateFrom = document.getElementById('datefrom').value;
+        const dateTo = document.getElementById('dateto').value;
+
+        console.log(`Filtering from ${dateFrom} to ${dateTo}`);
+        // Add filtering logic here (AJAX call or form submission)
+    });
+    $(document).ready(function () {
+
+        
+    });
 
     $("#generate").on("click", function () {
+     
+        var usertype = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
         var data = {
             employeeID: 3066,
-            // employeeID: @Accessor.HttpContext.Session.GetString("Id"),
+            employeeID: @Accessor.HttpContext.Session.GetString("Id"),
             datefrom: $("#datefrom").val(),
             dateto: $("#dateto").val()
         };
-
+        console.log(usertype);
+        var urls = usertype == "Admin" ? "/Payroll/PayslipAdmin" : "/Payroll/Payslip";
         $.ajax({
-            url: "/Payroll/Payslip",
+            url: urls,
             type: "GET",
             data: data,
             beforeSend: function () {
-                // Show loading indicator
+                localStorage.setItem("datefrom", $("#datefrom").val());
+                localStorage.setItem("dateto", $("#dateto").val());
                 showloadingoverlay();
                 $("#targetDiv").hide();
             },
             success: function (data) {
+              
                 $("#targetDiv").html(data);
                 $("#targetDiv").show();
             },
@@ -223,12 +318,9 @@
             }
         });
     });
-     $("#btn-refresh").on("click", function () {
-        var tableId = '#overtime-table';
-        if ($.fn.DataTable.isDataTable(tableId)) {
-            $(tableId).DataTable().clear().destroy();
-        }
-        FetchOvertimeList();
-    });
 
+    $("#add-import").on("click", function () {
+      
+    });
+    
 </script>

@@ -1,42 +1,29 @@
 ﻿@model MVC_HRIS.Models.TblPayslipVM
-@{
-    ViewData["Title"] = "Dashboard";
-    string message = "";
-    if (ViewData["Message"] != null)
-    {
-        message = ViewData["Message"].ToString();
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-}
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-@* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
-<link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<!-- DataTables -->
-<link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-<!-- Theme style -->
-<link rel="stylesheet" href="~/dist/css/adminlte.min.css">
-<link href="~/css/iziToast.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="~/css/mod-input.css" />
-<link rel="stylesheet" href="~/css/timelogs.css" />
-<link rel="stylesheet" href="~/css/department.css" />
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+    <title>Document with Footer</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
-
-<style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+    <style>
         #overtime-table thead th {
             text-align: center;
             vertical-align: middle;
         }
-        .action-navbar
-        {
+
+        .action-navbar {
             background-color: var(--dark);
             padding: 10px;
             border-top-left-radius: 20px;
@@ -44,15 +31,16 @@
         }
 
         .action-navbar-2 {
-            border-top:2px solid white;
+            border-top: 2px solid white;
             background-color: var(--dark);
             padding: 10px;
         }
+
         .circle-btn {
             width: 40px; /* Adjust as needed */
             height: 40px;
             border-radius: 50%;
-            border:none;
+            border: none;
             background: transparent;
             color: white; /* Icon color */
             display: flex;
@@ -61,8 +49,8 @@
             font-size: 20px;
             transition: all 0.3s ease-in-out;
         }
-        .lbl
-        {
+
+        .lbl {
             display: flex;
             color: white;
             margin-top: 10px;
@@ -82,436 +70,414 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
-       .btn:hover::before {
-        opacity: 1;
-        animation: shineEffect 1.5s infinite;
-    }
+            .btn:hover::before {
+                opacity: 1;
+                animation: shineEffect 1.5s infinite;
+            }
 
-    @@keyframes shineEffect {
-        0% {
-            left: -100%;
+        @@keyframes shineEffect {
+            0% {
+                left: -100%;
+            }
+
+            50% {
+                left: 100%;
+            }
+
+            100% {
+                left: -100%;
+            }
         }
-        50% {
-            left: 100%;
+
+        .ps-img {
+            width: 100%; /* Set the div width */
+            height: 100%; /* Set the div height */
+            overflow: hidden; /* Ensures no overflow */
         }
-        100% {
-            left: -100%;
+
+        .m-payslip {
+            margin-top: 5px;
+            padding: 10px;
+            border: 2px solid black;
+            border-radius: 10px;
         }
-    }
-    .ps-img
-    {
-        width: 100%; /* Set the div width */
-        height: 100%; /* Set the div height */
-        overflow: hidden; /* Ensures no overflow */
-   
 
-    }
-    .m-payslip
-    {
-        margin-top: 5px;
-        padding: 10px;
-        border: 2px solid black;
-        border-radius:10px;
-    }
-    .ps-img img {
-        background-color: var(--dark);
-        width: 40%;
-        height: auto;
-        object-fit: cover;
-        padding: 0px 30px;
-        border-radius: 25px;
-    }
-    .b-top
-    {
-        border-top: 2px dashed black;
-        margin-top:15px;
+        .ps-img img {
+            background-color: var(--dark);
+            width: 40%;
+            height: auto;
+            object-fit: cover;
+            padding: 0px 30px;
+            border-radius: 25px;
+        }
 
-    }
-    .a-end
-    {
-        align-items: flex-end;
-        flex-direction: column;
-        justify-content: flex-end;
-    }
-    .f-start
-    {
-        justify-content: flex-start;
-    }
-    .f-end
-    {
-        justify-content: flex-end;
-    }
-    .b-top label
-    {
-        font-size:20px;
-        font-weight:100 !important;
-    }
-    .title-py
-    {
-        /* font-size: 30px; */
-        margin-top:10px;
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        padding: 0 auto;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-    .title-py label
-    {
-        font-size:25px;
-        margin-top:10px;
-        margin-left:15px;
-        font-weight:bolder !important;
-    }
-</style>
-<div class="d-flex-col w-100 h-100 m-payslip gap-15">
-   <div class="d-flex-row">
-       <div class="w-100">
-            <div class="ps-img">
-                <img src="/img/logo-04.png" alt="Image">
+        .b-top {
+            border-top: 2px dashed black;
+            margin-top: 15px;
+        }
 
-            </div>
-       </div>
-           
-        <div class="d-flex-col w-100 a-end">
-            <label style="font-weight: bolder;font-size: 35px;"> ODECCI SOLUTIONS INC.,</label>
-            <label style="font-size: 20px;">@DateTime.Now.ToString("MMMM dd, yyyy")</label>
-        </div>
+        .a-end {
+            align-items: flex-end;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
 
-   </div>
-   
-    <div class="b-top ">
-        <div class="title-py">
-            <label>Employee Details<label>
-        </div>
-        <div class="d-flex-row w-100 f-start">
+        .f-start {
+            justify-content: flex-start;
+        }
 
-            <div class="d-flex-col w-50  f-end" style="margin-top:15px">
-                <div>
-                    <label>Employee Name:</label>
-                </div>
-                <div>
-                    <label>Employee No.:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100" style="margin-top:15px">
-                <div>
-                    <label>@Model.EmployeeName</label>
-                </div>
-                <div>
-                    <label>@Model.EmployeeNumber</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100 a-end" style="margin-top:15px">
-                <div class="d-flex">
-                    <label>Payslip No.:</label>
-                </div>
-                <div>
-                    <label>Job Title:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-50 a-end" style="margin-top:15px">
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>@Model.PayslipNumber</label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>@Model.JobTitle</label>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex-row w-100 f-start">
-            <div class="d-flex-col w-50 f-end">
-                <div>
-                    <label>Department:</label>
-                </div>
-                <div>
-                    <label>TIN No.:</label>
-                </div>
-                <div>
-                    <label>Philhealth No.:</label>
-                </div>
-                <div>
-                    <label>Pay Period:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100">
-                <div>
-                    <label>@Model.Department</label>
-                </div>
-                <div>
-                    <label>
-                       ---
-                    </label>
-                
-                </div>
-                <div>
-                    <label>
-                        ---
-                    </label>
+        .f-end {
+            justify-content: flex-end;
+        }
 
-                </div>
-                <div>
-                    <label>
-                        @Model.PayDate.ToString("MMMM dd, yyyy")
-                    </label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100 a-end">
-                <div>
-                    <label>Emploment Status:</label>
-                </div>
-                <div>
-                    <label>SSS No.:</label>
-                </div>
-                <div>
-                    <label>HDMF No.:</label>
-                </div>
-                <div>
-                    <label>Pay Date:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-50 a-end">
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>Regular</label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>
-                       ---
-                    </label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>
-                        ---
-                    </label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>
-                        @Model.PayDate.ToString("MMMM dd, yyyy")
+        .b-top label {
+            font-size: 20px;
+            font-weight: 100 !important;
+        }
 
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="b-top ">
+        .title-py {
+            /* font-size: 30px; */
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            padding: 0 auto;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+            .title-py label {
+                font-size: 25px;
+                margin-top: 10px;
+                margin-left: 15px;
+                font-weight: bolder !important;
+            }
+    </style>
+    
+</head>
+<body>
+    <header>
+    </header>
+
+    <div class="d-flex-col w-100 h-100 m-payslip gap-15">
         <div class="d-flex-row">
-            <div class="title-py">
-                <label>Attedance Details<label>
+            <div class="w-100">
+                <div class="ps-img">
+                    <img src="/img/logo-04.png" alt="Image">
 
+                </div>
             </div>
-            <div class="title-py">
-                <label>Leave Details<label>
 
-            </div>
-        </div>
-        <div class="d-flex-row w-100 f-start">
-            <div class="d-flex-col w-50  f-end" style="margin-top:15px">
-                <div>
-                    <label>Work Days</label>
-                </div>
-                <div>
-                    <label>Over Time</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100" style="margin-top:15px">
-                <div>
-                    <label>--</label>
-                </div>
-                <div>
-                    <label>--</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100 a-end" style="margin-top:15px">
-                <div class="d-flex">
-                    <label>Vacation Leave: </label>
-                </div>
-                <div>
-                    <label>Sick Leave:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-50 a-end" style="margin-top:15px">
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>--</label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>--</label>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex-row w-100 f-start">
-            <div class="d-flex-col w-50 f-end">
-                <div class="d-flex">
-                    <label>Night Differentials:</label>
-                </div>
-                <div>
-                    <label>Holiday:</label>
-                </div>
-                <div>
-                    <label>Under Time Hours:</label>
-                </div>
-                <div>
-                    <label>Total Working Hours:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100">
-                <div>
-                    <label>--</label>
-                </div>
-                <div>
-                    <label>--</label>
-                </div>
-                <div>
-                    <label>--</label>
-                </div>
-                <div>
-                    <label>--</label>
-                </div>
-            </div>
             <div class="d-flex-col w-100 a-end">
-                <div>
-                    <label></label>
-                </div>
-                <div>
-                    <label></label>
-                </div>
-                <div>
-                    <label></label>
-                </div>
-                <div>
-                    <label></label>
-                </div>
+                <label style="font-weight: bolder;font-size: 35px;"> ODECCI SOLUTIONS INC.,</label>
+                <label style="font-size: 20px;">@DateTime.Now.ToString("MMMM dd, yyyy")</label>
             </div>
-            <div class="d-flex-col w-50 a-end">
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label></label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label></label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label></label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label></label>
-                </div>
-            </div>
+
         </div>
-    </div>
-    <div class="b-top ">
-        <div class="d-flex-row">
+
+        <div class="b-top ">
             <div class="title-py">
-                <label>Earnings<label>
-
+                <label>Employee Details<label>
             </div>
-            <div class="title-py">
-                <label>Deductions<label>
+            <div class="d-flex-row w-100 f-start">
 
+                <div class="d-flex-col w-50  f-end" style="margin-top:15px">
+                    <div>
+                        <label>Employee Name:</label>
+                    </div>
+                    <div>
+                        <label>Employee No.:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100" style="margin-top:15px">
+                    <div>
+                        <label>@Model.EmployeeName</label>
+                    </div>
+                    <div>
+                        <label>@Model.EmployeeNumber</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100 a-end" style="margin-top:15px">
+                    <div class="d-flex">
+                        <label>Payslip No.:</label>
+                    </div>
+                    <div>
+                        <label>Job Title:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-50 a-end" style="margin-top:15px">
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>@Model.PayslipNumber</label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>@Model.JobTitle</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex-row w-100 f-start">
+                <div class="d-flex-col w-50 f-end">
+                    <div>
+                        <label>Department:</label>
+                    </div>
+                    <div>
+                        <label>TIN No.:</label>
+                    </div>
+                    <div>
+                        <label>Philhealth No.:</label>
+                    </div>
+                    <div>
+                        <label>Pay Period:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100">
+                    <div>
+                        <label>@Model.Department</label>
+                    </div>
+                    <div>
+                        <label>
+                            ---
+                        </label>
+
+                    </div>
+                    <div>
+                        <label>
+                            ---
+                        </label>
+
+                    </div>
+                    <div>
+                        <label>
+                            @Model.PayDate.ToString("MMMM dd, yyyy")
+                        </label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100 a-end">
+                    <div>
+                        <label>Emploment Status:</label>
+                    </div>
+                    <div>
+                        <label>SSS No.:</label>
+                    </div>
+                    <div>
+                        <label>HDMF No.:</label>
+                    </div>
+                    <div>
+                        <label>Pay Date:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-50 a-end">
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>Regular</label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>
+                            ---
+                        </label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>
+                            ---
+                        </label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>
+                            @Model.PayDate.ToString("MMMM dd, yyyy")
+
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
-   
-        <div class="d-flex-row w-100 f-start">
-            <div class="d-flex-col w-50  f-end" style="margin-top:15px">
-                <div>
-                    <label>Gross Pay:</label>
-                </div>
-                <div>
-                    <label>Net Pay:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100" style="margin-top:15px">
-                <div>
-                    <label>@($"₱ {Model.GrossPay:N2}")</label>
-                </div>
-                <div>
-                    <label>@($"₱ {Model.NetPay:N2}")</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100 a-end" style="margin-top:15px">
-                <div class="d-flex">
-                    <label>Tax:</label>
-                </div>
-                <div>
-                    <label>SSS:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-50 a-end" style="margin-top:15px">
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>@($"₱ {Model.Tax:N2}")</label>
-                </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>@($"₱ {Model.SSS:N2}")</label>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex-row w-100 f-start">
-            <div class="d-flex-col w-50 f-end">
-                <div>
-                    <label>Other Deductions:</label>
-                </div>
-                <div>
-                    <label>Total Deductions:</label>
-                </div>
-            </div>
-            <div class="d-flex-col w-100">
-                <div>
-                    <label>@($"₱ {Model.OtherDeductions:N2}")</label>
-                </div>
-                <div>
-                    <label>@($"₱ {Model.TotalDeductions:N2}")</label>
-                </div>
+        <div class="b-top ">
+            <div class="d-flex-row">
+                <div class="title-py">
+                    <label>Attedance Details<label>
 
-            </div>
-            <div class="d-flex-col w-100 a-end">
-                <div>
-                    <label>PhilHealth:</label>
                 </div>
-                <div>
-                    <label>Pag-ibig:</label>
+                <div class="title-py">
+                    <label>Leave Details<label>
+
                 </div>
             </div>
-            <div class="d-flex-col w-50 a-end">
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>@($"₱ {Model.PhilHealth:N2}")</label>
+            <div class="d-flex-row w-100 f-start">
+                <div class="d-flex-col w-50  f-end" style="margin-top:15px">
+                    <div>
+                        <label>Work Days</label>
+                    </div>
+                    <div>
+                        <label>Over Time</label>
+                    </div>
                 </div>
-                <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
-                    <label>@($"₱ {Model.PagIbig:N2}")</label>
+                <div class="d-flex-col w-100" style="margin-top:15px">
+                    <div>
+                        <label>--</label>
+                    </div>
+                    <div>
+                        <label>--</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100 a-end" style="margin-top:15px">
+                    <div class="d-flex">
+                        <label>Vacation Leave: </label>
+                    </div>
+                    <div>
+                        <label>Sick Leave:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-50 a-end" style="margin-top:15px">
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>--</label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>--</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex-row w-100 f-start">
+                <div class="d-flex-col w-50 f-end">
+                    <div class="d-flex">
+                        <label>Night Differentials:</label>
+                    </div>
+                    <div>
+                        <label>Holiday:</label>
+                    </div>
+                    <div>
+                        <label>Under Time Hours:</label>
+                    </div>
+                    <div>
+                        <label>Total Working Hours:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100">
+                    <div>
+                        <label>--</label>
+                    </div>
+                    <div>
+                        <label>--</label>
+                    </div>
+                    <div>
+                        <label>--</label>
+                    </div>
+                    <div>
+                        <label>--</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100 a-end">
+                    <div>
+                        <label></label>
+                    </div>
+                    <div>
+                        <label></label>
+                    </div>
+                    <div>
+                        <label></label>
+                    </div>
+                    <div>
+                        <label></label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-50 a-end">
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label></label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label></label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label></label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label></label>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="b-top ">
+            <div class="d-flex-row">
+                <div class="title-py">
+                    <label>Earnings<label>
+
+                </div>
+                <div class="title-py">
+                    <label>Deductions<label>
+
+                </div>
+            </div>
+
+            <div class="d-flex-row w-100 f-start">
+                <div class="d-flex-col w-50  f-end" style="margin-top:15px">
+                    <div>
+                        <label>Gross Pay:</label>
+                    </div>
+                    <div>
+                        <label>Net Pay:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100" style="margin-top:15px">
+                    <div>
+                        <label>@($"₱ {Model.GrossPay:N2}")</label>
+                    </div>
+                    <div>
+                        <label>@($"₱ {Model.NetPay:N2}")</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100 a-end" style="margin-top:15px">
+                    <div class="d-flex">
+                        <label>Tax:</label>
+                    </div>
+                    <div>
+                        <label>SSS:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-50 a-end" style="margin-top:15px">
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>@($"₱ {Model.Tax:N2}")</label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>@($"₱ {Model.SSS:N2}")</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex-row w-100 f-start">
+                <div class="d-flex-col w-50 f-end">
+                    <div>
+                        <label>Other Deductions:</label>
+                    </div>
+                    <div>
+                        <label>Total Deductions:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-100">
+                    <div>
+                        <label>@($"₱ {Model.OtherDeductions:N2}")</label>
+                    </div>
+                    <div>
+                        <label>@($"₱ {Model.TotalDeductions:N2}")</label>
+                    </div>
+
+                </div>
+                <div class="d-flex-col w-100 a-end">
+                    <div>
+                        <label>PhilHealth:</label>
+                    </div>
+                    <div>
+                        <label>Pag-ibig:</label>
+                    </div>
+                </div>
+                <div class="d-flex-col w-50 a-end">
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>@($"₱ {Model.PhilHealth:N2}")</label>
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: column;align-items: flex-end;">
+                        <label>@($"₱ {Model.PagIbig:N2}")</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-   
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="~/js/overtime.js"></script>
-<script>
-    $(document).ready(function () {
-        // var tableId = '#overtime-table';
-        // if ($.fn.DataTable.isDataTable(tableId)) {
-        //     $(tableId).DataTable().clear().destroy();
-        // }
-        // FetchOvertimeList();
-        // $("#checkAll").click(function () {
-        //     $("input:checkbox").not(this).prop("checked", this.checked);
-        //     if ($(this).prop("checked") == true) {
-        //         console.log("checkall");
-        //     } else {
 
-        //         console.log("uncheckall");
-        //     }
-        // });
-    });
-
-
-
-    $("#otfile").on("click", function () {
-        loadModal('/OverTime/OTFiling', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> New Overtime ', 'l', false)
-    });
-     $("#btn-refresh").on("click", function () {
-        var tableId = '#overtime-table';
-        if ($.fn.DataTable.isDataTable(tableId)) {
-            $(tableId).DataTable().clear().destroy();
-        }
-        FetchOvertimeList();
-    });
-
-</script>
+    <script>
+       
+    </script>
+</body>
+</html>

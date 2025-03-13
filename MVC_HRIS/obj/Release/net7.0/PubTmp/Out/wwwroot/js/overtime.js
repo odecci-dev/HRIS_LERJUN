@@ -1,4 +1,3 @@
-
 function FetchOvertimeList() {
 
     var tableId = '#overtime-table';
@@ -6,11 +5,14 @@ function FetchOvertimeList() {
         $(tableId).DataTable().clear().destroy();
     }
     let data = {
-        EmployeeNo: "ODC-320250304"
+        EmployeeNo: EmployeeID
     };
     console.log(data);
     var dtProperties = {
-
+        responsive: true, // Enable responsive behavior
+        scrollX: true,    // Enable horizontal scrolling if needed
+        processing: true,
+        serverSide: true,
         ajax: {
             url: '/OverTime/GetOverTimeList',
             type: "POST",
@@ -108,7 +110,7 @@ function FetchOvertimeList() {
                 width: "10%"
             },
             {
-                targets: [2,5, 6], // Start Date, End Date
+                targets: [2, 5, 6], // Start Date, End Date
                 orderable: false,
                 width: "10%",
                 render: function (data, type, row) {
@@ -142,7 +144,7 @@ function FetchOvertimeList() {
                 createdCell: function (td, cellData, rowData, row, col) {
                     if (cellData === "APPROVED") {
                         $(td).css('color', 'green').css('font-weight', 'bold');
-                    } else if (cellData === "Pending") {
+                    } else if (cellData === "PENDING") {
                         $(td).css('color', 'orange').css('font-weight', 'bold');
                     } else if (cellData === "Rejected") {
                         $(td).css('color', 'red').css('font-weight', 'bold');
@@ -164,6 +166,32 @@ function FetchOvertimeList() {
     $(tableId + '_filter input').attr('placeholder', 'Searching...');
     $(tableId + ' tbody').on('click', 'tr', function () {
         var data = table.row(this).data();
+
+    });
+}
+
+function OverTimeDOM() {
+    $("#otsumbit").on("submit", function (event) {
+        event.preventDefault();
+
+        //$.ajax({
+        //    url: '/Salary/SaveSalary',
+        //    data: data,
+        //    type: "POST",
+        //    dataType: "json"
+        //}).done(function (data) {
+        //    var status = data.status;
+        //    console.log(status);
+        //    if (status === 'Entity already exists') {
+        //        notifyMsg('Warning!', 'Salary already exists', 'yellow', 'fas fa-check');
+        //    }
+        //    else {
+        //        notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+        //    }
+        //    modal = document.getElementById('salary-modal');
+        //    modal.style.display = "none";
+        //    initializeDataTable();
+        //});
 
     });
 }

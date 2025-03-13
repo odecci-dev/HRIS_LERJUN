@@ -9,7 +9,10 @@ function FetchOvertimeList() {
     };
     console.log(data);
     var dtProperties = {
-
+        responsive: true, // Enable responsive behavior
+        scrollX: true,    // Enable horizontal scrolling if needed
+        processing: true,
+        serverSide: true,
         ajax: {
             url: '/OverTime/GetOverTimeList',
             type: "POST",

@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Data;
-
+using X.PagedList;
+using X.PagedList.Mvc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using MVC_HRIS.Services;
@@ -63,12 +64,55 @@ namespace MVC_HRIS.Controllers
         {
             return View("_Payroll");
         }
-        public IActionResult Payslip(EmployeeFilters data)
+        public async Task<IActionResult> PayslipAdmin(RequestParamenter data, int page = 1, int pageSize = 5)
         {
+            // Retrieve data and map it correctly
+            var payslipData = await GetPayslipAdmin(data);
+
+            var result = payslipData
+                .Select(p => new TblPayslipVM
+                {
+                    EmployeeNumber = p.EmployeeNumber,
+                    UserId = p.UserId,
+                    EmployeeName = p.EmployeeName,
+                    GrossPay = p.GrossPay,
+                    NetPay = p.NetPay,
+                    Tax = p.Tax,
+                    SSS = p.SSS,
+                    PhilHealth = p.PhilHealth,
+                    PagIbig = p.PagIbig,
+                    PayDate = p.PayDate,
+                    TotalDeductions = p.TotalDeductions
+                })
+                .OrderByDescending(p => p.PayDate)
+                .ToList();
+
+            var totalCount = payslipData.Count;
+
+            // Assign result to StaticPagedList correctly
+            var viewModel = new PayslipViewModel
+            {
+                Payslips = new StaticPagedList<TblPayslipVM>(
+                    result, page, pageSize, totalCount)
+            };
+
+            // Return the partial view with data
+            return PartialView("_PayslipAdmin", viewModel);
+        }
+
+        public IActionResult Payslip(int employeeid , string datefrom, string dateto)
+        {
+            var data = new EmployeeFilters
+            {
+                EmployeeID = employeeid,
+                datefrom = datefrom,
+                dateto = dateto
+            };
             var result = GetPayslip(data).GetAwaiter().GetResult().FirstOrDefault();
             var model = new TblPayslipVM
             {
                 EmployeeName=result.EmployeeName,
+                UserId = result.UserId,
                 EmployeeNumber = result.EmployeeNumber,
                 PayslipNumber=result.PayslipNumber,
                 JobTitle = result.JobTitle,
@@ -94,9 +138,66 @@ namespace MVC_HRIS.Controllers
         }
         public class RequestParamenter
         {
-            public int EmployeeID { get; set; }
+            public int? EmployeeID { get; set; }
             public string DateFrom { get; set; }
             public string DateTo { get; set; }
+        }
+        public class EmployeeFiltersAdmin
+        {
+            public string datefrom { get; set; }
+            public string dateto { get; set; }
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> GetPayslipAdmin(EmployeeFiltersAdmin data)
+        //{
+        //    string result = "";
+        //    var list = new List<TblPayslipVM>();
+        //    try
+        //    {
+
+        //        HttpClient client = new HttpClient();
+        //        var url = DBConn.HttpString + "/Payroll/ComputePayslipAdmin";
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+        //        StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+        //        using (var response = await client.PostAsync(url, content))
+        //        {
+        //            string res = await response.Content.ReadAsStringAsync();
+        //            list = JsonConvert.DeserializeObject<List<TblPayslipVM>>(res);
+
+        //        }
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        string status = ex.GetBaseException().ToString();
+        //    }
+        //    return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+
+        //}
+        public async Task<List<TblPayslipVM>> GetPayslipAdmin(RequestParamenter data)
+        {
+            string result = "";
+            var list = new List<TblPayslipVM>();
+            try
+            {
+
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Payroll/ComputePayslipAdmin";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblPayslipVM>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return list;
         }
         public async Task<List<TblPayslipVM>> GetPayslip(EmployeeFilters data)
         {
@@ -104,12 +205,7 @@ namespace MVC_HRIS.Controllers
 
             try
             {
-                //var data = new RequestParamenter
-                //{
-                //    EmployeeID = 3066,
-                //    DateFrom = "2025-02-01",
-                //    DateTo = "2025-02-28"
-                //};
+            
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/Payroll/ComputePayslip";
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
