@@ -452,8 +452,37 @@
                         "data": "renderedHours", "orderable": false
                     },
                     {
-                        "title": "Status",
-                        "data": "statusName", "orderable": false
+                        "title": "",
+                        "data": "statusName", "orderable": false,
+                        "render": function (data, type, row) {
+                            var badge = "";
+                            if (data == 'Approved') {
+                                badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
+                            }
+                            else if(data == 'Pending'){
+                                badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
+                            }
+                            else if(data == 'Declined'){
+                                badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
+                            }
+                            if (data == 'Approved' || data == 'Pending' || data == 'Declined'){
+
+                                if(row.employeeType == '1'){
+                                    if(row.timelogStatus == 'Late'  && row.isUnderTime == '0'){
+
+                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ffcc00;'>Late</span>";
+                                    }
+                                    else if(row.timelogStatus === "ONTIME" && row.isUnderTime === "1"){
+
+                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #b2651b;'>Undertime</span>";
+                                    }
+                                    else{
+                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ac1616;'>Late & Undertime</span>";
+                                    }
+                                }
+                            }
+                            return badge;
+                        }
                     }
                 ], responsive: true
                 // , columnDefs:  columnDefsConfig
@@ -487,35 +516,12 @@
                     },
                     {
                         targets: [7],
-                        width: "15%",
-                        className: 'left-align'
+                        width: "20%",
                     },
 
                 ],
                 order: [[1, 'desc']] // Sort the second column (index 1) by descending order
-                , rowCallback: function (row, data, dataIndex) {
-                    console.log(data); // Debugging step
-
-                    if (data.employeeType === "1") {
-                        if (data.timelogStatus === "Late" && data.isUnderTime === "0") {
-                            $(row).css('background-color', '#ffcc00'); // Yellow
-                        }
-                        else if (data.timelogStatus === "ONTIME" && data.isUnderTime === "1") {
-
-                            $(row).css('background-color', '#ff9966'); // Light Red
-                        }
-                        else if (data.timelogStatus === "Late" && data.isUnderTime === "1") {
-
-                            $(row).css('background-color', '#cc3300'); // Red
-                        }
-
-                    }
-                    // else if (data.statusName === "Approved") {
-                    //     $(row).css('background-color', '#cce5ff'); // Light Blue
-                    // } else if (data.statusName === "Rejected") {
-                    //     $(row).css('background-color', '#ccffcc'); // Light Green
-                    // }
-                }
+                
             };
 
             var table = $(tableId).DataTable(dtProperties);

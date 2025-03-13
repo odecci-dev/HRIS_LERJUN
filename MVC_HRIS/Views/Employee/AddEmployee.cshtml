@@ -535,11 +535,11 @@
                     },
                     type: "POST",
                     beforeSend: function () {
-                        showloadingoverlay();
+                        // showloadingoverlay();
                     },
                     datatype: "json",
                     success: function (response) {
-                        // console.log(response);
+                        console.log(response);
                         var array = response[0].address.split(',');
                         // console.log(array[1].replace(' ', ''));
                         // console.log(array[2].replace(' ', ''));
@@ -674,7 +674,7 @@
                         img_edit = response[0].filePath;
                         // console.log(img_edit);
                         if (img_edit != "OPTION.webp") {
-                            var img = $('<img>').attr('src', '/img/' + img_edit);
+                            var img = $('<img>').attr('src',img_edit);
                             img.attr('height', '100%');
                             img.attr('width', '100%');
                             img.css({
@@ -701,7 +701,7 @@
                     },
                     complete: function () {
 
-                        hideloadingoverlay();
+                        // hideloadingoverlay();
                     }
                 });
                 $.ajax({
@@ -711,7 +711,7 @@
                     },
                     type: "POST",
                     beforeSend: function () {
-                        showloadingoverlay();
+                        // showloadingoverlay();
                     },
                     datatype: "json",
                     success: function (response) {
@@ -729,7 +729,7 @@
                     },
                     complete: function () {
 
-                        hideloadingoverlay();
+                        // hideloadingoverlay();
                     }
                 });
             }
