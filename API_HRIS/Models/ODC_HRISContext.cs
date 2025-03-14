@@ -63,6 +63,7 @@ public partial class ODC_HRISContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.Entity<TblTimeLog>(entity =>
         {
             entity.ToTable("tbl_TimeLogs");

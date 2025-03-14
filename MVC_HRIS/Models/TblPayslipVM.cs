@@ -24,6 +24,7 @@ public partial class TblPayslipVM
     public DateTime PayDate { get; set; }
 
     // Salary Details
+    public decimal RenderedHours { get; set; }
     public decimal GrossPay { get; set; }
     public decimal NetPay { get; set; }
 
