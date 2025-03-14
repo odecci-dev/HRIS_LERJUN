@@ -320,6 +320,7 @@ namespace API_HRIS.Manager
 
                                         string query = $@"update tbl_UsersModel set JWToken='" + string.Concat(strtokenresult.TakeLast(15)) + "' where id = '" + dt.Rows[0]["id"].ToString() + "'";
                                         db.DB_WithParam(query);
+                                        
 
                                         Stats = "Ok";
                                         Mess = "Successfully Log In";
