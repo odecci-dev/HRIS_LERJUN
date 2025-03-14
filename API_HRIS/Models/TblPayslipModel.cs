@@ -27,6 +27,8 @@ public partial class TblPayslipModel
     public decimal TaxDeduction { get; set; }
     [Column(TypeName = "decimal(18,2)")]
     public decimal NetSalary { get; set; }
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal RenderedHours { get; set; }
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public string PayslipNumber { get; set; }
     public int? Status { get; set; }
