@@ -82,7 +82,8 @@ namespace MVC_HRIS.Controllers
                     PhilHealth = p.PhilHealth,
                     PagIbig = p.PagIbig,
                     PayDate = p.PayDate,
-                    TotalDeductions = p.TotalDeductions
+                    TotalDeductions = p.TotalDeductions,
+                    RenderedHours = p.RenderedHours
                 })
                 .OrderByDescending(p => p.PayDate)
                 .ToList();
@@ -111,6 +112,7 @@ namespace MVC_HRIS.Controllers
             var result = GetPayslip(data).GetAwaiter().GetResult().FirstOrDefault();
             var model = new TblPayslipVM
             {
+                RenderedHours=result.RenderedHours,
                 EmployeeName=result.EmployeeName,
                 UserId = result.UserId,
                 EmployeeNumber = result.EmployeeNumber,
@@ -147,33 +149,7 @@ namespace MVC_HRIS.Controllers
             public string datefrom { get; set; }
             public string dateto { get; set; }
         }
-        //[HttpPost]
-        //public async Task<IActionResult> GetPayslipAdmin(EmployeeFiltersAdmin data)
-        //{
-        //    string result = "";
-        //    var list = new List<TblPayslipVM>();
-        //    try
-        //    {
-
-        //        HttpClient client = new HttpClient();
-        //        var url = DBConn.HttpString + "/Payroll/ComputePayslipAdmin";
-        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
-        //        StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-        //        using (var response = await client.PostAsync(url, content))
-        //        {
-        //            string res = await response.Content.ReadAsStringAsync();
-        //            list = JsonConvert.DeserializeObject<List<TblPayslipVM>>(res);
-
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        string status = ex.GetBaseException().ToString();
-        //    }
-        //    return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
-
-        //}
+ 
         public async Task<List<TblPayslipVM>> GetPayslipAdmin(RequestParamenter data)
         {
             string result = "";
