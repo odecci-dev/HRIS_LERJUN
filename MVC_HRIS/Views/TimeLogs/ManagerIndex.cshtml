@@ -67,7 +67,7 @@
                                     </select>
                                 </div>
                                 <div class="input-holder">
-                                    <button class="btn btn-success" id="export-timelogs" title="Time Out" onclick="ExportFunction()">
+                                    <button class="btn btn-success" id="export-timelogs" title="Time Out" onclick="ExportFunction()" style="font-size: .8rem;">
                                         <i class="fa-solid fa-file-arrow-down"></i> Export
                                     </button>
                                 </div>
@@ -382,14 +382,14 @@
                             //var images = img;
                             var fullname = row.fname + " " + row.lname;
                             var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
-                                                                    <div class="data-img">
-                                                                        <img src='${images}' width="100%" />
-                                                                    </div>
-                                                                    <div style="align-items: center;">
-                                                                        <h6 style="text-align: left; margin: 0; font-size: 16px;">${fullname}</h6>
-                                                                        <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
-                                                                    </div>
-                                                                </div>`;
+                                            <div class="data-img">
+                                                <img src='${images}' width="100%" />
+                                            </div>
+                                            <div style="align-items: center;">
+                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                            </div>
+                                        </div>`;
                             return btn;
                         }
                     },
@@ -457,27 +457,27 @@
                         "render": function (data, type, row) {
                             var badge = "";
                             if (data == 'Approved') {
-                                badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
+                                badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px; font-size: .8rem'>Approved</span>";
                             }
                             else if(data == 'Pending'){
-                                badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
+                                badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px; font-size: .8rem'>Pending</span>";
                             }
                             else if(data == 'Declined'){
-                                badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
+                                badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px; font-size: .8rem'>Declined</span>";
                             }
                             if (data == 'Approved' || data == 'Pending' || data == 'Declined'){
 
                                 if(row.employeeType == '1'){
                                     if(row.timelogStatus == 'Late'  && row.isUnderTime == '0'){
 
-                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ffcc00;'>Late</span>";
+                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ffcc00; font-size: .8rem'>Late</span>";
                                     }
                                     else if(row.timelogStatus === "ONTIME" && row.isUnderTime === "1"){
 
-                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #b2651b;'>Undertime</span>";
+                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #b2651b; font-size: .8rem'>Undertime</span>";
                                     }
                                     else{
-                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ac1616;'>Late & Undertime</span>";
+                                        badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ac1616; font-size: .8rem'>Late & Undertime</span>";
                                     }
                                 }
                             }
@@ -517,6 +517,7 @@
                     {
                         targets: [7],
                         width: "20%",
+                        className: 'left-align'
                     },
 
                 ],
@@ -525,7 +526,7 @@
             };
 
             var table = $(tableId).DataTable(dtProperties);
-
+            
             // Attach computeTotalRenderedHours to the search event
             $(tableId + '_filter input').on('keyup', function () {
                 computeTotalRenderedHours();
@@ -624,7 +625,7 @@
                 $(rows).each(function () {
                     var renderedHours = parseFloat($(this).find('td:nth-child(7)').text()) || 0; // 7th column (0-based index)
                     var status = $(this).find('td:nth-child(8)').text(); // 7th column (0-based index)
-                    if (status == 'Approved') {
+                    if (status.includes('Approved')) {
                         totalHours += renderedHours;
                     }
                     // console.log(status);

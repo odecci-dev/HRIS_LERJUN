@@ -86,8 +86,31 @@ namespace MVC_HRIS.Controllers
 
             return PartialView("OTFiling");
         }
+
+        public partial class TblOvertimeModelView
+        {
+            public int Id { get; set; }
+            public string? OTNo { get; set; }
+            public string? EmployeeNo { get; set; }
+            public string? Date { get; set; }
+            public string? StartTime { get; set; }
+            public string? EndTime { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+            public string? HoursFiled { get; set; }
+            public string? HoursApproved { get; set; }
+            public string? Remarks { get; set; }
+            public string? ConvertToLeave { get; set; }
+            public string? DateCreated { get; set; }
+            public int? LeaveId { get; set; }
+            public int? Status { get; set; }
+            public int? CreatedBy { get; set; }
+            public string? isDeleted { get; set; }
+            public int? DeletedBy { get; set; }
+            public string? DateDeleted { get; set; }
+        }
         [HttpPost]
-        public async Task<IActionResult> SaveOT(TblOvertimeVM data)
+        public async Task<IActionResult> SaveOT(TblOvertimeModelView data)
         {
             string res = "";
             try
