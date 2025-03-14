@@ -540,11 +540,18 @@ function OTdeclinemodal() {
     var element = document.querySelectorAll(".modal-header");
     var content = document.querySelectorAll(".modal-content");
     var modal_span = document.querySelectorAll(".modal-header span");
-    var delete_ = '<input type="submit" value="YES" id="btn-delete_item" class="btn-pay"  onclick="changeStatus_item()"/>';
+    var delete_ = '<input type="submit" value="YES" id="btn-decline-ot" class="btn-pay"  onclick="changeStatus_item()"/>';
     var cancelButton = '<input type="submit" value="NO" id="btn-cancel" class="btn-NO" data-dismiss="modal"/>';
+    var declineReason = `<div class="input-holder" id="timeoutreasonholder">
+                            <span class="label" > Specify Reason:</span >
+                                <div class="input-container">
+                                    <textarea id="declineReason" style="height: 66px; width: 100%"></textarea>
+                                </div>
+                        </div > `;
+    
     $('.input-container-button').empty();
     $('.img-header').empty();
-
+    $('#timeoutreasonholder').empty();
     content.forEach(content => {
         content.style.setProperty("border-radius", "15px 15px 15px 15px", "important");
         content.style.setProperty("border-bottom", "7px #d03a4b solid", "important");
@@ -560,10 +567,11 @@ function OTdeclinemodal() {
         element.style.setProperty("border-radius", "15px 15px 0 0", "important");
         element.style.setProperty("text-align", "center", "important");
     });
-    document.getElementById('message').textContent = 'Are you sure you want to aprroved this item?';
+    document.getElementById('message').textContent = 'Are you sure you want to decline this item?';
     document.getElementById('validation').textContent = 'Confirmation';
     $('.input-container-button').append(cancelButton);
     $('.input-container-button').append(delete_);
+    $('.modal-body').append(declineReason);
     $('.img-header').append('<img id="modalImage" src="/img/OPTION.webp" alt="Modal Image" />');
 }
 function changeStatus_item() {

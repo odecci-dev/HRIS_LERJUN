@@ -184,6 +184,9 @@ namespace API_HRIS.Controllers
             data.Identifier = "Auto";
             data.StatusId = data.StatusId;
             _context.TblTimeLogs.Add(data);
+            string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isLoggedIn] = '1'" +
+                                       " WHERE id = '" + data.UserId+ "'";
+            db.DB_WithParam(queryIsLoggedIn);
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -342,6 +345,9 @@ namespace API_HRIS.Controllers
                     //                + " WHERE Id = '" + lastTimein.Id + "'";
                     //db.AUIDB_WithParam(query);
                 }
+                string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isLoggedIn] = '1'" +
+                                       " WHERE id = '" + tblTimeLog.UserId + "'";
+                db.DB_WithParam(queryIsLoggedIn);
                 return Ok("TimeOut");
             }
             else
@@ -410,6 +416,9 @@ namespace API_HRIS.Controllers
                 data.DeleteFlag = 1;
                 data.Identifier = "Auto";
                 data.StatusId = data.StatusId;
+                string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isLoggedIn] = '1'" +
+                                       " WHERE id = '" + data.UserId + "'";
+                db.DB_WithParam(queryIsLoggedIn);
                 _context.TblTimeLogs.Add(data);
                 await _context.SaveChangesAsync();
             }
@@ -577,6 +586,10 @@ namespace API_HRIS.Controllers
                     TimeSpan times = datetimeToday.Subtract(lastTi);
                     double decimalHours = Math.Round(times.TotalHours, 2);
                     lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2")) - lastTimein.TotalLunchHours;
+
+                    string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isLoggedIn] = '0'" +
+                                           " WHERE id = '" + tblTimeLog.UserId + "'";
+                    db.DB_WithParam(queryIsLoggedIn);
                     _context.Entry(lastTimein).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                 }
