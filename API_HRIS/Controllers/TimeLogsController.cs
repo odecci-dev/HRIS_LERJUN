@@ -920,6 +920,7 @@ namespace API_HRIS.Controllers
                     item.TimeIn = dr["TimeIn"].ToString();
                     item.TimeOut = dr["TimeOut"].ToString();
                     item.RenderedHours = dr["RenderedHours"].ToString();
+                    item.Remarks = dr["Remarks"].ToString();
                     item.LunchIn = dr["LunchIn"].ToString();
                     item.LunchOut = dr["LunchOut"].ToString();
                     item.TotalLunchHours = dr["TotalLunchHours"].ToString();
