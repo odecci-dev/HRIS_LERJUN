@@ -173,9 +173,8 @@ function FetchOvertimeList() {
 function OverTimeDOM() {
     $("#otsumbit").on("submit", function (event) {
         event.preventDefault();
-
         //$.ajax({
-        //    url: '/Salary/SaveSalary',
+        //    url: '/Overtime/SaveSalary',
         //    data: data,
         //    type: "POST",
         //    dataType: "json"

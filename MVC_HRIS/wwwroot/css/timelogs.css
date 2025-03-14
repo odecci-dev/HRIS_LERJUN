@@ -1,3 +1,4 @@
+
 .mod-inputs-nw {
     font-size: 1.2rem;
     height: 35px;
@@ -83,23 +84,23 @@
     }
 /* Text Fiel */
 .input-holder {
-    margin: 20px 0;
+/*    margin: 20px 0;*/
 }
 
-    .input-holder .input-container {
-        margin-top: 5px;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
+.input-holder .input-container {
+    margin-top: 5px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
 
-        .input-holder .input-container input,
-        .input-holder .input-container textarea,
-        .input-holder .input-container select {
-            width: 100% !important;
-            /* padding: 10px 5px; */
-            margin: 0;
-        }
+.input-holder .input-container input,
+.input-holder .input-container textarea,
+.input-holder .input-container select {
+    width: 100% !important;
+    /* padding: 10px 5px; */
+    margin: 0;
+}
 /* Style for the error message */
 .error {
     color: red;
@@ -133,16 +134,16 @@ button:disabled {
     position: relative;
 }
 
-    .m-notification span {
-        background-color: red !important;
-        color: white !important;
-        padding: 8px;
-        border-radius: 100%;
-        font-size: 15px;
-        position: absolute;
-        top: -10px;
-        right: 85%;
-    }
+.m-notification span {
+    background-color: red !important;
+    color: white !important;
+    padding: 8px;
+    border-radius: 100%;
+    font-size: 15px;
+    position: absolute;
+    top: -10px;
+    right: 85%;
+}
 
 .timeout-modal-holder {
     background-color: rgba(0,0,0, .3);
@@ -159,9 +160,9 @@ button:disabled {
     display: none;
 }
 
-    .timeout-modal-holder #timeoutreasonholder {
-        display: none;
-    }
+.timeout-modal-holder #timeoutreasonholder {
+    display: none;
+}
 
 .sub-content-mv {
     display: flex;
@@ -215,7 +216,7 @@ footer {
 }
 
 .mod-inputs-nw {
-    font-size: 1.2rem;
+    font-size: .8rem;
     height: 35px;
     padding: 10px;
     outline: none;
@@ -223,6 +224,8 @@ footer {
     box-shadow: inset 1px 2px 1px 1px rgba(116, 113, 113, 0.5);
     border-radius: 5px;
     /*    color: var(--secondary-dark);*/
+
+    padding: 10px 5px
 }
 
 .input-container-2 {
@@ -259,7 +262,7 @@ footer {
 }
 
 table span {
-    color: var(--dark) !important;
+/*    color: var(--dark);*/
 }
 
 .left-align {
@@ -289,35 +292,38 @@ table .child ul li .dtr-data .action {
 #payroll-table_wrapper .row:first-of-type,
 #salary-table_wrapper .row:first-of-type,
 #schedule-table_wrapper .row:first-of-type,
-#etype-table_wrapper .row:first-of-type {
+#etype-table_wrapper .row:first-of-type,
+#pending-overtime-table_wrapper .row:first-of-type {
     background-color: var(--dark);
     padding: 10px;
     color: white;
     margin: 0;
     align-items: center;
-    margin-bottom: -5px
+    margin-bottom: -5px;
 }
 
-    #time-table_wrapper .row:first-of-type label,
-    #pending-timelogs-table_wrapper .row:first-of-type label,
-    #time-table_wrapper .row:first-of-type label select,
-    #pending-timelogs-table_wrapper .row:first-of-type label select,
-    #emp-table_wrapper .row:first-of-type label,
-    #emp-table_wrapper .row:first-of-type label select,
-    #pos-table_wrapper .row:first-of-type label,
-    #pos-table_wrapper .row:first-of-type label select,
-    #dep-table_wrapper .row:first-of-type label,
-    #dep-table_wrapper .row:first-of-type label select,
-    #payroll-table_wrapper .row:first-of-type label,
-    #payroll-table_wrapper .row:first-of-type label select,
-    #salary-table_wrapper .row:first-of-type label,
-    #salary-table_wrapper .row:first-of-type label select,
-    #schedule-table_wrapper .row:first-of-type label,
-    #schedule-table_wrapper .row:first-of-type label select,
-    #etype-table_wrapper .row:first-of-type label,
-    #etype-table_wrapper .row:first-of-type label select {
-        margin: 0 !important;
-    }
+#time-table_wrapper .row:first-of-type label,
+#pending-timelogs-table_wrapper .row:first-of-type label,
+#time-table_wrapper .row:first-of-type label select,
+#pending-timelogs-table_wrapper .row:first-of-type label select,
+#emp-table_wrapper .row:first-of-type label,
+#emp-table_wrapper .row:first-of-type label select,
+#pos-table_wrapper .row:first-of-type label,
+#pos-table_wrapper .row:first-of-type label select,
+#dep-table_wrapper .row:first-of-type label,
+#dep-table_wrapper .row:first-of-type label select,
+#payroll-table_wrapper .row:first-of-type label,
+#payroll-table_wrapper .row:first-of-type label select,
+#salary-table_wrapper .row:first-of-type label,
+#salary-table_wrapper .row:first-of-type label select,
+#schedule-table_wrapper .row:first-of-type label,
+#schedule-table_wrapper .row:first-of-type label select,
+#etype-table_wrapper .row:first-of-type label,
+#etype-table_wrapper .row:first-of-type label select,
+#pending-overtime-table_wrapper .row:first-of-type label,
+#pending-overtime-table_wrapper .row:first-of-type label select  {
+    margin: 0 !important;
+}
 
 .action-navbar {
     background-color: var(--dark);
