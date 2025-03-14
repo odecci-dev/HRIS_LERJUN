@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace API_HRIS.Controllers
 {
@@ -152,9 +154,30 @@ namespace API_HRIS.Controllers
 
             return Ok(result);
         }
-
+        public partial class TblOvertimeModelView
+        {
+            public int Id { get; set; }
+            public string? OTNo { get; set; }
+            public string? EmployeeNo { get; set; }
+            public string? Date { get; set; }
+            public string? StartTime { get; set; }
+            public string? EndTime { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+            public string? HoursFiled { get; set; }
+            public string? HoursApproved { get; set; }
+            public string? Remarks { get; set; }
+            public string? ConvertToLeave { get; set; }
+            public string? DateCreated { get; set; }
+            public int? LeaveId { get; set; }
+            public int? Status { get; set; }
+            public int? CreatedBy { get; set; }
+            public string? isDeleted { get; set; }
+            public int? DeletedBy { get; set; }
+            public string? DateDeleted { get; set; }
+        }
         [HttpPost]
-        public async Task<ActionResult<TblOvertimeModel>> save(TblOvertimeModel data)
+        public async Task<ActionResult<TblOvertimeModel>> save(TblOvertimeModelView data)
         {
             if (_context.TblOvertimeModel == null)
             {
@@ -180,12 +203,14 @@ namespace API_HRIS.Controllers
                 //_context.TblPositionModels.Add(tblPositionModel);
                 if (data.Id == 0)
                 {
-                    string query =
-                        $@"INSERT INTO [TblOvertimeModel] 
-                 ([EmployeeNo],[Date],[StartTime],[EndTime],[StartDate],[EndDate],[HoursFiled],[Remarks],[ConvertToLeave],[DateCreated],[isDeleted],[CreatedBy],[Status])
-                 VALUES ('" + data.EmployeeNo + "','" + data.Date + "','" + data.StartTime + "','" + data.EndTime + "','" + data.StartDate + "','" + data.EndDate + "','" + data.HoursFiled + "','" + data.Remarks + "','" + data.ConvertToLeave + "','" + DateTime.Now + "','0','" + data.CreatedBy + "','1004');";
+                    string query = $@"INSERT INTO [TblOvertimeModel] 
+                     ([EmployeeNo],[Date],[StartTime],[EndTime],[StartDate],[EndDate],[HoursFiled],[Remarks],[ConvertToLeave],[DateCreated],[isDeleted],[CreatedBy],[Status])
+                     VALUES ('" + data.EmployeeNo + "','" + data.Date + "','" + data.StartTime + "','" + data.EndTime + "','" + data.StartDate + "','" + data.EndDate + "','" + data.HoursFiled + "','" + data.Remarks + "','" + data.ConvertToLeave + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + data.CreatedBy + "','1004');";
+                    
                     db.AUIDB_WithParam(query);
                     //_context.TblOvertimeModel.Add(data);
+
+                    //await _context.SaveChangesAsync();
                     status = "Overtime request has been successfully saved";
                     dbmet.InsertAuditTrail("Save Overtime request" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Overtime Module", "User", "0");
                     //_context.SaveChanges();

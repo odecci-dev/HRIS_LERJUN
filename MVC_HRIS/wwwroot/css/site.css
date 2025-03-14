@@ -11,6 +11,7 @@
 @import "print-layout.css";
 @import "schedule.css";
 @import "calendar.css";
+@import "overtime.css";
 
 * {
     margin: 0;

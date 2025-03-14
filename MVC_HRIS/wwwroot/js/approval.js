@@ -47,7 +47,7 @@ function initializeTimlogsDataTable() {
                                                 <img src='${images}' width="100%" />
                                             </div>
                                             <div style="align-items: center;">
-                                                <h6 style="text-align: left; margin: 0; font-size: 16px;">${fullname}</h6>
+                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
                                                 <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
                                             </div>
                                         </div>`;
@@ -130,7 +130,7 @@ function initializeTimlogsDataTable() {
                     var task = row.taskId;
                     var button = "";
                     if (row.statusId == '0') {
-                        button = `<div class="action">
+                        button = `<div class="action" style="justify-content: start !important">
                                                     <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
                                                             data-id="${data}"
                                                             data-status="${row.statusId}"
@@ -140,6 +140,7 @@ function initializeTimlogsDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                         >
                                                         <i class="fa-solid fa-circle-xmark"></i> Decline
                                                     </button>
@@ -152,6 +153,7 @@ function initializeTimlogsDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                         >
                                                         <i class="fa-solid fa-circle-check"></i> Approve
                                                     </button>
@@ -175,7 +177,10 @@ function initializeTimlogsDataTable() {
             { targets: 5, className: 'none' },
             { "type": "date", "targets": 0 },
             { width: '25%', targets: 0 },
-            { width: '5%', targets: 8 }
+            {
+                targets: [8],
+                width: "5%", className: 'left-align' 
+            },
         ],
         order: [[0, 'desc']] // Sort the second column (index 1) by descending order
     };
