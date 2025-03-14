@@ -453,7 +453,8 @@ body-container {
 .tbl-edit,
 .tbl-approve,
 .tbl-view,
-.default-btn {
+.default-btn,
+.btn-danger {
     display: flex;
     gap: 5px;
     margin: 0 0px;
@@ -462,7 +463,6 @@ body-container {
     padding: 5px 10px 5px 10px;
     cursor: pointer;
     border-radius: 5px;
-    background-color: var(--blue);
     color: #fff !important;
     width: 100%;
     font-size: 12px !important;
