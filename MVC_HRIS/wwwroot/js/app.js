@@ -8,6 +8,9 @@ document.getElementById('toggle-sidebar').addEventListener('click', () => {
 
     updateSidebar();
 });
+function refreshPage() {
+    window.location.reload();
+}
 function updateSidebar() {
     const isActive = localStorage.getItem('sidebar-active') === 'true';
     const sidebar = document.getElementById('mysidebar');
