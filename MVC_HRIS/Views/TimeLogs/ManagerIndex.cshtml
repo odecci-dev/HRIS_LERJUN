@@ -364,6 +364,7 @@
                         var url = new URL(window.location.href);
                         var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                         // console.log('table1', _currentPage);
+                        
                         table.page(_currentPage - 1).draw('page');
 
                         // Compute total rendered hours after data is loaded

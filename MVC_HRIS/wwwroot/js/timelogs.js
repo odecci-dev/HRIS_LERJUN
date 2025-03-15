@@ -9,6 +9,7 @@ async function timeLogs() {
         var mtltimeout = document.getElementById('mtltimeout').value;
         var manualtask = document.getElementById('manualtask').value;
         var mtlremarks = document.getElementById('mtlremarks').value;
+        var mtlbreak = document.getElementById('mtlbreak').value; 
 
         var data = {};
         data.id = mtlid;
@@ -16,7 +17,7 @@ async function timeLogs() {
         data.date = mtldate;
         data.timeIn = mtltimein;
         data.timeOut = mtltimeout;
-        data.renderedHours = (new Date(mtltimeout) - new Date(mtltimein)) / 3600000;
+        data.renderedHours = ((new Date(mtltimeout) - new Date(mtltimein)) / 3600000) - mtlbreak;
         data.TaskId = manualtask;
         data.deleteFlag = 1;
         data.Remarks = mtlremarks;
@@ -439,6 +440,9 @@ function initializeDataTable() {
             data: {
                 data: data
             },
+            beforeSend: function () {
+                showodcloading();
+            },
             dataType: "json",
             processing: true,
             serverSide: true,
@@ -450,6 +454,9 @@ function initializeDataTable() {
 
                 // Compute total rendered hours after data is loaded
                 computeTotalRenderedHoursEmp();
+
+                // Hide loading indicator after completion
+                hideodcloading();
             },
             error: function (err) {
                 alert(err.responseText);
