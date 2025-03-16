@@ -959,5 +959,241 @@ namespace API_HRIS.Controllers
             }
 
         }
+
+        public class SummaryTimelogsVM
+        {
+            public string? UserID { get; set; }
+            public string? Fullname { get; set; }
+            public string? ApprovedOvertimeHours { get; set; }
+            public string? UndertimeHours { get; set; }
+            public string? ApprovedOffsetTimeHours { get; set; }
+            public string? ApprovedTotalHours { get; set; }
+            public string? RequiredHours { get; set; }
+            public string? DaysLate { get; set; }
+            public string? WorkingDays { get; set; }
+        }
+
+            [HttpPost]
+        public async Task<IActionResult> SummaryTimeLogList(TimeLogsParam data)
+        {
+
+            var result = (dynamic)null;
+            try
+            {
+                string sql = $@"DECLARE @StartDate DATE = '"+data.datefrom+"', @EndDate DATE = '" + data.dateto + "'";
+
+                sql += $@" SELECT
+	                um.id as 'UserID'
+	                ,um.Fullname
+	                ,COALESCE(SUM(OverTime.HoursApproved),0)AS 'ApprovedOvertimeHours'
+	                ,CASE
+		                WHEN COALESCE(COALESCE(workingDays.ScheduledWorkingDay*8, 0) - SUM(TotalTime.RenderedHours),0) < 0 THEN 0
+		                ELSE COALESCE(COALESCE(workingDays.ScheduledWorkingDay*8, 0) - SUM(TotalTime.RenderedHours),0)
+	                END AS 'UndertimeHours'
+	                ,COALESCE(SUM(OffsetTime.HoursApproved),0)AS 'ApprovedOffsetTimeHours'
+	                ,COALESCE(SUM(TotalTime.RenderedHours),0) AS 'ApprovedTotalHours'
+	                ,COALESCE(workingDays.ScheduledWorkingDay*8, 0) 'RequiredHours'
+	                ,COALESCE(SUM(late.LateCount), 0) 'DaysLate'
+	                ,COALESCE(workingDays.ScheduledWorkingDay, 0) 'WorkingDays'
+                FROM tbl_UsersModel um WITH(NOLOCK)
+
+                LEFT JOIN (SELECT SUM(RenderedHours) AS RenderedHours, UserId FROM tbl_TimeLogs WITH(NOLOCK) WHERE StatusId = '1' AND Date BETWEEN @StartDate AND @EndDate GROUP BY UserId)TotalTime 
+                ON um.ID = TotalTime.UserId
+
+                LEFT JOIN (SELECT SUM(HoursApproved) AS HoursApproved,EmployeeNo FROM TblOvertimeModel WHERE Status = '5' AND ConvertToLeave = 0 AND ConvertToOffset = 0 AND Date BETWEEN @StartDate AND @EndDate GROUP BY EmployeeNo  )OverTime 
+                ON um.EmployeeID = OverTime.EmployeeNo
+                LEFT JOIN (SELECT SUM(HoursApproved) AS HoursApproved,EmployeeNo FROM TblOvertimeModel WHERE Status = '5' AND ConvertToLeave = 0 AND ConvertToOffset = 1 AND Date BETWEEN @StartDate AND @EndDate GROUP BY EmployeeNo  )OffsetTime 
+                ON um.EmployeeID = OffsetTime.EmployeeNo
+
+                LEFT JOIN (
+                SELECT
+                SUM(isScheduled) ScheduledWorkingDay
+                ,sched.userId
+                FROM (
+	                SELECT DATEADD(DAY, number, @StartDate) AS SQLDate
+	                FROM master.dbo.spt_values
+	                WHERE type = 'P' 
+	                AND DATEADD(DAY, number, @StartDate) <= @EndDate) CutOffDates
+                LEFT JOIN (SELECT 
+	                DISTINCT(DATENAME(WEEKDAY,DATE)) AS 'schedDays'
+	                ,um.Id AS userId
+	                ,CASE
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Monday' then CASE WHEN sm.MondayS IS NULL THEN 0 ELSE 1 END
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Tuesday' then CASE WHEN sm.TuesdayS IS NULL THEN 0 ELSE 1 END
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Wednesday' then CASE WHEN sm.WednesdayS IS NULL THEN 0 ELSE 1 END
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Thursday' then CASE WHEN sm.ThursdayS IS NULL THEN 0 ELSE 1 END
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Friday' then CASE WHEN sm.FridayS IS NULL THEN 0 ELSE 1 END
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Saturday' then CASE WHEN sm.SaturdayS IS NULL THEN 0 ELSE 1 END
+		                WHEN DATENAME(WEEKDAY,DATE) = 'Sunday' then CASE WHEN sm.SundayS IS NULL THEN 0 ELSE 1 END
+	                END isScheduled
+                FROM tbl_TimeLogs tl
+                LEFT JOIN tbl_UsersModel um
+                on um.Id = tl.UserId
+                left join tbl_EmployeeType et
+                on et.Id = Um.EmployeeType
+                LEFT JOIN tbl_ScheduleModel sm
+                ON SM.ID = ET.ScheduleId
+                WHERE Date BETWEEN @StartDate AND @EndDate
+                GROUP BY DATE, sm.MondayS, sm.TuesdayS, sm.WednesdayS, sm.ThursdayS, sm.FridayS, sm.SaturdayS, sm.SundayS,um.Id) sched
+                ON sched.schedDays = DATENAME(WEEKDAY,CutOffDates.SQLDate)
+                GROUP BY sched.userId) workingDays
+                on um.Id = workingDays.userId
+
+                LEFT JOIN (
+                SELECT
+	                lateCount.userId
+	                ,COUNT(lateCount.TimeLogsStatus) LateCount
+                FROM
+                (SELECT 
+	                um.id AS 'userId'
+	                ,tl.Date
+	                ,SUM(CASE
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Monday' 
+		                THEN 
+			                CASE
+				                WHEN sched.MondayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.MondayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Tuesday' 
+		                THEN 
+			                CASE
+				                WHEN sched.TuesdayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.TuesdayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Wednesday' 
+		                THEN 
+			                CASE
+				                WHEN sched.WednesdayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.WednesdayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Thursday' 
+		                THEN 
+			                CASE
+				                WHEN sched.ThursdayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.ThursdayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Friday' 
+		                THEN 
+			                CASE
+				                WHEN sched.FridayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.FridayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Saturday' 
+		                THEN 
+			                CASE
+				                WHEN sched.SaturdayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.SaturdayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                WHEN DATENAME(WEEKDAY, LEFT(tl.TimeIn,10)) = 'Sunday' 
+		                THEN 
+			                CASE
+				                WHEN sched.SundayS IS NULL THEN 0
+				                ELSE
+				
+				                CASE
+					                WHEN RIGHT(tl.TimeIn, 5) > sched.SundayS
+					                THEN 1
+					                ELSE 0
+				                END
+			                END
+		                ELSE NULL
+	                END )as TimeLogsStatus
+                FROM tbl_TimeLogs tl WITH(NOLOCK)
+                LEFT JOIN tbl_UsersModel um WITH(NOLOCK)
+                ON tl.UserId = um.ID
+                LEFT JOIN tbl_EmployeeType et WITH(NOLOCK)
+                ON et.ID = um.EmployeeType
+                LEFT JOIN tbl_ScheduleModel sched WITH(NOLOCK)
+                ON sched.ID = et.ScheduleId
+                LEFT JOIN tbl_TimeLogStatus ts WITH(NOLOCK)
+                ON ts.StatusId = tl.StatusId
+                LEFT JOIN tbl_TaskModel t WITH(NOLOCK)
+                ON t.Id = tl.TaskId
+                WHERE tl.Date between @StartDate AND @EndDate 
+                GROUP BY um.id, sched.MondayS, sched.TuesdayS, sched.WednesdayS, sched.ThursdayS, sched.FridayS, sched.SaturdayS, sched.SundayS, sched.MondayE, sched.TuesdayE, sched.WednesdayE, sched.ThursdayE, sched.FridayE, sched.SaturdayE, sched.SundayE,tl.Date
+
+                ) lateCount
+                WHERE lateCount.TimeLogsStatus != 0 
+                GROUP BY lateCount.userId) AS late
+                ON late.userId = um.ID
+                WHERE um.Id IS NOT NULL";
+
+
+                if (data.Department != "0")
+                {
+                    sql += " AND um.Department = '" + data.Department + "'";
+                }
+                if (data.UserId != "0")
+                {
+                    sql += " AND um.Id = '" + data.UserId + "'";
+                }
+
+
+                sql += "  GROUP BY um.Fullname,workingDays.ScheduledWorkingDay,um.id ORDER BY um.Id desc";
+                result = new List<SummaryTimelogsVM>();
+                DataTable table = db.SelectDb(sql).Tables[0];
+                foreach (DataRow dr in table.Rows)
+                {
+                    var item = new SummaryTimelogsVM();
+                    item.UserID = dr["UserID"].ToString();
+                    item.Fullname = dr["Fullname"].ToString();
+                    item.ApprovedOvertimeHours = dr["ApprovedOvertimeHours"].ToString();
+                    item.UndertimeHours = dr["UndertimeHours"].ToString();
+                    item.ApprovedOffsetTimeHours = dr["ApprovedOffsetTimeHours"].ToString();
+                    item.ApprovedTotalHours = dr["ApprovedTotalHours"].ToString();
+                    item.RequiredHours = dr["RequiredHours"].ToString();
+                    item.DaysLate = dr["DaysLate"].ToString();
+                    item.WorkingDays = dr["WorkingDays"].ToString();
+
+
+                    result.Add(item);
+                }
+
+
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }
