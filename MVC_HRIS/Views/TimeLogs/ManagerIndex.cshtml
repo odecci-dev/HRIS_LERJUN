@@ -477,6 +477,9 @@
 
                                         badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #b2651b; font-size: .8rem'>Undertime</span>";
                                     }
+                                    else if(row.timelogStatus === "RestDayOverTime"){
+                                        badge += "";
+                                    }
                                     else{
                                         badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ac1616; font-size: .8rem'>Late & Undertime</span>";
                                     }

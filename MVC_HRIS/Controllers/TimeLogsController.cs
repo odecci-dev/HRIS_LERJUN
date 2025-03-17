@@ -400,6 +400,72 @@ namespace MVC_HRIS.Controllers
 
             return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
         }
+        public class SummaryTimelogsVM
+        {
+            public string? UserID { get; set; }
+            public string? Fullname { get; set; }
+            public string? ApprovedOvertimeHours { get; set; }
+            public string? UndertimeHours { get; set; }
+            public string? ApprovedOffsetTimeHours { get; set; }
+            public string? ApprovedTotalHours { get; set; }
+            public string? RequiredHours { get; set; }
+            public string? DaysLate { get; set; }
+            public string? WorkingDays { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetSummaryTimelogsListManager(TimeLogsParam data)
+        {
+            string result = "";
+            var list = new List<SummaryTimelogsVM>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                //var url = DBConn.HttpString + "/TimeLogs/TimeLogsListManager";
+                var url = DBConn.HttpString + "/TimeLogs/SummaryTimeLogList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<SummaryTimelogsVM>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetSummaryTimelogsListSelect(TimeLogsParam data)
+        {
+            string result = "";
+            var list = new List<SummaryTimelogsVM>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                //var url = DBConn.HttpString + "/TimeLogs/TimeLogsListManager";
+                var url = DBConn.HttpString + "/TimeLogs/SummaryTimeLogList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<SummaryTimelogsVM>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(list);
+        }
         [HttpPost]
         public async Task<IActionResult> GetNotificationList(TblNotification data)
         {

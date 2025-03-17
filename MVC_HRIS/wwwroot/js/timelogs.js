@@ -796,3 +796,280 @@ function initializeDataTable() {
 
 
 }
+
+
+
+
+//Summary Functions
+function defaultdate() {
+
+    const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+    // Format the dates as YYYY-MM-DD
+    const formatDate = (date) => {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = date.getDate();
+
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+
+        return `${year}-${month}-${day}`;
+    };
+
+    // Set the values for the date inputs
+    document.getElementById('stl-datefrom').value = formatDate(firstDayOfMonth);
+    document.getElementById('stl-dateto').value = formatDate(lastDayOfMonth);
+}
+function fetchSummaryTimlogsUsers() {
+    var datefrom = document.getElementById('stl-datefrom').value;
+    var dateto = document.getElementById('stl-dateto').value;
+    const data = {
+        UserId: "0",
+        datefrom: datefrom,
+        dateto: dateto,
+        Department: "0",
+
+    };
+
+    console.log(data);
+    $.ajax({
+        url: '/TimeLogs/GetSummaryTimelogsListSelect',
+        data: {
+            data: data,
+        },
+        type: "POST",
+        datatype: "json",
+        success: function (data) {
+            console.log(data);
+            $("#stlSelectUser").empty();
+            $("#stlSelectUser").append('<option value="0" disabled selected>Select User</option>');
+            $("#stlSelectUser").append('<option value="0" >Select All</option>');
+            for (var i = 0; i < data.length; i++) {
+                $("#stlSelectUser").append('<option value="' + data[i].userID + '">' + data[i].fullname + "</option>");
+               
+            }
+        }
+    });
+}
+function initializeSTLDataTable() {
+
+    var tableId = '#summary-timelogs-table';
+    if ($.fn.DataTable.isDataTable(tableId)) {
+        $(tableId).DataTable().clear().destroy();
+    }
+    var datefrom = document.getElementById('stl-datefrom').value;
+    var dateto = document.getElementById('stl-dateto').value;
+    var userid = document.getElementById('stlSelectUser').value;
+    const data = {
+        UserId: userid,
+        datefrom: datefrom,
+        dateto: dateto,
+        Department: "0",
+
+    };
+    console.log(data);
+    var dtProperties = {
+
+        ajax: {
+            url: '/TimeLogs/GetSummaryTimelogsListManager',
+            type: "POST",
+            data: {
+                data: data
+            },
+            dataType: "json",
+            processing: true,
+            serverSide: true,
+            complete: function (xhr) {
+                var url = new URL(window.location.href);
+                var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                //console.log('table1', _currentPage);
+                table.page(_currentPage - 1).draw('page');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        },
+        responsive: true,
+        "columns": [
+
+            {
+                "title": "Full Name",
+                "data": "fullname",
+                "orderable": true
+            },
+
+            {
+                "title": "Overtime",
+                "data": "approvedOvertimeHours", "orderable": false
+            },
+            {
+                "title": "Undertime",
+                "data": "undertimeHours", "orderable": false
+            },
+            {
+                "title": "Offset Time",
+                "data": "approvedOffsetTimeHours", "orderable": false
+            },
+            {
+                "title": "Total Hours",
+                "data": "approvedTotalHours", "orderable": false
+            },
+            {
+                "title": "Required Hours",
+                "data": "requiredHours", "orderable": false
+            },
+            {
+                "title": "Days Late",
+                "data": "daysLate", "orderable": false
+            },
+            {
+                "title": "Working Days",
+                "data": "workingDays", "orderable": false
+            }
+        ], "dom": 'rtip',
+        columnDefs: [
+
+
+            {
+                targets: [0], // Fullname
+                width: "30%",
+                className: 'left-align'
+            },
+            {
+                targets: [1], // overtime
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [2], // Undertime
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [3], // Offset Time
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [4], // Total Hours
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [5], // Required Hours
+                width: "10%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [6], // Days Late
+                width: "10%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [7], // Working Days
+                width: "10%",
+                className: 'dt-body-right'
+            }
+
+        ]
+    };
+
+    $('#summary-timelogs-table').on('page.dt', function () {
+
+        var info = table.page.info();
+        var url = new URL(window.location.href);
+        url.searchParams.set('page01', (info.page + 1));
+        window.history.replaceState(null, null, url);
+    });
+
+    var table = $(tableId).DataTable(dtProperties);
+    $(tableId + '_filter input').attr('placeholder', 'Searching...');
+    $(tableId + ' tbody').on('click', 'tr', function () {
+        var data = table.row(this).data();
+
+    });
+}
+function stlDOM() {
+    document.getElementById("stlSelectUser").onchange = function () {
+        initializeSTLDataTable();
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const stlmonthSelect = document.getElementById("stl-monthSelect");
+        const stlcurrentYear = new Date().getFullYear();
+
+        for (let stlmonth = 0; stlmonth < 12; stlmonth++) {
+            const stlmonthName = new Date(stlcurrentYear, stlmonth).toLocaleString('default', { month: 'long' });
+            const stloption = document.createElement("option");
+            stloption.value = `${stlcurrentYear}-${String(stlmonth + 1).padStart(2, '0')}`;
+            stloption.text = `${stlmonthName} ${stlcurrentYear}`;
+            stlmonthSelect.appendChild(stloption);
+        }
+
+        // Set default to current month
+        stlmonthSelect.value = `${stlcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        setCutOffDatesStl();
+    });
+    document.getElementById("stl-monthSelect").onchange = function () {
+        setCutOffDatesStl();
+        initializeSTLDataTable();
+    }
+    document.getElementById("stlCuttOff").onchange = function () {
+        setCutOffDatesStl();
+        initializeSTLDataTable();
+    }
+}
+function stladjustToWeekday(date) {
+    const day = date.getDay();
+    if (day === 0) { // Sunday -> Move to Saturday
+        date.setDate(date.getDate() - 1);
+    } else if (day === 6) { // Saturday -> Move to Friday
+        date.setDate(date.getDate() - 1);
+    }
+    return date;
+}
+function setCutOffDatesStl() {
+    const stlselectedMonth = document.getElementById("stl-monthSelect").value;
+    const stlCuttOff = document.getElementById("stlCuttOff").value;
+    const [year, month] = stlselectedMonth.split('-').map(Number);
+
+    //let fromDate, toDate;
+    console.log(month);
+    if (stlCuttOff == 0) {
+        fromDate = new Date(year, month - 2, 26);
+        toDate = new Date(year, month - 1, 10);
+    } else if (stlCuttOff == 1) {
+        fromDate = new Date(year, month - 1, 11);
+        toDate = new Date(year, month - 1, 25);
+    }
+    // Adjust to weekday if falls on weekend
+    fromDate = stladjustToWeekday(fromDate);
+    toDate = stladjustToWeekday(toDate);
+    // Format as YYYY-MM-DD
+    const formatFromDate = (fromDate) => {
+        let year = fromDate.getFullYear();
+        let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = fromDate.getDate();
+
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+
+        return `${year}-${month}-${day}`;
+    };
+    const formatToDate = (toDate) => {
+        let year = toDate.getFullYear();
+        let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = toDate.getDate();
+
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+
+        return `${year}-${month}-${day}`;
+    };
+    document.getElementById('stl-datefrom').value = formatFromDate(fromDate);
+    document.getElementById('stl-dateto').value = formatToDate(toDate);
+}

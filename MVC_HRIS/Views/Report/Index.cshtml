@@ -91,6 +91,7 @@
             <div class="tab">
                 <button class="tablinks active" onclick="openTab(event, 'Tab1')">Payslip</button>
                 <button class="tablinks active" onclick="openTab(event, 'Tab2')">Payroll Maintenance</button>
+                <button class="tablinks active" onclick="openTab(event, 'Tab3')">Timglogs Summary</button>
             </div>
             <div id="Tab1" class="tab-content active">
                 @await Html.PartialAsync("~/Views/Payroll/_Payroll.cshtml")
@@ -98,6 +99,9 @@
 
             <div id="Tab2" class="tab-content">
 @*                 @await Html.PartialAsync("~/Views/Payroll/Index.cshtml") *@
+            </div>
+            <div id="Tab3" class="tab-content">
+                @await Html.PartialAsync("~/Views/Timelogs/_SummaryTimelogs.cshtml") 
             </div>
         </div>
         <div class="content-filter-tbl">
@@ -123,7 +127,12 @@
 
         $(document).ready(function () {
 
+            initializeSTLDataTable();
         });
+
+        fetchSummaryTimlogsUsers();
+        // defaultdate();
+        stlDOM();
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
 
