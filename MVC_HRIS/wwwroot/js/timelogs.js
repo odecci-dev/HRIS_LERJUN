@@ -834,7 +834,7 @@ function fetchSummaryTimlogsUsers() {
 
     };
 
-    console.log(data);
+    //console.log(data);
     $.ajax({
         url: '/TimeLogs/GetSummaryTimelogsListSelect',
         data: {
@@ -870,7 +870,7 @@ function initializeSTLDataTable() {
         Department: "0",
 
     };
-    console.log(data);
+    //console.log(data);
     var dtProperties = {
 
         ajax: {
@@ -1020,6 +1020,7 @@ function stlDOM() {
         setCutOffDatesStl();
         initializeSTLDataTable();
     }
+    
 }
 function stladjustToWeekday(date) {
     const day = date.getDay();
@@ -1072,4 +1073,16 @@ function setCutOffDatesStl() {
     };
     document.getElementById('stl-datefrom').value = formatFromDate(fromDate);
     document.getElementById('stl-dateto').value = formatToDate(toDate);
+}
+async function STLExportFunction() {
+    var btnexport = document.getElementById('export-timelogs');
+
+    var datefrom = document.getElementById('stl-datefrom').value;
+    var dateto = document.getElementById('stl-dateto').value;
+    var userid = document.getElementById('stlSelectUser').value;
+    var depart = 0;
+    window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=" + "&UserId=" + userid + "&datefrom=" + $('#stl-datefrom').val() + "&dateto=" + $('#stl-dateto').val() + "&Department=" + depart;
+
+    /*window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=0" + "&UserId=" + userid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&Department=0";*/
+
 }
