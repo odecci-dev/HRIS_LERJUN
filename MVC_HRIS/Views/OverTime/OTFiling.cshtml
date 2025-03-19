@@ -132,6 +132,15 @@
                     <label for="myCheckbox" style="margin-top: 5px; text-align: center;width:80%">Convert to Compensatory Time-Off</label>
                     <input type="hidden" id="toggleValue" value="0">
                 </div>
+
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleCheckbox2" onclick="updateToggleText()">
+                        <span class="slider"><span id="toggleText2">NO</span></span>
+                    </label>
+                    <label for="myCheckbox" style="margin-top: 5px; text-align: center;width:80%">Convert to Offset Time-Off</label>
+                    <input type="hidden" id="toggleValue2" value="0">
+                </div>
             </div>
 
             <div class="mod-form">
@@ -162,6 +171,10 @@
             var checkbox = document.getElementById("toggleCheckbox");
             var text = document.getElementById("toggleText");
             var hiddenValue = document.getElementById("toggleValue");
+
+            var checkbox2 = document.getElementById("toggleCheckbox2");
+            var text2 = document.getElementById("toggleText2");
+            var hiddenValue2 = document.getElementById("toggleValue2");
             console.log(hiddenValue.value);
             if (checkbox.checked) {
                 text.innerText = "YES";
@@ -174,6 +187,44 @@
                 text.classList.add("toggle-text-right");
                 hiddenValue.value = "0";
             }
+            if (checkbox2.checked) {
+                text2.innerText = "YES";
+                text2.classList.remove("toggle-text-right");
+                text2.classList.add("toggle-text-left");
+                hiddenValue2.value = "1";
+            } else {
+                text2.innerText = "NO";
+                text2.classList.remove("toggle-text-left");
+                text2.classList.add("toggle-text-right");
+                hiddenValue2.value = "0";
+            }
+            checkbox.addEventListener("change", function() {
+                if (this.checked) {
+                    checkbox2.checked = false;
+                    text2.innerText = "NO";
+                    text2.classList.remove("toggle-text-left");
+                    text2.classList.add("toggle-text-right");
+                } else {
+                    checkbox2.checked = true;
+                    text2.innerText = "YES";
+                    text2.classList.remove("toggle-text-right");
+                    text2.classList.add("toggle-text-left");
+                }
+            });
+            checkbox2.addEventListener("change", function() {
+                if (this.checked) {
+                    checkbox.checked = false;
+                    text.innerText = "NO";
+                    text.classList.remove("toggle-text-left");
+                    text.classList.add("toggle-text-right");
+                } else {
+                    checkbox.checked = true;
+                    text.innerText = "Yes";
+                    text.classList.remove("toggle-text-right");
+                    text.classList.add("toggle-text-left");
+                }
+            });
+
         }
         function calculateTimeDifference() {
             let startTime = document.getElementById("starttime").value;
@@ -212,23 +263,31 @@
             var hoursfiled = document.getElementById('hoursfiled').value;
             var remarks = document.getElementById('remarks').value;
             var isCheckbox = document.getElementById('toggleCheckbox');
+            var isCheckbox2 = document.getElementById('toggleCheckbox2');
             var toggleCheckbox = 0;
+            var toggleCheckbox2 = 0;
             if (isCheckbox.checked) {
                 toggleCheckbox = 1;
             } else {
                 toggleCheckbox = 0;
+            }
+            if (isCheckbox2.checked) {
+                toggleCheckbox2 = 1;
+            } else {
+                toggleCheckbox2 = 0;
             }
             var data = {};
             data.Id = otid;
             data.EmployeeNo = EmployeeID;
             data.Date = shiftdate;
             data.StartDate = startdate;
-            data.EndDate = startdate;
+            data.EndDate = enddate;
             data.StartTime = starttime;
             data.EndTime = endtime;
             data.HoursFiled = hoursfiled;
             data.Remarks = remarks;
             data.ConvertToLeave = toggleCheckbox;
+            data.ConvertToOffset = toggleCheckbox2;
             data.CreatedBy = defaultCreatedBy;
             console.log(data);
 

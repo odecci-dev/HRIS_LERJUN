@@ -1,0 +1,148 @@
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+<style>
+    /* Center the animation */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(255,255,255, .4);
+            gap: 50px;
+            padding: 0;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            /* Adjust based on your logo background */
+            
+        }
+        .loader-container:hover{
+            cursor: wait;
+        }
+
+        /* Logo container */
+        .logo {
+            display: flex;
+            gap: 5px; /* Adjust spacing between letters */
+        }
+
+        /* Waving effect for each letter */
+        .letter {
+            /* width: 50px; Adjust based on your image size */
+            max-height: 50px;
+            height: auto;
+            display: inline-block;
+            animation: wave 1s ease-in-out infinite;
+        }
+        .center {
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+        .waveLoader {
+        width: 6px;
+        height: 50px;
+        background: linear-gradient(45deg, #ED1C24, #132B3C);
+        margin: 10px;
+        animation: waveLoader 1s linear infinite;
+        border-radius: 20px;
+        }
+
+        .waveLoader:nth-child(2) {
+        animation-delay: 0.1s;
+        }
+
+        .waveLoader:nth-child(3) {
+        animation-delay: 0.2s;
+        }
+
+        .waveLoader:nth-child(4) {
+        animation-delay: 0.3s;
+        }
+
+        .waveLoader:nth-child(5) {
+        animation-delay: 0.4s;
+        }
+
+        .waveLoader:nth-child(6) {
+        animation-delay: 0.5s;
+        }
+
+        .waveLoader:nth-child(7) {
+        animation-delay: 0.6s;
+        }
+
+        .waveLoader:nth-child(8) {
+        animation-delay: 0.7s;
+        }
+
+        .waveLoader:nth-child(9) {
+        animation-delay: 0.8s;
+        }
+
+        .waveLoader:nth-child(10) {
+        animation-delay: 0.9s;
+        }
+
+        @@keyframes waveLoader {
+        0% {
+            transform: scale(0);
+        }
+
+        50% {
+            transform: scale(1);
+        }
+
+        100% {
+            transform: scale(0);
+        }
+        }
+
+
+        /* Waving animation */
+        @@keyframes wave {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+</style>
+
+<div class="loader-container" id="odc-loader">
+    <div class="logo">
+        <img src="~/img/o.png" class="letter" style="animation-delay: 0s;">
+        <img src="~/img/d.png" class="letter" style="animation-delay: 0.2s;">
+        <img src="~/img/e.png" class="letter" style="animation-delay: 0.4s;">
+        <img src="~/img/c.png" class="letter" style="animation-delay: 0.6s;">
+        <img src="~/img/c.png" class="letter" style="animation-delay: 0.8s;">
+        <img src="~/img/i.png" class="letter" style="animation-delay: 1s;">
+    </div>
+    <div class="center">
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+        <div class="waveLoader"></div>
+    </div>
+</div>
+
+
+<script>
+</script>

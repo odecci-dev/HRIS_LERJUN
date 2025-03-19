@@ -168,6 +168,7 @@ namespace API_HRIS.Controllers
             public string? HoursApproved { get; set; }
             public string? Remarks { get; set; }
             public string? ConvertToLeave { get; set; }
+            public string? ConvertToOffset { get; set; }
             public string? DateCreated { get; set; }
             public int? LeaveId { get; set; }
             public int? Status { get; set; }
@@ -204,8 +205,8 @@ namespace API_HRIS.Controllers
                 if (data.Id == 0)
                 {
                     string query = $@"INSERT INTO [TblOvertimeModel] 
-                     ([EmployeeNo],[Date],[StartTime],[EndTime],[StartDate],[EndDate],[HoursFiled],[Remarks],[ConvertToLeave],[DateCreated],[isDeleted],[CreatedBy],[Status])
-                     VALUES ('" + data.EmployeeNo + "','" + data.Date + "','" + data.StartTime + "','" + data.EndTime + "','" + data.StartDate + "','" + data.EndDate + "','" + data.HoursFiled + "','" + data.Remarks + "','" + data.ConvertToLeave + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + data.CreatedBy + "','1004');";
+                     ([EmployeeNo],[Date],[StartTime],[EndTime],[StartDate],[EndDate],[HoursFiled],[Remarks],[ConvertToLeave],[ConvertToOffset],[DateCreated],[isDeleted],[CreatedBy],[Status])
+                     VALUES ('" + data.EmployeeNo + "','" + data.Date + "','" + data.StartTime + "','" + data.EndTime + "','" + data.StartDate + "','" + data.EndDate + "','" + data.HoursFiled + "','" + data.Remarks + "','" + data.ConvertToLeave + "','" + data.ConvertToOffset + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + data.CreatedBy + "','1004');";
                     
                     db.AUIDB_WithParam(query);
                     //_context.TblOvertimeModel.Add(data);
