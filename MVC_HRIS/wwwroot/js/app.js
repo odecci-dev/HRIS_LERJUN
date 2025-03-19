@@ -36,7 +36,10 @@ function showloadingoverlay() {
     const loadingOverlay = document.getElementById('loadingOverlay');
     loadingOverlay.style.display = 'flex'; // Display the loading overlay
 }
-
+function showodcloading() {
+    const odcloading = document.getElementById('odc-loader');
+    odcloading.style.display = 'flex'; // Display the loading overlay
+}
 function showsubnav() {
 
     localStorage.setItem('subnav', 0);
@@ -92,7 +95,14 @@ function showsubnav() {
         }
     });
 }
+
+function hideodcloading() {
+
+    const odcloading = document.getElementById('odc-loader');
+    odcloading.style.display = 'none';
+}
 function hideloadingoverlay() {
+
     loadingOverlay.style.display = 'none';
 }
 

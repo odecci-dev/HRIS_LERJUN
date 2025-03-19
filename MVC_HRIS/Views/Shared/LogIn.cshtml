@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html>
@@ -20,8 +21,10 @@
   </head>
   <body>
     @RenderBody()
-   
+
+    @await Html.PartialAsync("~/Views/TimeLogs/_loader.cshtml");
     <div class="form-container">
+
         <div class="mod-form-row">
             <div class="background-image-container" style="background-image: url('/img/bg.png');">
                 <div class="hero-container">
@@ -112,10 +115,8 @@
                     </div>
                     </div>
             </div>
+
         </div>
-    <div>   
-        
-        <div>
    
    <script src="/js/app.js"></script>
     <script src="~/js/iziToast.min.js"></script>
@@ -176,6 +177,9 @@
                 data: {
                     data: data,
                 },
+                beforeSend: function () {
+                    showodcloading();
+                },
                 type: "POST",
                 datatype: "json",
                 success: function (response) {
@@ -188,6 +192,14 @@
                     {
                         window.location.href = response.redirectToUrl;
                     } 
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    location.reload(); // Reload the page on error
+                },
+                complete: function () {
+                    // Hide loading indicator after completion
+                    hideodcloading();
                 }
             });
         }

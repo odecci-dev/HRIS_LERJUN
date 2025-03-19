@@ -101,6 +101,7 @@ namespace MVC_HRIS.Controllers
             public string? HoursApproved { get; set; }
             public string? Remarks { get; set; }
             public string? ConvertToLeave { get; set; }
+            public string? ConvertToOffset { get; set; }
             public string? DateCreated { get; set; }
             public int? LeaveId { get; set; }
             public int? Status { get; set; }
@@ -163,6 +164,7 @@ namespace MVC_HRIS.Controllers
             public decimal? HoursApproved { get; set; }
             public string? Remarks { get; set; }
             public bool? ConvertToLeave { get; set; }
+            public bool? ConvertToOffset { get; set; }
             public DateTime? DateCreated { get; set; }
             public int? LeaveId { get; set; }
             public int? Status { get; set; }

@@ -12,6 +12,7 @@
 <style>
 
 </style>
+@await Html.PartialAsync("~/Views/TimeLogs/_loader.cshtml");
 <div id="dashboard-main-container">
     <div class="title-main-container">
         <div class="content-container">
@@ -131,6 +132,13 @@
                     <div class="input-container">
                         <!-- Error message container placed above the timeout field -->
                         <input type="datetime-local" id="mtltimeout" class="mod-inputs-nw" placeholder="Date" required />
+                    </div>
+                </div>
+                <div class="input-holder">
+                    <span class="label">Break(Hour/s)</span>
+                    <div class="input-container">
+                        <!-- Error message container placed above the timeout field -->
+                        <input type="number" step="0.01" min="0" id="mtlbreak" class="mod-inputs-nw" placeholder="0.00" required />
                     </div>
                 </div>
                 <div class="input-holder">
@@ -264,8 +272,15 @@
                 data: {
                     data: data,
                 },
+                beforeSend: function () {
+                    showodcloading();
+                },
                 type: "POST",
-                datatype: "json"
+                datatype: "json",
+                complete: function (xhr) {
+                    // Hide loading indicator after completion
+                    hideodcloading();
+                },
             }).done(function (data) {
                 // console.log(data);
                 if (data.status == '200') {
@@ -305,8 +320,15 @@
                 data: {
                     data: data,
                 },
+                beforeSend: function () {
+                    showodcloading();
+                },
                 type: "POST",
-                datatype: "json"
+                datatype: "json",
+                complete: function (xhr) {
+                    // Hide loading indicator after completion
+                    hideodcloading();
+                },
             }).done(function (data) {
                 console.log(data);
                 if (data.status == '200') {

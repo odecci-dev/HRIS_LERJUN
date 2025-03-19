@@ -31,6 +31,7 @@ public partial class TblOvertimeModel
     [MaxLength(255)]
     public string? Remarks { get; set; }
     public bool? ConvertToLeave { get; set; }
+    public bool? ConvertToOffset { get; set; }
     public DateTime? DateCreated { get; set; }
     public int? LeaveId { get; set; }
     public int? Status { get; set; }

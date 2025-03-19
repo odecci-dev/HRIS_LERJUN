@@ -364,6 +364,7 @@
                         var url = new URL(window.location.href);
                         var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                         // console.log('table1', _currentPage);
+                        
                         table.page(_currentPage - 1).draw('page');
 
                         // Compute total rendered hours after data is loaded
@@ -475,6 +476,9 @@
                                     else if(row.timelogStatus === "ONTIME" && row.isUnderTime === "1"){
 
                                         badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #b2651b; font-size: .8rem'>Undertime</span>";
+                                    }
+                                    else if(row.timelogStatus === "RestDayOverTime"){
+                                        badge += "";
                                     }
                                     else{
                                         badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ac1616; font-size: .8rem'>Late & Undertime</span>";
