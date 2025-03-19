@@ -551,7 +551,6 @@ function OTdeclinemodal() {
     
     $('.input-container-button').empty();
     $('.img-header').empty();
-    $('#timeoutreasonholder').empty();
     content.forEach(content => {
         content.style.setProperty("border-radius", "15px 15px 15px 15px", "important");
         content.style.setProperty("border-bottom", "7px #d03a4b solid", "important");
@@ -571,6 +570,7 @@ function OTdeclinemodal() {
     document.getElementById('validation').textContent = 'Confirmation';
     $('.input-container-button').append(cancelButton);
     $('.input-container-button').append(delete_);
+    $('.modal-body .input-holder').remove();
     $('.modal-body').append(declineReason);
     $('.img-header').append('<img id="modalImage" src="/img/OPTION.webp" alt="Modal Image" />');
 }

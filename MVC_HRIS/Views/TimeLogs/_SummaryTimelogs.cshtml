@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+<div>
+    <div>
+        @* <div>
+            <h1>Pending Timelogs</h1>
+        </div> *@
+        <div class="content-filter">
+            <div class="sub-content">
+                <div class="mod-form">
+
+                    <div class="action-navbar">
+                        <div class="layer">
+                            <div class="input-holder">
+                                <span class="text-left text-dark">From:</span>
+                                <div class="date-input">
+                                    <input type="date" id="stl-datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <span class="text-left text-dark">To:</span>
+                                <div class="date-input">
+                                    <input type="date" id="stl-dateto" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <button class="btn btn-success" id="export-stl" title="Time Out" onclick="STLExportFunction()">
+                                    <i class="fa-solid fa-file-arrow-down"></i> Export
+                                </button>
+                            </div>
+
+                           
+                        </div>
+
+                        <div class="layer">
+                            <div class="input-holder">
+                                @* <span class="text-left text-dark">Months:</span> *@
+                                <div class="date-input">
+                                    <select id="stl-monthSelect" class="form-control"></select>
+                                </div>
+                            </div>
+
+                            <div class="input-holder">
+                                @* <span class="text-left">Filter User:</span> *@
+                                <select id="stlCuttOff">
+                                    <option value="0" selected > First Cutt-off</option>
+                                    <option value="1"  > Second Cutt-off</option>
+                                </select>
+                            </div>
+                            <div class="input-holder">
+                                @* <span class="text-left">Filter User:</span> *@
+                                <select id="stlSelectUser">
+                                    <option value="0" selected disabled> Select User</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="content-filter-tbl">
+                <table id="summary-timelogs-table" class="table table-bordered table-hover w-100">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+                </table>
+                <div id="table-footer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+           
+        });
+        
+
+    </script>
+}
