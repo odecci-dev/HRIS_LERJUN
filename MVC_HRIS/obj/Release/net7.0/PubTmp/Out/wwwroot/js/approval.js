@@ -47,7 +47,7 @@ function initializeTimlogsDataTable() {
                                                 <img src='${images}' width="100%" />
                                             </div>
                                             <div style="align-items: center;">
-                                                <h6 style="text-align: left; margin: 0; font-size: 16px;">${fullname}</h6>
+                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
                                                 <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
                                             </div>
                                         </div>`;
@@ -130,7 +130,7 @@ function initializeTimlogsDataTable() {
                     var task = row.taskId;
                     var button = "";
                     if (row.statusId == '0') {
-                        button = `<div class="action">
+                        button = `<div class="action" style="justify-content: start !important">
                                                     <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
                                                             data-id="${data}"
                                                             data-status="${row.statusId}"
@@ -140,6 +140,7 @@ function initializeTimlogsDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                         >
                                                         <i class="fa-solid fa-circle-xmark"></i> Decline
                                                     </button>
@@ -152,6 +153,7 @@ function initializeTimlogsDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                         >
                                                         <i class="fa-solid fa-circle-check"></i> Approve
                                                     </button>
@@ -175,7 +177,10 @@ function initializeTimlogsDataTable() {
             { targets: 5, className: 'none' },
             { "type": "date", "targets": 0 },
             { width: '25%', targets: 0 },
-            { width: '5%', targets: 8 }
+            {
+                targets: [8],
+                width: "5%", className: 'left-align' 
+            },
         ],
         order: [[0, 'desc']] // Sort the second column (index 1) by descending order
     };
@@ -535,11 +540,18 @@ function OTdeclinemodal() {
     var element = document.querySelectorAll(".modal-header");
     var content = document.querySelectorAll(".modal-content");
     var modal_span = document.querySelectorAll(".modal-header span");
-    var delete_ = '<input type="submit" value="YES" id="btn-delete_item" class="btn-pay"  onclick="changeStatus_item()"/>';
+    var delete_ = '<input type="submit" value="YES" id="btn-decline-ot" class="btn-pay"  onclick="changeStatus_item()"/>';
     var cancelButton = '<input type="submit" value="NO" id="btn-cancel" class="btn-NO" data-dismiss="modal"/>';
+    var declineReason = `<div class="input-holder" id="timeoutreasonholder">
+                            <span class="label" > Specify Reason:</span >
+                                <div class="input-container">
+                                    <textarea id="declineReason" style="height: 66px; width: 100%"></textarea>
+                                </div>
+                        </div > `;
+    
     $('.input-container-button').empty();
     $('.img-header').empty();
-
+    $('#timeoutreasonholder').empty();
     content.forEach(content => {
         content.style.setProperty("border-radius", "15px 15px 15px 15px", "important");
         content.style.setProperty("border-bottom", "7px #d03a4b solid", "important");
@@ -555,10 +567,11 @@ function OTdeclinemodal() {
         element.style.setProperty("border-radius", "15px 15px 0 0", "important");
         element.style.setProperty("text-align", "center", "important");
     });
-    document.getElementById('message').textContent = 'Are you sure you want to aprroved this item?';
+    document.getElementById('message').textContent = 'Are you sure you want to decline this item?';
     document.getElementById('validation').textContent = 'Confirmation';
     $('.input-container-button').append(cancelButton);
     $('.input-container-button').append(delete_);
+    $('.modal-body').append(declineReason);
     $('.img-header').append('<img id="modalImage" src="/img/OPTION.webp" alt="Modal Image" />');
 }
 function changeStatus_item() {

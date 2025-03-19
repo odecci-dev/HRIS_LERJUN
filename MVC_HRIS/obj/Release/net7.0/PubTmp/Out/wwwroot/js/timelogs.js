@@ -504,7 +504,7 @@ function initializeDataTable() {
             // },
             {
                 "title": "Task",
-                "data": "task"
+                "data": "task", "orderable": false,
             },
             {
                 "title": "Task Description",
@@ -540,22 +540,36 @@ function initializeDataTable() {
             },
             {
                 "title": "Total Rendered Hours",
-                "data": "renderedHours"
+                "data": "renderedHours", "orderable": false,
             },
             {
                 "title": "Status",
-                "data": "statusName"
+                "data": "statusName", "orderable": false,
+                "render": function (data, type, row) {
+                    var badge = "";
+                    if (data == 'Approved') {
+                        badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
+                    }
+                    else if (data == 'Pending') {
+                        badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
+                    }
+                    else if (data == 'Declined') {
+                        badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
+                    }
+
+                    return badge;
+                }
             }
             ,
             {
                 "title": "Action",
-                "data": "id",
+                "data": "id", "orderable": false,
                 "render": function (data, type, row) {
                     var images = row['filePath'] == null ? img : row['filePath'];
                     var status = row.statusId;
                     var task = row.taskId;
                     if (status == 2 || status == 5) {
-                        var button = `<div class="action">
+                        var button = `<div class="action" style="justify-content: start !important">
                                                         <button class="default-btn btn btn-danger" id="" title="Delete" 
                                                             data-id="${data}"
                                                             data-status="${row.statusId}"
@@ -565,8 +579,9 @@ function initializeDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
                                                         disabled>
-                                                    <i class="fa-solid fa-trash"></i> delete
+                                                    <i class="fa-solid fa-trash"></i> Delete
                                                 </button>
                                                         <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
                                                             data-id="${data}"
@@ -577,13 +592,14 @@ function initializeDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                                 disabled>
                                                             <i class="fa-solid fa-pen-to-square"></i> edit
                                                         </button>
                                             </div>`;
                     }
                     else {
-                        var button = `<div class="action">
+                        var button = `<div class="action" style="justify-content: start !important">
                                                         <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete" 
                                                             data-id="${data}"
                                                             data-status="${row.statusId}"
@@ -593,8 +609,9 @@ function initializeDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                         >
-                                                    <i class="fa-solid fa-trash"></i> delete
+                                                    <i class="fa-solid fa-trash"></i> Delete
                                                 </button>
                                                         <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
                                                             data-id="${data}"
@@ -605,8 +622,9 @@ function initializeDataTable() {
                                                             data-timeout="${row.timeOut}"
                                                             data-remarks="${row.remarks}"
                                                             data-userid="${row.userId}"
+                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
                                                                 >
-                                                            <i class="fa-solid fa-pen-to-square"></i> edit
+                                                            <i class="fa-solid fa-pen-to-square"></i> Edit
                                                         </button>
                                             </div>`;
 
@@ -645,12 +663,11 @@ function initializeDataTable() {
             },
             {
                 targets: [6],
-                width: "15%",
-                className: 'left-align'
+                width: "5%",
             },
             {
                 targets: [7],
-                width: "10%",
+                width: "5%",
                 className: 'left-align'
             },
         ],

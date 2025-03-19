@@ -172,9 +172,9 @@ namespace API_HRIS.Controllers
             int workdays = 0;
             decimal nightdiff = 0;
             decimal holiday = 0;
-          
+            var excludedPosId = new List<int> { 1,5,6 };
 
-            var emplist =  _context.TblUsersModels.Where(a=> a.DeleteFlag == false && a.UserType == 3).ToList();
+            var emplist =  _context.TblUsersModels.ToList();
             var paylist = _context.TblPayslipModel.ToList();
             if(paylist.Count != 0)
             {

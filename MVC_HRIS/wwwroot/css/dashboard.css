@@ -453,8 +453,7 @@ body-container {
 .tbl-edit,
 .tbl-approve,
 .tbl-view,
-.default-btn,
-.btn-danger {
+.default-btn {
     display: flex;
     gap: 5px;
     margin: 0 0px;
