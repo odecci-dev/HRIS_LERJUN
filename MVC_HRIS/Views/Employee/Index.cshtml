@@ -118,7 +118,7 @@
 
                                                          <div class="data-img"> <img src='${images}' width="100%" /> </div>
                                                          <div class="actions">
-                                                            <a class="tbl-edit" data-id="${data}">
+        @*                                                  <a class="tbl-edit" data-id="${data}">
                                                                 <i class="fa-solid fa-pen-to-square"></i>
                                                                     Edit
                                                             </a>
@@ -126,7 +126,7 @@
                                                                 <i class="fa-solid fa-trash"></i>
                                                                 Delete
                                                             </a>
-        @*<a class="tbl-email"
+                                                            <a class="tbl-email"
                                                                 data-id="${data}"
                                                                 data-email="${row.email}"
                                                                 data-empid="${row.employeeID}"
@@ -156,6 +156,40 @@
                     {
                         "title": "Gender",
                         "data": "gender"
+                    },
+                    {
+                        "title": "Action",
+                        "data": "id", "orderable": false,
+                        "render": function (data, type, row) {
+                            var button = `<label class="popup">
+                                                <input type="checkbox">
+                                                <div class="burger" tabindex="0">
+                                                <span></span>
+                                                <span></span>
+                                                </div>
+                                                <nav class="popup-window">
+
+                                                            <button class="tbl-edit btn btn-info" data-id="${data}" style="width: 100px; font-size:13px; padding: 5px 5px">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                                    Edit
+                                                            </button>
+                                                            <button class="tbl-delete btn btn-danger" data-id="${data}" style="width: 100px; font-size:13px; padding: 5px 5px">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                                Delete
+                                                            </button>
+                                                                @*<a class="tbl-email"
+                                                                data-id="${data}"
+                                                                data-email="${row.email}"
+                                                                data-empid="${row.employeeID}"
+                                                                data-name="${row.fullname}"
+                                                                >
+                                                            <i class="fa-solid fa-envelope"></i>
+                                                            <span>Email</span>
+                                                        </a>*@
+                                                </nav>
+                                            </label>`;
+                            return button;
+                        }
                     }
                 ],
                 pageLength: 5,

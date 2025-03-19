@@ -548,6 +548,16 @@ function initializeDataTable() {
             {
                 "title": "Total Rendered Hours",
                 "data": "renderedHours", "orderable": false,
+                "render": function (data, type, row) {
+                    if (data != '' || data != null) {
+                        return data;
+                    }
+                    else {
+                        
+                        return 0;
+                    }
+
+                }
             },
             {
                 "title": "Status",
@@ -576,64 +586,134 @@ function initializeDataTable() {
                     var status = row.statusId;
                     var task = row.taskId;
                     if (status == 2 || status == 5) {
-                        var button = `<div class="action" style="justify-content: start !important">
-                                                        <button class="default-btn btn btn-danger" id="" title="Delete" 
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
-                                                        disabled>
-                                                    <i class="fa-solid fa-trash"></i> Delete
-                                                </button>
-                                                        <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                                disabled>
-                                                            <i class="fa-solid fa-pen-to-square"></i> edit
-                                                        </button>
-                                            </div>`;
+                        //var button = `<div class="action" style="justify-content: start !important">
+                        //                                <button class="default-btn btn btn-danger" id="" title="Delete" 
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
+                        //                                disabled>
+                        //                            <i class="fa-solid fa-trash"></i> Delete
+                        //                        </button>
+                        //                                <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                        disabled>
+                        //                                    <i class="fa-solid fa-pen-to-square"></i> edit
+                        //                                </button>
+                        //                    </div>`;
+                        var button = `<label class="popup">
+                                      <input type="checkbox">
+                                      <div class="burger" tabindex="0">
+                                        <span></span>
+                                        <span></span>
+                                      </div>
+                                      <nav class="popup-window">
+                                            <button class="default-btn btn btn-danger" id="" title="Delete"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
+                                            disabled>
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button></br>
+                                            <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                    disabled>
+                                                <i class="fa-solid fa-pen-to-square"></i> edit
+                                            </button>
+                                      </nav>
+                                    </label>`;
                     }
                     else {
-                        var button = `<div class="action" style="justify-content: start !important">
-                                                        <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete" 
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                        >
-                                                    <i class="fa-solid fa-trash"></i> Delete
-                                                </button>
-                                                        <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                                >
-                                                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                                                        </button>
-                                            </div>`;
+                        //var button = `<div class="action" style="justify-content: start !important">
+                        //                                <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete" 
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                >
+                        //                                    <i class="fa-solid fa-trash"></i> Delete
+                        //                                </button></br>
+                        //                                <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                        >
+                        //                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                        //                                </button>
+                        //                    </div>`;
+                        var button = `<label class="popup">
+                                        <input type="checkbox">
+                                        <div class="burger" tabindex="0">
+                                        <span></span>
+                                        <span></span>
+                                        </div>
+                                        <nav class="popup-window">
+                                            <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px; padding: 5px 5px"
+                                            >
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button></br>
+                                            <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                    >
+                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            </button>
+                                        </nav>
+                                    </label>`;
 
                     }
                     return button;
@@ -675,8 +755,7 @@ function initializeDataTable() {
             {
                 targets: [7],
                 width: "5%",
-                className: 'left-align'
-            },
+            }
         ],
         order: [[0, 'desc']] // Sort the second column (index 1) by descending order
 
