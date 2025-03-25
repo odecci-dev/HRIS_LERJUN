@@ -65,9 +65,16 @@
                                     </button>
                                     <button class="btn btn-info" id="add-timeout-regular" title="Time Out">
                                         <i class="fa-solid fa-clock"></i> Time Out
-                                    </button><button class="btn btn-info" id="break-regular" title="Time Out">
-                                        <i class="fa-solid fa-clock"></i> Break
                                     </button>
+                                    @* <button class="btn btn-info" id="break-regular" title="Time Out">
+                                        <i class="fa-solid fa-clock"></i> Break
+                                    </button> *@
+                                    <select id="break-regular" >
+                                        <option value="0" disabled selected>Select Break</option>
+                                        <option value="1">15 minutes break(First)</option>
+                                        <option value="2">Lunch break</option>
+                                        <option value="3">15 minutes break(Second)</option>
+                                    </select>
                                     @* Regular clock in/out button End*@
                                     <button class="btn btn-info" id="add-timelogs" title="Manual Entry" onclick="myFunctionOpen()">
                                         <i class="fa-solid fa-plus"></i> Manual Entry
@@ -301,14 +308,9 @@
             const now = new Date();
             const hours = now.getHours();
 
-            var clockIn = "";
+            var clockIn = "Regular Clock In";
 
-            if (hours < 12) {
-                clockIn = "Morning Click In";
-            }
-            else {
-                clockIn = "Afternoon Click In";
-            }
+            
             var data = {
                 TaskId: 13,
                 userid: @Accessor.HttpContext.Session.GetString("Id"),
@@ -342,20 +344,20 @@
 
             });
         });
-        $('#break-regular').on('click', function () {
+        $('#break-regular').on('change', function () {
             const now = new Date();
             const hours = now.getHours();
-
+            var breakType = document.getElementById('break-regular').value;
             var meridiem = 0;
 
-            if (hours >= 12 && hours < 13) {
+            if (breakType == 2) {
                 meridiem = 2;
             }
-            else if (hours < 12) {
-                meridiem = 0;
+            else if (breakType == 1) {
+                meridiem = 1;
             }
             else {
-                meridiem = 1;
+                meridiem = 3;
             }
 
             $('#break-regular').attr('disabled', 'disabled');
@@ -385,42 +387,43 @@
                 }
 
             });
-            var data = {
-                TaskId: 10,
-                userid: @Accessor.HttpContext.Session.GetString("Id"),
-                Remarks: breakReason,
-                StatusId: 5
+            // var data = {
+            //     TaskId: 10,
+            //     userid: @Accessor.HttpContext.Session.GetString("Id"),
+            //     Remarks: breakReason,
+            //     StatusId: 5
 
-            };
-            $.ajax({
-                url: '/TimeLogs/TimeIn',
-                data: {
-                    data: data,
-                },
-                type: "POST",
-                datatype: "json"
-            }).done(function (data) {
-                // console.log(data);
-                if (data.status == '200') {
+            // };
+            // $.ajax({
+            //     url: '/TimeLogs/TimeIn',
+            //     data: {
+            //         data: data,
+            //     },
+            //     type: "POST",
+            //     datatype: "json"
+            // }).done(function (data) {
+            //     // console.log(data);
+            //     if (data.status == '200') {
 
-                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
-                    window.location.href = '@Url.Action("Index", "Timelogs")';
-                }
-                else {
-                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
-                }
+            //         notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+            //         window.location.href = '@Url.Action("Index", "Timelogs")';
+            //     }
+            //     else {
+            //         notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+            //     }
 
-            });
+            // });
             initializeDataTable();
         });
         var tlmodal = document.getElementById('tlmodal')
         defaultdate();
         modalDom();
         $(document).ready(function () {
+
+            checkBreakTime();
             timeLogs();
             fetchtaskselect();
             fetchBreakselect();
-            checkBreakTime();
             const timbtn = document.querySelectorAll('.time-btn');
             const dateinput = document.querySelectorAll('.date-input');
             var type = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
@@ -784,62 +787,51 @@
                 var timeinbtn = document.getElementById('add-timein-regular');
                 var timeoutbtn = document.getElementById('add-timeout-regular');
                 var breakbtn = document.getElementById('break-regular');
+                let breakbtnoptions = breakbtn.options;
                 if (data.length == 0) {
                     timeinbtn.disabled = false;
                     timeoutbtn.disabled = true;
                     breakbtn.disabled = true;
                 }
                 else {
-                    if (hours < 12) {
-                        if (data[0].breakInAm != null && data[0].breakOutAm != null) {
-                            timeinbtn.disabled = true;
-                            timeoutbtn.disabled = false;
-                            breakbtn.disabled = true;
-                        }
-                        else if (data[0].breakInAm != null && data[0].breakOutAm == null) {
-                            timeinbtn.disabled = false;
-                            timeoutbtn.disabled = true;
-                            breakbtn.disabled = true;
-                        }
-                        else {
-                            timeinbtn.disabled = true;
-                            timeoutbtn.disabled = false;
-                            breakbtn.disabled = false;
+                    console.log(data[0].breakInAm);
+                    console.log(data[0].lunchIn);
+                    console.log(data[0].breakInPm);
+                    if (data[0].breakInAm != null) {
+                        for (let i = 0; i < breakbtnoptions.length; i++) {
+                            if (breakbtnoptions[i].value === "1") {
+                                breakbtnoptions[i].disabled = true;
+                                
+                            }
                         }
                     }
-                    else if (hours == 12) {
-                        if (data[0].lunchIn != null && data[0].lunchOut != null) {
-                            timeinbtn.disabled = true;
-                            timeoutbtn.disabled = false;
-                            breakbtn.disabled = true;
-                        }
-                        else if (data[0].lunchIn != null && data[0].lunchOut == null) {
-                            timeinbtn.disabled = false;
-                            timeoutbtn.disabled = true;
-                            breakbtn.disabled = true;
-                        }
-                        else {
-                            timeinbtn.disabled = true;
-                            timeoutbtn.disabled = false;
-                            breakbtn.disabled = false;
+                    if (data[0].lunchIn != null) {
+                        for (let i = 0; i < breakbtnoptions.length; i++) {
+                            if (breakbtnoptions[i].value === "2") {
+                                breakbtnoptions[i].disabled = true;
+                                
+                            }
                         }
                     }
-                    else {
-                        if (data[0].breakInPm != null && data[0].breakOutPm != null) {
-                            timeinbtn.disabled = true;
-                            timeoutbtn.disabled = false;
-                            breakbtn.disabled = true;
+
+                    if (data[0].breakInPm != null) {
+                        for (let i = 0; i < breakbtnoptions.length; i++) {
+                            if (breakbtnoptions[i].value === "3") {
+                                breakbtnoptions[i].disabled = true;
+                                
+                            }
                         }
-                        else if (data[0].breakInPm != null && data[0].breakOutPm == null) {
-                            timeinbtn.disabled = false;
-                            timeoutbtn.disabled = true;
-                            breakbtn.disabled = true;
-                        }
-                        else {
-                            timeinbtn.disabled = true;
-                            timeoutbtn.disabled = false;
-                            breakbtn.disabled = false;
-                        }
+                    }
+                    if (data[0].breakInAm != null && data[0].breakOutAm == null || data[0].breakInPm != null && data[0].breakOutPm == null || data[0].lunchIn != null && data[0].lunchOut == null) {
+
+                        timeinbtn.disabled = false;
+                        timeoutbtn.disabled = true;
+                        breakbtn.disabled = true;
+                    }
+                    else{
+                        timeinbtn.disabled = true;
+                        timeoutbtn.disabled = false;
+                        breakbtn.disabled = false;
                     }
                 }
             });

@@ -130,34 +130,69 @@ function initializeTimlogsDataTable() {
                     var task = row.taskId;
                     var button = "";
                     if (row.statusId == '0') {
-                        button = `<div class="action" style="justify-content: start !important">
-                                                    <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                        >
-                                                        <i class="fa-solid fa-circle-xmark"></i> Decline
-                                                    </button>
-                                                    <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                        >
-                                                        <i class="fa-solid fa-circle-check"></i> Approve
-                                                    </button>
-                                                </div>`;
+                        //button = `<div class="action" style="justify-content: start !important">
+                        //                            <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                >
+                        //                                <i class="fa-solid fa-circle-xmark"></i> Decline
+                        //                            </button>
+                        //                            <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                >
+                        //                                <i class="fa-solid fa-circle-check"></i> Approve
+                        //                            </button>
+                        //                        </div>`;
+                        button = `<label class="popup">
+                                        <input type="checkbox">
+                                        <div class="burger" tabindex="0">
+                                        <span></span>
+                                        <span></span>
+                                        </div>
+                                        <nav class="popup-window">
+                                            <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
+                                                    data-id="${data}"
+                                                    data-status="${row.statusId}"
+                                                    data-task="${row.taskId}"
+                                                    data-date="${row.date}"
+                                                    data-timein="${row.timeIn}"
+                                                    data-timeout="${row.timeOut}"
+                                                    data-remarks="${row.remarks}"
+                                                    data-userid="${row.userId}"
+                                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                >
+                                                <i class="fa-solid fa-circle-xmark"></i> Decline
+                                            </button>
+                                            <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
+                                                    data-id="${data}"
+                                                    data-status="${row.statusId}"
+                                                    data-task="${row.taskId}"
+                                                    data-date="${row.date}"
+                                                    data-timein="${row.timeIn}"
+                                                    data-timeout="${row.timeOut}"
+                                                    data-remarks="${row.remarks}"
+                                                    data-userid="${row.userId}"
+                                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                >
+                                                <i class="fa-solid fa-circle-check"></i> Approve
+                                            </button>
+                                        </nav>
+                                    </label>`;
                     }
                     return button;
                 }
@@ -179,7 +214,7 @@ function initializeTimlogsDataTable() {
             { width: '25%', targets: 0 },
             {
                 targets: [8],
-                width: "5%", className: 'left-align' 
+                width: "5%", "className": "text-center", "targets": "7"
             },
         ],
         order: [[0, 'desc']] // Sort the second column (index 1) by descending order
@@ -369,21 +404,44 @@ function initializeOTDataTable() {
 
                     var button = "";
 
-                    button = `<div class="action">
-                                    <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
-                                            data-id="${data}"
-                                            data-status="1005"
+                    //button = `<div class="action">
+                    //                <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
+                    //                        data-id="${data}"
+                    //                        data-status="1005"
                                                             
-                                        >
-                                        <i class="fa-solid fa-circle-xmark"></i> Decline
-                                    </button>
-                                    <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
-                                            data-id="${data}"
-                                            data-status="5"             
-                                        >
-                                        <i class="fa-solid fa-circle-check"></i> Approve
-                                    </button>
-                                </div>`;
+                    //                    >
+                    //                    <i class="fa-solid fa-circle-xmark"></i> Decline
+                    //                </button>
+                    //                <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
+                    //                        data-id="${data}"
+                    //                        data-status="5"             
+                    //                    >
+                    //                    <i class="fa-solid fa-circle-check"></i> Approve
+                    //                </button>
+                    //            </div>`;
+                    button = `<label class="popup">
+                                    <input type="checkbox">
+                                    <div class="burger" tabindex="0">
+                                    <span></span>
+                                    <span></span>
+                                    </div>
+                                    <nav class="popup-window">
+                                           <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
+                                                    data-id="${data}"
+                                                    data-status="1005"
+                                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                >
+                                                <i class="fa-solid fa-circle-xmark"></i> Decline
+                                            </button>
+                                            <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
+                                                    data-id="${data}"
+                                                    data-status="5"          
+                                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                >
+                                                <i class="fa-solid fa-circle-check"></i> Approve
+                                            </button>
+                                    </nav>
+                                </label>`;
                     return button;
                 }
             }
@@ -457,7 +515,7 @@ function initializeOTDataTable() {
             {
                 targets: [10], // Convert To Leave Column
                 orderable: false,
-                width: "5%",
+                width: "5%", "className": "text-center", "targets": "7"
 
             },
         ]

@@ -204,12 +204,7 @@
                     text2.innerText = "NO";
                     text2.classList.remove("toggle-text-left");
                     text2.classList.add("toggle-text-right");
-                } else {
-                    checkbox2.checked = true;
-                    text2.innerText = "YES";
-                    text2.classList.remove("toggle-text-right");
-                    text2.classList.add("toggle-text-left");
-                }
+                } 
             });
             checkbox2.addEventListener("change", function() {
                 if (this.checked) {
@@ -217,12 +212,7 @@
                     text.innerText = "NO";
                     text.classList.remove("toggle-text-left");
                     text.classList.add("toggle-text-right");
-                } else {
-                    checkbox.checked = true;
-                    text.innerText = "Yes";
-                    text.classList.remove("toggle-text-right");
-                    text.classList.add("toggle-text-left");
-                }
+                } 
             });
 
         }

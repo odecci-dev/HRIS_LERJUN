@@ -371,13 +371,13 @@ namespace API_HRIS.Controllers
             {
                 if (lastTimein.TimeOut.IsNullOrEmpty())
                 {
-                    if (tblTimeLog.Meridiem == 0)
+                    if (tblTimeLog.Meridiem == 1)
                     {
                         lastTimein.BreakInAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
                         _context.Entry(lastTimein).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
                     }
-                    else if (tblTimeLog.Meridiem == 1)
+                    else if (tblTimeLog.Meridiem == 3)
                     {
                         lastTimein.BreakInPm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
                         _context.Entry(lastTimein).State = EntityState.Modified;
@@ -440,26 +440,26 @@ namespace API_HRIS.Controllers
                     _context.Entry(lastTimein).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                 }
-                else if (lastTimein.LunchIn != null && lastTimein.LunchOut == null)
+                if (lastTimein.LunchIn != null && lastTimein.LunchOut == null)
                 {
-                    if (lastTimein.BreakInAm == null)
-                    {
-                        lastTimein.BreakInAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                    //if (lastTimein.BreakInAm == null)
+                    //{
+                    //    lastTimein.BreakInAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
-                    }
-                    if (lastTimein.BreakOutAm == null)
-                    {
-                        lastTimein.BreakOutAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        // Parse the string to DateTime
-                        DateTime Breakdate = DateTime.Parse(lastTimein.BreakInAm);
-                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
-                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
-                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
-                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
-                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
-                        lastTimein.TotalBreakAmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
-                    }
+                    //}
+                    //if (lastTimein.BreakOutAm == null)
+                    //{
+                    //    lastTimein.BreakOutAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                    //    // Parse the string to DateTime
+                    //    DateTime Breakdate = DateTime.Parse(lastTimein.BreakInAm);
+                    //    string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                    //    string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                    //    DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                    //    DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                    //    TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                    //    double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                    //    lastTimein.TotalBreakAmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                    //}
                     // Parse the string to DateTime
                     DateTime date = DateTime.Parse(lastTimein.LunchIn);
                     string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
@@ -473,27 +473,27 @@ namespace API_HRIS.Controllers
                     _context.Entry(lastTimein).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                 }
-                else
+                if (lastTimein.BreakInPm != null && lastTimein.BreakOutPm == null)
                 {
-                    if (lastTimein.LunchIn == null)
-                    {
-                        lastTimein.LunchIn = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                    //if (lastTimein.LunchIn == null)
+                    //{
+                    //    lastTimein.LunchIn = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
-                    }
-                    if (lastTimein.LunchOut == null)
-                    {
-                        lastTimein.LunchOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        // Parse the string to DateTime
-                        DateTime Breakdate = DateTime.Parse(lastTimein.LunchIn);
-                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
-                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
-                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
-                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
-                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
-                        lastTimein.TotalLunchHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                    //}
+                    //if (lastTimein.LunchOut == null)
+                    //{
+                    //    lastTimein.LunchOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                    //    // Parse the string to DateTime
+                    //    DateTime Breakdate = DateTime.Parse(lastTimein.LunchIn);
+                    //    string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                    //    string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                    //    DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                    //    DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                    //    TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                    //    double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                    //    lastTimein.TotalLunchHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
 
-                    }
+                    //}
                     // Parse the string to DateTime
                     DateTime date = DateTime.Parse(lastTimein.BreakInPm);
                     string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
