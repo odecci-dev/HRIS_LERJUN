@@ -42,6 +42,7 @@ public partial class ODC_HRISContext : DbContext
     public virtual DbSet<GetAllUserDetailsResult> AllUserDetails { get; set; }
     public virtual DbSet<TblModulesModel> TblModulesModel { get; set; }
     public virtual DbSet<TblScheduleModel> TblScheduleModels { get; set; }
+    public virtual DbSet<TblScheduleDayModel> TblScheduleDayModels { get; set; }
     public virtual DbSet<TblEmploymentStatusModel> TblEmploymentStatusModels { get; set; }
     public DbSet<TblCalendarModel> TimeSchedules { get; set; }
     public virtual DbSet<TblEmployeeTypeModel> TblEmployeeTypes { get; set; }
@@ -57,6 +58,7 @@ public partial class ODC_HRISContext : DbContext
     public virtual DbSet<TblPhilHealthModel> TblPhilHealthModel { get; set; }
     public virtual DbSet<TblPagIbigModel> TblPagIbigModel { get; set; }
     public virtual DbSet<TblPayslipModel> TblPayslipModel { get; set; }
+    public virtual DbSet<TblLeaveRequestModel> TblLeaveRequestModel { get; set; }
     public List<GetAllUserDetailsResult> GetEmployees()
     {
         return AllUserDetails.FromSqlRaw("EXEC GetAllUserDetails").ToList();

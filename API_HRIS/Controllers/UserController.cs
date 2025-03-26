@@ -95,5 +95,9 @@ namespace API_HRIS.Controllers
 
            
         }
+        public class UserId
+        {
+            public int Id { get; set; }
+        }
     }
 }

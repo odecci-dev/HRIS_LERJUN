@@ -185,6 +185,7 @@ namespace MVC_HRIS.Controllers
             public string? Id { get; set; }
             public string Department { get; set; }
             public string UserType { get; set; }
+            public string EmployeeType { get; set; }
             public string Position { get; set; }
             public string Lname { get; set; }
             public string Fname { get; set; }

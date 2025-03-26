@@ -79,6 +79,7 @@ namespace API_HRIS.Controllers
                         eType.Id = data.Id;
                         eType.Title = data.Title;
                         eType.Description = data.Description;
+                        eType.ScheduleId = data.ScheduleId;
                         eType.DeleteFlag = 0;
                         eType.DateUpdated = DateTime.Now;
 

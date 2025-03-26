@@ -69,7 +69,7 @@ namespace AOPC_CMSv2.Controllers
         [HttpGet]
         public async Task<JsonResult> GetScheduleListOption()
         {
-            string result = "";
+            //string result = "";
 
             var list = new List<TblScheduleModel>();
             string test = token_.GetValue();
@@ -81,13 +81,34 @@ namespace AOPC_CMSv2.Controllers
             List<TblScheduleModel> models = JsonConvert.DeserializeObject<List<TblScheduleModel>>(response);
             return new(models);
         }
+        public class TblScheduleModelRequest
+        {
+            public int Id { get; set; }
+            public string? Title { get; set; }
+            public string? Description { get; set; }
+            public string? MondayS { get; set; }
+            public string? MondayE { get; set; }
+            public string? TuesdayS { get; set; }
+            public string? TuesdayE { get; set; }
+            public string? WednesdayS { get; set; }
+            public string? WednesdayE { get; set; }
+            public string? ThursdayS { get; set; }
+            public string? ThursdayE { get; set; }
+            public string? FridayS { get; set; }
+            public string? FridayE { get; set; }
+            public string? SaturdayS { get; set; }
+            public string? SaturdayE { get; set; }
+            public string? SundayS { get; set; }
+            public string? SundayE { get; set; }
+
+        }
         [HttpPost]
-        public async Task<IActionResult> AddSchedule(TblScheduleModel data)
+        public async Task<IActionResult> AddSchedule(TblScheduleModelRequest data)
         {
             string res = "";
             try
             {
-
+                
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/Schedule/saveschedule";
 
@@ -99,6 +120,35 @@ namespace AOPC_CMSv2.Controllers
                     res = await response.Content.ReadAsStringAsync();
 
                 }
+            }
+            catch (Exception ex)
+            {
+                status = ex.GetBaseException().ToString();
+            }
+            return Json(new { status = res });
+        }
+        public class scheduleId
+        {
+            public int Id { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetScheduleById(scheduleId data)
+        {
+            string result = "";
+            var list = new List<TblScheduleDayModel>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Schedule/ScheduleById";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblScheduleDayModel>>(res);
+
+                }
 
             }
 
@@ -106,9 +156,9 @@ namespace AOPC_CMSv2.Controllers
             {
                 status = ex.GetBaseException().ToString();
             }
-            return Json(new { status = res });
-        }
 
+            return Json(list);
+        }
 
 
     }

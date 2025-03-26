@@ -32,7 +32,7 @@ tr:nth-child(even) {
     color:var(--dark);
 }
 th {
-    background-color: var(--dark);
+    background-color: var(--table-header);
     color: white; 
 }
 /*div.dataTables_wrapper div.dataTables_filter {
@@ -70,4 +70,27 @@ div.dataTables_wrapper div.dataTables_filter input {
 /*Datatable*/
 table.dataTable td {
     font-size: 13px;
+}
+th {
+    color: var(--dark);
+    font-weight: 600 !important;
+    font-size: 13px;
+}
+td {
+    color: var(--dark);
+    font-size: 12px;
+}
+thead tr {
+    border-bottom: 3px solid var(--dark) !important;
+}
+table.dataTable > thead > tr > td,
+table.dataTable > tbody > tr > td {
+    align-content: center;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    border-left: 0;
+    border-right: 0;
+}
+.popup{
+    margin: 0 !important
 }
