@@ -261,19 +261,8 @@ namespace API_HRIS.Controllers
             try
             {
                 var schedule = _context.TblScheduleModels.Where(a => a.DeleteFlag ==false).ToList();
-                var scheduleday = _context.TblScheduleDayModels.ToList();
-                var result = from sched in schedule
-                         
-                         where sched.DeleteFlag == false // Filtering condition
-                         
-                         select new
-                         {
-                             Id = sched.Id,
-                             Title = sched.Title,
-                             Description = sched.Description,
-                         };
-                var finalResult = result.ToList();
-                return Ok(finalResult);
+               
+                return Ok(schedule);
             }
             catch
             {
