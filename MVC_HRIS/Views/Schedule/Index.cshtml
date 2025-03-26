@@ -1,5 +1,6 @@
-﻿  @using Microsoft.AspNetCore.Http;
-    @inject IHttpContextAccessor Accessor;
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+
 @{
     ViewData["Title"] = "Schedule";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -80,16 +81,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="mondays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="mondays" class="mod-inputs-nw" placeholder="Date" required  />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="mondaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="mondaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="monday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="monday" class="" placeholder="Date"  />
                                 </div>
                             </div>
                         </div>
@@ -101,16 +102,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="tuesdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="tuesdays" class="mod-inputs-nw" placeholder="Date" required  />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="tuesdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="tuesdaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="tuesday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="tuesday" class="" placeholder="Date"  />
                                 </div>
                             </div>
                         </div>
@@ -122,16 +123,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="wednesdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="wednesdays" class="mod-inputs-nw" placeholder="Date" required />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="wednesdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="wednesdaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="wednesday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="wednesday" class="" placeholder="Date"  />
                                 </div>
                             </div>
                         </div>
@@ -143,16 +144,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="thursdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="thursdays" class="mod-inputs-nw" placeholder="Date" required  />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="thursdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="thursdaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="thursday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="thursday" class="" placeholder="Date"  />
                                 </div>
                             </div>
                         </div>
@@ -164,16 +165,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="fridays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="fridays" class="mod-inputs-nw" placeholder="Date" required  />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="fridaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="fridaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="friday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="friday" class="" placeholder="Date"  />
                                 </div>
                             </div>
                         </div>
@@ -185,16 +186,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="saturdays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="saturdays" class="mod-inputs-nw" placeholder="Date" required  />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="saturdaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="saturdaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="saturday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="saturday" class="" placeholder="Date"  />
                                 </div>
                             </div>
                         </div>
@@ -206,16 +207,16 @@
                         <div class="input-holder">
                             <span class="label">Start</span>
                             <div class="input-container">
-                                <input type="time" id="sundays" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="sundays" class="mod-inputs-nw" placeholder="Date" required  />
                             </div>
                         </div>
                         <div class="input-holder">
                             <span class="label">End</span>
                             <div class="input-container">
-                                <input type="time" id="sundaye" class="mod-inputs-nw" placeholder="Date" required value="0" />
+                                <input type="time" id="sundaye" class="mod-inputs-nw" placeholder="Date" required  />
                                 <div class="input-container">
                                     <span class="label">idle</span>
-                                    <input type="checkbox" id="sunday" class="" placeholder="Date" value="0" />
+                                    <input type="checkbox" id="sunday" class="" placeholder="as"  />
                                 </div>
                             </div>
                         </div>
@@ -260,7 +261,6 @@
                     processing: true,
                     serverSide: true,
                     complete: function (xhr) {
-
                     },
                     error: function (err) {
                         alert(err.responseText);
@@ -286,20 +286,6 @@
                                                                             data-id="${data}"
                                                                             data-title="${row.title}"
                                                                             data-description="${row.description}"
-                                                                            data-mondays="${row.mondayS}"
-                                                                            data-mondaye="${row.mondayE}"
-                                                                            data-tuesdays="${row.tuesdayS}"
-                                                                            data-tuesdaye="${row.tuesdayE}"
-                                                                            data-wednesdays="${row.wednesdayS}"
-                                                                            data-wednesdaye="${row.wednesdayE}"
-                                                                            data-thursdays="${row.thursdayS}"
-                                                                            data-thursdaye="${row.thursdayE}"
-                                                                            data-fridays="${row.fridayS}"
-                                                                            data-fridaye="${row.fridayE}"
-                                                                            data-saturdays="${row.saturdayS}"
-                                                                            data-saturdaye="${row.saturdayE}"
-                                                                            data-sundays="${row.sundayS}"
-                                                                            data-sundaye="${row.sundayE}"
                                                                             >
                                                                             <i class="fa-solid fa-info"></i> view
                                                                 </button>
@@ -307,20 +293,6 @@
                                                                             data-id="${data}"
                                                                             data-title="${row.title}"
                                                                             data-description="${row.description}"
-                                                                            data-mondays="${row.mondayS}"
-                                                                            data-mondaye="${row.mondayE}"
-                                                                            data-tuesdays="${row.tuesdayS}"
-                                                                            data-tuesdaye="${row.tuesdayE}"
-                                                                            data-wednesdays="${row.wednesdayS}"
-                                                                            data-wednesdaye="${row.wednesdayE}"
-                                                                            data-thursdays="${row.thursdayS}"
-                                                                            data-thursdaye="${row.thursdayE}"
-                                                                            data-fridays="${row.fridayS}"
-                                                                            data-fridaye="${row.fridayE}"
-                                                                            data-saturdays="${row.saturdayS}"
-                                                                            data-saturdaye="${row.saturdayE}"
-                                                                            data-sundays="${row.sundayS}"
-                                                                            data-sundaye="${row.sundayE}"
                                                                             >
                                                                             <i class="fa-solid fa-pen-to-square"></i> edit
                                                                         </button>

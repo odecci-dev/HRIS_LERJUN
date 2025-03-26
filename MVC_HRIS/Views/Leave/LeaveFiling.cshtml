@@ -1,0 +1,282 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document with Footer</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+
+    <style>
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 34px;
+        }
+
+            .toggle-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(36px);
+            }
+
+        /* Text inside toggle */
+        .slider span {
+            position: absolute;
+            width: 50%;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            transition: .4s;
+        }
+
+        .toggle-text-left {
+            left: 5px;
+        }
+
+        .toggle-text-right {
+            right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+    </header>
+    <div>
+        <form id="leavesumbit">
+            <div class="d-flex-col h-100 gap-20">
+                
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">Start Date:</label>
+
+                    <input type="hidden" id="lrid" class="mod-inputs-nw" placeholder="Date" value="0" style="width:80%" required />
+                    <input type="date" id="leavestartdate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">End Date:</label>
+                    <input type="date" id="leaveenddate" class="mod-inputs-nw" placeholder="Date" value="" style="width:80%" required />
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="hoursfiled" style="width:20%">Days Filed:</label>
+                    <input type="number" value="" id="daysfiled" class="mod-input" style="width:80%" step="any" onkeydown="return preventInvalidInput(event)"
+                           required disabled/>
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">Leave Type:</label>
+                    <select id="leavetype" rows="10" cols="30" class="mod-input" required style="width:80%">
+                        <option>Select Leave Type</option>
+                        <option>1</option>
+                        <option>2</option>
+                    </select>
+                </div>
+                <div class="d-flex-row w-100 gap-20">
+                    <label class="label-color" for="email" style="width:20%">Reason:</label>
+                    <textarea id="remarks" rows="10" cols="30" class="mod-input" required style="width:80%"></textarea>
+                </div>
+
+            </div>
+
+            <div class="mod-form">
+                <div class="input-container-2">
+                    <div id="mode-inputs">
+                        <input type="submit" value="Submit" id="btn-timein" class="btn-footer" style="width: 100%;" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
+        var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
+        
+        $(document).ready(function () {
+            
+            // localStorage.setItem('leaveid', leaveid);
+            // localStorage.setItem('leaveedate', leaveedate);
+            // localStorage.setItem('leavesdate', leavesdate);
+            // localStorage.setItem('leavedfiled', leavedfiled);
+            // localStorage.setItem('leavetype', leavetype);
+            // localStorage.setItem('leavereason', leavereason);
+        });
+
+        GetLeaveTypeListtOption();
+        function GetLeaveTypeListtOption() {
+
+            $.ajax({
+                url: '/Leave/GetLeaveTypeListtOption',
+                data: {},
+                type: "GET",
+                datatype: "json"
+            }).done(function (data) { // @* //  *@
+                console.log(data)
+                $("#leavetype").empty();
+                $("#leavetype").append('<option value="" disabled selected>Select Employee Type</option>');
+                for (var i = 0; i < data.length; i++) {
+                    $("#leavetype").append('<option value="' + data[i].id + '">' + data[i].name + "</option>");
+                }
+                setModalValue();
+            });
+        }
+        async function setModalValue(){
+            // Format the dates as YYYY-MM-DD
+            const formatDate = (date) => {
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = date.getDate();
+
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+
+                return `${year}-${month}-${day}`;
+            };
+            var startDate = new Date(localStorage.getItem('leavesdate'));
+            var endDate = new Date(localStorage.getItem('leaveedate'));
+
+            // Set the values for the date inputs
+            document.getElementById('lrid').value = localStorage.getItem('leaveid');
+            document.getElementById('leavestartdate').value = formatDate(startDate);
+            document.getElementById('leaveenddate').value = formatDate(endDate);
+            document.getElementById('daysfiled').value =localStorage.getItem('leavedfiled');
+            document.getElementById('leavetype').value = localStorage.getItem('leavetype');
+            document.getElementById('remarks').value = localStorage.getItem('leavereason');
+        }
+        // var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
+        // var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
+        // $(document).ready(function () {
+        //     let today = new Date().toISOString().split("T")[0];
+        //     document.getElementById("shiftdate").setAttribute("max", today);
+        //     document.getElementById("startdate").setAttribute("max", today);
+        //     document.getElementById("endate").setAttribute("max", today);
+        // });
+        function preventInvalidInput(event) {
+            if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+                event.preventDefault();
+            }
+        }
+        document.getElementById("leaveenddate").onchange = function () {
+            calculateTimeDifference();
+        };
+        function calculateTimeDifference() {
+            let startDate = document.getElementById("leavestartdate").value;
+            let endDate = document.getElementById("leaveenddate").value;
+            let daysFiled = document.getElementById("daysfiled");
+
+            if (!startDate || !endDate) {
+                endTime.value = 0; // Clear the field if inputs are empty
+                return;
+            }
+
+            let start = new Date(startDate);
+            let end = new Date(endDate);
+
+            let diffInMinutes = (end - start) / (1000 * 60);
+
+            if (diffInMinutes < 0) {
+                daysFiled.value = ""; // Clear the field if the end time is earlier
+                alert("End time must be greater than start time.");
+                return;
+            }
+
+            let totalHours = (diffInMinutes / 60 / 24).toFixed(0); // Convert to decimal format
+
+            daysFiled.value = totalHours; // Update the input field with the computed value
+        }
+
+         $('#leavesumbit').submit(function (e) {
+            e.preventDefault();
+            var lrid = document.getElementById('lrid').value;
+            var leavestartdate = document.getElementById('leavestartdate').value;
+            var leaveenddate = document.getElementById('leaveenddate').value;
+            var daysfiled = document.getElementById('daysfiled').value;
+            var leavetype = document.getElementById('leavetype').value;
+            var remarks = document.getElementById('remarks').value;
+       
+            var data = {};
+            data.Id = lrid;
+            data.EmployeeNo = EmployeeID;
+            data.StartDate = leavestartdate;
+            data.EndDate = leaveenddate;
+            data.LeaveTypeId = leavetype;
+            data.DaysFiled = daysfiled;
+            data.Reason = remarks;
+            data.CreatedBy = defaultCreatedBy;
+            console.log(data);
+            $.ajax({
+                url: '/Leave/SaveLR',
+                data: data,
+                type: "POST",
+                dataType: "json"
+            }).done(function (data) {
+                var status = data.status;
+                console.log(status);
+                if (status === 'Entity already exists') {
+                    notifyMsg('Warning!', 'Leave already exists', 'yellow', 'fas fa-check');
+                }
+                else {
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                }
+                modal = document.getElementById('defaultmodal');
+                modal.style.display = "none";
+                // window.location.reload();
+                sessionStorage.setItem("LeaveFlag", "true");
+                window.location.reload();
+                // document.getElementById('leavefiling').click();
+                // FetchLeaveRequestList();
+            });
+
+         });
+    </script>
+</body>
+</html>

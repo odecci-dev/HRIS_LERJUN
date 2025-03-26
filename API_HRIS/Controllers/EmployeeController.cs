@@ -256,6 +256,7 @@ namespace API_HRIS.Controllers
             public string? Id { get; set; }
             public string Department { get; set; }
             public string UserType { get; set; }
+            public string EmployeeType { get; set; }
             public string Lname { get; set; }
             public string Fname { get; set; }
             public string Mname { get; set; }
@@ -348,6 +349,7 @@ namespace API_HRIS.Controllers
                 {
                     var employee = _context.TblUsersModels.SingleOrDefault(a => a.Id == int.Parse(data.Id));
                     employee.UserType = int.Parse(data.UserType);
+                    employee.EmployeeType = int.Parse(data.EmployeeType);
                     employee.Fullname = data.Fname + " " + data.Mname + " " + data.Lname + " " + data.Suffix;
                     employee.Active = 1;
                     employee.Fname = data.Fname;
