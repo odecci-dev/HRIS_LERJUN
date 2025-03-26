@@ -183,23 +183,28 @@
                 type: "POST",
                 datatype: "json",
                 success: function (response) {
-                    
-                    console.log(response);
-                    if(response.stats != null) {
-                        notifyMsg('Error!', response.stats, 'red', 'fas fa-ban');
-                    }
-                    else
-                    {
-                        window.location.href = response.redirectToUrl;
-                    } 
+                    setTimeout(function () {
+                        console.log(response);
+                        if(response.stats != null) {
+                            notifyMsg('Error!', response.stats, 'red', 'fas fa-ban');
+                        }
+                        else
+                        {
+                            window.location.href = response.redirectToUrl;
+                        } 
+                    }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
                 },
                 error: function (xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                    location.reload(); // Reload the page on error
+                    setTimeout(function () {
+                        console.error("AJAX Error:", status, error);
+                        location.reload(); // Reload the page on error
+                     }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
                 },
                 complete: function () {
-                    // Hide loading indicator after completion
-                    hideodcloading();
+                    setTimeout(function () {
+                        // Hide loading indicator after completion
+                        hideodcloading();
+                     }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
                 }
             });
         }

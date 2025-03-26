@@ -279,14 +279,10 @@
                 data: {
                     data: data,
                 },
-                beforeSend: function () {
-                    showodcloading();
-                },
                 type: "POST",
                 datatype: "json",
                 complete: function (xhr) {
-                    // Hide loading indicator after completion
-                    hideodcloading();
+                    
                 },
             }).done(function (data) {
                 // console.log(data);
@@ -322,14 +318,9 @@
                 data: {
                     data: data,
                 },
-                beforeSend: function () {
-                    showodcloading();
-                },
                 type: "POST",
                 datatype: "json",
                 complete: function (xhr) {
-                    // Hide loading indicator after completion
-                    hideodcloading();
                 },
             }).done(function (data) {
                 console.log(data);

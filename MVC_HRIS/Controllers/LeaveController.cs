@@ -24,6 +24,8 @@ using Net.SourceForge.Koogra.Excel2007.OX;
 using MVC_HRIS.Models;
 using MVC_HRIS.Services;
 using API_HRIS.Manager;
+using API_HRIS.Models;
+using System.Net;
 
 namespace MVC_HRIS.Controllers
 {
@@ -54,6 +56,89 @@ namespace MVC_HRIS.Controllers
             return View("_LeaveTypeMaintenance");
         }
 
+        public IActionResult LeaveFiling()
+        {
+            return PartialView("LeaveFiling");
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetLeaveTypeListtOption()
+        {
+            //string result = "";
 
+            var list = new List<TblLeaveTypeModel>();
+            string test = token_.GetValue();
+            var url = DBConn.HttpString + "/Leave/LeaveTypeList";
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+
+            string response = await client.GetStringAsync(url);
+            List<TblLeaveTypeModel> models = JsonConvert.DeserializeObject<List<TblLeaveTypeModel>>(response);
+            return new(models);
+        }
+        public class LeaveRequestListParam
+        {
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetLeaveRequestList(LeaveRequestListParam data)
+        {
+            string result = "";
+            var list = new List<TblLeaveRequestModel>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Leave/LeaveRequestList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblLeaveRequestModel>>(res);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveLR(TblLeaveRequestModel data)
+        {
+            string res = "";
+            try
+            {
+
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Leave/save";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    if (numericStatusCode == 200)
+                    {
+                        res = numericStatusCode.ToString();
+                    }
+                    else
+                    {
+                        res = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                status = ex.GetBaseException().ToString();
+            }
+            return Json(new { status = res });
+        }
     }
 }

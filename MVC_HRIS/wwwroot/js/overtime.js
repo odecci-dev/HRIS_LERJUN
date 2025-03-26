@@ -7,12 +7,12 @@ function FetchOvertimeList() {
     let data = {
         EmployeeNo: EmployeeID
     };
-    console.log(data);
+    //console.log(data);
     var dtProperties = {
         responsive: true, // Enable responsive behavior
         scrollX: true,    // Enable horizontal scrolling if needed
-        processing: true,
-        serverSide: true,
+        //processing: true,
+        //serverSide: true,
         ajax: {
             url: '/OverTime/GetOverTimeList',
             type: "POST",
@@ -25,7 +25,7 @@ function FetchOvertimeList() {
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                console.log('table1', _currentPage);
+                //console.log('table1', _currentPage);
                 table.page(_currentPage - 1).draw('page');
             },
             error: function (err) {

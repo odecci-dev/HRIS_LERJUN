@@ -54,12 +54,34 @@
                                     <option value="1"  > Second Cutt-off</option>
                                 </select>
                             </div>
-                            <div class="input-holder">
+                            <div class="input-holder" style="display: none">
                                 @* <span class="text-left">Filter User:</span> *@
                                 <select id="stlSelectUser">
                                     <option value="0" selected disabled> Select User</option>
                                 </select>
                             </div>
+
+                            <div class="input-holder selectUsersController">
+                                <button class="btn btn-info" id="selectusers-stl" title="Select Users" >
+                                    Select Users &nbsp 
+                                    <svg id="select-user-arrow-down" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                                    <svg id="select-user-arrow-up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+                                    @* <svg id="select-user-arrow-up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg> *@
+                                </button>
+                                <div class="selectusersOptions" id="selectusersOptionsModal">
+                                    @* <input type="text" class="search-user" id="stl-search-user" placeholder="Search..."> *@
+                                    
+                                    <div class="input-holder">
+                                        <input type="text" id="stl-search-user" class="mod-inputs-nw" placeholder="Search Name Here..." />
+                                        <a id="clear-user-filter">Clear</a>
+                                    </div>
+                                    <form id="selectusersOptions">
+                    
+                                        <div></div>
+                                    </form>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -71,7 +93,6 @@
                     </thead>
                     <tbody>
                     </tbody>
-
                 </table>
                 <div id="table-footer">
                 </div>

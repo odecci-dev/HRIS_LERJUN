@@ -582,3 +582,43 @@ table .child ul li .dtr-data .action {
         color: var(--dark) !important;
     }
 }
+
+
+/*Timelogs Summary*/
+.selectUsersController{
+    position: relative;
+}
+.selectusersOptions {
+    min-width: 300px;
+    height: 350px;
+    background-color: #fff;
+    position: absolute;
+    left: 5px;
+    top: 45px;
+    z-index: 999;
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    overflow-y: scroll;
+    display: none;
+}
+#select-user-arrow-up{
+    display: none;
+}
+.selectusersOptions .input-holder{
+    background-color: #fff;
+    position: sticky;
+    top: -10px;
+    margin-top: -10px;
+    margin-left: -10px;
+    padding: 10px;
+
+}
+.selectusersOptions #stl-search-user{
+    width: 100%
+}
+.selectusersOptions #clear-user-filter{
+    cursor: pointer;
+}
+.selectusersOptions #clear-user-filter:hover{
+    color: red;
+}

@@ -1,3 +1,7 @@
+
+var modalIdentifier = 0;
+const selectedEmployeeFilter = []
+
 async function timeLogs() {
 
     $("#add-time-logs-form").on("submit", function (event) {
@@ -440,26 +444,17 @@ function initializeDataTable() {
             data: {
                 data: data
             },
-            beforeSend: function () {
-                showodcloading();
-            },
             dataType: "json",
             processing: true,
             serverSide: true,
             complete: function (xhr) {
-                // var url = new URL(window.location.href);
-                // var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                // // console.log('table1', _currentPage);
-                // table.page(_currentPage - 1).draw('page');
-
                 // Compute total rendered hours after data is loaded
                 computeTotalRenderedHoursEmp();
-
-                // Hide loading indicator after completion
-                hideodcloading();
             },
             error: function (err) {
-                alert(err.responseText);
+                setTimeout(function () {
+                    alert(err.responseText);
+                }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
             }
         },
         columns: [
@@ -719,7 +714,7 @@ function initializeDataTable() {
                     return button;
                 }
             }
-        ]
+        ], "dom": 'rtip'
         , responsive: true
         // , columnDefs:  columnDefsConfig
         , columnDefs: [
@@ -875,10 +870,6 @@ function initializeDataTable() {
 
 
 }
-
-
-
-
 //Summary Functions
 function defaultdate() {
 
@@ -905,12 +896,9 @@ function defaultdate() {
 function fetchSummaryTimlogsUsers() {
     var datefrom = document.getElementById('stl-datefrom').value;
     var dateto = document.getElementById('stl-dateto').value;
+    var fullname = document.getElementById('stl-search-user').value;
     const data = {
-        UserId: "0",
-        datefrom: datefrom,
-        dateto: dateto,
-        Department: "0",
-
+        fullname: fullname
     };
 
     //console.log(data);
@@ -920,15 +908,28 @@ function fetchSummaryTimlogsUsers() {
             data: data,
         },
         type: "POST",
-        datatype: "json",
+        datatype: "json", async: false,
         success: function (data) {
-            console.log(data);
+            //console.log(data);
             $("#stlSelectUser").empty();
             $("#stlSelectUser").append('<option value="0" disabled selected>Select User</option>');
             $("#stlSelectUser").append('<option value="0" >Select All</option>');
             for (var i = 0; i < data.length; i++) {
-                $("#stlSelectUser").append('<option value="' + data[i].userID + '">' + data[i].fullname + "</option>");
+                $("#stlSelectUser").append('<option value="' + data[i].userID + '"><input type="checkbox" id="selectedUsers' + data[i].userID +'" value="' + data[i].userID + '">' + data[i].fullname + "</option>");
                
+            }
+            var form = document.getElementById('selectusersOptions');
+            form.innerHTML = "";
+
+            for (var i = 0; i < data.length; i++) {
+                var div = document.createElement("div");
+                div.className = "formControl";
+                div.innerHTML = `
+                    <input class="stlSelectUserOption" type="checkbox" class="stlSelectUserOption" data-value="`+ data[i].userID + `" id="stlSelectUserOption` + data[i].userID+`" name="`+ data[i].fullname + `" value="` + data[i].userID + `" />
+                    <a>`+ data[i].fullname + `</a>`;
+                form.appendChild(div);
+
+                
             }
         }
     });
@@ -941,13 +942,15 @@ function initializeSTLDataTable() {
     }
     var datefrom = document.getElementById('stl-datefrom').value;
     var dateto = document.getElementById('stl-dateto').value;
-    var userid = document.getElementById('stlSelectUser').value;
+    //var userid = document.getElementById('stlSelectUser').value;
+    var checkedUser = document.querySelectorAll('input[class="stlSelectUserOption"]:checked');
+    selectedEmail = Array.from(checkedUser).map(x => x.value);
+    //console.log(selectedEmail);
     const data = {
-        UserId: userid,
+        UserId: selectedEmployeeFilter,
         datefrom: datefrom,
         dateto: dateto,
         Department: "0",
-
     };
     //console.log(data);
     var dtProperties = {
@@ -979,7 +982,10 @@ function initializeSTLDataTable() {
                 "data": "fullname",
                 "orderable": true
             },
-
+            {
+                "title": "Unfiled Overtime",
+                "data": "unfiledOvertime", "orderable": false
+            },
             {
                 "title": "Overtime",
                 "data": "approvedOvertimeHours", "orderable": false
@@ -993,8 +999,12 @@ function initializeSTLDataTable() {
                 "data": "approvedOffsetTimeHours", "orderable": false
             },
             {
+                "title": "Total Hours By Schedule",
+                "data": "totalHoursBySchedule", "orderable": false
+            },
+            {
                 "title": "Total Hours",
-                "data": "approvedTotalHours", "orderable": false
+                "data": "totalHours", "orderable": false
             },
             {
                 "title": "Required Hours",
@@ -1099,7 +1109,69 @@ function stlDOM() {
         setCutOffDatesStl();
         initializeSTLDataTable();
     }
-    
+   
+
+    document.getElementById("selectusers-stl").onclick = function () {
+        var selectUsersModal = document.getElementById('selectusersOptionsModal');
+        var arrowUp = document.getElementById('select-user-arrow-up');
+        var arrowDown = document.getElementById('select-user-arrow-down');
+        if (modalIdentifier == 0) {
+            modalIdentifier = 1;
+            selectUsersModal.style.display = "block";
+            arrowDown.style.display = "none";
+            arrowUp.style.display = "inline-block";
+            document.getElementById("stl-search-user").focus();
+        }
+        else {
+            modalIdentifier = 0;
+
+            selectUsersModal.style.display = "none";
+            arrowDown.style.display = "inline-block";
+            arrowUp.style.display = "none";
+            
+        }
+    }
+    document.getElementById("clear-user-filter").onclick = function () {
+        document.querySelectorAll('.stlSelectUserOption').forEach(checkbox => {
+            checkbox.checked = false;
+            selectedEmployeeFilter.length = 0;
+        });
+        initializeSTLDataTable();
+    }
+    $('#selectusersOptions').on('click', '.stlSelectUserOption', function () {
+        var value = $(this).data('value');
+        document.getElementById("stl-search-user").focus();
+        if ($(this).is(":checked")) {
+
+            //alert(value);
+            selectedEmployeeFilter.push(value);
+            initializeSTLDataTable();
+        }
+        else {
+            let index = selectedEmployeeFilter.indexOf(value);
+
+            if (index !== -1) {
+                selectedEmployeeFilter.splice(index, 1);
+
+                initializeSTLDataTable();
+            }
+        }
+    });
+
+    document.getElementById("stl-search-user").addEventListener("input", function () {
+
+
+        fetchSummaryTimlogsUsers();
+        for (var i = 0; i < selectedEmployeeFilter.length; i++) {
+            var checkboxId = 'stlSelectUserOption' + selectedEmployeeFilter[i];
+            var checkbox = document.getElementById(checkboxId);
+            if (checkbox) {  // Ensure the checkbox exists before modifying it
+                checkbox.checked = true;
+            } else {
+                console.warn("Checkbox not found:", checkboxId); // Debugging info
+            }
+        }
+    });
 }
 function stladjustToWeekday(date) {
     const day = date.getDay();
@@ -1116,7 +1188,7 @@ function setCutOffDatesStl() {
     const [year, month] = stlselectedMonth.split('-').map(Number);
 
     //let fromDate, toDate;
-    console.log(month);
+    //console.log(month);
     if (stlCuttOff == 0) {
         fromDate = new Date(year, month - 2, 26);
         toDate = new Date(year, month - 1, 10);
@@ -1159,8 +1231,10 @@ async function STLExportFunction() {
     var datefrom = document.getElementById('stl-datefrom').value;
     var dateto = document.getElementById('stl-dateto').value;
     var userid = document.getElementById('stlSelectUser').value;
+    var checkedUser = document.querySelectorAll('input[class="stlSelectUserOption"]');
+    selectedUser = Array.from(checkedUser).map(x => x.value);
     var depart = 0;
-    window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=" + "&UserId=" + userid + "&datefrom=" + $('#stl-datefrom').val() + "&dateto=" + $('#stl-dateto').val() + "&Department=" + depart;
+    window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=" + "&UserId=" + selectedUser + "&datefrom=" + $('#stl-datefrom').val() + "&dateto=" + $('#stl-dateto').val() + "&Department=" + depart;
 
     /*window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=0" + "&UserId=" + userid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&Department=0";*/
 

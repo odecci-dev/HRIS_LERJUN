@@ -84,7 +84,7 @@
         <div class="content-filter">
             <div class="tab">
                 <button class="tablinks active" onclick="openTab(event, 'Tab1')">OverTime Filing</button>
-                <button class="tablinks" onclick="openTab(event, 'Tab2')">Leave Filing</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab2')" id="leavefiling">Leave Filing</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab3')">Leave Balance</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab4')">Leave Ledger</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab5')">Leave Maintenance</button>
@@ -95,7 +95,7 @@
             </div>
 
             <div id="Tab2" class="tab-content">
-              
+                @await Html.PartialAsync("~/Views/Leave/_Leave.cshtml")
             </div>
 
             <div id="Tab3" class="tab-content">
@@ -131,10 +131,17 @@
 </div>
 
 
+<script src="~/js/leave.js"></script>
 
 @section Scripts {
     <script>
-
+        window.addEventListener("load", function () {
+            if (sessionStorage.getItem("LeaveFlag") === "true") {
+                sessionStorage.removeItem("LeaveFlag"); // Remove flag to avoid repeat execution
+                document.getElementById('leavefiling').click();
+                FetchLeaveRequestList();
+            }
+        });
         $(document).ready(function () {
 
         });
