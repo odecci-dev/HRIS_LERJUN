@@ -1,4 +1,4 @@
-let toggleButton = window.localStorage.getItem("toggleButton");
+//let toggleButton = window.localStorage.getItem("toggleButton");
 let toggle = document.querySelector("#toggleButton");
 
 

@@ -450,6 +450,9 @@ body-container {
     height: 50px;
     border-radius: 20%;
 }
+.tbl-edit {
+    background-color: #138496
+}
 .tbl-edit,
 .tbl-approve,
 .tbl-view,

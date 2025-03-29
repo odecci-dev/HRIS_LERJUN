@@ -1,3 +1,7 @@
+
+var modalIdentifier = 0;
+const selectedEmployeeFilter = []
+
 async function timeLogs() {
 
     $("#add-time-logs-form").on("submit", function (event) {
@@ -9,6 +13,7 @@ async function timeLogs() {
         var mtltimeout = document.getElementById('mtltimeout').value;
         var manualtask = document.getElementById('manualtask').value;
         var mtlremarks = document.getElementById('mtlremarks').value;
+        var mtlbreak = document.getElementById('mtlbreak').value; 
 
         var data = {};
         data.id = mtlid;
@@ -16,7 +21,7 @@ async function timeLogs() {
         data.date = mtldate;
         data.timeIn = mtltimein;
         data.timeOut = mtltimeout;
-        data.renderedHours = (new Date(mtltimeout) - new Date(mtltimein)) / 3600000;
+        data.renderedHours = ((new Date(mtltimeout) - new Date(mtltimein)) / 3600000) - mtlbreak;
         data.TaskId = manualtask;
         data.deleteFlag = 1;
         data.Remarks = mtlremarks;
@@ -443,16 +448,13 @@ function initializeDataTable() {
             processing: true,
             serverSide: true,
             complete: function (xhr) {
-                // var url = new URL(window.location.href);
-                // var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                // // console.log('table1', _currentPage);
-                // table.page(_currentPage - 1).draw('page');
-
                 // Compute total rendered hours after data is loaded
                 computeTotalRenderedHoursEmp();
             },
             error: function (err) {
-                alert(err.responseText);
+                setTimeout(function () {
+                    alert(err.responseText);
+                }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
             }
         },
         columns: [
@@ -541,6 +543,16 @@ function initializeDataTable() {
             {
                 "title": "Total Rendered Hours",
                 "data": "renderedHours", "orderable": false,
+                "render": function (data, type, row) {
+                    if (data != '' || data != null) {
+                        return data;
+                    }
+                    else {
+                        
+                        return 0;
+                    }
+
+                }
             },
             {
                 "title": "Status",
@@ -569,70 +581,140 @@ function initializeDataTable() {
                     var status = row.statusId;
                     var task = row.taskId;
                     if (status == 2 || status == 5) {
-                        var button = `<div class="action" style="justify-content: start !important">
-                                                        <button class="default-btn btn btn-danger" id="" title="Delete" 
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
-                                                        disabled>
-                                                    <i class="fa-solid fa-trash"></i> Delete
-                                                </button>
-                                                        <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                                disabled>
-                                                            <i class="fa-solid fa-pen-to-square"></i> edit
-                                                        </button>
-                                            </div>`;
+                        //var button = `<div class="action" style="justify-content: start !important">
+                        //                                <button class="default-btn btn btn-danger" id="" title="Delete" 
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
+                        //                                disabled>
+                        //                            <i class="fa-solid fa-trash"></i> Delete
+                        //                        </button>
+                        //                                <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                        disabled>
+                        //                                    <i class="fa-solid fa-pen-to-square"></i> edit
+                        //                                </button>
+                        //                    </div>`;
+                        var button = `<label class="popup">
+                                      <input type="checkbox">
+                                      <div class="burger" tabindex="0">
+                                        <span></span>
+                                        <span></span>
+                                      </div>
+                                      <nav class="popup-window">
+                                            <button class="default-btn btn btn-danger" id="" title="Delete"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px !important; padding: 5px 5px !important"
+                                            disabled>
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button></br>
+                                            <button class="default-btn btn btn-info" id="add-timeout" title="Time Out"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                    disabled>
+                                                <i class="fa-solid fa-pen-to-square"></i> edit
+                                            </button>
+                                      </nav>
+                                    </label>`;
                     }
                     else {
-                        var button = `<div class="action" style="justify-content: start !important">
-                                                        <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete" 
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                        >
-                                                    <i class="fa-solid fa-trash"></i> Delete
-                                                </button>
-                                                        <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
-                                                            data-id="${data}"
-                                                            data-status="${row.statusId}"
-                                                            data-task="${row.taskId}"
-                                                            data-date="${row.date}"
-                                                            data-timein="${row.timeIn}"
-                                                            data-timeout="${row.timeOut}"
-                                                            data-remarks="${row.remarks}"
-                                                            data-userid="${row.userId}"
-                                                            style="width: 100px; font-size:13px; padding: 5px 5px"
-                                                                >
-                                                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                                                        </button>
-                                            </div>`;
+                        //var button = `<div class="action" style="justify-content: start !important">
+                        //                                <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete" 
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                >
+                        //                                    <i class="fa-solid fa-trash"></i> Delete
+                        //                                </button></br>
+                        //                                <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
+                        //                                    data-id="${data}"
+                        //                                    data-status="${row.statusId}"
+                        //                                    data-task="${row.taskId}"
+                        //                                    data-date="${row.date}"
+                        //                                    data-timein="${row.timeIn}"
+                        //                                    data-timeout="${row.timeOut}"
+                        //                                    data-remarks="${row.remarks}"
+                        //                                    data-userid="${row.userId}"
+                        //                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                        //                                        >
+                        //                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                        //                                </button>
+                        //                    </div>`;
+                        var button = `<label class="popup">
+                                        <input type="checkbox">
+                                        <div class="burger" tabindex="0">
+                                        <span></span>
+                                        <span></span>
+                                        </div>
+                                        <nav class="popup-window">
+                                            <button class="tbl-delete btn btn-danger" id="add-timein" title="Delete"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px; padding: 5px 5px"
+                                            >
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button></br>
+                                            <button class="tbl-edit btn btn-info" id="add-timeout" title="Time Out"
+                                                data-id="${data}"
+                                                data-status="${row.statusId}"
+                                                data-task="${row.taskId}"
+                                                data-date="${row.date}"
+                                                data-timein="${row.timeIn}"
+                                                data-timeout="${row.timeOut}"
+                                                data-remarks="${row.remarks}"
+                                                data-userid="${row.userId}"
+                                                style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                    >
+                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            </button>
+                                        </nav>
+                                    </label>`;
 
                     }
                     return button;
                 }
             }
-        ]
+        ], "dom": 'rtip'
         , responsive: true
         // , columnDefs:  columnDefsConfig
         , columnDefs: [
@@ -668,8 +750,7 @@ function initializeDataTable() {
             {
                 targets: [7],
                 width: "5%",
-                className: 'left-align'
-            },
+            }
         ],
         order: [[0, 'desc']] // Sort the second column (index 1) by descending order
 
@@ -787,5 +868,374 @@ function initializeDataTable() {
         $('#totalamountEmp').html("Total Rendered Hours: " + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + totalHours.toFixed(2));
     }
 
+
+}
+//Summary Functions
+function defaultdate() {
+
+    const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+    // Format the dates as YYYY-MM-DD
+    const formatDate = (date) => {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = date.getDate();
+
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+
+        return `${year}-${month}-${day}`;
+    };
+
+    // Set the values for the date inputs
+    document.getElementById('stl-datefrom').value = formatDate(firstDayOfMonth);
+    document.getElementById('stl-dateto').value = formatDate(lastDayOfMonth);
+}
+function fetchSummaryTimlogsUsers() {
+    var datefrom = document.getElementById('stl-datefrom').value;
+    var dateto = document.getElementById('stl-dateto').value;
+    var fullname = document.getElementById('stl-search-user').value;
+    const data = {
+        fullname: fullname
+    };
+
+    //console.log(data);
+    $.ajax({
+        url: '/TimeLogs/GetSummaryTimelogsListSelect',
+        data: {
+            data: data,
+        },
+        type: "POST",
+        datatype: "json", async: false,
+        success: function (data) {
+            //console.log(data);
+            $("#stlSelectUser").empty();
+            $("#stlSelectUser").append('<option value="0" disabled selected>Select User</option>');
+            $("#stlSelectUser").append('<option value="0" >Select All</option>');
+            for (var i = 0; i < data.length; i++) {
+                $("#stlSelectUser").append('<option value="' + data[i].userID + '"><input type="checkbox" id="selectedUsers' + data[i].userID +'" value="' + data[i].userID + '">' + data[i].fullname + "</option>");
+               
+            }
+            var form = document.getElementById('selectusersOptions');
+            form.innerHTML = "";
+
+            for (var i = 0; i < data.length; i++) {
+                var div = document.createElement("div");
+                div.className = "formControl";
+                div.innerHTML = `
+                    <input class="stlSelectUserOption" type="checkbox" class="stlSelectUserOption" data-value="`+ data[i].userID + `" id="stlSelectUserOption` + data[i].userID+`" name="`+ data[i].fullname + `" value="` + data[i].userID + `" />
+                    <a>`+ data[i].fullname + `</a>`;
+                form.appendChild(div);
+
+                
+            }
+        }
+    });
+}
+function initializeSTLDataTable() {
+
+    var tableId = '#summary-timelogs-table';
+    if ($.fn.DataTable.isDataTable(tableId)) {
+        $(tableId).DataTable().clear().destroy();
+    }
+    var datefrom = document.getElementById('stl-datefrom').value;
+    var dateto = document.getElementById('stl-dateto').value;
+    //var userid = document.getElementById('stlSelectUser').value;
+    var checkedUser = document.querySelectorAll('input[class="stlSelectUserOption"]:checked');
+    selectedEmail = Array.from(checkedUser).map(x => x.value);
+    //console.log(selectedEmail);
+    const data = {
+        UserId: selectedEmployeeFilter,
+        datefrom: datefrom,
+        dateto: dateto,
+        Department: "0",
+    };
+    //console.log(data);
+    var dtProperties = {
+
+        ajax: {
+            url: '/TimeLogs/GetSummaryTimelogsListManager',
+            type: "POST",
+            data: {
+                data: data
+            },
+            dataType: "json",
+            processing: true,
+            serverSide: true,
+            complete: function (xhr) {
+                var url = new URL(window.location.href);
+                var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                //console.log('table1', _currentPage);
+                table.page(_currentPage - 1).draw('page');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        },
+        responsive: true,
+        "columns": [
+
+            {
+                "title": "Full Name",
+                "data": "fullname",
+                "orderable": true
+            },
+            {
+                "title": "Unfiled Overtime",
+                "data": "unfiledOvertime", "orderable": false
+            },
+            {
+                "title": "Overtime",
+                "data": "approvedOvertimeHours", "orderable": false
+            },
+            {
+                "title": "Undertime",
+                "data": "undertimeHours", "orderable": false
+            },
+            {
+                "title": "Offset Time",
+                "data": "approvedOffsetTimeHours", "orderable": false
+            },
+            {
+                "title": "Total Hours By Schedule",
+                "data": "totalHoursBySchedule", "orderable": false
+            },
+            {
+                "title": "Total Hours",
+                "data": "totalHours", "orderable": false
+            },
+            {
+                "title": "Required Hours",
+                "data": "requiredHours", "orderable": false
+            },
+            {
+                "title": "Days Late",
+                "data": "daysLate", "orderable": false
+            },
+            {
+                "title": "Working Days",
+                "data": "workingDays", "orderable": false
+            }
+        ], "dom": 'rtip',
+        columnDefs: [
+
+
+            {
+                targets: [0], // Fullname
+                width: "30%",
+                className: 'left-align'
+            },
+            {
+                targets: [1], // overtime
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [2], // Undertime
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [3], // Offset Time
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [4], // Total Hours
+                width: "15%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [5], // Required Hours
+                width: "10%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [6], // Days Late
+                width: "10%",
+                className: 'dt-body-right'
+            },
+            {
+                targets: [7], // Working Days
+                width: "10%",
+                className: 'dt-body-right'
+            }
+
+        ]
+    };
+
+    $('#summary-timelogs-table').on('page.dt', function () {
+
+        var info = table.page.info();
+        var url = new URL(window.location.href);
+        url.searchParams.set('page01', (info.page + 1));
+        window.history.replaceState(null, null, url);
+    });
+
+    var table = $(tableId).DataTable(dtProperties);
+    $(tableId + '_filter input').attr('placeholder', 'Searching...');
+    $(tableId + ' tbody').on('click', 'tr', function () {
+        var data = table.row(this).data();
+
+    });
+}
+function stlDOM() {
+    document.getElementById("stlSelectUser").onchange = function () {
+        initializeSTLDataTable();
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const stlmonthSelect = document.getElementById("stl-monthSelect");
+        const stlcurrentYear = new Date().getFullYear();
+
+        for (let stlmonth = 0; stlmonth < 12; stlmonth++) {
+            const stlmonthName = new Date(stlcurrentYear, stlmonth).toLocaleString('default', { month: 'long' });
+            const stloption = document.createElement("option");
+            stloption.value = `${stlcurrentYear}-${String(stlmonth + 1).padStart(2, '0')}`;
+            stloption.text = `${stlmonthName} ${stlcurrentYear}`;
+            stlmonthSelect.appendChild(stloption);
+        }
+
+        // Set default to current month
+        stlmonthSelect.value = `${stlcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        setCutOffDatesStl();
+    });
+    document.getElementById("stl-monthSelect").onchange = function () {
+        setCutOffDatesStl();
+        initializeSTLDataTable();
+    }
+    document.getElementById("stlCuttOff").onchange = function () {
+        setCutOffDatesStl();
+        initializeSTLDataTable();
+    }
+   
+
+    document.getElementById("selectusers-stl").onclick = function () {
+        var selectUsersModal = document.getElementById('selectusersOptionsModal');
+        var arrowUp = document.getElementById('select-user-arrow-up');
+        var arrowDown = document.getElementById('select-user-arrow-down');
+        if (modalIdentifier == 0) {
+            modalIdentifier = 1;
+            selectUsersModal.style.display = "block";
+            arrowDown.style.display = "none";
+            arrowUp.style.display = "inline-block";
+            document.getElementById("stl-search-user").focus();
+        }
+        else {
+            modalIdentifier = 0;
+
+            selectUsersModal.style.display = "none";
+            arrowDown.style.display = "inline-block";
+            arrowUp.style.display = "none";
+            
+        }
+    }
+    document.getElementById("clear-user-filter").onclick = function () {
+        document.querySelectorAll('.stlSelectUserOption').forEach(checkbox => {
+            checkbox.checked = false;
+            selectedEmployeeFilter.length = 0;
+        });
+        initializeSTLDataTable();
+    }
+    $('#selectusersOptions').on('click', '.stlSelectUserOption', function () {
+        var value = $(this).data('value');
+        document.getElementById("stl-search-user").focus();
+        if ($(this).is(":checked")) {
+
+            //alert(value);
+            selectedEmployeeFilter.push(value);
+            initializeSTLDataTable();
+        }
+        else {
+            let index = selectedEmployeeFilter.indexOf(value);
+
+            if (index !== -1) {
+                selectedEmployeeFilter.splice(index, 1);
+
+                initializeSTLDataTable();
+            }
+        }
+    });
+
+    document.getElementById("stl-search-user").addEventListener("input", function () {
+
+
+        fetchSummaryTimlogsUsers();
+        for (var i = 0; i < selectedEmployeeFilter.length; i++) {
+            var checkboxId = 'stlSelectUserOption' + selectedEmployeeFilter[i];
+            var checkbox = document.getElementById(checkboxId);
+            if (checkbox) {  // Ensure the checkbox exists before modifying it
+                checkbox.checked = true;
+            } else {
+                console.warn("Checkbox not found:", checkboxId); // Debugging info
+            }
+        }
+    });
+}
+function stladjustToWeekday(date) {
+    const day = date.getDay();
+    if (day === 0) { // Sunday -> Move to Saturday
+        date.setDate(date.getDate() - 1);
+    } else if (day === 6) { // Saturday -> Move to Friday
+        date.setDate(date.getDate() - 1);
+    }
+    return date;
+}
+function setCutOffDatesStl() {
+    const stlselectedMonth = document.getElementById("stl-monthSelect").value;
+    const stlCuttOff = document.getElementById("stlCuttOff").value;
+    const [year, month] = stlselectedMonth.split('-').map(Number);
+
+    //let fromDate, toDate;
+    //console.log(month);
+    if (stlCuttOff == 0) {
+        fromDate = new Date(year, month - 2, 26);
+        toDate = new Date(year, month - 1, 10);
+    } else if (stlCuttOff == 1) {
+        fromDate = new Date(year, month - 1, 11);
+        toDate = new Date(year, month - 1, 25);
+    }
+    // Adjust to weekday if falls on weekend
+    fromDate = stladjustToWeekday(fromDate);
+    toDate = stladjustToWeekday(toDate);
+    // Format as YYYY-MM-DD
+    const formatFromDate = (fromDate) => {
+        let year = fromDate.getFullYear();
+        let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = fromDate.getDate();
+
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+
+        return `${year}-${month}-${day}`;
+    };
+    const formatToDate = (toDate) => {
+        let year = toDate.getFullYear();
+        let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = toDate.getDate();
+
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+
+        return `${year}-${month}-${day}`;
+    };
+    document.getElementById('stl-datefrom').value = formatFromDate(fromDate);
+    document.getElementById('stl-dateto').value = formatToDate(toDate);
+}
+async function STLExportFunction() {
+    var btnexport = document.getElementById('export-timelogs');
+
+    var datefrom = document.getElementById('stl-datefrom').value;
+    var dateto = document.getElementById('stl-dateto').value;
+    var userid = document.getElementById('stlSelectUser').value;
+    var checkedUser = document.querySelectorAll('input[class="stlSelectUserOption"]');
+    selectedUser = Array.from(checkedUser).map(x => x.value);
+    var depart = 0;
+    window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=" + "&UserId=" + selectedUser + "&datefrom=" + $('#stl-datefrom').val() + "&dateto=" + $('#stl-dateto').val() + "&Department=" + depart;
+
+    /*window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=0" + "&UserId=" + userid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&Department=0";*/
 
 }
