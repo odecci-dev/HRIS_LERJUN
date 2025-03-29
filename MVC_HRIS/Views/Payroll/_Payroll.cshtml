@@ -168,7 +168,7 @@
             <button class="btn btn-primary" id="add-import" title="Time Out ">
                 <i class="fa-solid fa-file-import"></i> Import
             </button>
-            <button class="btn btn-success" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
+            <button class="btn btn-success" id="add-timelogs" title="Time Out" onclick="exportToExcel()">
                 <i class="fa-solid fa-file-arrow-down"></i> Export
             </button>
         </div>
@@ -251,7 +251,18 @@
         }
         return date;
     }
+    function exportToExcel() {
+        var employeeID = @Accessor.HttpContext.Session.GetString("Id");
+        var dateFrom = $("#datefrom").val();
+        var dateTo = $("#dateto").val();
 
+        var url = '@Url.Action("ExportToExcel", "Payroll")' +
+            '?employeeID=' + encodeURIComponent(employeeID) +
+            '&datefrom=' + encodeURIComponent(dateFrom) +
+            '&dateto=' + encodeURIComponent(dateTo);
+
+        window.location.href = url;
+    }
     // Function to set the cut-off dates based on selected month
     function setCutOffDates(cutOffType) {
         const selectedMonth = document.getElementById("monthSelect").value;

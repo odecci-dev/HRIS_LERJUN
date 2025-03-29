@@ -129,7 +129,7 @@ namespace API_HRIS.Controllers
             decimal holiday = 0;
             var excludedPosId = new List<int> { 1,5,6 };
 
-            var emplist =  _context.TblUsersModels.Where(a=>a.PositionLevelId != 1).ToList();
+            var emplist =  _context.TblUsersModels.Where(a=>a.PositionLevelId != 1 && a.EmployeeType != null).ToList();
             var paylist = _context.TblPayslipModel.ToList();
             if(paylist.Count != 0)
             {
