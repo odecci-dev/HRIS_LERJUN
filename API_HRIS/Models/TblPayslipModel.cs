@@ -17,7 +17,9 @@ public partial class TblPayslipModel
     [MaxLength(255)]
     public string EmployeeId { get; set; }
     [Column(TypeName = "decimal(18,2)")]
-    public decimal GrossSalary { get; set; }
+    public decimal GrossSalary { get; set; }    
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal OTPay { get; set; }
     [Column(TypeName = "decimal(18,2)")]
     public decimal SSSDeduction { get; set; }
     [Column(TypeName = "decimal(18,2)")]
@@ -29,6 +31,8 @@ public partial class TblPayslipModel
     public decimal NetSalary { get; set; }
     [Column(TypeName = "decimal(18,2)")]
     public decimal RenderedHours { get; set; }
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal OTHours { get; set; }
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public string PayslipNumber { get; set; }
     public int? Status { get; set; }
