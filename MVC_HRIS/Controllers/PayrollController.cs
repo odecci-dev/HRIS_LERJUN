@@ -83,7 +83,9 @@ namespace MVC_HRIS.Controllers
                     PagIbig = p.PagIbig,
                     PayDate = p.PayDate,
                     TotalDeductions = p.TotalDeductions,
-                    RenderedHours = p.RenderedHours
+                    RenderedHours = p.RenderedHours,
+                    OvertimePay=p.OvertimePay,
+                    OvertimeHours=p.OvertimeHours
                 })
                 .OrderByDescending(p => p.PayDate)
                 .ToList();
@@ -129,6 +131,8 @@ namespace MVC_HRIS.Controllers
                 PagIbig = result.PagIbig,
                 OtherDeductions = 0,
                 TotalDeductions = result.TotalDeductions,
+                OvertimeHours = result.OvertimeHours,
+                OvertimePay = result.OvertimePay,
             };
             return PartialView("_Payslip", model);
         }

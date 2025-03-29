@@ -131,8 +131,14 @@
     <div class="d-flex action-navbar">
         <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
             <div>
-                <button onclick="setCutOffDates('first')">First Cut-off</button>
-                <button onclick="setCutOffDates('second')">Second Cut-off</button>
+         @*        <button onclick="setCutOffDates('first')">First Cut-off</button>
+                <button onclick="setCutOffDates('second')">Second Cut-off</button> *@
+                <button class="btn btn-info" id="otfile" title="Add New" onclick="setCutOffDates('first')">
+                    <i class="fa-regular fa-calendar-plus"></i>  First Cut-Off
+                </button>
+                <button class="btn btn-primary" id="show-timeout-modal" title="Delete" onclick="setCutOffDates('second')">
+                    <i class="fa-regular fa-calendar-minus"></i>  Second Cut-Off
+                </button>
             </div>
             <label for="datefrom" class="lbl">Months:</label>
             <select id="monthSelect" class="form-control" style="width: 200px;"></select>
@@ -151,13 +157,13 @@
     <div class="d-flex action-navbar-2">
         <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
             <button class="btn btn-info" id="generate" title="Time In">
-                <i class="fas fa-print"></i>Generate
+                <i class="fas fa-print"></i>  Generate
             </button>
             @*    <button class="btn btn-danger" id="show-timeout-modal" title="Time Out">
             <i class="fa-solid fa-circle-minus"></i> Delete
             </button> *@
             <button class="btn btn-warning" id="btn-refresh" title="Time Out">
-                <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                <i class="fa-solid fa-arrows-rotate"></i>  Refresh
             </button>
             <button class="btn btn-primary" id="add-import" title="Time Out ">
                 <i class="fa-solid fa-file-import"></i> Import
@@ -239,9 +245,9 @@
     function adjustToWeekday(date) {
         const day = date.getDay();
         if (day === 0) { // Sunday -> Move to Saturday
-            date.setDate(date.getDate()-1);
+            date.setDate(date.getDate());
         } else if (day === 6) { // Saturday -> Move to Friday
-            date.setDate(date.getDate()-1);
+            date.setDate(date.getDate());
         }
         return date;
     }
@@ -266,8 +272,8 @@
         toDate = adjustToWeekday(toDate);
 
         // Format as YYYY-MM-DD
-        document.getElementById('datefrom').value = fromDate.toISOString().split('T')[0];
-        document.getElementById('dateto').value = toDate.toISOString().split('T')[0];
+            document.getElementById('datefrom').value = new Date(fromDate).toLocaleDateString('en-CA');
+            document.getElementById('dateto').value = new Date(toDate).toLocaleDateString('en-CA');
     }
 
     // Event listener for filter button (optional, for filtering logic)

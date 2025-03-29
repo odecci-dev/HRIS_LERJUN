@@ -11,12 +11,15 @@
 @import "print-layout.css";
 @import "schedule.css";
 @import "calendar.css";
+@import "overtime.css";
 
 * {
     margin: 0;
     box-sizing: border-box;
 }
-
+#odc-loader{
+    display: none;
+}
 body {
     background-color: var(--light);
     font-family: "Montserrat-Reg";

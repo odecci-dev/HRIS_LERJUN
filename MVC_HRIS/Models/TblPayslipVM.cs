@@ -25,8 +25,10 @@ public partial class TblPayslipVM
 
     // Salary Details
     public decimal RenderedHours { get; set; }
+    public decimal OvertimeHours { get; set; }
     public decimal GrossPay { get; set; }
     public decimal NetPay { get; set; }
+    public decimal OvertimePay { get; set; }
 
     // Deductions
     public decimal Tax { get; set; }
