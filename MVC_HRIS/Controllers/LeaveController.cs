@@ -60,6 +60,10 @@ namespace MVC_HRIS.Controllers
         {
             return PartialView("LeaveFiling");
         }
+        public IActionResult Leave()
+        {
+            return PartialView("_Leave");
+        }
         [HttpGet]
         public async Task<JsonResult> GetLeaveTypeListtOption()
         {

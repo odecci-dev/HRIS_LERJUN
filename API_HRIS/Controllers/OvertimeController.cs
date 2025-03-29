@@ -64,9 +64,7 @@ namespace API_HRIS.Controllers
                                  StatusName = status != null ? status.Status : "Unknown", // Handle NULL values
                                  ot.Status
                              };
-                //var result = (dynamic)null;
-                //result = _context.TblOvertimeModel.Where(a => a.isDeleted == false && a.EmployeeNo == data.EmployeeNo).OrderByDescending(a => a.Id).ToList();
-                return Ok(result);
+               return Ok(result);
 
             }
             catch (Exception ex)
