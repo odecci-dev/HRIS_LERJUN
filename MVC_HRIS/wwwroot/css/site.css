@@ -12,14 +12,17 @@
 @import "schedule.css";
 @import "calendar.css";
 @import "overtime.css";
+@import "employee.css";
 
 * {
     margin: 0;
     box-sizing: border-box;
 }
-#odc-loader{
+
+#odc-loader {
     display: none;
 }
+
 body {
     background-color: var(--light);
     font-family: "Montserrat-Reg";
@@ -214,38 +217,38 @@ body {
         padding: 0 20px;
     }
 
-        .top-bar .logo-box {
-            width: 50% !important;
-            padding: 10px;
-            background-image: url(/img/logo-04.png);
-            background-size: contain !important;
-            background-repeat: no-repeat;
-            background-position: left;
-        }
+    .top-bar .logo-box {
+        width: 50% !important;
+        padding: 10px;
+        background-image: url(/img/logo-04.png);
+        background-size: contain !important;
+        background-repeat: no-repeat;
+        background-position: left;
+    }
 
-        .top-bar .navigation {
-            width: 50%;
-            height: 100px !important;
-            display: flex;
-            align-items: center;
-            justify-content: end
-        }
+    .top-bar .navigation {
+        width: 50%;
+        height: 100px !important;
+        display: flex;
+        align-items: center;
+        justify-content: end
+    }
 
-            .top-bar .navigation i {
-                font-size: 23px;
-            }
+    .top-bar .navigation i {
+        font-size: 23px;
+    }
 
-        .top-bar .menu {
-            width: 70vw;
-            padding: 20px;
-        }
+    .top-bar .menu {
+        width: 70vw;
+        padding: 20px;
+    }
 
-            .top-bar .menu .emp-info span {
-                font-size: 18px;
-            }
+    .top-bar .menu .emp-info span {
+        font-size: 18px;
+    }
 
-            .top-bar .menu li {
-                margin: 20px 0 !important;
-                font-size: 18px;
-            }
+    .top-bar .menu li {
+        margin: 20px 0 !important;
+        font-size: 18px;
+    }
 }

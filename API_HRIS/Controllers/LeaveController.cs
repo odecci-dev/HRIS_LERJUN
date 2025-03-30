@@ -9,6 +9,7 @@ using System;
 using Microsoft.IdentityModel.Tokens;
 using System.Drawing;
 using PeterO.Numbers;
+using System.Data;
 
 namespace API_HRIS.Controllers
 {
@@ -21,7 +22,7 @@ namespace API_HRIS.Controllers
         DbManager db = new DbManager();
         private readonly DBMethods dbmet;
 
-        public LeaveController(ODC_HRISContext context,DBMethods _dbmet)
+        public LeaveController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
             dbmet = _dbmet;
@@ -43,12 +44,90 @@ namespace API_HRIS.Controllers
         {
             public string? StartDate { get; set; }
             public string? EndDate { get; set; }
+            public string? UserId { get; set; }
         }
         [HttpPost]
         public async Task<IActionResult> LeaveRequestList(LeaveRequestListParam data)
         {
-            var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false).ToList();
-            return Ok(result);
+            try
+            {
+                var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        public class CheckedLeaveRequestListParam
+        {
+            public string[]? Id { get; set; }
+        }
+        public class TblLeaveRequestVM
+        {
+            public string? Id { get; set; }
+            public string? LeaveRequestNo { get; set; }
+            public string? EmployeeNo { get; set; }
+            public DateTime? Date { get; set; }
+            public DateTime? StartDate { get; set; }
+            public DateTime? EndDate { get; set; }
+            public string? DaysFiled { get; set; }
+            public string? LeaveTypeId { get; set; }
+            public string? Reason { get; set; }
+            public string? Status { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckedLeaveRequestList(CheckedLeaveRequestListParam data)
+        {
+            try
+            {
+                //var filter = new CheckedLeaveRequestListParam;
+                string sql = "";
+                //var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false).ToList();
+                var result = (dynamic)null;
+                sql = $@" SELECT * FROM [TblLeaveRequestModel] ";
+                sql += " WHERE Id in (";
+                for (int x = 0; x < data.Id.Length; x++)
+                {
+                    sql += data.Id[x] + ',';
+                }
+                sql += "'0')";
+                result = new List<TblLeaveRequestVM>();
+                DataTable table = db.SelectDb(sql).Tables[0];
+                foreach (DataRow dr in table.Rows)
+                {
+                    var item = new TblLeaveRequestVM();
+                    item.Id = dr["Id"].ToString();
+                    item.LeaveRequestNo = dr["LeaveRequestNo"].ToString();
+                    item.EmployeeNo = dr["EmployeeNo"].ToString();
+                    item.Date = Convert.ToDateTime(dr["Date"]);
+                    item.StartDate = Convert.ToDateTime(dr["StartDate"]);
+                    item.EndDate = Convert.ToDateTime(dr["EndDate"]);
+                    item.DaysFiled = dr["DaysFiled"].ToString();
+                    item.Reason = dr["Reason"].ToString();
+                    item.Status = dr["Status"].ToString();
+                    result.Add(item);
+                }
+                //result = result.Where(a => filter.Id?.Contains(a) == true).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> PendingLeaveRequestList(LeaveRequestListParam data)
+        {
+            try
+            {
+                var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false && a.Status == 1004).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPost]
         public async Task<ActionResult<TblLeaveRequestModel>> Save(TblLeaveRequestModel data)
@@ -68,7 +147,7 @@ namespace API_HRIS.Controllers
                 leaveno = "LR202501";
             }
             else
-            {   
+            {
                 leaveno = "LR" + no;
             }
             try
@@ -76,7 +155,7 @@ namespace API_HRIS.Controllers
 
                 if (data.Id == 0)
                 { // Insert Team
-                    
+
                     var leaveRequest = new TblLeaveRequestModel
                     {
                         LeaveRequestNo = leaveno,
@@ -94,7 +173,7 @@ namespace API_HRIS.Controllers
                     };
                     _context.TblLeaveRequestModel.Add(leaveRequest);
                     await _context.SaveChangesAsync();
-                   
+
                     await _context.SaveChangesAsync();
                     status = "Leave Request successfully saved";
                     dbmet.InsertAuditTrail("Save Leave Request" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Leave Request Module", "User", "0");
@@ -150,11 +229,11 @@ namespace API_HRIS.Controllers
                 if (existingItem != null)
                 {
 
-                    if(data.Status == 0)
+                    if (data.Status == 0)
                     {
 
                         existingItem.Status = 1005;
-                       
+
                     }
                     else if (data.Status == 1)
                     {
@@ -177,6 +256,54 @@ namespace API_HRIS.Controllers
                 return Problem(ex.GetBaseException().ToString());
             }
         }
+        public class multiApprovalParamList
+        {
+            public int? Id { get; set; }
+            public string? reason { get; set; }
+        }
+        public class multiApprovalParam
+        {
+            public int? Status { get; set; }
+            public List<multiApprovalParamList> lrapproval { get; set; }
+        }
+        [HttpPost]
+        public async Task<ActionResult<TblLeaveRequestModel>> MultiUpdateStatus(multiApprovalParam data)
+        {
+            string status = "";
+
+            try
+            {
+                for (int i = 0; i < data.lrapproval.Count; i++)
+                {
+                    Console.WriteLine(data.lrapproval[i].Id);
+                    var existingItem = await _context.TblLeaveRequestModel.FindAsync(data.lrapproval[i].Id);
+                    if (existingItem != null)
+                    {
+                        if (data.Status == 0)
+                        {
+                            existingItem.Status = 1005;
+                        }
+                        else if (data.Status == 1)
+                        {
+                            existingItem.Status = 5;
+                        }
+                        existingItem.ApprovalReason = data.lrapproval[i].reason;
+                        _context.TblLeaveRequestModel.Update(existingItem);
+                        await _context.SaveChangesAsync();
+                        status = "Leave request successfully deleted";
+                        dbmet.InsertAuditTrail("Update Leave request" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Leave request Module", "User", "0");
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                dbmet.InsertAuditTrail("Update Leave request" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Leave request Module", "User", "0");
+                return Problem(ex.GetBaseException().ToString());
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> LeaveTypeList()
         {

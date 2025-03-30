@@ -21,7 +21,7 @@ namespace API_HRIS.Controllers
         private readonly ODC_HRISContext _context;
         DbManager db = new DbManager();
         private readonly DBMethods dbmet;
-        public ScheduleController(ODC_HRISContext context , DBMethods _dbmet)
+        public ScheduleController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
             dbmet = _dbmet;
@@ -164,7 +164,7 @@ namespace API_HRIS.Controllers
                 }
                 else
                 {
-                   
+
                     var existingSchedule = await _context.TblScheduleModels.FindAsync(data.Id);
                     if (existingSchedule != null)
                     {
@@ -257,19 +257,20 @@ namespace API_HRIS.Controllers
         [HttpGet]
         public async Task<IActionResult> ScheduleList()
         {
-            
+
             try
             {
-                var schedule = _context.TblScheduleModels.Where(a => a.DeleteFlag ==false).ToList();
-               
+                var schedule = _context.TblScheduleModels.Where(a => a.DeleteFlag == false).ToList();
                 return Ok(schedule);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("ERROR");
+                // Log the exception
+                return BadRequest(new { message = "An error occurred", details = ex.Message });
             }
         }
-        public class scheduleId {
+        public class scheduleId
+        {
             public int Id { get; set; }
         }
         [HttpPost]
@@ -278,9 +279,9 @@ namespace API_HRIS.Controllers
 
             try
             {
-               
+
                 var result = _context.TblScheduleDayModels.Where(a => a.SchceduleId == data.Id).OrderBy(a => a.Day).ToList();
-                
+
                 return Ok(result);
             }
             catch

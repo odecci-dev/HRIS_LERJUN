@@ -1,0 +1,224 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @using Microsoft.AspNetCore.Http;
+    @inject IHttpContextAccessor Accessor;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document with Footer</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
+
+    <style>
+        .modal-dialog{
+            max-width: fit-content;
+        }
+       
+    </style>
+</head>
+<body>
+    <header>
+    </header>
+    <div>
+        <form id="approveleavesumbit">
+
+            <div class="content-filter-tbl">
+                <table id="to-approve-leave-table" class="table table-bordered table-hover w-100">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="table-footer">
+                </div>
+
+            </div>
+            <div class="mod-form">
+                <div class="input-container-2">
+                    <div id="mode-inputs">
+                        <input type="submit" value="Approve" id="btn-timein" class="btn-footer" style="width: 100%;" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
+        var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
+        
+        $(document).ready(function () {
+            
+        });
+
+        initializeLeaveDataTable();
+        function initializeLeaveDataTable() {
+
+            var tableId = '#to-approve-leave-table';
+            if ($.fn.DataTable.isDataTable(tableId)) {
+                $(tableId).DataTable().clear().destroy();
+            }
+                
+            let data = {
+                Id: selectedLeaveRequest
+            };
+            //console.log(data);
+            var dtProperties = {
+
+                ajax: {
+                    url: '/Leave/GetCheckedLeaveRequestList',
+                    type: "POST",
+                    data: {
+                        data: data
+                    },
+                    dataType: "json",
+                    processing: true,
+                    serverSide: true,
+                    complete: function (xhr) {
+                        var url = new URL(window.location.href);
+                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                        //console.log('table1', _currentPage);
+                        table.page(_currentPage - 1).draw('page');
+                    },
+                    error: function (err) {
+                        alert(err.responseText);
+                    }
+                },
+                responsive: false,
+                "columns": [
+                    {
+                        "title": "LR-Number",
+                        "data": "leaveRequestNo", "orderable": false
+                    },
+                    {
+                        "title": "Employee No",
+                        "data": "employeeNo", "orderable": false
+                    },
+                    {
+                        "title": "Start Date",
+                        "data": "startDate", "orderable": false
+                    },
+                    {
+                        "title": "End Date",
+                        "data": "endDate", "orderable": false
+                    },
+                    {
+                        "title": "Days Filed",
+                        "data": "daysFiled", "orderable": false
+                    },
+                    {
+                        "title": "Reason",
+                        "data": "reason", "orderable": false
+                    },
+                    {
+                        "title": "Add Reason",
+                        "data": "id",
+                        "render": function (data, type, row) {
+                            var textfield = "";
+                                textfield = `<input type="hidden" id="lrid" class="lrid" value="${data}"><textarea id="approval-reason" class="approval-reason" data-id="${data}" required>`;
+
+                            return textfield;
+                        }
+                    }
+                ],
+                dom: 'rtip',
+                columnDefs: [
+
+                       
+                    {
+                        targets: [0], // OT-Number column
+                        width: "10%"
+                    },
+                    {
+                        targets: [1], // OT-Number column
+                        width: "10%"
+                    },
+                    {
+                        targets: [2, 3], // Start Date, End Date
+                        orderable: false,
+                        type: 'date',
+                        width: "10%",
+                        render: function (data, type, row) {
+                            if (data && (type === 'display' || type === 'filter')) {
+                                let date = new Date(data);
+                                return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        targets: [4], // OT-Number column
+                        width: "10%"
+                    },
+                    {
+                        targets: [5], // OT-Number column
+                        width: "30%"
+                    },
+                    {
+                        targets: [6], // OT-Number column
+                        width: "15%"
+                    }
+                ]
+            };
+
+            $('#to-approve-leave-table').on('page.dt', function () {
+
+                var info = table.page.info();
+                var url = new URL(window.location.href);
+                url.searchParams.set('page01', (info.page + 1));
+                window.history.replaceState(null, null, url);
+            });
+
+            var table = $(tableId).DataTable(dtProperties);
+            $(tableId + '_filter input').attr('placeholder', 'Searching...');
+            $(tableId + ' tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+            });
+        }
+        const lrapproval = []
+         $('#approveleavesumbit').submit(function (e) {
+            e.preventDefault();
+
+            document.querySelectorAll("textarea[data-id]").forEach(el => {
+                lrapproval.push({ id: el.dataset.id, reason: el.value });
+            }); 
+            var data = {};
+            data.lrapproval = lrapproval;
+            data.status = 0;
+            console.log(data)
+
+            $.ajax({
+                url: '/Leave/MultiApproval',
+                data: data,
+                type: "POST",
+                dataType: "json"
+            }).done(function (data) {
+                var status = data.status;
+                console.log(status);
+                if (status === 'Entity already exists') {
+                    notifyMsg('Warning!', 'OT already exists', 'yellow', 'fas fa-check');
+                }
+                else {
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                }
+
+                modal = document.getElementById('defaultmodal');
+                modal.style.display = "none";
+                // window.location.reload();
+                sessionStorage.setItem("LeaveFlag", "true");
+                window.location.reload();
+            });
+         });
+    </script>
+</body>
+</html>
