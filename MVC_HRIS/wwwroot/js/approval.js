@@ -1,3 +1,4 @@
+//Timelogs Tab
 function initializeTimlogsDataTable() {
     var tableId = '#pending-timelogs-table';
     var lastSelectedRow = null;
@@ -34,7 +35,9 @@ function initializeTimlogsDataTable() {
                 alert(err.responseText);
             }
         },
+        dom: 'rtip',
         columns: [
+            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
             {
                 "title": "Profile",
                 "data": "id",
@@ -125,9 +128,6 @@ function initializeTimlogsDataTable() {
                 "title": "Action",
                 "data": "id",
                 "render": function (data, type, row) {
-                    var images = row['filePath'] == null ? img : row['filePath'];
-                    var status = row.statusId;
-                    var task = row.taskId;
                     var button = "";
                     if (row.statusId == '0') {
                         //button = `<div class="action" style="justify-content: start !important">
@@ -201,23 +201,33 @@ function initializeTimlogsDataTable() {
         , responsive: true
         // , columnDefs:  columnDefsConfig
         , columnDefs: [
-            { targets: 1, className: 'left-align' },
-            { responsivePriority: 10010, targets: 6 },
+            {
+                targets: [0], // Checkbox column
+                orderable: false,
+                searchable: false,
+                width: "5%", // Adjust width
+                "className": "text-center",
+                render: function (data, type, row) {
+                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                }
+            },
+            { targets: 2, className: 'left-align' },
             { responsivePriority: 10010, targets: 7 },
             { responsivePriority: 10010, targets: 8 },
-            { responsivePriority: 10008, targets: 0 },
-            { targets: 2, className: 'none' },
+            { responsivePriority: 10010, targets: 9 },
+            { responsivePriority: 10008, targets: 1 },
             { targets: 3, className: 'none' },
             { targets: 4, className: 'none' },
             { targets: 5, className: 'none' },
-            { "type": "date", "targets": 0 },
-            { width: '25%', targets: 0 },
+            { targets: 6, className: 'none' },
+            { "type": "date", "targets": 1 },
+            { width: '25%', targets: 1 },
             {
-                targets: [8],
+                targets: [9],
                 width: "5%", "className": "text-center", "targets": "7"
             },
         ],
-        order: [[0, 'desc']] // Sort the second column (index 1) by descending order
+        order: [[1, 'desc']] // Sort the second column (index 1) by descending order
     };
 
     var table = $(tableId).DataTable(dtProperties);
@@ -253,7 +263,6 @@ function initializeTimlogsDataTable() {
 
 
 }
-
 function timelogsTableMOD() {
     $('#selectUserPending').on('change', function () {
 
@@ -306,7 +315,7 @@ function decline_item() {
         initializeTimlogsDataTable();
     });
 }
-
+//OverTime Tab
 function initializeOTDataTable() {
 
     var tableId = '#pending-overtime-table';
@@ -342,8 +351,9 @@ function initializeOTDataTable() {
             }
         },
         responsive: true,
+        dom: 'rtip',
         "columns": [
-
+            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
             {
                 "title": "OT-Number",
                 "data": "otNo", "orderable": false
@@ -404,21 +414,6 @@ function initializeOTDataTable() {
 
                     var button = "";
 
-                    //button = `<div class="action">
-                    //                <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
-                    //                        data-id="${data}"
-                    //                        data-status="1005"
-                                                            
-                    //                    >
-                    //                    <i class="fa-solid fa-circle-xmark"></i> Decline
-                    //                </button>
-                    //                <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
-                    //                        data-id="${data}"
-                    //                        data-status="5"             
-                    //                    >
-                    //                    <i class="fa-solid fa-circle-check"></i> Approve
-                    //                </button>
-                    //            </div>`;
                     button = `<label class="popup">
                                     <input type="checkbox">
                                     <div class="burger" tabindex="0">
@@ -447,14 +442,22 @@ function initializeOTDataTable() {
             }
         ],
         columnDefs: [
-
-
             {
-                targets: [0], // OT-Number column
+                targets: [0], // Checkbox column
+                orderable: false,
+                searchable: false,
+                width: "5%", // Adjust width
+                "className": "text-center",
+                render: function (data, type, row) {
+                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                }
+            },
+            {
+                targets: [1], // OT-Number column
                 width: "20%"
             },
             {
-                targets: [1], // Date column (only sortable column)
+                targets: [2], // Date column (only sortable column)
                 type: 'date',
                 width: "10%",
                 render: function (data, type, row) {
@@ -466,12 +469,12 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [2, 3, 7], // Start Time, End Time
+                targets: [3, 4, 8], // Start Time, End Time
                 orderable: false,
                 className: 'none'
             },
             {
-                targets: [4, 5], // Start Date, End Date
+                targets: [5, 6], // Start Date, End Date
                 orderable: false,
                 className: 'none',
                 render: function (data, type, row) {
@@ -483,23 +486,23 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [6], // Hours Filed, Hours Approved
+                targets: [7], // Hours Filed, Hours Approved
                 orderable: false,
                 width: "10%"
             },
             {
-                targets: [7], // Remarks column
+                targets: [8], // Remarks column
                 orderable: false,
                 width: "10%"
             },
             {
-                targets: [8], // Convert To Leave Column
+                targets: [9], // Convert To Leave Column
                 orderable: false,
                 width: "10%"
 
             },
             {
-                targets: [9], // Status Column
+                targets: [10], // Status Column
                 orderable: false,
                 width: "10%",
                 createdCell: function (td, cellData, rowData, row, col) {
@@ -513,7 +516,7 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [10], // Convert To Leave Column
+                targets: [11], // Convert To Leave Column
                 orderable: false,
                 width: "5%", "className": "text-center", "targets": "7"
 
@@ -606,7 +609,7 @@ function OTdeclinemodal() {
                                     <textarea id="declineReason" style="height: 66px; width: 100%"></textarea>
                                 </div>
                         </div > `;
-    
+
     $('.input-container-button').empty();
     $('.img-header').empty();
     content.forEach(content => {
@@ -657,6 +660,190 @@ function changeStatus_item() {
 
         $("#alertmodal").modal('hide');
         initializeOTDataTable();
+    });
+}
+
+//Leave Tab
+function initializeLeaveDataTable() {
+
+    var tableId = '#pending-leave-table';
+    if ($.fn.DataTable.isDataTable(tableId)) {
+        $(tableId).DataTable().clear().destroy();
+    }
+    var empNo = "0";
+    empNo = document.getElementById('selectUserOTPending').value;
+    empNo = empNo === '' ? '0' : empNo;
+    let data = {
+        EmployeeNo: empNo
+    };
+    //console.log(data);
+    var dtProperties = {
+
+        ajax: {
+            url: '/Leave/GetPendingLeaveRequestList',
+            type: "POST",
+            data: {
+                data: data
+            },
+            dataType: "json",
+            processing: true,
+            serverSide: true,
+            complete: function (xhr) {
+                var url = new URL(window.location.href);
+                var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                //console.log('table1', _currentPage);
+                table.page(_currentPage - 1).draw('page');
+            },
+            error: function (err) {
+                alert(err.responseText);
+            }
+        },
+        responsive: true,
+        "columns": [
+
+            { "title": "<input type='checkbox' id='checkAllLeave' class='checkAllLeave'>", "data": null, "orderable": false },
+            {
+                "title": "LR-Number",
+                "data": "leaveRequestNo", "orderable": false
+            },
+            {
+                "title": "Employee No",
+                "data": "employeeNo", "orderable": false
+            },
+
+            {
+                "title": "Date",
+                "data": "date", "orderable": true
+            },
+            {
+                "title": "Start Date",
+                "data": "startDate", "orderable": false
+            },
+            {
+                "title": "End Date",
+                "data": "endDate", "orderable": false
+            },
+            {
+                "title": "Days Filed",
+                "data": "daysFiled", "orderable": false
+            },
+            {
+                "title": "Reason",
+                "data": "reason", "orderable": false
+            }
+            ,
+            {
+                "title": "Status",
+                "data": "status", "orderable": false,
+                "render": function (data, type, row) {
+                    var badge = "";
+                    if (data == 5) {
+                        badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
+                    }
+                    else if (data == 1004) {
+                        badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
+                    }
+                    else if (data == 1005) {
+                        badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
+                    }
+
+                    return badge;
+                }
+            },
+            {
+                "title": "Action",
+                "data": "id",
+                "render": function (data, type, row) {
+                    var button = "";
+                    button = `<label class="popup">
+                                        <input type="checkbox">
+                                        <div class="burger" tabindex="0">
+                                        <span></span>
+                                        <span></span>
+                                        </div>
+                                        <nav class="popup-window">
+                                            <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
+                                                    data-id="${data}"
+                                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                >
+                                                <i class="fa-solid fa-circle-xmark"></i> Decline
+                                            </button>
+                                            <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
+                                                    data-id="${data}"
+                                                    style="width: 100px; font-size:13px; padding: 5px 5px"
+                                                >
+                                                <i class="fa-solid fa-circle-check"></i> Approve
+                                            </button>
+                                        </nav>
+                                    </label>`;
+
+                    return button;
+                }
+            }
+        ],
+        dom: 'rtip',
+        columnDefs: [
+
+            {
+                targets: [0], // Checkbox column
+                orderable: false,
+                searchable: false,
+                width: "5%", // Adjust width
+                "className": "text-center",
+                render: function (data, type, row) {
+                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                }
+            },
+            {
+                targets: [1], // OT-Number column
+                width: "10%"
+            },
+            {
+                targets: [2], // OT-Number column
+                width: "10%"
+            },
+            {
+                targets: [3, 4, 5], // Start Date, End Date
+                orderable: false,
+                type: 'date',
+                width: "10%",
+                render: function (data, type, row) {
+                    if (data && (type === 'display' || type === 'filter')) {
+                        let date = new Date(data);
+                        return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                    }
+                    return data;
+                }
+            },
+            {
+                targets: [6], // OT-Number column
+                width: "10%"
+            },
+            {
+                targets: [7], // OT-Number column
+                width: "10%"
+            },
+            {
+                targets: [8], // Hours Filed, Hours Approved
+                orderable: false,
+                width: "8%"
+            },
+        ]
+    };
+
+    $('#pending-leave-table').on('page.dt', function () {
+
+        var info = table.page.info();
+        var url = new URL(window.location.href);
+        url.searchParams.set('page01', (info.page + 1));
+        window.history.replaceState(null, null, url);
+    });
+
+    var table = $(tableId).DataTable(dtProperties);
+    $(tableId + '_filter input').attr('placeholder', 'Searching...');
+    $(tableId + ' tbody').on('click', 'tr', function () {
+        var data = table.row(this).data();
+
     });
 }
 

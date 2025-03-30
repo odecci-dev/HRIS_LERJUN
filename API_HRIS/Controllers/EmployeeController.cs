@@ -53,10 +53,10 @@ namespace API_HRIS.Controllers
             public int pageSize { get; set; }
         }
 
-        public EmployeeController(ODC_HRISContext context,DBMethods _dbmet)
+        public EmployeeController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
-            dbmet= _dbmet;
+            dbmet = _dbmet;
         }
         [HttpPost]
         public async Task<IActionResult> saveEType(TblEmployeeTypeModel data)
@@ -283,7 +283,7 @@ namespace API_HRIS.Controllers
         private TblUsersModel buildEmployee(EmployeeViewModel registrationModel)
         {
             var pass = Cryptography.Encrypt(registrationModel.Password);
-            var filepath = registrationModel.FilePath == null ? "/img/OPTION.webp" : registrationModel.FilePath;
+            var filepath = registrationModel.FilePath == null ? "" : registrationModel.FilePath;
             var BuffHerdModel = new TblUsersModel()
             {
                 UserType = int.Parse(registrationModel.UserType),

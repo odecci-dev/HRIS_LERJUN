@@ -22,7 +22,7 @@ namespace API_HRIS.Controllers
         DbManager db = new DbManager();
         private readonly DBMethods dbmet;
 
-        public TimeLogsController(ODC_HRISContext context,DBMethods _dbmet)
+        public TimeLogsController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
             dbmet = _dbmet;
@@ -185,7 +185,7 @@ namespace API_HRIS.Controllers
             data.StatusId = data.StatusId;
             _context.TblTimeLogs.Add(data);
             string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isLoggedIn] = '1'" +
-                                       " WHERE id = '" + data.UserId+ "'";
+                                       " WHERE id = '" + data.UserId + "'";
             db.DB_WithParam(queryIsLoggedIn);
             await _context.SaveChangesAsync();
             return Ok();
@@ -775,7 +775,7 @@ namespace API_HRIS.Controllers
         [HttpPost]
         public async Task<IActionResult> RegularTimeLogList(TimeLogsParam data)
         {
-            
+
             var result = (dynamic)null;
             try
             {
@@ -815,12 +815,12 @@ namespace API_HRIS.Controllers
                         ON ts.StatusId = tl.StatusId
                         LEFT JOIN tbl_TaskModel t WITH(NOLOCK)
                         ON t.Id = tl.TaskId
-                        WHERE tl.Date between '" + data.datefrom + "' AND '" + data.dateto+"'";
+                        WHERE tl.DeleteFlag = 1 AND  tl.Date between '" + data.datefrom + "' AND '" + data.dateto + "'";
 
-                
+
                 if (data.Department != "0")
                 {
-                    sql += " AND um.Department = '" +data.Department +"'";
+                    sql += " AND um.Department = '" + data.Department + "'";
                 }
                 if (data.UserId != "0")
                 {
@@ -909,7 +909,7 @@ namespace API_HRIS.Controllers
             var result = (dynamic)null;
             try
             {
-                string sql = $@"DECLARE @StartDate DATE = '"+data.datefrom+"', @EndDate DATE = '" + data.dateto + "'";
+                string sql = $@"DECLARE @StartDate DATE = '" + data.datefrom + "', @EndDate DATE = '" + data.dateto + "'";
 
                 sql += $@" SELECT
 							um.id as 'UserID'
@@ -1031,7 +1031,7 @@ namespace API_HRIS.Controllers
                     sql += " AND um.Id in (";
                     for (int x = 0; x < data.UserId.Length; x++)
                     {
-                        sql += data.UserId[x]+',';
+                        sql += data.UserId[x] + ',';
                     }
                     sql += "'0')";
                 }
@@ -1088,8 +1088,8 @@ namespace API_HRIS.Controllers
 
                 if (data.fullname != null)
                 {
-                    sql += " AND um.Fullname like '%"+data.fullname+"%'";
-                    
+                    sql += " AND um.Fullname like '%" + data.fullname + "%'";
+
                 }
 
                 sql += "  ORDER BY um.Fullname ASC";

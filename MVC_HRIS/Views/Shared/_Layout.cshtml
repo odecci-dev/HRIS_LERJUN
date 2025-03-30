@@ -21,10 +21,11 @@
     <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
     <link href="~/css/iziToast.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/mod-input.css" />
-    <link rel="stylesheet" href="~/css/timelogs.css" /> 
+    <link rel="stylesheet" href="~/css/timelogs.css" />
     <link rel="stylesheet" href="~/css/department.css" />
     <link rel="stylesheet" href="~/css/overtime.css" />
     <link rel="stylesheet" href="~/css/actiondropdown.css" />
+    <link rel="stylesheet" href="~/css/employee.css  />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
@@ -33,7 +34,7 @@
 
 <body>
 
-    
+
     <div class="modal fade" id="defaultmodal" data-backdrop="static" data-bs-focus="false">
         <div class="modal-dialog">
             <div class="modal-content mat-modal-content">
@@ -117,7 +118,7 @@
                         <label class="label-color" for="password2">Retype Password</label>
                         <div id="error-password" class="error">*Password does not match.</div>
                     </div>
-                     
+
                     <input type="password" value="" id="password2" class="mod-input" required />
                 </div>
                 <div id="message">
@@ -139,15 +140,15 @@
                     </button>
                 </div>
             </div>
-            
+
         </form>
     </div>
 
     @Html.Partial("_TopBar")
     @Html.Partial("_SideBar")
     <main>
-    @* @Html.Partial("_Main") *@
-    @RenderBody()
+        @* @Html.Partial("_Main") *@
+        @RenderBody()
     </main>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
@@ -328,7 +329,7 @@
                                              <li>
                                                         <div>
                                                             <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
-                                                             
+
                                                                                 <i class="fa-solid fa-chart-line" style="font-size: 20px;margin-right:5px"></i>
                                                                 <span style="color: white;">Dashboard</span>
                                                             </a>

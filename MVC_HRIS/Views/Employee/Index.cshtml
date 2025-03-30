@@ -109,35 +109,44 @@
                 "columns": [
 
                     {
-                        "title": "Action",
+                        "title": "Profile",
                         "data": "id",
                         "render": function (data, type, row) {
 
-                            var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
-                            let btnView = `
+                            // var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
+                            var images = "../../"+row['filePath'] == null ? img : "../../"+row['filePath'];
+                            let profile = "";
+                            var initial = row['fname'].charAt(0)+row['lname'].charAt(0);
+                            initial = initial.toUpperCase()
+                            if(row['filePath'] == "" || row['filePath'] == null){
+                                profile = `<div class="initial"> ${initial} </div>`;
+                            }
+                            else{
+                                 profile = `<div class="data-img"> <img src='${images}' width="100%" /> </div>`;
+                            }
+        @* let btnView = `
 
-                                                         <div class="data-img"> <img src='${images}' width="100%" /> </div>
-                                                         <div class="actions">
-        @*                                                  <a class="tbl-edit" data-id="${data}">
-                                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                                    Edit
-                                                            </a>
-                                                            <a class="tbl-delete" data-id="${data}">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                                Delete
-                                                            </a>
-                                                            <a class="tbl-email"
-                                                                data-id="${data}"
-                                                                data-email="${row.email}"
-                                                                data-empid="${row.employeeID}"
-                                                                data-name="${row.fullname}"
-                                                                >
-                                                            <i class="fa-solid fa-envelope"></i>
-                                                            <span>Email</span>
-                                                        </a>*@
-                                                         </div>
-                                                          `
-                            return btnView;
+                                    <div class="data-img"> <img src='${images}' width="100%" /> </div>
+                                    <div class="actions">
+                                    <a class="tbl-edit" data-id="${data}">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                            Edit
+                                    </a>
+                                    <a class="tbl-delete" data-id="${data}">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Delete
+                                    </a>
+                                    <a class="tbl-email"
+                                        data-id="${data}"
+                                        data-email="${row.email}"
+                                        data-empid="${row.employeeID}"
+                                        data-name="${row.fullname}"
+                                        >
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <span>Email</span>
+                                </a>
+                            </div>`*@
+                            return profile;
                         }
                     },
 
@@ -177,7 +186,7 @@
                                                                 <i class="fa-solid fa-trash"></i>
                                                                 Delete
                                                             </button>
-                                                                @*<a class="tbl-email"
+        @*<a class="tbl-email"
                                                                 data-id="${data}"
                                                                 data-email="${row.email}"
                                                                 data-empid="${row.employeeID}"

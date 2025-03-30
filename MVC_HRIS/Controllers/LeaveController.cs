@@ -49,8 +49,8 @@ namespace MVC_HRIS.Controllers
             _appSettings = appSettings.Value;
         }
 
-       
-       
+
+
         public IActionResult LeaveTypeMaintenance()
         {
             return View("_LeaveTypeMaintenance");
@@ -63,6 +63,10 @@ namespace MVC_HRIS.Controllers
         public IActionResult Leave()
         {
             return PartialView("_Leave");
+        }
+        public IActionResult LeaveApproval()
+        {
+            return PartialView("LeaveApproval");
         }
         [HttpGet]
         public async Task<JsonResult> GetLeaveTypeListtOption()
@@ -83,6 +87,7 @@ namespace MVC_HRIS.Controllers
         {
             public string? StartDate { get; set; }
             public string? EndDate { get; set; }
+            public string? UserId { get; set; }
         }
         [HttpPost]
         public async Task<IActionResult> GetLeaveRequestList(LeaveRequestListParam data)
@@ -109,6 +114,74 @@ namespace MVC_HRIS.Controllers
 
             return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
         }
+        [HttpPost]
+        public async Task<IActionResult> GetPendingLeaveRequestList(LeaveRequestListParam data)
+        {
+            string result = "";
+            var list = new List<TblLeaveRequestModel>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Leave/PendingLeaveRequestList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblLeaveRequestModel>>(res);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+        }
+        public class CheckedLeaveRequestListParam
+        {
+            public string[]? Id { get; set; }
+        }
+        public class TblLeaveRequestVM
+        {
+            public string? Id { get; set; }
+            public string? LeaveRequestNo { get; set; }
+            public string? EmployeeNo { get; set; }
+            public string? Date { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+            public string? DaysFiled { get; set; }
+            public string? LeaveTypeId { get; set; }
+            public string? Reason { get; set; }
+            public string? Status { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCheckedLeaveRequestList(CheckedLeaveRequestListParam data)
+        {
+            string result = "";
+            var list = new List<TblLeaveRequestVM>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Leave/CheckedLeaveRequestList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblLeaveRequestVM>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+        }
 
         [HttpPost]
         public async Task<IActionResult> SaveLR(TblLeaveRequestModel data)
@@ -119,6 +192,50 @@ namespace MVC_HRIS.Controllers
 
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/Leave/save";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    if (numericStatusCode == 200)
+                    {
+                        res = numericStatusCode.ToString();
+                    }
+                    else
+                    {
+                        res = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                status = ex.GetBaseException().ToString();
+            }
+            return Json(new { status = res });
+        }
+        public class multiApprovalParamList
+        {
+            public int? Id { get; set; }
+            public string? reason { get; set; }
+        }
+        public class multiApprovalParam
+        {
+            public int? Status { get; set; }
+            public List<multiApprovalParamList> lrapproval { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> MultiApproval(multiApprovalParam data)
+        {
+            string res = "";
+            try
+            {
+
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Leave/MultiUpdateStatus";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
