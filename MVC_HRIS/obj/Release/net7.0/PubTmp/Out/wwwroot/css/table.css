@@ -4,10 +4,10 @@ table {
     width: 100%;
     margin: 0 auto;
 }
-    table.table-bordered.dataTable {
-        text-align:center;
-    }
-        td, th {
+table.table-bordered.dataTable {
+    text-align:center;
+}
+td, th {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 8px;
@@ -32,7 +32,7 @@ tr:nth-child(even) {
     color:var(--dark);
 }
 th {
-    background-color: var(--dark);
+    background-color: var(--table-header);
     color: white; 
 }
 /*div.dataTables_wrapper div.dataTables_filter {
@@ -54,15 +54,43 @@ th {
         margin-left:50px !important;
 
     }*/
-    div.dataTables_wrapper div.dataTables_filter input {
-        font-size: 1.2rem;
-        height: 35px;
-        outline: none;
-        border: 1px solid #e7e6e6;
-        box-shadow: inset 1px 2px 1px 1px rgba(116, 113, 113, 0.5);
-        border-radius: 5px;
-        width: 100%;
-        color: var(--secondary-dark);
-        margin:0 auto !important;
+div.dataTables_wrapper div.dataTables_filter input {
+    font-size: 1.2rem;
+    height: 35px;
+    outline: none;
+    border: 1px solid #e7e6e6;
+    box-shadow: inset 1px 2px 1px 1px rgba(116, 113, 113, 0.5);
+    border-radius: 5px;
+    width: 100%;
+    color: var(--secondary-dark);
+    margin:0 auto !important;
       
-    }
+}
+
+/*Datatable*/
+table.dataTable td {
+    font-size: 13px;
+}
+th {
+    color: var(--dark);
+    font-weight: 600 !important;
+    font-size: 13px;
+}
+td {
+    color: var(--dark);
+    font-size: 12px;
+}
+thead tr {
+    border-bottom: 3px solid var(--dark) !important;
+}
+table.dataTable > thead > tr > td,
+table.dataTable > tbody > tr > td {
+    align-content: center;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    border-left: 0;
+    border-right: 0;
+}
+.popup{
+    margin: 0 !important
+}

@@ -44,7 +44,7 @@
     padding-left: 15px;
 }
 select {
-    font-size: 1.2rem;
+    font-size: .8rem;
     height: 35px;
     outline: none;
     border: 1px solid #e7e6e6;
@@ -53,6 +53,17 @@ select {
     /*width: 100%;*/
 /*    color: var(--secondary-dark);*/
     margin-top: 10px;
+    padding: 10px 5px
+}
+.form-control.form-control-sm {
+    font-size: .8rem !important;
+    padding: 10px 5px
+}
+div.dataTables_wrapper div.dataTables_length select {
+    padding:0 15px
+}
+button {
+    font-size: .8rem;
 }
 .input-container {
     display: flex;
@@ -108,7 +119,7 @@ select {
 }
 .main-container span {
     font-size: 15px;
-    color: var(--light);
+    color: var(--dark);
     font-weight:lighter;
 }
 .btn-footer input[type="submit"] {

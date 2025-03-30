@@ -17,6 +17,7 @@ using System.Text;
 using static API_HRIS.ApplicationModel.EntityModels;
 using System.Runtime.Intrinsics.X86;
 using System.Linq;
+using API_HRIS.Migrations;
 
 namespace API_HRIS.Controllers
 {
@@ -68,55 +69,7 @@ namespace API_HRIS.Controllers
         {
             var excludedTaskIds = new List<int> { 10, 11, 12 };
             var employee = await _context.TblUsersModels.FindAsync(data.EmployeeID);
-            if (employee == null)
-                throw new InvalidOperationException("Employee not found");
-            var existingRecord = await _context.TblPayslipModel.Where(a=>a.EmployeeId == data.EmployeeID.ToString()).ToListAsync();
-
-
-            if (existingRecord.Any())
-            {
-                // Remove the record
-                _context.TblPayslipModel.RemoveRange(existingRecord);
-                await _context.SaveChangesAsync(); // Save changes to the database
-            }
-            decimal renderedHours = dbmet.TimeLogsData().ToList()
-                .Where(a => a.UserId == data.EmployeeID.ToString() && !excludedTaskIds.Contains(int.Parse(a.TaskId))
-                    && Convert.ToDateTime(a.Date) >= Convert.ToDateTime(data.datefrom)
-                    && Convert.ToDateTime(a.Date) <= Convert.ToDateTime(data.dateto) && a.StatusId == "1").ToList()
-                .Sum(a => {
-                    if (decimal.TryParse(a.RenderedHours, out decimal value))
-                        return value;
-                    return 0;
-                });
-            var totalSalary = renderedHours * decimal.Parse(employee.Rate);
-            if (!decimal.TryParse(totalSalary.ToString(), out decimal grossSalary))
-                throw new InvalidOperationException("Employee salary rate is invalid.");
-
-            //_logger.LogInformation($"Computing Payslip for Employee ID: {data.EmployeeID}");
-
-            decimal sssDeduction = await dbmet.ComputeSSSContribution(grossSalary);
-            decimal philHealthDeduction = await dbmet.ComputePhilHealthDeduction(grossSalary);
-            decimal pagIbigDeduction = await dbmet.ComputePagIbigDeduction(grossSalary);
-            decimal taxDeduction = await dbmet.ComputeWithholdingTax(grossSalary, employee.PayrollType);
-            decimal totalDeduction = (sssDeduction + philHealthDeduction + pagIbigDeduction);
-            decimal taxableIncome = grossSalary - totalDeduction;
-            decimal netSalary = taxableIncome - taxDeduction;
-
-            var payslip = new TblPayslipModel
-            {
-                RenderedHours = renderedHours,
-                EmployeeId = data.EmployeeID.ToString(),
-                GrossSalary = grossSalary,
-                SSSDeduction = sssDeduction,
-                PhilHealthDeduction = philHealthDeduction,
-                PagIbigDeduction = pagIbigDeduction,
-                TaxDeduction = taxDeduction,
-                NetSalary = netSalary,
-                DateCreated = DateTime.Now
-            };
-
-            _context.TblPayslipModel.Add(payslip);
-            await _context.SaveChangesAsync();
+           
 
             var result = (from user in _context.TblUsersModels
                           join dept in _context.TblDeparmentModels
@@ -148,7 +101,9 @@ namespace API_HRIS.Controllers
                                PhilHealth = py.PhilHealthDeduction,
                                PagIbig = py.PagIbigDeduction,
                                OtherDeductions = "0.00",
-                               TotalDeductions = py.TaxDeduction + py.SSSDeduction + py.PhilHealthDeduction + py.PagIbigDeduction
+                               TotalDeductions = py.TaxDeduction + py.SSSDeduction + py.PhilHealthDeduction + py.PagIbigDeduction,
+                                    OvertimeHours = py.OTHours,
+                               OvertimePay = py.OTPay
                            })
                      .Where(x => x.EmployeeNumber == employee.EmployeeId.ToString())
                      .ToList();
@@ -172,9 +127,9 @@ namespace API_HRIS.Controllers
             int workdays = 0;
             decimal nightdiff = 0;
             decimal holiday = 0;
-          
+            var excludedPosId = new List<int> { 1,5,6 };
 
-            var emplist =  _context.TblUsersModels.Where(a=> a.DeleteFlag == false && a.UserType == 3).ToList();
+            var emplist =  _context.TblUsersModels.Where(a=>a.PositionLevelId != 1 && a.EmployeeType != null).ToList();
             var paylist = _context.TblPayslipModel.ToList();
             if(paylist.Count != 0)
             {
@@ -204,6 +159,7 @@ namespace API_HRIS.Controllers
                     ExpectedTotalDates = allDates.Count,
                     MissingDates = missingDates
                 };
+                var othours = _context.TblOvertimeModel.Where(a => a.EmployeeNo == emplist[x].EmployeeId).Sum(a => a.HoursFiled);
 
                 var excludedTaskIds = new List<int> { 10, 11, 12 };
                 var empid = emplist[x].EmployeeId;
@@ -223,7 +179,7 @@ namespace API_HRIS.Controllers
                 decimal rates = emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate);
                 
                 var totalSalary = renderedHours * rates;
-                
+                var total_otpay = rates * 1.25m * othours;
                 if (!decimal.TryParse(totalSalary.ToString(), out decimal grossSalary))
                     throw new InvalidOperationException("Employee salary rate is invalid.");
 
@@ -234,7 +190,7 @@ namespace API_HRIS.Controllers
                 decimal taxDeduction = await dbmet.ComputeWithholdingTax(grossSalary, emplist[x].PayrollType);
                 decimal totalDeduction = (sssDeduction + philHealthDeduction + pagIbigDeduction);
                 decimal taxableIncome = grossSalary - totalDeduction;
-                decimal netSalary = taxableIncome - taxDeduction;
+                decimal netSalary = (taxableIncome - taxDeduction) + total_otpay ?? 0;
 
                 var payslip = new TblPayslipModel
                 {
@@ -246,7 +202,9 @@ namespace API_HRIS.Controllers
                     PagIbigDeduction = pagIbigDeduction,
                     TaxDeduction = taxDeduction,
                     NetSalary = netSalary,
-                    DateCreated = DateTime.Now
+                    DateCreated = DateTime.Now,
+                    OTHours=othours ?? 0,
+                    OTPay=total_otpay ?? 0
                 };
 
                 _context.TblPayslipModel.Add(payslip);
@@ -257,6 +215,20 @@ namespace API_HRIS.Controllers
             }
             try
             {
+                var overtimeData = _context.TblOvertimeModel
+                                    .GroupBy(a => a.EmployeeNo)
+                                    .Select(g => new
+                                    {
+                                        EmployeeNo = g.Key,
+                                        TotalOvertimeHours = g.Sum(a => a.HoursFiled) ?? 0
+                                    })
+                                    .ToDictionary(o => o.EmployeeNo, o => o.TotalOvertimeHours);
+
+                // Fetch employee rates
+                var employeeRates = emplist.ToDictionary(
+    e => e.EmployeeId,
+    e => e.Rate != null ? decimal.Parse(e.Rate.ToString()) : 0m // Handle nulls
+);
 
                 result = (from user in _context.TblUsersModels
                           join dept in _context.TblDeparmentModels
@@ -266,32 +238,36 @@ namespace API_HRIS.Controllers
                           on user.Position equals pos.Id into PosGroup
                           from pos in PosGroup.DefaultIfEmpty()
                           select new { user, dept, pos })
-                                  .AsEnumerable() // Switch to client-side processing
-                                  .Join(_context.TblPayslipModel.AsEnumerable(),
-                                        u => u.user.Id,
-                                        py => int.Parse(py.EmployeeId), // int.Parse now works since it's processed in memory
-                                        (u, py) => new
-                                        {
-                                            RenderedHours = py.RenderedHours,
-                                            UserId = u.user.Id,
-                                            Status = u.user.Status,
-                                            EmployeeName = u.user.Fullname,
-                                            EmployeeNumber = u.user.EmployeeId,
-                                            JobTitle = u.pos?.Name ?? "N/A",
-                                            Department = u.dept?.DepartmentName ?? "N/A",
-                                            PayslipNumber = py.PayslipNumber,
-                                            TaxNumber = "",
-                                            PayDate = py.DateCreated,
-                                            GrossPay = py.GrossSalary,
-                                            NetPay = py.NetSalary,
-                                            Tax = py.TaxDeduction,
-                                            SSS = py.SSSDeduction,
-                                            PhilHealth = py.PhilHealthDeduction,
-                                            PagIbig = py.PagIbigDeduction,
-                                            OtherDeductions = "0.00",
-                                            TotalDeductions = py.TaxDeduction + py.SSSDeduction + py.PhilHealthDeduction + py.PagIbigDeduction
-                                        })
-                                  .ToList();
+                   .AsEnumerable() // Switch to client-side processing
+                   .Join(_context.TblPayslipModel.AsEnumerable(),
+                         u => u.user.Id,
+                         py => int.Parse(py.EmployeeId), // int.Parse now works since it's processed in memory
+                         (u, py) => new
+                         {
+                             RenderedHours = py.RenderedHours,
+                             UserId = u.user.Id,
+                             Status = u.user.Status,
+                             EmployeeName = u.user.Fullname,
+                             EmployeeNumber = u.user.EmployeeId,
+                             JobTitle = u.pos?.Name ?? "N/A",
+                             Department = u.dept?.DepartmentName ?? "N/A",
+                             PayslipNumber = py.PayslipNumber,
+                             TaxNumber = "",
+                             PayDate = py.DateCreated,
+                             GrossPay = py.GrossSalary,
+                             NetPay = py.NetSalary,
+                             Tax = py.TaxDeduction,
+                             SSS = py.SSSDeduction,
+                             PhilHealth = py.PhilHealthDeduction,
+                             PagIbig = py.PagIbigDeduction,
+                             OtherDeductions = "0.00",
+                             TotalDeductions = py.TaxDeduction + py.SSSDeduction + py.PhilHealthDeduction + py.PagIbigDeduction,
+                             OvertimeHours = py.OTHours,
+                             OvertimePay = py.OTPay
+            })
+                   .ToList();
+
+            
                 return Ok(result);
             }
             catch (Exception ex)

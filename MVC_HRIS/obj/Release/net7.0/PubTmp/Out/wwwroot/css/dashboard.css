@@ -450,6 +450,9 @@ body-container {
     height: 50px;
     border-radius: 20%;
 }
+.tbl-edit {
+    background-color: #138496
+}
 .tbl-edit,
 .tbl-approve,
 .tbl-view,
@@ -462,9 +465,9 @@ body-container {
     padding: 5px 10px 5px 10px;
     cursor: pointer;
     border-radius: 5px;
-    background-color: var(--blue);
-    color: white;
+    color: #fff !important;
     width: 100%;
+    font-size: 12px !important;
 }
 table.dataTable thead th:first-child {
     width: 150px; /* Adjust this value as needed */
