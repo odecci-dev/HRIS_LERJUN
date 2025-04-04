@@ -29,10 +29,10 @@
     <header>
     </header>
     <div>
-        <form id="approveleavesumbit">
+        <form id="approveotsumbit">
 
             <div class="content-filter-tbl">
-                <table id="to-approve-leave-table" class="table table-bordered table-hover w-100">
+                <table id="to-approve-ot-table" class="table table-bordered table-hover w-100">
                     <thead>
                     </thead>
                     <tbody>
@@ -58,13 +58,13 @@
         var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
         
         $(document).ready(function () {
-            
+
+        initializeOTDataTable();
         });
+        
+        function initializeOTDataTable() {
 
-        initializeLeaveDataTable();
-        function initializeLeaveDataTable() {
-
-            var tableId = '#to-approve-leave-table';
+            var tableId = '#to-approve-ot-table';
             if ($.fn.DataTable.isDataTable(tableId)) {
                 $(tableId).DataTable().clear().destroy();
             }
@@ -76,8 +76,9 @@
             var dtProperties = {
 
                 ajax: {
-                    url: '/Leave/GetCheckedLeaveRequestList',
+                    url: '/Overtime/GetCheckedOTRequestList',
                     type: "POST",
+                    async: false,
                     data: {
                         data: data
                     },
@@ -97,35 +98,45 @@
                 responsive: false,
                 "columns": [
                     {
-                        "title": "LR-Number",
-                        "data": "leaveRequestNo", "orderable": false
+                        "title": "OT-Number",
+                        "data": "otNo", "orderable": false
                     },
                     {
                         "title": "Employee No",
                         "data": "employeeNo", "orderable": false
                     },
                     {
-                        "title": "Start Date",
-                        "data": "startDate", "orderable": false
+                        "title": "Start Time",
+                        "data": "startTime", "orderable": false
                     },
                     {
-                        "title": "End Date",
-                        "data": "endDate", "orderable": false
+                        "title": "End Time",
+                        "data": "endTime", "orderable": false
                     },
                     {
-                        "title": "Days Filed",
-                        "data": "daysFiled", "orderable": false
+                        "title": "Hours Filed",
+                        "data": "hoursFiled", "orderable": false
                     },
                     {
                         "title": "Reason",
-                        "data": "reason", "orderable": false
+                        "data": "remarks", "orderable": false
+                    },
+                    {
+                        "title": "Approve Hours",
+                        "data": "hoursFiled",
+                        "render": function (data, type, row) {
+                            var textfield = "";
+                                textfield = `<input type="number" id="approve-hours" class="approve-hours" data-id="${row.id}" data-filed="${data}" value="${data}" required>`;
+
+                            return textfield;
+                        }
                     },
                     {
                         "title": "Add Reason",
                         "data": "id",
                         "render": function (data, type, row) {
                             var textfield = "";
-                                textfield = `<input type="hidden" id="lrid" class="lrid" value="${data}"><textarea id="approval-reason" class="approval-reason" data-id="${data}" required>`;
+                                textfield = `<textarea id="approval-reason" class="approval-reason" data-id="${data}" required>`;
 
                             return textfield;
                         }
@@ -148,13 +159,13 @@
                         orderable: false,
                         type: 'date',
                         width: "10%",
-                        render: function (data, type, row) {
-                            if (data && (type === 'display' || type === 'filter')) {
-                                let date = new Date(data);
-                                return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
-                            }
-                            return data;
-                        }
+                        // render: function (data, type, row) {
+                        //     if (data && (type === 'display' || type === 'filter')) {
+                        //         let date = new Date(data);
+                        //         return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                        //     }
+                        //     return data;
+                        // }
                     },
                     {
                         targets: [4], // OT-Number column
@@ -183,22 +194,47 @@
             $(tableId + '_filter input').attr('placeholder', 'Searching...');
             $(tableId + ' tbody').on('click', 'tr', function () {
                 var data = table.row(this).data();
-            });
+            }); 
+            const inputs = document.querySelectorAll('input[type="number"].approve-hours');
+            if(otStatusIdentifier == 0){
+                
+                inputs.forEach(function(input) {
+                    input.disabled = true;  // Disable the input
+                    input.value = '0';
+                    input.style.border ="none";
+                    input.style.background = "transparent"
+                });
+            }
+            else{
+                 inputs.forEach(function(input) {
+                    input.disabled = false;  // Disable the input
+                    input.style.border ="1px solid black";
+                    input.style.background = "transparent";
+                    input.style.padding = "10px";
+                    input.style.borderRadius = "0";
+                });
+            }
         }
-        var lrapproval = []
-         $('#approveleavesumbit').submit(function (e) {
+         var otapproval = [];
+         $('#approveotsumbit').submit(function (e) {
             e.preventDefault();
 
             document.querySelectorAll("textarea[data-id]").forEach(el => {
-                lrapproval.push({ id: el.dataset.id, reason: el.value });
-            }); 
+                let hoursInput = document.querySelector(`input[data-id="${el.dataset.id}"]`); // Find the matching input field
+                // otapproval.push({ id: el.dataset.id, reason: el.value, hoursApproved: hoursInput });
+                otapproval.push({
+                    id: el.dataset.id,
+                    reason: el.value,
+                    hoursApproved: hoursInput ? hoursInput.value : 0  // Use input value, default to 0 if not found
+                });
+            });
             var data = {};
-            data.lrapproval = lrapproval;
-            data.status = 0;
+            data.otapproval = otapproval;
+            data.status = otStatusIdentifier;
             console.log(data)
 
             $.ajax({
-                url: '/Leave/MultiApproval',
+                url: '/Overtime/MultiApproval',
                 data: data,
                 type: "POST",
                 dataType: "json"
@@ -219,6 +255,21 @@
                 window.location.reload();
             });
          });
+
+        $('#to-approve-ot-table').on('change', '.approve-hours', function () {
+            
+            var filed = $(this).data('filed');
+            var value = $(this).val();
+            var id = $(this).data('id');
+            console.log(filed);
+            console.log(value);
+            console.log(id);
+             // If 'filed' is less than 'value', set the value of the input to 'filed'
+            if (parseFloat(filed) < parseFloat(value)) {
+                alert("Value is grater than Filed Overtime");
+                $(this).val(filed);  // Correct syntax to set the value
+            }
+        });
     </script>
 </body>
 </html>

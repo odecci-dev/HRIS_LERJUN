@@ -92,8 +92,6 @@ namespace API_HRIS.Controllers
                 status = "You're not logged in in HRIS";
                 return Ok(status);
             }
-
-           
         }
         public class UserId
         {

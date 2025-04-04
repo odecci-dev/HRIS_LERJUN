@@ -313,11 +313,18 @@ function fetchtimlogsuserpendingselect() {
 function fetchOTuserpendingselect() {
 
 
-    const data = {
-        EmployeeNo: "0"
+    var empNo = "0";
+    empNo = document.getElementById('selectUserOTPending').value;
+    empNo = empNo === '' ? '0' : empNo;
+    var sdate = document.getElementById('pot-datefrom').value;
+    var edate = document.getElementById('pot-dateto').value;
+    let data = {
+        EmployeeNo: empNo,
+        startDate: sdate,
+        endDate: edate,
+        status: otStatusFilter
     };
     //console.log(data);
-
     $.ajax({
         url: '/OverTime/GetPendingOvertTimeListSelect',
         data: {

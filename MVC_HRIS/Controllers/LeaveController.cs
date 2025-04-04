@@ -235,7 +235,7 @@ namespace MVC_HRIS.Controllers
             {
 
                 HttpClient client = new HttpClient();
-                var url = DBConn.HttpString + "/Leave/MultiUpdateStatus";
+                var url = DBConn.HttpString + "/Leave/MultiOTUpdateStatus";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");

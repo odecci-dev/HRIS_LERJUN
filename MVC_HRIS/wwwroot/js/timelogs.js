@@ -870,7 +870,7 @@ function initializeDataTable() {
 
 
 }
-//Summary Functions
+//Summary Functionsstl-datefrom
 function defaultdate() {
 
     const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);

@@ -9,6 +9,7 @@
 }
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor Accessor;
+
 <style>
     /* Style for tab container */
     .tab {
@@ -148,8 +149,12 @@
 
 
 @section Scripts {
+    
     <script>
-        const selectedLeaveRequest = []
+        const selectedRequest = []
+        let otStatusIdentifier = 0;
+        let otStatusFilter = 0;
+        
         $(document).ready(function () {
             // Timelogs Start
             fetchtimlogsuserpendingselect();
@@ -194,13 +199,13 @@
                 alert('Select Leave Request First');
             }
             else{
-                loadModal('/Leave/LeaveApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Approve Leave ', 'l', false);
-                selectedLeaveRequest.length = 0;
+                loadModal('/Leave/LeaveApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Leave ', 'l', false);
+                selectedRequest.length = 0;
                 for (var checkbox of checkedCheckboxes) {
                     var value = checkbox.value;
-                    selectedLeaveRequest.push(value);
+                    selectedRequest.push(value);
                 }
-                console.log(selectedLeaveRequest);
+                console.log(selectedRequest);
             }
         }
         const lrapprovallist = []
@@ -213,12 +218,12 @@
             }
             else{
 
-                selectedLeaveRequest.length = 0;
+                selectedRequest.length = 0;
                 for (var checkbox of checkedCheckboxes) {
                     var value = checkbox.value;
-                    selectedLeaveRequest.push(value);
+                    selectedRequest.push(value);
                 }
-                console.log(selectedLeaveRequest);
+                console.log(selectedRequest);
                 LRapprovemodal();
                 $("#alertmodal").modal('show');
             }
@@ -255,11 +260,11 @@
         }
         function approvedLR() {
 
-            console.log(selectedLeaveRequest.length);
+            console.log(selectedRequest.length);
 
            const lrapproval = []
-           for(var i = 0; i < selectedLeaveRequest.length; i++){
-               lrapproval.push({ id: selectedLeaveRequest[i], reason: 'Approved without reason'});
+           for(var i = 0; i < selectedRequest.length; i++){
+               lrapproval.push({ id: selectedRequest[i], reason: 'Approved without reason'});
            }
            // lrapproval.push({ id: el.dataset.id, reason: el.value });
             var data = {};
@@ -304,5 +309,116 @@
                 }
            }
         });
+
+        $('#pending-overtime-table').on('click', '.checkAllOT', function () {
+            
+           var checkAllPending = document.getElementById("checkAllOT");
+           if(checkAllPending.checked == true){
+               var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+                for (var checkbox of checkboxes) {
+                    checkbox.checked = this.checked;
+                }
+           }
+           else{
+               var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+                for (var checkbox of checkboxes) {
+                    checkbox.checked = false;
+                }
+           }
+        });
+
+        $('#pending-timelogs-table').on('click', '.checkAllTL', function () {
+            alert('Hello');
+           var checkAllPending = document.getElementById("checkAllTL");
+           if(checkAllPending.checked == true){
+               var checkboxes = document.querySelectorAll('.tl-row-checkbox');
+                for (var checkbox of checkboxes) {
+                    checkbox.checked = this.checked;
+                }
+           }
+
+           else{
+               var checkboxes = document.querySelectorAll('.tl-row-checkbox');
+                for (var checkbox of checkboxes) {
+                    checkbox.checked = false;
+                }
+           }
+        });
+
+        // document.getElementById("decline-ot").onclick = function () {
+        //     otStatusIdentifier = 0;
+        //     console.log(otStatusIdentifier);
+        //     var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+        //     var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+        //     if(checkedCheckboxes.length == 0){
+        //         alert('Select Overtime Request First');
+        //     }
+        //     else{
+        //         loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Overtime ', 'l', false);
+        //         selectedRequest.length = 0;
+        //         for (var checkbox of checkedCheckboxes) {
+        //             var value = checkbox.value;
+        //             selectedRequest.push(value);
+        //         }
+        //         console.log(selectedRequest);
+        //     }
+        // }
+        function DeclineOvertime(){
+            otStatusIdentifier = 0;
+            console.log(otStatusIdentifier);
+            var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+            var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+            if(checkedCheckboxes.length == 0){
+                alert('Select Overtime Request First');
+            }
+            else{
+                loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Overtime ', 'l', false);
+                selectedRequest.length = 0;
+                for (var checkbox of checkedCheckboxes) {
+                    var value = checkbox.value;
+                    selectedRequest.push(value);
+                }
+
+                console.log(selectedRequest);
+            }
+        }
+        // document.getElementById("approve-ot").onclick = function () {
+        //     otStatusIdentifier = 1;
+        //     console.log(otStatusIdentifier);
+        //     var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+        //     var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+        //     if(checkedCheckboxes.length == 0){
+        //         alert('Select Overtime Request First');
+        //     }
+        //     else{
+        //         loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Approve Overtime ', 'l', false);
+        //         selectedRequest.length = 0;
+        //         for (var checkbox of checkedCheckboxes) {
+        //             var value = checkbox.value;
+        //             selectedRequest.push(value);
+        //         }
+        //         console.log(selectedRequest);
+        //     }
+        // }
+        function ApproveOvertime(){
+            otStatusIdentifier = 1;
+            console.log(otStatusIdentifier);
+            var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+            var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+            if(checkedCheckboxes.length == 0){
+                alert('Select Overtime Request First');
+            }
+            else{
+                loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Approve Overtime ', 'l', false);
+                selectedRequest.length = 0;
+                for (var checkbox of checkedCheckboxes) {
+                    var value = checkbox.value;
+                    selectedRequest.push(value);
+                }
+                console.log(selectedRequest);
+            }
+        }
     </script>
+    
+    
 }

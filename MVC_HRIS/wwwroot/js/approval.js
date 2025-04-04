@@ -37,7 +37,7 @@ function initializeTimlogsDataTable() {
         },
         dom: 'rtip',
         columns: [
-            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
+            { "title": "<input type='checkbox' id='checkAllTL' class='checkAllTL'>", "data": null, "orderable": false },
             {
                 "title": "Profile",
                 "data": "id",
@@ -208,7 +208,7 @@ function initializeTimlogsDataTable() {
                 width: "5%", // Adjust width
                 "className": "text-center",
                 render: function (data, type, row) {
-                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                    return '<input type="checkbox" class="tl-row-checkbox" value="' + row.id + '">';
                 }
             },
             { targets: 2, className: 'left-align' },
@@ -325,8 +325,13 @@ function initializeOTDataTable() {
     var empNo = "0";
     empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
+    var sdate = document.getElementById('pot-datefrom').value;
+    var edate = document.getElementById('pot-dateto').value; 
     let data = {
-        EmployeeNo: empNo
+        EmployeeNo: empNo,
+        startDate: sdate,
+        endDate: edate,
+        status: otStatusFilter
     };
     //console.log(data);
     var dtProperties = {
@@ -351,9 +356,9 @@ function initializeOTDataTable() {
             }
         },
         responsive: true,
-        dom: 'rtip',
+        dom: 'Bfrtip',
         "columns": [
-            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
+            { "title": "<input type='checkbox' id='checkAllOT' class='checkAllOT'>", "data": null, "orderable": false },
             {
                 "title": "OT-Number",
                 "data": "otNo", "orderable": false
@@ -449,7 +454,7 @@ function initializeOTDataTable() {
                 width: "5%", // Adjust width
                 "className": "text-center",
                 render: function (data, type, row) {
-                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                    return '<input type="checkbox" id="" class="ot-row-checkbox" value="' + row.id + '">';
                 }
             },
             {
@@ -510,7 +515,7 @@ function initializeOTDataTable() {
                         $(td).css('color', 'green').css('font-weight', 'bold');
                     } else if (cellData === "PENDING") {
                         $(td).css('color', 'orange').css('font-weight', 'bold');
-                    } else if (cellData === "Rejected") {
+                    } else if (cellData === "DECLINED") {
                         $(td).css('color', 'red').css('font-weight', 'bold');
                     }
                 }
@@ -518,9 +523,53 @@ function initializeOTDataTable() {
             {
                 targets: [11], // Convert To Leave Column
                 orderable: false,
-                width: "5%", "className": "text-center", "targets": "7"
+                width: "100px", "className": "text-center", "targets": "7"
 
             },
+        ],
+        searching: false, // Disables the search input
+        buttons: [
+            {
+                extend: 'pdf',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
+                title: 'Overtime List', // Set custom title in the file
+                filename: 'Overtime_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Specify column indexes to export
+                }
+            },
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Overtime List', // Set custom title in the file
+                filename: 'Overtime_List', // Custom file name
+                className: 'btn btn-success',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Specify column indexes to export
+                }
+            },
+            {
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
+                className: 'btn btn-danger',
+                action: function () {
+                    DeclineOvertime(); // Call your custom function
+                }
+            },
+            {
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Approve</span>',
+                className: 'btn btn-success',
+                action: function () {
+                    ApproveOvertime(); // Call your custom function
+                }
+            },
+            {
+                text: '<span style="color: #000; font-weight: 400;"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>',
+                className: 'btn btn-warning',
+                action: function () {
+                    initializeOTDataTable(); // Call your custom function
+                }
+            }
         ]
     };
 
@@ -564,6 +613,14 @@ function OTTableMOD() {
         //approvemodal();
         OTapprovemodal();
         $("#alertmodal").modal('show');
+    });
+    $('#pot-datefrom').on('change', function () {
+
+        initializeOTDataTable();
+    });
+    $('#pot-dateto').on('change', function () {
+
+        initializeOTDataTable();
     });
 
 }

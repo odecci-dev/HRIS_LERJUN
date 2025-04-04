@@ -128,11 +128,32 @@
             <button class="btn btn-warning" id="btn-refresh" title="Refresh">
                 <i class="fa-solid fa-arrows-rotate"></i> Refresh
             </button>
-            <button class="btn btn-primary" id="add-timelogs" title="Import" onclick="myFunctionOpen()">
+            @* <button class="btn btn-primary" id="add-timelogs" title="Import" onclick="myFunctionOpen()">
                 <i class="fa-solid fa-file-import"></i> Import
             </button>
             <button class="btn btn-success" id="add-timelogs" title="Export" onclick="myFunctionOpen()">
                 <i class="fa-solid fa-file-arrow-down"></i> Export
+            </button> *@
+            @using (Html.BeginForm("Index", "Filing", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <label for="file" class="btn btn-primary" style="font-weight: 400" >
+                    @* <div class="custum-file-upload"> *@
+                        @* <i class="fa-solid fa-file-import"></i>
+                        Import
+                        <input id="file" type="file" onchange="submitForm()"> *@
+                        
+                    @* </div> *@
+                    <input id="upload-excel" type="file" size="1" name="file" accept="excel/*" class="form-control-sm mb-1">
+                    <button type="submit" class="btn btn-success btn-block mb-1" id="btnimport" data-toggle="tooltip" title="Import Excel">
+                        @* <i class="fas fa-upload"></i>  *@
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" /></svg>
+                        Upload
+                    </button>
+                    
+                </label>
+            }
+            <button class="btn btn-secondary" id="add-timelogs" title="Download" onclick="downloadTemplate()">
+                <i class="fa-solid fa-file-arrow-down"></i> Download Template
             </button>
         </div>
 
@@ -187,5 +208,9 @@
         }
         FetchOvertimeList();
     });
-
+    function submitForm() {
+            // Trigger form submission when a file is chosen
+            document.getElementById('uploadOTForm').submit();
+            alert("Hello World!")
+        }
 </script>
