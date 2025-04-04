@@ -154,7 +154,9 @@
         const selectedRequest = []
         let otStatusIdentifier = 0;
         let otStatusFilter = 0;
-        
+
+        var userType = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
+        var userId = "@Accessor.HttpContext.Session.GetString("UserID")";
         $(document).ready(function () {
             // Timelogs Start
             fetchtimlogsuserpendingselect();
@@ -162,7 +164,7 @@
             timelogsTableMOD();
             // Timelogs End
             // Overtime Start
-            fetchOTuserpendingselect();
+            // fetchOTuserpendingselect();
             initializeOTDataTable();
             OTTableMOD();
             // Overtime End

@@ -159,6 +159,10 @@ namespace MVC_HRIS.Controllers
             public string OTNo { get; set; }
             public string EmployeeNo { get; set; }
             public string fullname { get; set; }
+            public string Department { get; set; }
+            public string Position { get; set; }
+            public string PositionLevel { get; set; }
+            public string EmployeeType { get; set; }
             public DateTime? Date { get; set; }
             [DataType(DataType.Date)]
             public TimeSpan? StartTime { get; set; }
@@ -212,6 +216,7 @@ namespace MVC_HRIS.Controllers
             public string startDate { get; set; }
             public string endDate { get; set; }
             public int? status { get; set; }
+            public int? ManagerId { get; set; }
         }
         [HttpPost]
         public async Task<IActionResult> GetPendingOvertTimeList(PedingOTFilter data)

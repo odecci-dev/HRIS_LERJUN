@@ -310,49 +310,49 @@ function fetchtimlogsuserpendingselect() {
         }
     });
 }
-function fetchOTuserpendingselect() {
+//function fetchOTuserpendingselect() {
 
 
-    var empNo = "0";
-    empNo = document.getElementById('selectUserOTPending').value;
-    empNo = empNo === '' ? '0' : empNo;
-    var sdate = document.getElementById('pot-datefrom').value;
-    var edate = document.getElementById('pot-dateto').value;
-    let data = {
-        EmployeeNo: empNo,
-        startDate: sdate,
-        endDate: edate,
-        status: otStatusFilter
-    };
-    //console.log(data);
-    $.ajax({
-        url: '/OverTime/GetPendingOvertTimeListSelect',
-        data: {
-            data: data,
-        },
-        type: "POST",
-        datatype: "json",
-        success: function (data) {
-            //console.log(data);
-            $("#selectUserOTPending").empty();
-            $("#selectUserOTPending").append('<option value="0" disabled selected>Select User</option>');
-            $("#selectUserOTPending").append('<option value="0" >Select All</option>');
-            //Use a Set to store distinct userIds
-            const distinctUserIds = [...new Set(data.map(item => item.employeeNo))];
+//    var empNo = "0";
+//    empNo = document.getElementById('selectUserOTPending').value;
+//    empNo = empNo === '' ? '0' : empNo;
+//    var sdate = document.getElementById('pot-datefrom').value;
+//    var edate = document.getElementById('pot-dateto').value;
+//    let data = {
+//        EmployeeNo: empNo,
+//        startDate: sdate,
+//        endDate: edate,
+//        status: otStatusFilter
+//    };
+//    //console.log(data);
+//    $.ajax({
+//        url: '/OverTime/GetPendingOvertTimeListSelect',
+//        data: {
+//            data: data,
+//        },
+//        type: "POST",
+//        datatype: "json",
+//        success: function (data) {
+//            //console.log(data);
+//            $("#selectUserOTPending").empty();
+//            $("#selectUserOTPending").append('<option value="0" disabled selected>Select User</option>');
+//            $("#selectUserOTPending").append('<option value="0" >Select All</option>');
+//            //Use a Set to store distinct userIds
+//            const distinctUserIds = [...new Set(data.map(item => item.employeeNo))];
 
-            // Iterate over the distinct userIds
-            distinctUserIds.forEach(employeeNo => {
-                // Find the user details corresponding to the current userId
-                const user = data.find(item => item.employeeNo === employeeNo);
+//            // Iterate over the distinct userIds
+//            distinctUserIds.forEach(employeeNo => {
+//                // Find the user details corresponding to the current userId
+//                const user = data.find(item => item.employeeNo === employeeNo);
 
-                // Append the user to the select element
-                if (user) {
-                    $("#selectUserOTPending").append('<option value="' + user.employeeNo + '"><div style="display: block"><span>' + user.fullname + " </span></div></option>");
-                }
-            });
-        }
-    });
-}
+//                // Append the user to the select element
+//                if (user) {
+//                    $("#selectUserOTPending").append('<option value="' + user.employeeNo + '"><div style="display: block"><span>' + user.fullname + " </span></div></option>");
+//                }
+//            });
+//        }
+//    });
+//}
 function fetchusertypeselect() {
 
     $.ajax({

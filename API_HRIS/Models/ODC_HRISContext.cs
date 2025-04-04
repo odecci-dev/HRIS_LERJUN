@@ -26,6 +26,7 @@ public partial class ODC_HRISContext : DbContext
     public virtual DbSet<TblPayrollType> TblPayrollTypes { get; set; }
 
     public virtual DbSet<TblPositionModel> TblPositionModels { get; set; }
+    public virtual DbSet<TblPositionLevelModel> TblPositionLevelModels { get; set; }
 
     public virtual DbSet<TblSalaryType> TblSalaryTypes { get; set; }
 
@@ -124,7 +125,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblApiTokenModel>(entity =>
         {
             entity.ToTable("tbl_ApiTokenModel");
@@ -133,7 +133,6 @@ public partial class ODC_HRISContext : DbContext
             entity.Property(e => e.Name).IsUnicode(false);
             entity.Property(e => e.Role).IsUnicode(false);
         });
-
         modelBuilder.Entity<TblAudittrail>(entity =>
         {
             entity.ToTable("tbl_audittrail");
@@ -150,7 +149,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblDeparmentModel>(entity =>
         {
             entity.ToTable("tbl_DeparmentModel");
@@ -166,7 +164,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(150)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblModulesModel>(entity =>
         {
             entity.ToTable("TblModulesModel");
@@ -176,7 +173,6 @@ public partial class ODC_HRISContext : DbContext
             entity.Property(e => e.Link).IsUnicode(false);
             entity.Property(e => e.Title).IsUnicode(false);
         });
-
         modelBuilder.Entity<TblPayrollType>(entity =>
         {
             entity.ToTable("tbl_PayrollType");
@@ -192,7 +188,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblPositionModel>(entity =>
         {
             entity.ToTable("tbl_PositionModel");
@@ -206,7 +201,11 @@ public partial class ODC_HRISContext : DbContext
                 .HasComputedColumnSql("((('POS'+'-')+'0')+CONVERT([varchar],[Id],(0)))", false)
                 .HasColumnName("PositionID");
         });
+        modelBuilder.Entity<TblPositionLevelModel>(entity =>
+        {
+            entity.ToTable("tbl_PositionLevel");
 
+        });
         modelBuilder.Entity<TblSalaryType>(entity =>
         {
             entity.ToTable("tbl_SalaryType");
@@ -223,7 +222,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblStatusModel>(entity =>
         {
             entity.ToTable("tbl_StatusModel");
@@ -233,7 +231,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblTaskModel>(entity =>
         {
             entity.ToTable("tbl_TaskModel");
@@ -261,7 +258,6 @@ public partial class ODC_HRISContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("StatusId");
         });
-        
         modelBuilder.Entity<TblEmergencyContactsModel>(entity =>
         {
             entity.ToTable("tbl_EmergencyContactsModel");
@@ -280,7 +276,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblUserType>(entity =>
         {
             entity.ToTable("tbl_UserType");
@@ -305,7 +300,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasMaxLength(550)
                 .IsUnicode(false);
         });
-
         modelBuilder.Entity<TblUsersModel>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_UsersModel");
@@ -361,7 +355,6 @@ public partial class ODC_HRISContext : DbContext
                 .HasColumnName("Updated_By");
             entity.Property(e => e.Username).IsUnicode(false);
         });
-
         OnModelCreatingGeneratedProcedures(modelBuilder);
         OnModelCreatingPartial(modelBuilder);
     }

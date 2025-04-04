@@ -82,6 +82,7 @@ namespace API_HRIS.Controllers
             public string? startDate { get; set; }
             public string? endDate { get; set; }
             public int? status { get; set; }
+            public int? ManagerId { get; set; }
 
         }
         [HttpPost]
@@ -98,14 +99,34 @@ namespace API_HRIS.Controllers
             DateTime startD = DateTime.ParseExact(data.startDate, "yyyy-MM-dd", null);
             DateTime endD = DateTime.ParseExact(data.endDate, "yyyy-MM-dd", null);
             var result = from ot in _context.TblOvertimeModel
+
                      join user in _context.TblUsersModels
                      on ot.EmployeeNo equals user.EmployeeId
+
+                     join department in _context.TblDeparmentModels
+                     on user.Department equals department.Id into departmentgroup
+                     from department in departmentgroup.DefaultIfEmpty()
+
+                     join position in _context.TblPositionModels
+                     on user.Position equals position.Id into positiongroup
+                     from position in positiongroup.DefaultIfEmpty()
+                     
+                     join positionlvl in _context.TblPositionLevelModels
+                     on user.PositionLevelId equals positionlvl.Id into positionlvlgroup
+                     from positionlvl in positionlvlgroup.DefaultIfEmpty()
+                     
+                     join employeeType in _context.TblEmployeeTypes
+                     on user.EmployeeType equals employeeType.Id into employeeTypegroup
+                     from employeeType in employeeTypegroup.DefaultIfEmpty()
+
                      join leave in _context.TblLeaveTypeModel
                      on ot.LeaveId equals leave.Id into leavegroup
                      from leave in leavegroup.DefaultIfEmpty()
+
                      join status in _context.TblStatusModels
                      on ot.Status equals status.Id into statusgroup
                      from status in statusgroup.DefaultIfEmpty()
+
                      where ot.isDeleted == false && ot.Date >= startD && ot.Date <= endD
                          select new
                      {
@@ -114,6 +135,11 @@ namespace API_HRIS.Controllers
                          ot.EmployeeNo,
                          Date = ot.Date != null ? ot.Date.Value.ToString("yyyy-MM-dd") : null,
                          user.Fullname,
+                         Department = department.DepartmentName,
+                         Position = position.Name,
+                         PositionLevel = positionlvl.Level,
+                         EmployeeType = employeeType.Title,
+                         ManagerId = user.ManagerId,
                          ot.StartTime,
                          ot.EndTime,
                          StartDate = ot.StartDate != null ? ot.StartDate.Value.ToString("yyyy-MM-dd") : null,
@@ -140,6 +166,10 @@ namespace API_HRIS.Controllers
             if (data.EmployeeNo != "0")
             {
                 result = result.Where(a => a.EmployeeNo == data.EmployeeNo);
+            }
+            if (data.ManagerId != 0)
+            {
+                result = result.Where(a => a.ManagerId == data.ManagerId);
             }
             return Ok(result);
         }

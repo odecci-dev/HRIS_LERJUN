@@ -316,24 +316,31 @@ function decline_item() {
     });
 }
 //OverTime Tab
-function initializeOTDataTable() {
 
+var table; //  Declare early here
+function initializeOTDataTable() {
     var tableId = '#pending-overtime-table';
+
     if ($.fn.DataTable.isDataTable(tableId)) {
         $(tableId).DataTable().clear().destroy();
     }
     var empNo = "0";
-    empNo = document.getElementById('selectUserOTPending').value;
+    //empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
     var sdate = document.getElementById('pot-datefrom').value;
     var edate = document.getElementById('pot-dateto').value; 
+    var managerId = 0;
+    if (userType != 'Admin') {
+        managerId = userId
+    }
     let data = {
-        EmployeeNo: empNo,
+        EmployeeNo: "0",
         startDate: sdate,
         endDate: edate,
-        status: otStatusFilter
+        status: otStatusFilter,
+        ManagerId: managerId
     };
-    //console.log(data);
+    console.log(data);
     var dtProperties = {
 
         ajax: {
@@ -344,24 +351,94 @@ function initializeOTDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                 //console.log('table1', _currentPage);
                 table.page(_currentPage - 1).draw('page');
+
+                //  Extract unique statusName values from the AJAX response
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const departments = [...new Set(data.map(item => item.department))];
+                const $deptFilter = $('#departmentFilter');
+                if ($deptFilter.length && $deptFilter.children('option').length <= 1) {
+                    departments.forEach(dep => {
+                        if (dep) {
+                            $deptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position filter
+                const positions = [...new Set(data.map(item => item.position))];
+                const $posFilter = $('#positionFilter');
+                if ($posFilter.length && $posFilter.children('option').length <= 1) {
+                    positions.forEach(pos => {
+                        if (pos) {
+                            $posFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const positionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $poslvlFilter = $('#positionLevelFilter');
+                if ($poslvlFilter.length && $poslvlFilter.children('option').length <= 1) {
+                    positionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $poslvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const employeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $employeeTypeFilter = $('#employeeType');
+                if ($employeeTypeFilter.length && $employeeTypeFilter.children('option').length <= 1) {
+                    employeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $employeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const fullnames = [...new Set(data.map(item => item.fullname))];
+                const $fullnameFilter = $('#fullname');
+                if ($fullnameFilter.length && $fullnameFilter.children('option').length <= 1) {
+                    fullnames.forEach(fullname => {
+                        if (fullname) {
+                            $fullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
+
+                
+
+                $('#customFilterButtons').html(`
+                    <button class="btn btn-warning" id="refresh-ot" title="Refresh" onclick="initializeOTDataTable()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                    <button class="btn btn-danger" id="decline-ot" title="Reject" onclick="DeclineOvertime()">
+                        <i class="fa-solid fa-circle-minus"></i> Decline
+                    </button>
+                    <button class="btn btn-success" id="approve-ot" title="Approve" onclick="ApproveOvertime()">
+                        <i class="fa-solid fa-file-arrow-down"></i> Approve
+                    </button>
+
+                `);
             },
             error: function (err) {
                 alert(err.responseText);
             }
         },
         responsive: true,
-        dom: 'Bfrtip',
+        dom: 'Brtip',
         "columns": [
             { "title": "<input type='checkbox' id='checkAllOT' class='checkAllOT'>", "data": null, "orderable": false },
             {
                 "title": "OT-Number",
-                "data": "otNo", "orderable": false
+                "data": "otNo", "orderable": false,
             },
 
             {
@@ -414,7 +491,7 @@ function initializeOTDataTable() {
             },
             {
                 "title": "Action",
-                "data": "id",
+                "data": "id", "orderable": false,
                 "render": function (data, type, row) {
 
                     var button = "";
@@ -444,6 +521,41 @@ function initializeOTDataTable() {
                                 </label>`;
                     return button;
                 }
+            },
+            {
+                title: "Department",
+                data: "department",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position",
+                data: "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position Level",
+                data: "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Eemployee Type",
+                data: "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Fullname",
+                data: "fullname",
+                name: "fullname",
+                visible: false,
+                searchable: true
             }
         ],
         columnDefs: [
@@ -527,7 +639,7 @@ function initializeOTDataTable() {
 
             },
         ],
-        searching: false, // Disables the search input
+        //searching: false, // Disables the search input
         buttons: [
             {
                 extend: 'pdf',
@@ -544,33 +656,56 @@ function initializeOTDataTable() {
                 text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
                 title: 'Overtime List', // Set custom title in the file
                 filename: 'Overtime_List', // Custom file name
-                className: 'btn btn-success',
+                className: 'btn btn-info',
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Specify column indexes to export
                 }
             },
+            //{
+            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
+            //    className: 'btn btn-danger',
+            //    action: function () {
+            //        DeclineOvertime(); // Call your custom function
+            //    }
+            //},
             {
-                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
-                className: 'btn btn-danger',
-                action: function () {
-                    DeclineOvertime(); // Call your custom function
-                }
-            },
-            {
-                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Approve</span>',
-                className: 'btn btn-success',
-                action: function () {
-                    ApproveOvertime(); // Call your custom function
-                }
-            },
-            {
-                text: '<span style="color: #000; font-weight: 400;"><i class="fa-solid fa-arrows-rotate"></i> Refresh</span>',
-                className: 'btn btn-warning',
-                action: function () {
-                    initializeOTDataTable(); // Call your custom function
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="departmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="positionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="positionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="employeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="fullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="departmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
                 }
             }
-        ]
+        ],
     };
 
     $('#pending-overtime-table').on('page.dt', function () {
@@ -581,11 +716,39 @@ function initializeOTDataTable() {
         window.history.replaceState(null, null, url);
     });
 
-    var table = $(tableId).DataTable(dtProperties);
+    table = $(tableId).DataTable(dtProperties);
     $(tableId + '_filter input').attr('placeholder', 'Searching...');
     $(tableId + ' tbody').on('click', 'tr', function () {
-        var data = table.row(this).data();
+    var data = table.row(this).data();
 
+    });
+
+
+    //$(document).on('change', '#departmentFilter', function () {
+    //    const departmentval = $(this).val();
+    //    table.column('department:name').search(departmentval).draw();
+    //});
+
+    //$(document).on('change', '#positionFilter', function () {
+    //    const positionval = $(this).val();
+    //    table.column('position:name').search(positionval).draw();
+    //});
+    //$(document).on('change', '#positionLevelFilter', function () {
+    //    const positionlevelval = $(this).val();
+    //    table.column('positionLevel:name').search(positionlevelval).draw();
+    //});
+
+    $(document).on('change', '#positionLevelFilter', function () {
+        const val = $(this).val();
+        table.column('positionLevel:name').search(val).draw();
+    });
+    $(document).on('change', '#employeeType', function () {
+        const val = $(this).val();
+        table.column('employeeType:name').search(val).draw();
+    });
+    $(document).on('change', '#fullname', function () {
+        const val = $(this).val();
+        table.column('fullname:name').search(val).draw();
     });
 }
 function OTTableMOD() {
@@ -624,6 +787,8 @@ function OTTableMOD() {
     });
 
 }
+
+
 function OTapprovemodal() {
     var element = document.querySelectorAll(".modal-header");
     var content = document.querySelectorAll(".modal-content");
@@ -728,7 +893,7 @@ function initializeLeaveDataTable() {
         $(tableId).DataTable().clear().destroy();
     }
     var empNo = "0";
-    empNo = document.getElementById('selectUserOTPending').value;
+    //empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
     let data = {
         EmployeeNo: empNo

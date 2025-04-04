@@ -334,34 +334,67 @@
         });
 
         var usertype = @Accessor.HttpContext.Session.GetString("UserType");
+        var posLevel = @Accessor.HttpContext.Session.GetString("PositionLevel");
+        var htmlContent ="";
         if (usertype != "2") {
-            const htmlContent = `
+            if(posLevel == 5){
+                 htmlContent = `
+                                    <li>
+                                        <div>
+                                            <a href="../../TimeLogs/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+                                                <span style="color: white;">TimeSheet</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="filing">
+                                        <div>
+                                            <a href="../../Filing/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                <i class="fas fa-file-signature" style="font-size: 20px;"></i>
+                                                <span style="color: white;">Filing</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="approval">
+                                        <div>
+                                            <a href="../../Approval/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                <i class="fa-sharp fa-solid fa-check-to-slot" style="font-size: 20px;"></i>
+                                                <span style="color: white;">Approvals</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    `;
+            }
+            else{
+                 htmlContent = `
+                                    <li>
+                                        <div>
+                                            <a href="../../TimeLogs/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+                                                <span style="color: white;">TimeSheet</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li class="filing">
+                                        <div>
+                                            <a href="../../Filing/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
 
-                                            <li>
-                                                <div>
-                                                    <a href="../../TimeLogs/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-                                                        <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
-                                                        <span style="color: white;">TimeSheet</span>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                            <li class="filing">
-                                                <div>
-                                                    <a href="../../Filing/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                <i class="fas fa-file-signature" style="font-size: 20px;"></i>
+                                                <span style="color: white;">Filing</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    `;
 
-                                                        <i class="fas fa-file-signature" style="font-size: 20px;"></i>
-                                                        <span style="color: white;">Filing</span>
-                                                    </a>
-                                                </div>
-                                            </li>
-                                          `;
+
+            }
 
             // Insert the HTML content into the div with class content-item
             $(".content-item").html(htmlContent);
             $(".top-bar-content-item").html(htmlContent);
         }
         else {
-            const htmlContent = `
+             htmlContent = `
                                              <li>
                                                         <div>
                                                             <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
