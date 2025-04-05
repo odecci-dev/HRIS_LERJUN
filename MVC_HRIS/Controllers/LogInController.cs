@@ -149,6 +149,7 @@ namespace AOPC.Controllers
                     //HttpContext.Session.SetString("UserType", dt.Rows[0]["UserType"].ToString());
                     //HttpContext.Session.SetString("CorporateName", dt.Rows[0]["CorporateName"].ToString());
                     HttpContext.Session.SetString("UserID", dt.Rows[0]["Id"].ToString());
+                    HttpContext.Session.SetString("UserName", dt.Rows[0]["Username"].ToString());
                     HttpContext.Session.SetString("EmployeeID", dt.Rows[0]["EmployeeID"].ToString());
                     HttpContext.Session.SetString("UserType", dt.Rows[0]["UserType"].ToString());
                     HttpContext.Session.SetString("UserTypeName", dt.Rows[0]["UserTypeName"].ToString());
@@ -225,6 +226,21 @@ namespace AOPC.Controllers
         
 
         }
+        [HttpGet]
+        public IActionResult Check()
+        {
+            var user = HttpContext.Session.GetString("UserName");
+
+            if (!string.IsNullOrEmpty(user))
+            {
+                // Optional: re-set the same value to "touch" the session
+                HttpContext.Session.SetString("UserName", user);
+                return Json(new { isLoggedIn = true });
+            }
+
+            return Json(new { isLoggedIn = false });
+        }
+        
         public async Task<String> GetUserType(loginCredentials data)
         {
             string result = "";

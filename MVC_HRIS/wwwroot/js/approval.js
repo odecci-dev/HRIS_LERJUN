@@ -340,7 +340,7 @@ function initializeOTDataTable() {
         status: otStatusFilter,
         ManagerId: managerId
     };
-    console.log(data);
+    //console.log(data);
     var dtProperties = {
 
         ajax: {
@@ -370,7 +370,6 @@ function initializeOTDataTable() {
                         }
                     });
                 }
-
                 // Populate Position filter
                 const positions = [...new Set(data.map(item => item.position))];
                 const $posFilter = $('#positionFilter');
@@ -412,8 +411,6 @@ function initializeOTDataTable() {
                         }
                     });
                 }
-
-                
 
                 $('#customFilterButtons').html(`
                     <button class="btn btn-warning" id="refresh-ot" title="Refresh" onclick="initializeOTDataTable()">
@@ -697,8 +694,8 @@ function initializeOTDataTable() {
 
                         filterUI = `
                             <div class="d-flex gap-2">
-                                <select id="departmentFilter" class="btn btn-info">
-                                    <option value="">All Departments</option>
+                                <select id="fullname" class="btn btn-info">
+                                    <option value="">All Users</option>
                                 </select>
                             </div>`;
                     }
@@ -724,31 +721,52 @@ function initializeOTDataTable() {
     });
 
 
-    //$(document).on('change', '#departmentFilter', function () {
-    //    const departmentval = $(this).val();
-    //    table.column('department:name').search(departmentval).draw();
-    //});
+    $(document).on('change', '#departmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+        
+    });
 
-    //$(document).on('change', '#positionFilter', function () {
-    //    const positionval = $(this).val();
-    //    table.column('position:name').search(positionval).draw();
-    //});
-    //$(document).on('change', '#positionLevelFilter', function () {
-    //    const positionlevelval = $(this).val();
-    //    table.column('positionLevel:name').search(positionlevelval).draw();
-    //});
-
+    $(document).on('change', '#positionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
     $(document).on('change', '#positionLevelFilter', function () {
         const val = $(this).val();
-        table.column('positionLevel:name').search(val).draw();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
     });
     $(document).on('change', '#employeeType', function () {
         const val = $(this).val();
-        table.column('employeeType:name').search(val).draw();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
     });
     $(document).on('change', '#fullname', function () {
         const val = $(this).val();
-        table.column('fullname:name').search(val).draw();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
     });
 }
 function OTTableMOD() {
@@ -895,8 +913,18 @@ function initializeLeaveDataTable() {
     var empNo = "0";
     //empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
+    var sdate = document.getElementById('plr-datefrom').value;
+    var edate = document.getElementById('plr-dateto').value;
+    var managerId = 0;
+    if (userType != 'Admin') {
+        managerId = userId
+    }
     let data = {
-        EmployeeNo: empNo
+        EmployeeNo: "0",
+        startDate: sdate,
+        endDate: edate,
+        status: plrStatusFilter,
+        ManagerId: managerId
     };
     //console.log(data);
     var dtProperties = {
@@ -909,12 +937,78 @@ function initializeLeaveDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                 //console.log('table1', _currentPage);
                 table.page(_currentPage - 1).draw('page');
+
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const lrdepartments = [...new Set(data.map(item => item.department))];
+                const $lrdeptFilter = $('#lrdepartmentFilter');
+                if ($lrdeptFilter.length && $lrdeptFilter.children('option').length <= 1) {
+                    lrdepartments.forEach(dep => {
+                        if (dep) {
+                            $lrdeptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+                // Populate Position filter
+                const lrpositions = [...new Set(data.map(item => item.position))];
+                const $lrposFilter = $('#lrpositionFilter');
+                if ($lrposFilter.length && $lrposFilter.children('option').length <= 1) {
+                    lrpositions.forEach(pos => {
+                        if (pos) {
+                            $lrposFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const lrpositionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $lrposlvlFilter = $('#lrpositionLevelFilter');
+                if ($lrposlvlFilter.length && $lrposlvlFilter.children('option').length <= 1) {
+                    lrpositionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $lrposlvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const lremployeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $lremployeeTypeFilter = $('#lremployeeType');
+                if ($lremployeeTypeFilter.length && $lremployeeTypeFilter.children('option').length <= 1) {
+                    lremployeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $lremployeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const lrfullnames = [...new Set(data.map(item => item.fullname))];
+                const $lrfullnameFilter = $('#lrfullname');
+                if ($lrfullnameFilter.length && $lrfullnameFilter.children('option').length <= 1) {
+                    lrfullnames.forEach(fullname => {
+                        if (fullname) {
+                            $lrfullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
+
+                $('#lrcustomFilterButtons').html(`
+                    <button class="btn btn-warning" id="refresh-leave" title="Refresh" onclick="initializeLeaveDataTable()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                    <button class="btn btn-danger" id="decline-leave" title="Delete" onclick="rejectLeave()">
+                        <i class="fa-solid fa-circle-minus"></i> Decline
+                    </button>
+                    <button class="btn btn-success" id="approve-leave" title="Approve" onclick="approveLeave()">
+                        <i class="fa-solid fa-file-arrow-down"></i> Approve
+                    </button>
+
+                `);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -956,21 +1050,8 @@ function initializeLeaveDataTable() {
             ,
             {
                 "title": "Status",
-                "data": "status", "orderable": false,
-                "render": function (data, type, row) {
-                    var badge = "";
-                    if (data == 5) {
-                        badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
-                    }
-                    else if (data == 1004) {
-                        badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
-                    }
-                    else if (data == 1005) {
-                        badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
-                    }
+                "data": "statusName", "orderable": false
 
-                    return badge;
-                }
             },
             {
                 "title": "Action",
@@ -1001,9 +1082,45 @@ function initializeLeaveDataTable() {
 
                     return button;
                 }
+            },
+            {
+                title: "Department",
+                data: "department",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position",
+                data: "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position Level",
+                data: "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Eemployee Type",
+                data: "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Fullname",
+                "data": "fullname", 
+                name: "fullname",
+                visible: false,
+                searchable: true
+
             }
         ],
-        dom: 'rtip',
+        dom: 'Brtip',
         columnDefs: [
 
             {
@@ -1050,6 +1167,72 @@ function initializeLeaveDataTable() {
                 orderable: false,
                 width: "8%"
             },
+        ],
+        buttons: [
+            {
+                extend: 'pdf',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            //{
+            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
+            //    className: 'btn btn-danger',
+            //    action: function () {
+            //        DeclineOvertime(); // Call your custom function
+            //    }
+            //},
+            {
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrdepartmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="lrpositionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="lrpositionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="lremployeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
+                }
+            }
         ]
     };
 
@@ -1066,6 +1249,54 @@ function initializeLeaveDataTable() {
     $(tableId + ' tbody').on('click', 'tr', function () {
         var data = table.row(this).data();
 
+    });
+
+
+    $(document).on('change', '#lrdepartmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+    });
+
+    $(document).on('change', '#lrpositionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#lrpositionLevelFilter', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#lremployeeType', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#lrfullname', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
     });
 }
 

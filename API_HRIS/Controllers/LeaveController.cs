@@ -116,12 +116,100 @@ namespace API_HRIS.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> PendingLeaveRequestList(LeaveRequestListParam data)
+        public class PendingLeaveRequestListParam
         {
+            public string? EmployeeNo { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+            public int? status { get; set; }
+            public int? ManagerId { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> PendingLeaveRequestList(PendingLeaveRequestListParam data)
+        {
+            DateTime startD = DateTime.ParseExact(data.StartDate, "yyyy-MM-dd", null);
+            DateTime endD = DateTime.ParseExact(data.EndDate, "yyyy-MM-dd", null);
             try
             {
-                var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false && a.Status == 1004).ToList();
+                //var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false && a.Status == 1004).ToList();
+
+
+                var result = 
+                    from lr in _context.TblLeaveRequestModel
+
+                    join user in _context.TblUsersModels
+                    on lr.EmployeeNo equals user.EmployeeId
+
+                    join department in _context.TblDeparmentModels
+                    on user.Department equals department.Id into departmentgroup
+                    from department in departmentgroup.DefaultIfEmpty()
+
+                    join position in _context.TblPositionModels
+                    on user.Position equals position.Id into positiongroup
+                    from position in positiongroup.DefaultIfEmpty()
+
+                    join positionlvl in _context.TblPositionLevelModels
+                    on user.PositionLevelId equals positionlvl.Id into positionlvlgroup
+                    from positionlvl in positionlvlgroup.DefaultIfEmpty()
+
+                    join employeeType in _context.TblEmployeeTypes
+                    on user.EmployeeType equals employeeType.Id into employeeTypegroup
+                    from employeeType in employeeTypegroup.DefaultIfEmpty()
+
+                    join leaveType in _context.TblLeaveTypeModel
+                    on lr.LeaveTypeId equals leaveType.Id into leaveTypegroup
+                    from leaveType in leaveTypegroup.DefaultIfEmpty()
+
+                    join status in _context.TblStatusModels
+                    on lr.Status equals status.Id into statusgroup
+                    from status in statusgroup.DefaultIfEmpty()
+
+                    where lr.isDeleted == false && lr.Date >= startD && lr.Date <= endD
+                    select new
+                    {
+                        lr.Id,
+                        lr.LeaveRequestNo,
+                        lr.EmployeeNo,
+                        lr.ApprovalReason,
+                        Date = lr.Date != null ? lr.Date.Value.ToString("yyyy-MM-dd") : null,
+                        StartDate = lr.StartDate != null ? lr.StartDate.Value.ToString("yyyy-MM-dd") : null,
+                        EndDate = lr.EndDate != null ? lr.EndDate.Value.ToString("yyyy-MM-dd") : null,
+                        lr.DaysFiled,
+                        LeaveTypeId = lr.LeaveTypeId,
+                        LeaveType = leaveType.Name,
+                        lr.Reason,
+                        DateCreated = lr.DateCreated != null ? lr.DateCreated.Value.ToString("yyyy-MM-dd") : null,
+                        Status = lr.Status,
+                        StatusName = status.Status,
+                        lr.CreatedBy,
+                        lr.isDeleted,
+                        lr.DeletedBy,
+                        DateDeleted = lr.DateDeleted != null ? lr.DateDeleted.Value.ToString("yyyy-MM-dd") : null,
+                        lr.UpdatedBy,
+                        DateUpdated = lr.DateUpdated != null ? lr.DateUpdated.Value.ToString("yyyy-MM-dd") : null,
+                        user.Fullname,
+                        Department = department.DepartmentName,
+                        Position = position.Name,
+                        PositionLevel = positionlvl.Level,
+                        EmployeeType = employeeType.Title,
+                        ManagerId = user.ManagerId,
+                    };
+                if (data.status == 0)
+                {
+                    result = result.Where(a => a.Status == 1004);
+                }
+                else
+                {
+                    result = result.Where(a => a.Status == 1005);
+                }
+                if (data.EmployeeNo != "0")
+                {
+                    result = result.Where(a => a.EmployeeNo == data.EmployeeNo);
+                }
+                if (data.ManagerId != 0)
+                {
+                    result = result.Where(a => a.ManagerId == data.ManagerId);
+                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -309,6 +397,51 @@ namespace API_HRIS.Controllers
         {
             var result = _context.TblLeaveTypeModel.Where(a => a.isDeleted == false).ToList();
             return Ok(result);
+        }
+
+        public partial class TblLeaveImportModel
+        {
+            public string? EmployeeNo { get; set; }
+            public string? ApprovalReason { get; set; }
+            public string? Date { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+            public string? DaysFiled { get; set; }
+            public int? LeaveTypeId { get; set; }
+            public string? Reason { get; set; }
+            public string? DateCreated { get; set; }
+            public int? Status { get; set; }
+            public string? CreatedBy { get; set; }
+            public bool? isDeleted { get; set; }
+            public int? DeletedBy { get; set; }
+            public string? DateDeleted { get; set; }
+            public int? UpdatedBy { get; set; }
+            public string? DateUpdated { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Import(List<TblLeaveImportModel> list)
+        {
+            string result = "";
+            string status = "";
+            try
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    string query = $@"INSERT INTO 
+                                    [TblLeaveRequestModel] ([EmployeeNo], [Date], [StartDate], [EndDate], [DaysFiled], [Reason], [DateCreated], [CreatedBy], [Status])
+                                    VALUES ('" + list[0].EmployeeNo + "','" + list[i].Date + "','" + list[i].StartDate + "','" + list[i].EndDate + "','" + list[i].DaysFiled + "','" + list[i].Reason + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + list[0].CreatedBy + "','1004');";
+
+                    db.AUIDB_WithParam(query);
+                    status = "Inserted Successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.GetBaseException().ToString());
+
+            }
+
+            return Content(status);
         }
     }
 }

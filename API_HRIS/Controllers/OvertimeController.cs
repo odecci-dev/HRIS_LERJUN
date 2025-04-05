@@ -100,35 +100,36 @@ namespace API_HRIS.Controllers
             DateTime endD = DateTime.ParseExact(data.endDate, "yyyy-MM-dd", null);
             var result = from ot in _context.TblOvertimeModel
 
-                     join user in _context.TblUsersModels
-                     on ot.EmployeeNo equals user.EmployeeId
+                    join user in _context.TblUsersModels
+                    on ot.EmployeeNo equals user.EmployeeId
 
-                     join department in _context.TblDeparmentModels
-                     on user.Department equals department.Id into departmentgroup
-                     from department in departmentgroup.DefaultIfEmpty()
+                    join department in _context.TblDeparmentModels
+                    on user.Department equals department.Id into departmentgroup
+                    from department in departmentgroup.DefaultIfEmpty()
 
-                     join position in _context.TblPositionModels
-                     on user.Position equals position.Id into positiongroup
-                     from position in positiongroup.DefaultIfEmpty()
+                    join position in _context.TblPositionModels
+                    on user.Position equals position.Id into positiongroup
+                    from position in positiongroup.DefaultIfEmpty()
                      
-                     join positionlvl in _context.TblPositionLevelModels
-                     on user.PositionLevelId equals positionlvl.Id into positionlvlgroup
-                     from positionlvl in positionlvlgroup.DefaultIfEmpty()
+                    join positionlvl in _context.TblPositionLevelModels
+                    on user.PositionLevelId equals positionlvl.Id into positionlvlgroup
+                    from positionlvl in positionlvlgroup.DefaultIfEmpty()
                      
-                     join employeeType in _context.TblEmployeeTypes
-                     on user.EmployeeType equals employeeType.Id into employeeTypegroup
-                     from employeeType in employeeTypegroup.DefaultIfEmpty()
+                    join employeeType in _context.TblEmployeeTypes
+                    on user.EmployeeType equals employeeType.Id into employeeTypegroup
+                    from employeeType in employeeTypegroup.DefaultIfEmpty()
 
-                     join leave in _context.TblLeaveTypeModel
-                     on ot.LeaveId equals leave.Id into leavegroup
-                     from leave in leavegroup.DefaultIfEmpty()
+                    join leave in _context.TblLeaveTypeModel
+                    on ot.LeaveId equals leave.Id into leavegroup
+                    from leave in leavegroup.DefaultIfEmpty()
 
-                     join status in _context.TblStatusModels
-                     on ot.Status equals status.Id into statusgroup
-                     from status in statusgroup.DefaultIfEmpty()
+                    join status in _context.TblStatusModels
+                    on ot.Status equals status.Id into statusgroup
+                    from status in statusgroup.DefaultIfEmpty()
 
-                     where ot.isDeleted == false && ot.Date >= startD && ot.Date <= endD
-                         select new
+                    where ot.isDeleted == false && ot.Date >= startD && ot.Date <= endD
+
+                    select new
                      {
                          ot.Id,
                          ot.OTNo,
@@ -435,21 +436,13 @@ namespace API_HRIS.Controllers
             string status = "";
             try
             {
-
                 for (int i = 0; i < list.Count; i++)
                 {
-
-
-
                     string query = $@"INSERT INTO [TblOvertimeModel] 
                      ([EmployeeNo],[Date],[StartTime],[EndTime],[StartDate],[EndDate],[HoursFiled],[Remarks],[ConvertToLeave],[ConvertToOffset],[DateCreated],[isDeleted],[CreatedBy],[Status])
                      VALUES ('" + list[0].EmployeeNo + "','" + list[i].Date + "','" + list[i].StartTime + "','" + list[i].EndTime + "','" + list[i].StartDate + "','" + list[i].EndDate + "','" + list[i].HoursFiled + "','" + list[i].Remarks + "','" + list[i].ConvertToLeave + "','" + list[i].ConvertToOffset + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + list[0].CreatedBy + "','1004');";
 
                     db.AUIDB_WithParam(query);
-                    //string query = $@"insert into tbl_VendorModel (VendorName,BusinessTypeId,Description,Services,WebsiteUrl,FeatureImg,Gallery,Cno,Email,VideoUrl,VrUrl,BusinessLocationID,Status,FileUrl,Map,VendorLogo,Address) values
-                    //                 ('" + list[i].VendorName + "','" + list[i].BusinessTypeId + "','" + list[i].Description + "','" + list[i].Services + "','" + list[i].WebsiteUrl + "','" + FeaturedImage + "','" + list[i].Gallery + "','" + list[i].Cno + "','" + list[i].Email + "'" +
-                    //                   ",'" + list[i].VideoUrl + "','" + list[i].VrUrl + "','" + list[i].BusinessLocationID + "',5,'" + list[i].FileUrl + "','" + list[i].Map + "','" + Logo + "','" + list[i].Address + "')";
-                    //db.AUIDB_WithParam(query);
                     status = "Inserted Successfully";
 
 

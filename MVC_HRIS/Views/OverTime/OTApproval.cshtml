@@ -59,10 +59,10 @@
         
         $(document).ready(function () {
 
-        initializeOTDataTable();
+        initializeToApprovedOTDataTable();
         });
         
-        function initializeOTDataTable() {
+        function initializeToApprovedOTDataTable() {
 
             var tableId = '#to-approve-ot-table';
             if ($.fn.DataTable.isDataTable(tableId)) {
@@ -86,10 +86,10 @@
                     processing: true,
                     serverSide: true,
                     complete: function (xhr) {
-                        var url = new URL(window.location.href);
-                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
+                        // var url = new URL(window.location.href);
+                        // var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                         //console.log('table1', _currentPage);
-                        table.page(_currentPage - 1).draw('page');
+                        // table.page(_currentPage - 1).draw('page');
                     },
                     error: function (err) {
                         alert(err.responseText);

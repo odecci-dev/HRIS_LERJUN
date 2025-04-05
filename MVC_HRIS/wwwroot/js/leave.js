@@ -103,7 +103,7 @@ function FetchLeaveRequestList() {
                 }
             }
         ],
-        dom: 't',
+        //dom: 't',
         columnDefs: [
 
             {
@@ -180,3 +180,27 @@ function OverTimeDOM() {
     //});
 }
 
+function viewRejectedLR() {
+    var statusLabel = document.getElementById('plrStatusLabel');
+    if (plrStatusFilter == 0) {
+        plrStatusFilter = 1;
+        showodcloading();
+        setTimeout(function () {
+            initializeLeaveDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Pending"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
+    else {
+        plrStatusFilter = 0;
+        showodcloading();
+        setTimeout(function () {
+            initializeLeaveDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Rejected"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
+} 
+function downloadLeaveTemplate() {
+    location.replace('../Leave/DownloadHeader');
+}
