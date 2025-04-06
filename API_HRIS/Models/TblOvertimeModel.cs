@@ -26,6 +26,7 @@ public partial class TblOvertimeModel
     [DataType(DataType.Date)]
     public DateTime? EndDate { get; set; }
     public decimal? HoursFiled { get; set; }
+    public string? ApprovalReason { get; set; }
     public decimal? HoursApproved { get; set; }
     [Column(TypeName = "varchar(255)")]
     [MaxLength(255)]

@@ -26,6 +26,7 @@ using MVC_HRIS.Services;
 using API_HRIS.Manager;
 using API_HRIS.Models;
 using System.Net;
+using System.ComponentModel.DataAnnotations;
 
 namespace MVC_HRIS.Controllers
 {
@@ -88,7 +89,9 @@ namespace MVC_HRIS.Controllers
             public string? StartDate { get; set; }
             public string? EndDate { get; set; }
             public string? UserId { get; set; }
+            public string? ManagerId { get; set; }
         }
+
         [HttpPost]
         public async Task<IActionResult> GetLeaveRequestList(LeaveRequestListParam data)
         {
@@ -114,11 +117,48 @@ namespace MVC_HRIS.Controllers
 
             return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
         }
+
+        public partial class TblLeaveRequestModelView
+        {
+            public int Id { get; set; }
+            public string? LeaveRequestNo { get; set; }
+            public string? EmployeeNo { get; set; }
+            public string? ApprovalReason { get; set; }
+            public DateTime? Date { get; set; }
+            public DateTime? StartDate { get; set; }
+            public DateTime? EndDate { get; set; }
+            public decimal? DaysFiled { get; set; }
+            public int? LeaveTypeId { get; set; }
+            public string? Reason { get; set; }
+            public DateTime? DateCreated { get; set; }
+            public int? Status { get; set; }
+            public string? StatusName { get; set; }
+            public int? CreatedBy { get; set; }
+            public bool? isDeleted { get; set; }
+            public int? DeletedBy { get; set; }
+            public DateTime? DateDeleted { get; set; }
+            public int? UpdatedBy { get; set; }
+            public DateTime? DateUpdated { get; set; }
+            public string? Fullname { get; set; }
+            public string? Department { get; set; }
+            public string? Position { get; set; }
+            public string? PositionLevel { get; set; }
+            public string? EmployeeType { get; set; }
+
+        }
+        public class PendingLeaveRequestListParam
+        {
+            public string? EmployeeNo { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
+            public int? status { get; set; }
+            public int? ManagerId { get; set; }
+        }
         [HttpPost]
-        public async Task<IActionResult> GetPendingLeaveRequestList(LeaveRequestListParam data)
+        public async Task<IActionResult> GetPendingLeaveRequestList(PendingLeaveRequestListParam data)
         {
             string result = "";
-            var list = new List<TblLeaveRequestModel>();
+            var list = new List<TblLeaveRequestModelView>();
             try
             {
                 HttpClient client = new HttpClient();
@@ -128,7 +168,7 @@ namespace MVC_HRIS.Controllers
                 using (var response = await client.PostAsync(url, content))
                 {
                     string res = await response.Content.ReadAsStringAsync();
-                    list = JsonConvert.DeserializeObject<List<TblLeaveRequestModel>>(res);
+                    list = JsonConvert.DeserializeObject<List<TblLeaveRequestModelView>>(res);
 
                 }
             }
@@ -235,7 +275,7 @@ namespace MVC_HRIS.Controllers
             {
 
                 HttpClient client = new HttpClient();
-                var url = DBConn.HttpString + "/Leave/MultiUpdateStatus";
+                var url = DBConn.HttpString + "/Leave/MultiOTUpdateStatus";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
@@ -260,6 +300,108 @@ namespace MVC_HRIS.Controllers
                 status = ex.GetBaseException().ToString();
             }
             return Json(new { status = res });
+        }
+
+        public IActionResult DownloadHeader()
+        {
+            var stream = new MemoryStream();
+            using (var pck = new ExcelPackage(stream))
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet 1");
+                ws.Cells["A1"].Value = "Date";
+                ws.Cells["B1"].Value = "Start Date";
+                ws.Cells["C1"].Value = "End Date";
+                ws.Cells["D1"].Value = "Days Filed";
+                ws.Cells["E1"].Value = "Remarks";
+                ws.Cells["F1"].Value = "Leave Type";
+                ws.Cells["J1"].Value = "Employee No.";
+                ws.Cells["K1"].Value = "UserID";
+
+
+                // Apply Custom Formatting
+                ws.Cells["A:A"].Style.Numberformat.Format = "yyyy-mm-dd"; // Date format with microseconds
+                ws.Cells["B:B"].Style.Numberformat.Format = "yyyy-mm-dd";
+                ws.Cells["C:C"].Style.Numberformat.Format = "yyyy-mm-dd";
+                ws.Cells["D:D"].Style.Numberformat.Format = "0.00";
+                ws.Cells["A2"].Value = "yyyy-mm-dd";
+                ws.Cells["B2"].Value = "yyyy-mm-dd";
+                ws.Cells["C2"].Value = "yyyy-mm-dd";
+                ws.Cells["D2"].Value = "0";
+                ws.Cells["J2"].Value = HttpContext.Session.GetString("EmployeeID");
+                ws.Cells["K2"].Value = HttpContext.Session.GetString("Id");
+                // Apply Bold to Headers
+                for (var col = 1; col <= 9; col++)
+                {
+                    ws.Cells[1, col].Style.Font.Bold = true;
+                }
+                // Set Formula for Hours Filed (Column F)
+                string blank = "''";
+                for (int row = 2; row <= 50; row++)
+                {
+                    ws.Cells[$"D{row}"].Formula = $"=IFERROR(IF(((C{row})-(B{row}))=0,\"\",((C{row})-(B{row}))),\"\")";
+                    ws.Cells[$"L{row}"].Formula = $"=IF(A{row}=\"\",\"\",TEXT(A{row},\"yyyy-MM-dd\"))";
+                    ws.Cells[$"M{row}"].Formula = $"=IF(B{row}=\"\",\"\",TEXT(B{row},\"yyyy-MM-dd\"))";
+                    ws.Cells[$"N{row}"].Formula = $"=IF(C{row}=\"\",\"\",TEXT(C{row},\"yyyy-MM-dd\"))";
+                }
+                // Hide columns J (10), K (11), L (12), M (13), N (14), O (15), P (16)
+                for (int col = 10; col <= 16; col++)
+                {
+                    ws.Column(col).Hidden = true;
+                }
+                ws.Cells["Q1:Q2"].Style.Font.Italic = true;
+                ws.Cells["Q1:Q2"].Style.Font.Color.SetColor(Color.Red);
+                ws.Cells["Q1"].Value = "All Fields are required";
+                ws.Cells["Q2"].Value = "Please follow the format shown in the first row.";
+                string sqlLeaveType = $@"SELECT [Id], [Name] FROM [TblLeaveTypeModel]";
+                var dataSet = db.SelectDb(sqlLeaveType);
+
+                if (dataSet == null || dataSet.Tables.Count == 0)
+                {
+                    return BadRequest("No leave types found in the database.");
+                }
+
+                DataTable dt = dataSet.Tables[0];
+                int ctr = 2;
+                var validation = ws.DataValidations.AddListValidation("F2:F1000");
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ws.Cells["R" + ctr].Value = dr["Name"].ToString();
+                    ws.Cells["S" + ctr].Value = dr["Id"].ToString();
+                    // Add a dropdown list in A2 (below the header)
+                    validation.Formula.Values.Add(dr["Name"].ToString());
+                    ctr++;
+                }
+                validation.ShowErrorMessage = true;
+                validation.ErrorTitle = "Invalid Selection";
+                validation.Error = "Please select a valid option from the dropdown list.";
+                int ctrTierId = 50;
+                for (int i = 2; i < ctrTierId; i++)
+                {
+                    ws.Cells["G" + i].Formula = "=IFERROR(VLOOKUP(F" + i + ",R2:S8,2,FALSE),0)";
+                }
+                ws.Cells.AutoFitColumns();
+                int[] lockedColumns = { 3, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
+
+                int[] hideColumns = { 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19 };
+                foreach (int col in lockedColumns)
+                {
+                    ws.Column(col).Style.Locked = true; // Lock column
+                }
+                foreach (int col in hideColumns)
+                {
+                    ws.Column(col).Hidden = true;       // Hide column
+                }
+                ws.Cells["A:C"].Style.Locked = false;
+                ws.Cells["E:F"].Style.Locked = false;
+                //// Protect the worksheet to enforce the lock
+
+                ws.Protection.IsProtected = true;
+                pck.Save();
+            }
+
+            stream.Position = 0;
+            string excelName = "Request-Leave-Template.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
     }
 }

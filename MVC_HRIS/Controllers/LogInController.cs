@@ -130,7 +130,7 @@ namespace AOPC.Controllers
                                     ODC_HRIS.dbo.tbl_UsersModel.Updated_By, ODC_HRIS.dbo.tbl_UsersModel.Date_Deleted, ODC_HRIS.dbo.tbl_UsersModel.Deleted_By, ODC_HRIS.dbo.tbl_UsersModel.Restored_By, 
                                     ODC_HRIS.dbo.tbl_UsersModel.Date_Restored, ODC_HRIS.dbo.tbl_UsersModel.Department, ODC_HRIS.dbo.tbl_UsersModel.AgreementStatus, ODC_HRIS.dbo.tbl_UsersModel.RememberToken, 
                                     ODC_HRIS.dbo.tbl_SalaryType.SalaryType, ODC_HRIS.dbo.tbl_SalaryType.Rate, ODC_HRIS.dbo.tbl_PayrollType.PayrollType, tbl_UsersModel.UserType, tbl_UserType.UserType as UserTypeName, 
-		                            ODC_HRIS.dbo.tbl_EmployeeType.Id as EmployeeTypeId, ODC_HRIS.dbo.tbl_EmployeeType.Title as EmployeeTypeName
+		                            ODC_HRIS.dbo.tbl_EmployeeType.Id as EmployeeTypeId, ODC_HRIS.dbo.tbl_EmployeeType.Title as EmployeeTypeName, ODC_HRIS.dbo.tbl_UsersModel.PositionLevelId as PositionLevel
 
                                 FROM            ODC_HRIS.dbo.tbl_UsersModel INNER JOIN
                                     ODC_HRIS.dbo.tbl_StatusModel ON ODC_HRIS.dbo.tbl_UsersModel.Status = ODC_HRIS.dbo.tbl_StatusModel.id INNER JOIN
@@ -149,10 +149,12 @@ namespace AOPC.Controllers
                     //HttpContext.Session.SetString("UserType", dt.Rows[0]["UserType"].ToString());
                     //HttpContext.Session.SetString("CorporateName", dt.Rows[0]["CorporateName"].ToString());
                     HttpContext.Session.SetString("UserID", dt.Rows[0]["Id"].ToString());
+                    HttpContext.Session.SetString("UserName", dt.Rows[0]["Username"].ToString());
                     HttpContext.Session.SetString("EmployeeID", dt.Rows[0]["EmployeeID"].ToString());
                     HttpContext.Session.SetString("UserType", dt.Rows[0]["UserType"].ToString());
                     HttpContext.Session.SetString("UserTypeName", dt.Rows[0]["UserTypeName"].ToString());
                     HttpContext.Session.SetString("EmployeeTypeName", dt.Rows[0]["EmployeeTypeName"].ToString());
+                    HttpContext.Session.SetString("PositionLevel", dt.Rows[0]["PositionLevel"].ToString());
                     //HttpContext.Session.SetString("CorporateID", dt.Rows[0]["CorporateID"].ToString());StatusId
                     HttpContext.Session.SetString("Id", dt.Rows[0]["Id"].ToString());
                     //HttpContext.Session.SetString("MembershipName", dt.Rows[0]["MembershipName"].ToString());
@@ -224,6 +226,21 @@ namespace AOPC.Controllers
         
 
         }
+        [HttpGet]
+        public IActionResult Check()
+        {
+            var user = HttpContext.Session.GetString("UserName");
+
+            if (!string.IsNullOrEmpty(user))
+            {
+                // Optional: re-set the same value to "touch" the session
+                HttpContext.Session.SetString("UserName", user);
+                return Json(new { isLoggedIn = true });
+            }
+
+            return Json(new { isLoggedIn = false });
+        }
+        
         public async Task<String> GetUserType(loginCredentials data)
         {
             string result = "";
