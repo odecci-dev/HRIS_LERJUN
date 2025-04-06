@@ -37,7 +37,7 @@ function initializeTimlogsDataTable() {
         },
         dom: 'rtip',
         columns: [
-            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
+            { "title": "<input type='checkbox' id='checkAllTL' class='checkAllTL'>", "data": null, "orderable": false },
             {
                 "title": "Profile",
                 "data": "id",
@@ -208,7 +208,7 @@ function initializeTimlogsDataTable() {
                 width: "5%", // Adjust width
                 "className": "text-center",
                 render: function (data, type, row) {
-                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                    return '<input type="checkbox" class="tl-row-checkbox" value="' + row.id + '">';
                 }
             },
             { targets: 2, className: 'left-align' },
@@ -316,17 +316,29 @@ function decline_item() {
     });
 }
 //OverTime Tab
-function initializeOTDataTable() {
 
+var table; //  Declare early here
+function initializeOTDataTable() {
     var tableId = '#pending-overtime-table';
+
     if ($.fn.DataTable.isDataTable(tableId)) {
         $(tableId).DataTable().clear().destroy();
     }
     var empNo = "0";
-    empNo = document.getElementById('selectUserOTPending').value;
+    //empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
+    var sdate = document.getElementById('pot-datefrom').value;
+    var edate = document.getElementById('pot-dateto').value; 
+    var managerId = 0;
+    if (userType != 'Admin') {
+        managerId = userId
+    }
     let data = {
-        EmployeeNo: empNo
+        EmployeeNo: "0",
+        startDate: sdate,
+        endDate: edate,
+        status: otStatusFilter,
+        ManagerId: managerId
     };
     //console.log(data);
     var dtProperties = {
@@ -339,24 +351,91 @@ function initializeOTDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                 //console.log('table1', _currentPage);
                 table.page(_currentPage - 1).draw('page');
+
+                //  Extract unique statusName values from the AJAX response
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const departments = [...new Set(data.map(item => item.department))];
+                const $deptFilter = $('#departmentFilter');
+                if ($deptFilter.length && $deptFilter.children('option').length <= 1) {
+                    departments.forEach(dep => {
+                        if (dep) {
+                            $deptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+                // Populate Position filter
+                const positions = [...new Set(data.map(item => item.position))];
+                const $posFilter = $('#positionFilter');
+                if ($posFilter.length && $posFilter.children('option').length <= 1) {
+                    positions.forEach(pos => {
+                        if (pos) {
+                            $posFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const positionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $poslvlFilter = $('#positionLevelFilter');
+                if ($poslvlFilter.length && $poslvlFilter.children('option').length <= 1) {
+                    positionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $poslvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const employeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $employeeTypeFilter = $('#employeeType');
+                if ($employeeTypeFilter.length && $employeeTypeFilter.children('option').length <= 1) {
+                    employeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $employeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const fullnames = [...new Set(data.map(item => item.fullname))];
+                const $fullnameFilter = $('#fullname');
+                if ($fullnameFilter.length && $fullnameFilter.children('option').length <= 1) {
+                    fullnames.forEach(fullname => {
+                        if (fullname) {
+                            $fullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
+
+                $('#customFilterButtons').html(`
+                    <button class="btn btn-warning" id="refresh-ot" title="Refresh" onclick="initializeOTDataTable()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                    <button class="btn btn-danger" id="decline-ot" title="Reject" onclick="DeclineOvertime()">
+                        <i class="fa-solid fa-circle-minus"></i> Decline
+                    </button>
+                    <button class="btn btn-success" id="approve-ot" title="Approve" onclick="ApproveOvertime()">
+                        <i class="fa-solid fa-file-arrow-down"></i> Approve
+                    </button>
+
+                `);
             },
             error: function (err) {
                 alert(err.responseText);
             }
         },
         responsive: true,
-        dom: 'rtip',
+        dom: 'Brtip',
         "columns": [
-            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
+            { "title": "<input type='checkbox' id='checkAllOT' class='checkAllOT'>", "data": null, "orderable": false },
             {
                 "title": "OT-Number",
-                "data": "otNo", "orderable": false
+                "data": "otNo", "orderable": false,
             },
 
             {
@@ -409,7 +488,7 @@ function initializeOTDataTable() {
             },
             {
                 "title": "Action",
-                "data": "id",
+                "data": "id", "orderable": false,
                 "render": function (data, type, row) {
 
                     var button = "";
@@ -439,6 +518,41 @@ function initializeOTDataTable() {
                                 </label>`;
                     return button;
                 }
+            },
+            {
+                title: "Department",
+                data: "department",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position",
+                data: "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position Level",
+                data: "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Eemployee Type",
+                data: "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Fullname",
+                data: "fullname",
+                name: "fullname",
+                visible: false,
+                searchable: true
             }
         ],
         columnDefs: [
@@ -449,7 +563,7 @@ function initializeOTDataTable() {
                 width: "5%", // Adjust width
                 "className": "text-center",
                 render: function (data, type, row) {
-                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                    return '<input type="checkbox" id="" class="ot-row-checkbox" value="' + row.id + '">';
                 }
             },
             {
@@ -510,7 +624,7 @@ function initializeOTDataTable() {
                         $(td).css('color', 'green').css('font-weight', 'bold');
                     } else if (cellData === "PENDING") {
                         $(td).css('color', 'orange').css('font-weight', 'bold');
-                    } else if (cellData === "Rejected") {
+                    } else if (cellData === "DECLINED") {
                         $(td).css('color', 'red').css('font-weight', 'bold');
                     }
                 }
@@ -518,10 +632,77 @@ function initializeOTDataTable() {
             {
                 targets: [11], // Convert To Leave Column
                 orderable: false,
-                width: "5%", "className": "text-center", "targets": "7"
+                width: "100px", "className": "text-center", "targets": "7"
 
             },
-        ]
+        ],
+        //searching: false, // Disables the search input
+        buttons: [
+            {
+                extend: 'pdf',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
+                title: 'Overtime List', // Set custom title in the file
+                filename: 'Overtime_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Specify column indexes to export
+                }
+            },
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Overtime List', // Set custom title in the file
+                filename: 'Overtime_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] // Specify column indexes to export
+                }
+            },
+            //{
+            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
+            //    className: 'btn btn-danger',
+            //    action: function () {
+            //        DeclineOvertime(); // Call your custom function
+            //    }
+            //},
+            {
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="departmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="positionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="positionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="employeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="fullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="fullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
+                }
+            }
+        ],
     };
 
     $('#pending-overtime-table').on('page.dt', function () {
@@ -532,11 +713,60 @@ function initializeOTDataTable() {
         window.history.replaceState(null, null, url);
     });
 
-    var table = $(tableId).DataTable(dtProperties);
+    table = $(tableId).DataTable(dtProperties);
     $(tableId + '_filter input').attr('placeholder', 'Searching...');
     $(tableId + ' tbody').on('click', 'tr', function () {
-        var data = table.row(this).data();
+    var data = table.row(this).data();
 
+    });
+
+
+    $(document).on('change', '#departmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+        
+    });
+
+    $(document).on('change', '#positionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#positionLevelFilter', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#employeeType', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#fullname', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
     });
 }
 function OTTableMOD() {
@@ -565,8 +795,18 @@ function OTTableMOD() {
         OTapprovemodal();
         $("#alertmodal").modal('show');
     });
+    $('#pot-datefrom').on('change', function () {
+
+        initializeOTDataTable();
+    });
+    $('#pot-dateto').on('change', function () {
+
+        initializeOTDataTable();
+    });
 
 }
+
+
 function OTapprovemodal() {
     var element = document.querySelectorAll(".modal-header");
     var content = document.querySelectorAll(".modal-content");
@@ -671,10 +911,20 @@ function initializeLeaveDataTable() {
         $(tableId).DataTable().clear().destroy();
     }
     var empNo = "0";
-    empNo = document.getElementById('selectUserOTPending').value;
+    //empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
+    var sdate = document.getElementById('plr-datefrom').value;
+    var edate = document.getElementById('plr-dateto').value;
+    var managerId = 0;
+    if (userType != 'Admin') {
+        managerId = userId
+    }
     let data = {
-        EmployeeNo: empNo
+        EmployeeNo: "0",
+        startDate: sdate,
+        endDate: edate,
+        status: plrStatusFilter,
+        ManagerId: managerId
     };
     //console.log(data);
     var dtProperties = {
@@ -687,12 +937,78 @@ function initializeLeaveDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
                 //console.log('table1', _currentPage);
                 table.page(_currentPage - 1).draw('page');
+
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const lrdepartments = [...new Set(data.map(item => item.department))];
+                const $lrdeptFilter = $('#lrdepartmentFilter');
+                if ($lrdeptFilter.length && $lrdeptFilter.children('option').length <= 1) {
+                    lrdepartments.forEach(dep => {
+                        if (dep) {
+                            $lrdeptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+                // Populate Position filter
+                const lrpositions = [...new Set(data.map(item => item.position))];
+                const $lrposFilter = $('#lrpositionFilter');
+                if ($lrposFilter.length && $lrposFilter.children('option').length <= 1) {
+                    lrpositions.forEach(pos => {
+                        if (pos) {
+                            $lrposFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const lrpositionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $lrposlvlFilter = $('#lrpositionLevelFilter');
+                if ($lrposlvlFilter.length && $lrposlvlFilter.children('option').length <= 1) {
+                    lrpositionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $lrposlvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const lremployeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $lremployeeTypeFilter = $('#lremployeeType');
+                if ($lremployeeTypeFilter.length && $lremployeeTypeFilter.children('option').length <= 1) {
+                    lremployeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $lremployeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const lrfullnames = [...new Set(data.map(item => item.fullname))];
+                const $lrfullnameFilter = $('#lrfullname');
+                if ($lrfullnameFilter.length && $lrfullnameFilter.children('option').length <= 1) {
+                    lrfullnames.forEach(fullname => {
+                        if (fullname) {
+                            $lrfullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
+
+                $('#lrcustomFilterButtons').html(`
+                    <button class="btn btn-warning" id="refresh-leave" title="Refresh" onclick="initializeLeaveDataTable()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                    <button class="btn btn-danger" id="decline-leave" title="Delete" onclick="rejectLeave()">
+                        <i class="fa-solid fa-circle-minus"></i> Decline
+                    </button>
+                    <button class="btn btn-success" id="approve-leave" title="Approve" onclick="approveLeave()">
+                        <i class="fa-solid fa-file-arrow-down"></i> Approve
+                    </button>
+
+                `);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -734,21 +1050,8 @@ function initializeLeaveDataTable() {
             ,
             {
                 "title": "Status",
-                "data": "status", "orderable": false,
-                "render": function (data, type, row) {
-                    var badge = "";
-                    if (data == 5) {
-                        badge = "<span class='bg-success p-1 px-3 text-light' style='border-radius: 15px;'>Approved</span>";
-                    }
-                    else if (data == 1004) {
-                        badge = "<span class='bg-warning p-1 px-3 text-light' style='border-radius: 15px;'>Pending</span>";
-                    }
-                    else if (data == 1005) {
-                        badge = "<span class='bg-danger p-1 px-3 text-light' style='border-radius: 15px;'>Declined</span>";
-                    }
+                "data": "statusName", "orderable": false
 
-                    return badge;
-                }
             },
             {
                 "title": "Action",
@@ -779,9 +1082,45 @@ function initializeLeaveDataTable() {
 
                     return button;
                 }
+            },
+            {
+                title: "Department",
+                data: "department",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position",
+                data: "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Position Level",
+                data: "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                title: "Eemployee Type",
+                data: "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Fullname",
+                "data": "fullname", 
+                name: "fullname",
+                visible: false,
+                searchable: true
+
             }
         ],
-        dom: 'rtip',
+        dom: 'Brtip',
         columnDefs: [
 
             {
@@ -828,6 +1167,72 @@ function initializeLeaveDataTable() {
                 orderable: false,
                 width: "8%"
             },
+        ],
+        buttons: [
+            {
+                extend: 'pdf',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            //{
+            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
+            //    className: 'btn btn-danger',
+            //    action: function () {
+            //        DeclineOvertime(); // Call your custom function
+            //    }
+            //},
+            {
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrdepartmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="lrpositionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="lrpositionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="lremployeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
+                }
+            }
         ]
     };
 
@@ -844,6 +1249,54 @@ function initializeLeaveDataTable() {
     $(tableId + ' tbody').on('click', 'tr', function () {
         var data = table.row(this).data();
 
+    });
+
+
+    $(document).on('change', '#lrdepartmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+    });
+
+    $(document).on('change', '#lrpositionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#lrpositionLevelFilter', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#lremployeeType', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#lrfullname', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
     });
 }
 

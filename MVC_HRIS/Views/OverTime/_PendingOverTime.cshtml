@@ -7,6 +7,8 @@
     }
 
 }
+
+
 <div>
     <div>
         @* <div>
@@ -17,17 +19,93 @@
                 <div class="mod-form">
 
                     <div class="action-navbar">
-                        <div class="input-holder">
-                            <span class="text-left">Filter User:</span>
-                            <select id="selectUserOTPending">
-                                <option value="" selected disabled> Select User</option>
-                            </select>
+                        <div class="layer">
+                            <div class="input-holder">
+                                <span class="text-left text-dark">From:</span>
+                                <div class="date-input">
+                                    <input type="date" id="pot-datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <span class="text-left text-dark">To:</span>
+                                <div class="date-input">
+                                    <input type="date" id="pot-dateto" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            @* <div class="input-holder">
+                                <button class="btn btn-success" id="export-pot" title="Time Out" onclick="POTExportFunction()">
+                                    <i class="fa-solid fa-file-arrow-down"></i> Export
+                                </button>
+                            </div> *@
+                            @* <div class="input-holder">
+                                <a href="#" class="text-white" id="" title="View" onclick="viewRejectedOT()">
+                                    View <span id="StatusLabel" style="font-weight: 400">Rejected</span> Overtime <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div> *@
+                            <div class="input-holder">
+                                @* <span class="text-left text-dark">Months:</span> *@
+                                <div class="date-input">
+                                    <select id="pot-monthSelect" class="form-control"></select>
+                                </div>
+                            </div>
+
+                            <div class="input-holder">
+                                @* <span class="text-left">Filter User:</span> *@
+                                <select id="potCuttOff">
+                                    <option value="0" selected> First Cutt-off</option>
+                                    <option value="1"> Second Cutt-off</option>
+                                </select>
+                            </div
+                            <div class="input-holder">
+                                <a href="#" class="text-white" id="" title="View" onclick="viewRejectedOT()">
+                                    View <span id="StatusLabel" style="color: #fff;font-weight: 400">Rejected</span> Overtime <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
                         </div>
+                        @* <div class="layer"> 
+                            <div class="input-holder">
+                                <span class="text-left text-dark">Months:</span>
+                                <div class="date-input">
+                                    <select id="pot-monthSelect" class="form-control"></select>
+                                </div>
+                            </div>
+
+                            <div class="input-holder">
+                                <span class="text-left">Filter User:</span>
+                                <select id="potCuttOff">
+                                    <option value="0" selected> First Cutt-off</option>
+                                    <option value="1"> Second Cutt-off</option>
+                                </select>
+                            </div> 
+                            <div class="input-holder"> 
+                                 <span class="text-left">Filter User:</span> 
+                                 <select id="selectUserOTPending">
+                                    <option value="" selected disabled> Select User</option>
+                                </select> 
+                                <button class="btn btn-warning" id="refresh-ot" title="Refresh">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                                </button>
+                                <button class="btn btn-danger" id="decline-ot" title="Delete">
+                                    <i class="fa-solid fa-circle-minus"></i> Decline
+                                </button>
+                                <button class="btn btn-success" id="approve-ot" title="Approve" onclick="">
+                                    <i class="fa-solid fa-file-arrow-down"></i> Approve
+                                </button> 
+                             </div>
+                            <div class="input-holder">
+                                <a href="#" class="text-white" id="" title="View" onclick="viewRejectedOT()">
+                                    View <span id="StatusLabel" style="font-weight: 400">Rejected</span> Overtime <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div> 
+                        </div> *@
                     </div>
                 </div>
 
             </div>
             <div class="content-filter-tbl">
+                <div class="row mb-2">
+                    <div class="col-md-6" id="customFilterButtons"></div>
+                </div>
                 <table id="pending-overtime-table" class="table table-bordered table-hover w-100">
                     <thead>
                     </thead>
@@ -43,7 +121,9 @@
     </div>
 
 </div>
+
 @section Scripts {
+
     <script>
         $(document).ready(function () {
 
