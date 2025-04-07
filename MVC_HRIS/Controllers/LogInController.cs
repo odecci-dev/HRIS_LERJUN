@@ -60,8 +60,7 @@ namespace AOPC.Controllers
         {
             // Assuming LogIn is a method that returns a status string
             var status = await LogIn(data);
-            var usertype = await GetUserType(data);
-            if (status == "Ok")
+            if (status.Status == "Ok")
             {
                 // Get the token value
                 //string token = token_val.GetValue();
@@ -119,11 +118,11 @@ namespace AOPC.Controllers
                 }
                
                 // Redirect to the dashboard
-                if (usertype == "2")
+                if (status.UserType == "2")
                 {
                     return Json(new { redirectToUrl = Url.Action("Index", "Dashboard") });
                 }
-                else if (usertype == "3")
+                else if (status.UserType == "3")
                 {
                     return Json(new { redirectToUrl = Url.Action("Index", "TimeLogs") });
                 }
@@ -153,10 +152,14 @@ namespace AOPC.Controllers
             public string? location { get; set; }
             public bool? rememberToken { get; set; }
         }
-        public async Task<String> LogIn(loginCredentials data)
+        public class LoginResult
         {
-            string result = "";
-            string status = "";
+            public string Status { get; set; }
+            public string UserType { get; set; }
+        }
+        public async Task<LoginResult> LogIn(loginCredentials data)
+        {
+            var result = new LoginResult();
             try
             {
                 //var pass3 = Cryptography.Encrypt("odecciaccounting2025!");
@@ -216,13 +219,15 @@ namespace AOPC.Controllers
                         status = await response.Content.ReadAsStringAsync();
                         //List<LoginStats> models = JsonConvert.DeserializeObject<List<LoginStats>>(status);
                         string asdas = JsonConvert.DeserializeObject<LoginStats>(status).Status;
+                        string utype = JsonConvert.DeserializeObject<LoginStats>(status).UserType;
 
-                        result = asdas;
+                        result.Status = asdas;
+                        result.UserType = utype;
 
                     }
                  
            
-                    if (result == "Ok")
+                    if (result.Status == "Ok")
                     {
                         //string action = data.Id == 0 ? "Added New" : "Updated";
                         dbmet.InsertAuditTrail("User Id: " + dt.Rows[0]["Id"].ToString() +
@@ -249,7 +254,7 @@ namespace AOPC.Controllers
                        "0",
                        "2",
                        "Unknown");
-                    result = "Invalid Log IN";
+                    result.Status = "Invalid Log IN";
                 }    
             }
 
