@@ -55,6 +55,8 @@ namespace MVC_HRIS.Controllers
         public class EmployeeIdFilter
         {
             public string EmployeeNo { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
         }
         public IActionResult OTApproval()
         {

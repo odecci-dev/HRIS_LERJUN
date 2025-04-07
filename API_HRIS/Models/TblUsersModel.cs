@@ -51,6 +51,6 @@ public partial class TblUsersModel
     public int? PositionLevelId { get; set; }
     public int? ManagerId { get; set; }
     public bool isLoggedIn { get; set; }
-
-    //public int? CompanyId { get; set; }
+    public bool isOnline { get; set; }
+    public string? verificationCode { get; set; }
 }

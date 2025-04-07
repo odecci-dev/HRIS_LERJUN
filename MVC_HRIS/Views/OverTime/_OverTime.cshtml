@@ -105,7 +105,7 @@
 </style>
 <div>
     <div class="d-flex action-navbar">
-        <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
+        @* <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
             <label for="datefrom" class="lbl">From:</label>
             <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
             <label for="dateto" class="lbl">To:</label>
@@ -115,7 +115,35 @@
             </button>
         </div>
         <div id="time-btn-holder" class="time-btn-holder">
-        </div>
+        </div> *@
+        <div class="layer">
+                            <div class="input-holder">
+                                <span class="text-left text-dark">From:</span>
+                                <div class="date-input">
+                                    <input type="date" id="ot-datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <span class="text-left text-dark">To:</span>
+                                <div class="date-input">
+                                    <input type="date" id="ot-dateto" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                @* <span class="text-left text-dark">Months:</span> *@
+                                <div class="date-input">
+                                    <select id="ot-monthSelect" class="form-control"></select>
+                                </div>
+                            </div>
+
+                            <div class="input-holder">
+                                @* <span class="text-left">Filter User:</span> *@
+                                <select id="otCuttOff">
+                                    <option value="0" selected> First Cutt-off</option>
+                                    <option value="1"> Second Cutt-off</option>
+                                </select>
+                            </div>
+                        </div>
     </div>
     <div class="d-flex action-navbar-2">
         <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
@@ -213,4 +241,65 @@
             document.getElementById('uploadOTForm').submit();
             alert("Hello World!")
         }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        const otmonthSelect = document.getElementById("ot-monthSelect");
+        const otcurrentYear = new Date().getFullYear();
+        for (let otmonth = 0; otmonth < 12; otmonth++) {
+           const otmonthName = new Date(otcurrentYear, otmonth).toLocaleString('default', { month: 'long' });
+           const otoption = document.createElement("option");
+           otoption.value = `${otcurrentYear}-${String(otmonth + 1).padStart(2, '0')}`;
+           otoption.text = `${otmonthName} ${otcurrentYear}`;
+           otmonthSelect.appendChild(otoption);
+        }
+        otmonthSelect.value = `${otcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        setCutOffDatesOT();
+    });
+    function setCutOffDatesOT() {
+        const otselectedMonth = document.getElementById("ot-monthSelect").value;
+        const otCuttOff = document.getElementById("otCuttOff").value;
+        const [otyear, otmonth] = otselectedMonth.split('-').map(Number);
+        if (otCuttOff == 0) {
+           otfromDate = new Date(otyear, otmonth - 2, 26);
+           ottoDate = new Date(otyear, otmonth - 1, 10);
+        } else if (otCuttOff == 1) {
+           otfromDate = new Date(otyear, otmonth - 1, 11);
+           ottoDate = new Date(otyear, otmonth - 1, 25);
+        }
+        const formatOTFromDate = (otfromDate) => {
+           let year = otfromDate.getFullYear();
+           let month = otfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+           let day = otfromDate.getDate();
+           // Ensure month and day are always two digits
+           if (month < 10) month = '0' + month;
+           if (day < 10) day = '0' + day;
+           return `${year}-${month}-${day}`;
+        };
+        const formatOTToDate = (ottoDate) => {
+           let year = ottoDate.getFullYear();
+           let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+           let day = ottoDate.getDate();
+           // Ensure month and day are always two digits
+           if (month < 10) month = '0' + month;
+           if (day < 10) day = '0' + day;
+           return `${year}-${month}-${day}`;
+        };
+        document.getElementById('ot-datefrom').value = formatOTFromDate(otfromDate);
+        document.getElementById('ot-dateto').value = formatOTToDate(ottoDate);
+    }
+    $('#otCuttOff').on('change', function () {
+       setCutOffDatesOT();
+       FetchOvertimeList();
+    });
+    $('#ot-monthSelect').on('change', function () {
+       setCutOffDatesOT();
+       FetchOvertimeList();
+    });
+    $('#ot-datefrom').on('change', function () {
+       FetchOvertimeList();
+    });
+    $('#ot-dateto').on('change', function () {
+       FetchOvertimeList();
+    });
 </script>

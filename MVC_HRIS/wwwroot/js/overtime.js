@@ -4,10 +4,14 @@ function FetchOvertimeList() {
     if ($.fn.DataTable.isDataTable(tableId)) {
         $(tableId).DataTable().clear().destroy();
     }
+    var sdate = document.getElementById('ot-datefrom').value;
+    var edate = document.getElementById('ot-dateto').value;
     let data = {
+        StartDate: sdate,
+        EndDate: edate,
         EmployeeNo: EmployeeID
     };
-    //console.log(data);
+    console.log(data);
     var dtProperties = {
         responsive: true, // Enable responsive behavior
         scrollX: true,    // Enable horizontal scrolling if needed
@@ -219,8 +223,6 @@ function OverTimeDOM() {
 document.addEventListener("DOMContentLoaded", function () {
     const potmonthSelect = document.getElementById("pot-monthSelect");
     const potcurrentYear = new Date().getFullYear();
-    const plrmonthSelect = document.getElementById("plr-monthSelect");
-    const plrcurrentYear = new Date().getFullYear();
     for (let potmonth = 0; potmonth < 12; potmonth++) {
         const potmonthName = new Date(potcurrentYear, potmonth).toLocaleString('default', { month: 'long' });
         const potoption = document.createElement("option");
@@ -228,28 +230,27 @@ document.addEventListener("DOMContentLoaded", function () {
         potoption.text = `${potmonthName} ${potcurrentYear}`;
         potmonthSelect.appendChild(potoption);
     }
-    for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
-        const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
-        const plroption = document.createElement("option");
-        plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
-        plroption.text = `${plrmonthName} ${plrcurrentYear}`;
-        plrmonthSelect.appendChild(plroption);
-    }
-
     // Set default to current month
     potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
     setCutOffDatesPOT();
+
+    //const otmonthSelect = document.getElementById("ot-monthSelect");
+    //const otcurrentYear = new Date().getFullYear();
+    //for (let otmonth = 0; otmonth < 12; otmonth++) {
+    //    const otmonthName = new Date(otcurrentYear, otmonth).toLocaleString('default', { month: 'long' });
+    //    const otoption = document.createElement("option");
+    //    otoption.value = `${otcurrentYear}-${String(otmonth + 1).padStart(2, '0')}`;
+    //    otoption.text = `${otmonthName} ${otcurrentYear}`;
+    //    otmonthSelect.appendChild(otoption);
+    //}
+    //otmonthSelect.value = `${otcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+    //setCutOffDatesPOT();
 });
 function setCutOffDatesPOT() {
     const potselectedMonth = document.getElementById("pot-monthSelect").value;
     const potCuttOff = document.getElementById("potCuttOff").value;
-    const plrselectedMonth = document.getElementById("plr-monthSelect").value;
-    const plrCuttOff = document.getElementById("plrCuttOff").value;
     const [year, month] = potselectedMonth.split('-').map(Number);
-    const [plryear, plrmonth] = plrselectedMonth.split('-').map(Number);
-
-    //let fromDate, toDate;
+    let fromDate, toDate;
     //console.log(month);
     if (potCuttOff == 0) {
         fromDate = new Date(year, month - 2, 26);
@@ -258,19 +259,6 @@ function setCutOffDatesPOT() {
         fromDate = new Date(year, month - 1, 11);
         toDate = new Date(year, month - 1, 25);
     }
-    if (plrCuttOff == 0) {
-        plrfromDate = new Date(plryear, plrmonth - 2, 26);
-        plrtoDate = new Date(plryear, plrmonth - 1, 10);
-    } else if (plrCuttOff == 1) {
-        plrfromDate = new Date(plryear, plrmonth - 1, 11);
-        plrtoDate = new Date(plryear, plrmonth - 1, 25);
-    }
-    // Adjust to weekday if falls on weekend
-    fromDate = stladjustToWeekday(fromDate);
-    toDate = stladjustToWeekday(toDate);
-    // Adjust to weekday if falls on weekend
-    plrfromDate = stladjustToWeekday(plrfromDate);
-    plrtoDate = stladjustToWeekday(plrtoDate);
 
     // Format as YYYY-MM-DD
     const formatFromDate = (fromDate) => {
@@ -291,47 +279,63 @@ function setCutOffDatesPOT() {
         if (day < 10) day = '0' + day;
         return `${year}-${month}-${day}`;
     };
-    const formatPLRFromDate = (plrfromDate) => {
-        let year = plrfromDate.getFullYear();
-        let month = plrfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
-        let day = plrfromDate.getDate();
-        // Ensure month and day are always two digits
-        if (month < 10) month = '0' + month;
-        if (day < 10) day = '0' + day;
-        return `${year}-${month}-${day}`;
-    };
-    const formatPLRFToDate = (plrtoDate) => {
-        let year = plrtoDate.getFullYear();
-        let month = plrtoDate.getMonth() + 1; // Month is zero-indexed, so add 1
-        let day = plrtoDate.getDate();
-        // Ensure month and day are always two digits
-        if (month < 10) month = '0' + month;
-        if (day < 10) day = '0' + day;
-        return `${year}-${month}-${day}`;
-    };
     document.getElementById('pot-datefrom').value = formatFromDate(fromDate);
     document.getElementById('pot-dateto').value = formatToDate(toDate);
-    document.getElementById('plr-datefrom').value = formatPLRFromDate(plrfromDate);
-    document.getElementById('plr-dateto').value = formatPLRFToDate(plrtoDate);
+
+    //const otselectedMonth = document.getElementById("ot-monthSelect").value;
+    //const otCuttOff = document.getElementById("otCuttOff").value;
+    //const [otyear, otmonth] = otselectedMonth.split('-').map(Number);
+    //// Adjust to weekday if falls on weekend
+    //fromDate = stladjustToWeekday(fromDate);
+    //toDate = stladjustToWeekday(toDate);
+    //if (otCuttOff == 0) {
+    //    otfromDate = new Date(otyear, otmonth - 2, 26);
+    //    ottoDate = new Date(otyear, otmonth - 1, 10);
+    //} else if (otCuttOff == 1) {
+    //    otfromDate = new Date(otyear, otmonth - 1, 11);
+    //    ottoDate = new Date(otyear, otmonth - 1, 25);
+    //}
+    //// Adjust to weekday if falls on weekend
+    //otfromDate = stladjustToWeekday(otfromDate);
+    //ottoDate = stladjustToWeekday(ottoDate);
+    //const formatOTFromDate = (otfromDate) => {
+    //    let year = otfromDate.getFullYear();
+    //    let month = otfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+    //    let day = otfromDate.getDate();
+    //    // Ensure month and day are always two digits
+    //    if (month < 10) month = '0' + month;
+    //    if (day < 10) day = '0' + day;
+    //    return `${year}-${month}-${day}`;
+    //};
+    //const formatOTToDate = (ottoDate) => {
+    //    let year = ottoDate.getFullYear();
+    //    let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+    //    let day = ottoDate.getDate();
+    //    // Ensure month and day are always two digits
+    //    if (month < 10) month = '0' + month;
+    //    if (day < 10) day = '0' + day;
+    //    return `${year}-${month}-${day}`;
+    //};
+    //document.getElementById('ot-datefrom').value = formatOTFromDate(otfromDate);
+    //document.getElementById('ot-dateto').value = formatOTToDate(ottoDate);
 }
 $('#potCuttOff').on('change', function () {
     setCutOffDatesPOT();
     initializeOTDataTable();
 });
-
 $('#pot-monthSelect').on('change', function () {
     setCutOffDatesPOT();
     initializeOTDataTable();
 });
-$('#plrCuttOff').on('change', function () {
-    setCutOffDatesPOT();
-    initializeLeaveDataTable();
-});
 
-$('#plr-monthSelect').on('change', function () {
-    setCutOffDatesPOT();
-    initializeLeaveDataTable();
-});
+//$('#otCuttOff').on('change', function () {
+//    setCutOffDatesPOT();
+//    initializeLeaveDataTable();
+//});
+//$('#ot-monthSelect').on('change', function () {
+//    setCutOffDatesPOT();
+//    initializeLeaveDataTable();
+//});
 function viewRejectedOT() {
     var statusLabel = document.getElementById('StatusLabel');
     if (otStatusFilter == 0) {
