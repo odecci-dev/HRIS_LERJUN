@@ -250,6 +250,22 @@ namespace API_HRIS.Manager
             var result = new List<TblUsersModel>();
             bool compr_user = false;
             string utype = "";
+            var isLoggedin = _context.TblUsersModels.Where(a => a.Username == username && a.Password == Cryptography.Encrypt(password) && a.isLoggedIn == true).ToList().Count() > 0;
+            if (isLoggedin)
+            {
+                Stats = "Error! Your account is active on another device or browser!";
+                Mess = "Invalid Log In";
+                JWT = "";
+
+                StatusReturns isLoggedINresult = new StatusReturns
+                {
+                    Status = Stats,
+                    Message = Mess,
+                    JwtToken = JWT,
+                    UserType = utype
+                };
+                return isLoggedINresult;
+            }
             if (username.Length != 0 || password.Length != 0)
             {
                 var param = new IDataParameter[]
@@ -309,6 +325,7 @@ namespace API_HRIS.Manager
                                             letter = Convert.ToChar(shift + 2);
                                             str_build.Append(letter);
                                         }
+                                        var RememberMeToken = Cryptography.Encrypt(username+"odecci2025!"+username);
                                         //gv.AudittrailLogIn("Successfully", "Log In Form", dt.Rows[0]["EmployeeID"].ToString(), 7);
                                         var token = Cryptography.Encrypt(str_build.ToString());
                                         string strtokenresult = token;
@@ -320,7 +337,12 @@ namespace API_HRIS.Manager
 
                                         string query = $@"update tbl_UsersModel set JWToken='" + string.Concat(strtokenresult.TakeLast(15)) + "' where id = '" + dt.Rows[0]["id"].ToString() + "'";
                                         db.DB_WithParam(query);
-                                        
+                                        string updateRememberMeToken = $@"update tbl_UsersModel set RememberToken='" + RememberMeToken + "' where id = '" + dt.Rows[0]["id"].ToString() + "'";
+
+                                        db.DB_WithParam(updateRememberMeToken);
+                                        string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isLoggedIn] = '1'" +
+                                       " WHERE id = '" + dt.Rows[0]["id"].ToString() + "'";
+                                        db.DB_WithParam(queryIsLoggedIn);
 
                                         Stats = "Ok";
                                         Mess = "Successfully Log In";

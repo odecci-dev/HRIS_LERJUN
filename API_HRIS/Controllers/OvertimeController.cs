@@ -31,6 +31,8 @@ namespace API_HRIS.Controllers
         public class EmployeeIdFilter
         {
             public string? EmployeeNo { get; set; }
+            public string? StartDate { get; set; }
+            public string? EndDate { get; set; }
         }
 
         [HttpPost]
@@ -38,6 +40,8 @@ namespace API_HRIS.Controllers
         {
             try
             {
+                DateTime startD = DateTime.ParseExact(data.StartDate, "yyyy-MM-dd", null);
+                DateTime endD = DateTime.ParseExact(data.EndDate, "yyyy-MM-dd", null);
                 var result = from ot in _context.TblOvertimeModel
                              join leave in _context.TblLeaveTypeModel
                              on ot.LeaveId equals leave.Id into leavegroup
@@ -45,7 +49,7 @@ namespace API_HRIS.Controllers
                              join status in _context.TblStatusModels
                              on ot.Status equals status.Id into statusgroup
                              from status in statusgroup.DefaultIfEmpty()
-                             where ot.isDeleted == false && ot.EmployeeNo == data.EmployeeNo
+                             where ot.isDeleted == false && ot.EmployeeNo == data.EmployeeNo && ot.Date >= startD && ot.Date <= endD
                              select new
                              {
                                  ot.Id,
