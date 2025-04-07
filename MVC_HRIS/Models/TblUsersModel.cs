@@ -77,4 +77,5 @@ public partial class TblUsersModel
     public int? Position { get; set; }
     public int? PositionLevelId { get; set; }
     public int? ManagerId { get; set; }
+    public string? verificationCode { get; set; }
 }

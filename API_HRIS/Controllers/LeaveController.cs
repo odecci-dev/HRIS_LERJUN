@@ -44,14 +44,17 @@ namespace API_HRIS.Controllers
         {
             public string? StartDate { get; set; }
             public string? EndDate { get; set; }
-            public string? UserId { get; set; }
+            public string? EmployeeNo { get; set; }
         }
         [HttpPost]
         public async Task<IActionResult> LeaveRequestList(LeaveRequestListParam data)
         {
             try
             {
-                var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false).ToList();
+                DateTime startD = DateTime.ParseExact(data.StartDate, "yyyy-MM-dd", null);
+                DateTime endD = DateTime.ParseExact(data.EndDate, "yyyy-MM-dd", null);
+                var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false && a.EmployeeNo == data.EmployeeNo && a.Date >= startD && a.Date <= endD).ToList();
+                
                 return Ok(result);
             }
             catch (Exception ex)
@@ -428,7 +431,7 @@ namespace API_HRIS.Controllers
                 for (int i = 0; i < list.Count; i++)
                 {
                     string query = $@"INSERT INTO 
-                                    [TblLeaveRequestModel] ([EmployeeNo], [Date], [StartDate], [EndDate], [DaysFiled], [Reason], [DateCreated], [CreatedBy], [Status])
+                                    [TblLeaveRequestModel] ([EmployeeNo], [Date], [StartDate], [EndDate], [DaysFiled], [Reason], [DateCreated], [isDeleted], [CreatedBy], [Status])
                                     VALUES ('" + list[0].EmployeeNo + "','" + list[i].Date + "','" + list[i].StartDate + "','" + list[i].EndDate + "','" + list[i].DaysFiled + "','" + list[i].Reason + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + list[0].CreatedBy + "','1004');";
 
                     db.AUIDB_WithParam(query);

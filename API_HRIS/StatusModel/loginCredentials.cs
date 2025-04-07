@@ -10,5 +10,5 @@ public partial class loginCredentials
     public string? password { get; set; }
     public string? ipaddress { get; set; }
     public string? location { get; set; }
-    public string? rememberToken { get; set; }
+    public bool? rememberToken { get; set; }
 }

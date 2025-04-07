@@ -145,7 +145,7 @@
                 </div>
                 <div class="btn-footer">
                     <li>
-                        <a href="../../LogIn/Logout" style="display: flex; align-items: center; gap: 5px;" class="nav-item" id="">
+                        <a href="#" style="display: flex; align-items: center; gap: 5px;" class="nav-item" id="" onclick="logout()">
                             <i class="fa-solid fa-right-from-bracket" style="font-size: 23px;margin-right:5px"></i>
                             <span>LogOut</span>
                         </a>
@@ -335,6 +335,7 @@
 
         var usertype = @Accessor.HttpContext.Session.GetString("UserType");
         var posLevel = @Accessor.HttpContext.Session.GetString("PositionLevel");
+        var userId = @Accessor.HttpContext.Session.GetString("UserID");
         var htmlContent ="";
         if (usertype != "2") {
             if(posLevel == 5){
@@ -655,6 +656,35 @@
                 });
         }, 1000000); // Check every 10 minutes (adjust as needed)
 
+        function logout(){
+           var data = {
+                Id: userId
+                
+            };
+            $.ajax({
+                url: '/Login/LogoutUser',
+                data: {
+                    data: data,
+                },
+                beforeSend: function () {
+                    showodcloading();
+                },
+                type: "POST",
+                datatype: "json",
+                complete: function (xhr) {
+                },
+            }).done(function (data) {
+                console.log(data);
+                if(data == "Ok"){
+                       
+                        notifyMsg('Info!', 'Logout Successfully!', 'blue', '<i class="fa-solid fa-circle-info"></i>');
+                        hideodcloading();
+                        window.location.href = "/Login/LogOut";
+                }else{
+                    notifyMsg('Warning!', data, 'red', 'fas fa-exclamation-triangle');
+                }
+            });
+        }
     </script>
     @RenderSection("Scripts", required: false)
 </body>

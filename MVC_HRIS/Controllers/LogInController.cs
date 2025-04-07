@@ -23,6 +23,10 @@ using MVC_HRIS.Manager;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using API_HRIS.Manager;
 using Newtonsoft.Json.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using static MVC_HRIS.Controllers.OverTimeController;
 namespace AOPC.Controllers
 {
 
@@ -80,7 +84,40 @@ namespace AOPC.Controllers
                 //    // Serialize the list of models and store it in TempData
 
                 //}
+                //Remember me token
+                var jwtoken = Cryptography.Encrypt(data.username + "odecci2025!" + data.username);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, jwtoken),  // Store the encrypted token (JWT) in the "Name" claim (or a custom claim type)
+                    // You can add more claims if necessary (roles, permissions, etc.)
+                };
 
+                // Step 3: Create a ClaimsIdentity with the encrypted token as part of the claims
+                var claimsIdentity = new ClaimsIdentity(claims, "MyCookieAuth");
+                var authProperties = new AuthenticationProperties
+                {
+
+                    IsPersistent = data.rememberToken ?? false, // Defaults to false if null
+                    ExpiresUtc = (data.rememberToken ?? false)
+                        ? DateTime.UtcNow.AddDays(30)
+                        : DateTime.UtcNow.AddMinutes(10)
+                };
+                if (data.rememberToken == true) { 
+                    await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                    HttpContext.Session.SetString("RememberMe", "1");
+                    // Set the custom rememberMeToken cookie
+                    HttpContext.Response.Cookies.Append(
+                        "MyCookieAuth",        // Cookie name
+                        jwtoken,               // Cookie value (encrypted token)
+                        new CookieOptions
+                        {
+                            HttpOnly = true,       // Prevent access to the cookie via JavaScript (security measure)
+                            Secure = true,         // Ensure the cookie is sent over HTTPS only
+                            Expires = DateTime.UtcNow.AddDays(30)  // Set expiration date
+                        });
+                }
+               
                 // Redirect to the dashboard
                 if (usertype == "2")
                 {
@@ -114,7 +151,7 @@ namespace AOPC.Controllers
             public string? password { get; set; }
             public string? ipaddress { get; set; }
             public string? location { get; set; }
-            public string? rememberToken { get; set; }
+            public bool? rememberToken { get; set; }
         }
         public async Task<String> LogIn(loginCredentials data)
         {
@@ -213,9 +250,7 @@ namespace AOPC.Controllers
                        "2",
                        "Unknown");
                     result = "Invalid Log IN";
-                }
-                   
-                    
+                }    
             }
 
             catch (Exception ex)
@@ -240,7 +275,6 @@ namespace AOPC.Controllers
 
             return Json(new { isLoggedIn = false });
         }
-        
         public async Task<String> GetUserType(loginCredentials data)
         {
             string result = "";
@@ -273,13 +307,26 @@ namespace AOPC.Controllers
 
         }
         // Displays the index of the current user.
-        public IActionResult Index()
+        public IActionResult Index(loginCredentials data)
         {//update
             string token = HttpContext.Session.GetString("Bearer");
             string userType = HttpContext.Session.GetString("UserType");
-            if (token != "" && token != null)
+            var cookieValue = Request.Cookies["MyCookieAuth"];
+            if(cookieValue != null)
             {
-                if(userType != "2")
+                string sql = $@"select * from tbl_UsersModel where RememberToken = '" + cookieValue+"'";
+                DataTable dt = db.SelectDb(sql).Tables[0];
+                if (dt.Rows.Count != 0)
+                {
+                    HttpContext.Session.SetString("RememberMe", "1");
+                    var pass = dt.Rows[0]["Password"].ToString();
+                    var password = Cryptography.Decrypt(pass);
+                    data.username = dt.Rows[0]["Username"].ToString();
+                    data.password = password;
+                    data.rememberToken = true;
+                }
+                LoginUser(data);
+                if (userType != "2")
                 {
                     return RedirectToAction("Index", "TimeLogs");
                 }
@@ -287,17 +334,168 @@ namespace AOPC.Controllers
                 {
                     return RedirectToAction("Index", "Dashboard");
                 }
-                    
+            }
+            else if(token != null)
+            {
+                if (userType != "2")
+                {
+                    return RedirectToAction("Index", "TimeLogs");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
             }
             else
             {
                 return View();
             }
+
+            //if (token != "" && token != null)
+            //{
+            //    if(userType != "2")
+            //    {
+            //        return RedirectToAction("Index", "TimeLogs");
+            //    }
+            //    else
+            //    {
+            //        return RedirectToAction("Index", "Dashboard");
+            //    }
+
+            //}
+            //else
+            //{
+            //    return View();
+            //}
+            //return View();
         }
-        public IActionResult Logout()
+        public IActionResult ForgotPassword()
         {
-            HttpContext.Session.SetString("Bearer","");
+            return View("~/Views/LogIn/ForgotPassword.cshtml");
+        }
+        public class UserIdParam
+        {
+            public int? Id { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> LogoutUser(UserIdParam data)
+        {
+
+            string result = "";
+
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/User/LogOut";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_val.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    result = res;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(result);
+        }
+        public async Task<IActionResult> Logout()
+        {
+
+            string rememberMe = HttpContext.Session.GetString("RememberMe") ?? "0";
+
+            HttpContext.Session.SetString("Bearer", "");
+            
+            //await HttpContext.SignOutAsync("MyCookieAuth");
+            // Remove specific cookie
+            if(rememberMe == "1")
+            {
+                Response.Cookies.Delete("MyCookieAuth");
+            }
+            Response.Cookies.Delete(".AspNetCore.Session");
+            //return Json(result);
             return RedirectToAction("Index", "LogIn");
+        }
+        public class ForgotPasswordParam
+        {
+            public string email { get; set; }
+            public string? vcode { get; set; }
+            public string? newPassword { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> SearchAccount(ForgotPasswordParam data)
+        {
+            string result = "";
+            
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/User/SearchAccount";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_val.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    result = res;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SearchAccountByVerificationCode(ForgotPasswordParam data)
+        {
+            string result = "";
+
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/User/SearchAccountByVerificationCode";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_val.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    result = res;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveNewPassword(ForgotPasswordParam data)
+        {
+            string result = "";
+
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/User/SaveNewPassword";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_val.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    result = res;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(result);
         }
     }
 }
