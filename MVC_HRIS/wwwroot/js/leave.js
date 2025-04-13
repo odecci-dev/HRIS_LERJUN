@@ -13,8 +13,8 @@ function FetchLeaveRequestList() {
     };
     //console.log(data);
     var dtProperties = {
-        responsive: true, // Enable responsive behavior
-        scrollX: true,    // Enable horizontal scrolling if needed
+        //responsive: true, // Enable responsive behavior
+        //scrollX: true,    // Enable horizontal scrolling if needed
         //processing: true,
         //serverSide: true,
         ajax: {
@@ -24,7 +24,7 @@ function FetchLeaveRequestList() {
                 data: data
             },
             dataType: "json",
-            //processing: true,
+            processing: true,
             //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
@@ -37,7 +37,7 @@ function FetchLeaveRequestList() {
             }
         },
         "columns": [
-            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
+            { "title": "<input type='checkbox' id='checkAllLRList' class='checkAllLRList'>", "data": null, "orderable": false },
             {
                 "title": "LR-Number",
                 "data": "leaveRequestNo", "orderable": false
@@ -85,8 +85,7 @@ function FetchLeaveRequestList() {
 
                     return badge;
                 }
-            }
-            ,
+            },
             {
                 "title": "Action",
                 "data": "id", "orderable": false,
@@ -116,7 +115,14 @@ function FetchLeaveRequestList() {
                 width: "5%", // Adjust width
                 "className": "text-center",
                 render: function (data, type, row) {
-                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+
+                    if (row.status == 1004) {
+                        return '<input type="checkbox" class="lr-list-row-checkbox" value="' + row.id + '">';
+                    }
+                    else {
+                        return '';
+
+                    }
                 }
             },
             {
@@ -203,119 +209,11 @@ function viewRejectedLR() {
             statusLabel.innerHTML = "Rejected"
         }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
     }
-} 
+}
 function downloadLeaveTemplate() {
     location.replace('../Leave/DownloadHeader');
 }
-document.addEventListener("DOMContentLoaded", function () {
-    const plrmonthSelect = document.getElementById("plr-monthSelect");
-    const plrcurrentYear = new Date().getFullYear();
 
-    for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
-        const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
-        const plroption = document.createElement("option");
-        plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
-        plroption.text = `${plrmonthName} ${plrcurrentYear}`;
-        plrmonthSelect.appendChild(plroption);
-    }
-    plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    setCutOffDatesPLR();
-    //const lrmonthSelect = document.getElementById("lr-monthSelect");
-    //const lrcurrentYear = new Date().getFullYear();
-    //for (let lrmonth = 0; lrmonth < 12; lrmonth++) {
-    //    const lrmonthName = new Date(lrcurrentYear, lrmonth).toLocaleString('default', { month: 'long' });
-    //    const lroption = document.createElement("option");
-    //    lroption.value = `${lrcurrentYear}-${String(lrmonth + 1).padStart(2, '0')}`;
-    //    lroption.text = `${lrmonthName} ${lrcurrentYear}`;
-    //    lrmonthSelect.appendChild(lroption);
-    //}
-    //// Set default to current month
-    //potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    //plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    //setCutOffDatesPLR();
-});
-function setCutOffDatesPLR() {
-    //const lrselectedMonth = document.getElementById("lr-monthSelect").value;
-    //const lrCuttOff = document.getElementById("lrCuttOff").value;;
-    //const [year, month] = lrselectedMonth.split('-').map(Number);
-    const plrselectedMonth = document.getElementById("plr-monthSelect").value;
-    const plrCuttOff = document.getElementById("plrCuttOff").value
-    const [plryear, plrmonth] = plrselectedMonth.split('-').map(Number);
-
-    //let fromDate, toDate;
-    //console.log(month);
-    //if (lrCuttOff == 0) {
-    //    fromDate = new Date(year, month - 2, 26);
-    //    toDate = new Date(year, month - 1, 10);
-    //} else if (lrCuttOff == 1) {
-    //    fromDate = new Date(year, month - 1, 11);
-    //    toDate = new Date(year, month - 1, 25);
-    //}
-    if (plrCuttOff == 0) {
-        plrfromDate = new Date(plryear, plrmonth - 2, 26);
-        plrtoDate = new Date(plryear, plrmonth - 1, 10);
-    } else if (plrCuttOff == 1) {
-        plrfromDate = new Date(plryear, plrmonth - 1, 11);
-        plrtoDate = new Date(plryear, plrmonth - 1, 25);
-    }
-    // Adjust to weekday if falls on weekend
-    //fromDate = stladjustToWeekday(fromDate);
-    //toDate = stladjustToWeekday(toDate);
-    // Adjust to weekday if falls on weekend
-    plrfromDate = stladjustToWeekday(plrfromDate);
-    plrtoDate = stladjustToWeekday(plrtoDate);
-
-    //// Format as YYYY-MM-DD
-    //const formatFromDate = (fromDate) => {
-    //    let year = fromDate.getFullYear();
-    //    let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
-    //    let day = fromDate.getDate();
-    //    // Ensure month and day are always two digits
-    //    if (month < 10) month = '0' + month;
-    //    if (day < 10) day = '0' + day;
-    //    return `${year}-${month}-${day}`;
-    //};
-    //const formatToDate = (toDate) => {
-    //    let year = toDate.getFullYear();
-    //    let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
-    //    let day = toDate.getDate();
-    //    // Ensure month and day are always two digits
-    //    if (month < 10) month = '0' + month;
-    //    if (day < 10) day = '0' + day;
-    //    return `${year}-${month}-${day}`;
-    //};
-    const formatPLRFromDate = (plrfromDate) => {
-        let year = plrfromDate.getFullYear();
-        let month = plrfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
-        let day = plrfromDate.getDate();
-        // Ensure month and day are always two digits
-        if (month < 10) month = '0' + month;
-        if (day < 10) day = '0' + day;
-        return `${year}-${month}-${day}`;
-    };
-    const formatPLRToDate = (plrtoDate) => {
-        let year = plrtoDate.getFullYear();
-        let month = plrtoDate.getMonth() + 1; // Month is zero-indexed, so add 1
-        let day = plrtoDate.getDate();
-        // Ensure month and day are always two digits
-        if (month < 10) month = '0' + month;
-        if (day < 10) day = '0' + day;
-        return `${year}-${month}-${day}`;
-    };
-    //document.getElementById('lr-datefrom').value = formatFromDate(fromDate);
-    //document.getElementById('lr-dateto').value = formatToDate(toDate);
-    document.getElementById('plr-datefrom').value = formatPLRFromDate(plrfromDate);
-    document.getElementById('plr-dateto').value = formatPLRToDate(plrtoDate);
-}
-
-$('#plrCuttOff').on('change', function () {
-    setCutOffDatesPLR();
-    initializeLeaveDataTable();
-});
-$('#plr-monthSelect').on('change', function () {
-    setCutOffDatesPLR();
-    initializeLeaveDataTable();
-});
 $('#plr-datefrom').on('change', function () {
     initializeLeaveDataTable();
 });

@@ -11,10 +11,10 @@ function FetchOvertimeList() {
         EndDate: edate,
         EmployeeNo: EmployeeID
     };
-    console.log(data);
+    //console.log(data);
     var dtProperties = {
-        responsive: true, // Enable responsive behavior
-        scrollX: true,    // Enable horizontal scrolling if needed
+        //responsive: true, // Enable responsive behavior
+        //scrollX: true,    // Enable horizontal scrolling if needed
         //processing: true,
         //serverSide: true,
         ajax: {
@@ -25,7 +25,7 @@ function FetchOvertimeList() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
@@ -37,7 +37,7 @@ function FetchOvertimeList() {
             }
         },
         "columns": [
-            { "title": "<input type='checkbox' id='checkAll'>", "data": null, "orderable": false },
+            { "title": "<input type='checkbox' id='checkAllOTList' class='checkAllOTList'>", "data": null, "orderable": false },
             {
                 "title": "OT-Number",
                 "data": "otNo", "orderable": false
@@ -89,6 +89,24 @@ function FetchOvertimeList() {
             {
                 "title": "Status",
                 "data": "statusName", "orderable": false
+            },
+            {
+                "title": "Action",
+                "data": "id", "orderable": false,
+                "render": function (data, type, row) {
+                    var button = '';
+                    if (row.statusName == 'PENDING') {
+                        button = `<a class="editot" style="cursor: pointer" 
+                                    data-id="${data}"
+                                    data-sdate="${row.startDate}" 
+                                    data-edate="${row.endDate}" 
+                                    data-dfiled="${row.daysFiled}" 
+                                    data-leavetype="${row.leaveTypeId}" 
+                                    data-reason="${row.reason}" 
+                                id="editot"><svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"></path><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"></polygon></svg></a>`;
+                    }
+                    return button;
+                }
             }
         ],
         //dom: 't',
@@ -101,7 +119,12 @@ function FetchOvertimeList() {
                 width: "5%", // Adjust width
                 "className": "text-center",
                 render: function (data, type, row) {
-                    return '<input type="checkbox" class="row-checkbox" value="' + row.id + '">';
+                    if (row.statusName == 'PENDING') {
+                        return '<input type="checkbox" class="ot-list-row-checkbox" value="' + row.id + '">';
+                    }
+                    else {
+                        return '';
+                    }
                 }
             },
             {
@@ -198,6 +221,7 @@ function FetchOvertimeList() {
 function OverTimeDOM() {
     $("#otsumbit").on("submit", function (event) {
         event.preventDefault();
+        //alert('Hello World')
         //$.ajax({
         //    url: '/Overtime/SaveSalary',
         //    data: data,
@@ -218,115 +242,13 @@ function OverTimeDOM() {
         //});
 
     });
+
+
+
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const potmonthSelect = document.getElementById("pot-monthSelect");
-    const potcurrentYear = new Date().getFullYear();
-    for (let potmonth = 0; potmonth < 12; potmonth++) {
-        const potmonthName = new Date(potcurrentYear, potmonth).toLocaleString('default', { month: 'long' });
-        const potoption = document.createElement("option");
-        potoption.value = `${potcurrentYear}-${String(potmonth + 1).padStart(2, '0')}`;
-        potoption.text = `${potmonthName} ${potcurrentYear}`;
-        potmonthSelect.appendChild(potoption);
-    }
-    // Set default to current month
-    potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    setCutOffDatesPOT();
 
-    //const otmonthSelect = document.getElementById("ot-monthSelect");
-    //const otcurrentYear = new Date().getFullYear();
-    //for (let otmonth = 0; otmonth < 12; otmonth++) {
-    //    const otmonthName = new Date(otcurrentYear, otmonth).toLocaleString('default', { month: 'long' });
-    //    const otoption = document.createElement("option");
-    //    otoption.value = `${otcurrentYear}-${String(otmonth + 1).padStart(2, '0')}`;
-    //    otoption.text = `${otmonthName} ${otcurrentYear}`;
-    //    otmonthSelect.appendChild(otoption);
-    //}
-    //otmonthSelect.value = `${otcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-    //setCutOffDatesPOT();
-});
-function setCutOffDatesPOT() {
-    const potselectedMonth = document.getElementById("pot-monthSelect").value;
-    const potCuttOff = document.getElementById("potCuttOff").value;
-    const [year, month] = potselectedMonth.split('-').map(Number);
-    let fromDate, toDate;
-    //console.log(month);
-    if (potCuttOff == 0) {
-        fromDate = new Date(year, month - 2, 26);
-        toDate = new Date(year, month - 1, 10);
-    } else if (potCuttOff == 1) {
-        fromDate = new Date(year, month - 1, 11);
-        toDate = new Date(year, month - 1, 25);
-    }
 
-    // Format as YYYY-MM-DD
-    const formatFromDate = (fromDate) => {
-        let year = fromDate.getFullYear();
-        let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
-        let day = fromDate.getDate();
-        // Ensure month and day are always two digits
-        if (month < 10) month = '0' + month;
-        if (day < 10) day = '0' + day;
-        return `${year}-${month}-${day}`;
-    };
-    const formatToDate = (toDate) => {
-        let year = toDate.getFullYear();
-        let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
-        let day = toDate.getDate();
-        // Ensure month and day are always two digits
-        if (month < 10) month = '0' + month;
-        if (day < 10) day = '0' + day;
-        return `${year}-${month}-${day}`;
-    };
-    document.getElementById('pot-datefrom').value = formatFromDate(fromDate);
-    document.getElementById('pot-dateto').value = formatToDate(toDate);
-
-    //const otselectedMonth = document.getElementById("ot-monthSelect").value;
-    //const otCuttOff = document.getElementById("otCuttOff").value;
-    //const [otyear, otmonth] = otselectedMonth.split('-').map(Number);
-    //// Adjust to weekday if falls on weekend
-    //fromDate = stladjustToWeekday(fromDate);
-    //toDate = stladjustToWeekday(toDate);
-    //if (otCuttOff == 0) {
-    //    otfromDate = new Date(otyear, otmonth - 2, 26);
-    //    ottoDate = new Date(otyear, otmonth - 1, 10);
-    //} else if (otCuttOff == 1) {
-    //    otfromDate = new Date(otyear, otmonth - 1, 11);
-    //    ottoDate = new Date(otyear, otmonth - 1, 25);
-    //}
-    //// Adjust to weekday if falls on weekend
-    //otfromDate = stladjustToWeekday(otfromDate);
-    //ottoDate = stladjustToWeekday(ottoDate);
-    //const formatOTFromDate = (otfromDate) => {
-    //    let year = otfromDate.getFullYear();
-    //    let month = otfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
-    //    let day = otfromDate.getDate();
-    //    // Ensure month and day are always two digits
-    //    if (month < 10) month = '0' + month;
-    //    if (day < 10) day = '0' + day;
-    //    return `${year}-${month}-${day}`;
-    //};
-    //const formatOTToDate = (ottoDate) => {
-    //    let year = ottoDate.getFullYear();
-    //    let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
-    //    let day = ottoDate.getDate();
-    //    // Ensure month and day are always two digits
-    //    if (month < 10) month = '0' + month;
-    //    if (day < 10) day = '0' + day;
-    //    return `${year}-${month}-${day}`;
-    //};
-    //document.getElementById('ot-datefrom').value = formatOTFromDate(otfromDate);
-    //document.getElementById('ot-dateto').value = formatOTToDate(ottoDate);
-}
-$('#potCuttOff').on('change', function () {
-    setCutOffDatesPOT();
-    initializeOTDataTable();
-});
-$('#pot-monthSelect').on('change', function () {
-    setCutOffDatesPOT();
-    initializeOTDataTable();
-});
 
 //$('#otCuttOff').on('change', function () {
 //    setCutOffDatesPOT();
@@ -347,7 +269,7 @@ function viewRejectedOT() {
             statusLabel.innerHTML = "Pending"
         }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
 
-        
+
     }
     else {
         otStatusFilter = 0;
@@ -358,7 +280,7 @@ function viewRejectedOT() {
             statusLabel.innerHTML = "Rejected"
         }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
     }
-} 
+}
 function downloadTemplate() {
     location.replace('../OverTime/DownloadHeader');
 }

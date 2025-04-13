@@ -1110,5 +1110,76 @@ namespace API_HRIS.Controllers
             }
         }
 
+
+        public class multiApprovalParamTLList
+        {
+            public int? Id { get; set; }
+            public string? reason { get; set; }
+        }
+        public class multiApprovalTLParam
+        {
+            public int? Status { get; set; }
+            public List<multiApprovalParamTLList>? tlapproval { get; set; }
+        }
+        [HttpPost]
+        public async Task<ActionResult<TblTimeLog>> MultiUpdateStatus(multiApprovalTLParam data)
+        {
+            string status = "";
+
+            try
+            {
+                for (int i = 0; i < data.tlapproval.Count; i++)
+                {
+                    Console.WriteLine(data.tlapproval[i].Id);
+                    //var existingItem = await _context.TblTimeLogs.FindAsync(data.tlapproval[i].Id);
+
+                    if (data.Status == 0)
+                    {
+                        //existingItem.StatusId = 2;
+                        string query = $@"UPDATE [tbl_TimeLogs]
+	                        SET StatusId = '2'"
+                            + ", ApprovalReason  = '" + data.tlapproval[i].reason + "'"
+                        + " WHERE Id = '" + data.tlapproval[i].Id + "'";
+                        db.AUIDB_WithParam(query);
+                    }
+                    else if (data.Status == 1)
+                    {
+                        //existingItem.StatusId = 1;
+                        string query = $@"UPDATE [tbl_TimeLogs]
+	                        SET StatusId = '1'"
+                            + ", ApprovalReason  = '" + data.tlapproval[i].reason + "'"
+                        + " WHERE Id = '" + data.tlapproval[i].Id + "'";
+                        db.AUIDB_WithParam(query);
+                    }
+
+                    else if (data.Status == 2)
+                    {
+                        //existingItem.DeleteFlag = 0;
+                        string query = $@"UPDATE [tbl_TimeLogs]
+	                        SET DeleteFlag = '1'"
+                        + " WHERE Id = '" + data.tlapproval[i].Id + "'";
+                        db.AUIDB_WithParam(query);
+
+                    }
+                    //existingItem.ApprovalReason = data.tlapproval[i].reason;
+                    //_context.Entry(existingItem).Property(x => x.StatusId).IsModified = true;
+                    //_context.Entry(existingItem).Property(x => x.ApprovalReason).IsModified = true;
+                    //_context.Entry(existingItem).Property(x => x.DeleteFlag).IsModified = true;
+                    //_context.TblLeaveRequestModel.Update(existingItem);
+                    await _context.SaveChangesAsync();
+                    status = "Timelogs request successfully deleted";
+                    dbmet.InsertAuditTrail("Update Timelogs request" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Timelogs request Module", "User", "0");
+
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                dbmet.InsertAuditTrail("Update Timelogs request" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Timelogs request Module", "User", "0");
+                return Problem(ex.GetBaseException().ToString());
+            }
+        }
+
     }
 }

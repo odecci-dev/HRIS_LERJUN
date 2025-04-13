@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="~/css/department.css" />
     <link rel="stylesheet" href="~/css/overtime.css" />
     <link rel="stylesheet" href="~/css/actiondropdown.css" />
-    <link rel="stylesheet" href="~/css/employee.css  />
+    <link rel="stylesheet" href="~/css/employee.css   />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
@@ -181,7 +181,7 @@
     @* <script src="~/js/site.js" asp-append-version="true"></script> *@
     <!-- jQuery -->
     <script src="~/plugins/jquery/jquery.min.js"></script>
-   
+
     <!-- Bootstrap 4 -->
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- DataTables  & Plugins -->
@@ -645,7 +645,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (!data.isLoggedIn) {
-                        window.location.href = '/Login/Index';
+                        logout();
                     }
                     else{
                         console.log("LoggedIn")
@@ -654,12 +654,13 @@
                 .catch(error => {
                     console.error('Session check failed:', error);
                 });
+            // }, 5000);
         }, 1000000); // Check every 10 minutes (adjust as needed)
 
         function logout(){
            var data = {
                 Id: userId
-                
+
             };
             $.ajax({
                 url: '/Login/LogoutUser',
@@ -667,7 +668,7 @@
                     data: data,
                 },
                 beforeSend: function () {
-                    showodcloading();
+                    // showodcloading();
                 },
                 type: "POST",
                 datatype: "json",
@@ -676,9 +677,9 @@
             }).done(function (data) {
                 console.log(data);
                 if(data == "Ok"){
-                       
+
                         notifyMsg('Info!', 'Logout Successfully!', 'blue', '<i class="fa-solid fa-circle-info"></i>');
-                        hideodcloading();
+                        // hideodcloading();
                         window.location.href = "/Login/LogOut";
                 }else{
                     notifyMsg('Warning!', data, 'red', 'fas fa-exclamation-triangle');

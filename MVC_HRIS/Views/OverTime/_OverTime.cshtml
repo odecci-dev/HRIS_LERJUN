@@ -117,40 +117,40 @@
         <div id="time-btn-holder" class="time-btn-holder">
         </div> *@
         <div class="layer">
-                            <div class="input-holder">
-                                <span class="text-left text-dark">From:</span>
-                                <div class="date-input">
-                                    <input type="date" id="ot-datefrom" class="mod-inputs-nw" placeholder="Date" />
-                                </div>
-                            </div>
-                            <div class="input-holder">
-                                <span class="text-left text-dark">To:</span>
-                                <div class="date-input">
-                                    <input type="date" id="ot-dateto" class="mod-inputs-nw" placeholder="Date" />
-                                </div>
-                            </div>
-                            <div class="input-holder">
-                                @* <span class="text-left text-dark">Months:</span> *@
-                                <div class="date-input">
-                                    <select id="ot-monthSelect" class="form-control"></select>
-                                </div>
-                            </div>
+            <div class="input-holder">
+                <span class="text-left text-dark">From:</span>
+                <div class="date-input">
+                    <input type="date" id="ot-datefrom" class="mod-inputs-nw" placeholder="Date" />
+                </div>
+            </div>
+            <div class="input-holder">
+                <span class="text-left text-dark">To:</span>
+                <div class="date-input">
+                    <input type="date" id="ot-dateto" class="mod-inputs-nw" placeholder="Date" />
+                </div>
+            </div>
+            <div class="input-holder">
+                @* <span class="text-left text-dark">Months:</span> *@
+                <div class="date-input">
+                    <select id="ot-monthSelect" class="form-control"></select>
+                </div>
+            </div>
 
-                            <div class="input-holder">
-                                @* <span class="text-left">Filter User:</span> *@
-                                <select id="otCuttOff">
-                                    <option value="0" selected> First Cutt-off</option>
-                                    <option value="1"> Second Cutt-off</option>
-                                </select>
-                            </div>
-                        </div>
+            <div class="input-holder">
+                @* <span class="text-left">Filter User:</span> *@
+                <select id="otCuttOff">
+                    <option value="0" selected> First Cutt-off</option>
+                    <option value="1"> Second Cutt-off</option>
+                </select>
+            </div>
+        </div>
     </div>
     <div class="d-flex action-navbar-2">
         <div class="date-input" style=" display: flex; gap: 15px; align-items: center;">
             <button class="btn btn-info" id="otfile" title="Add New">
                 <i class="fa-solid fa-circle-plus"></i> Add New
             </button>
-            <button class="btn btn-danger" id="show-timeout-modal" title="Delete">
+            <button class="btn btn-danger" id="show-timeout-modal" title="Delete" onclick="DeleteOvertime()">
                 <i class="fa-solid fa-circle-minus"></i> Delete
             </button>
             <button class="btn btn-warning" id="btn-refresh" title="Refresh">
@@ -162,27 +162,64 @@
             <button class="btn btn-success" id="add-timelogs" title="Export" onclick="myFunctionOpen()">
                 <i class="fa-solid fa-file-arrow-down"></i> Export
             </button> *@
-            @using (Html.BeginForm("Index", "Filing", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                <label for="file" class="btn btn-primary" style="font-weight: 400" >
-                    @* <div class="custum-file-upload"> *@
-                        @* <i class="fa-solid fa-file-import"></i>
-                        Import
-                        <input id="file" type="file" onchange="submitForm()"> *@
-                        
-                    @* </div> *@
-                    <input id="upload-excel" type="file" size="1" name="file" accept="excel/*" class="form-control-sm mb-1">
-                    <button type="submit" class="btn btn-success btn-block mb-1" id="btnimport" data-toggle="tooltip" title="Import Excel">
-                        @* <i class="fas fa-upload"></i>  *@
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" /></svg>
-                        Upload
-                    </button>
-                    
-                </label>
-            }
-            <button class="btn btn-secondary" id="add-timelogs" title="Download" onclick="downloadTemplate()">
-                <i class="fa-solid fa-file-arrow-down"></i> Download Template
+            <div class="filing-container" id="ot-filing-container">
+                <div class="filing-card">
+                    <div class="card-header">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M12 4v10m0 0l3-3m-3 3l-3-3" /><path d="M12 20a8 8 0 0 1-8-8m16 0a7.99 7.99 0 0 1-3 6.245" /></g></svg>
+                            Import
+                        </h4>
+                    </div>
+                    @using (Html.BeginForm("Index", "Filing", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <label for="file" class="" style="font-weight: 400">
+                            @* <div class="custum-file-upload"> *@
+                            @* <i class="fa-solid fa-file-import"></i>
+                                Import
+                                <input id="file" type="file" onchange="submitForm()"> *@
+
+                            @* </div> *@
+                            @* <input id="upload-excel" type="file" size="1" name="file" accept="excel/*" class="form-control-sm mb-1"> *@
+                            @* <button type="submit" class="btn btn-success btn-upload" id="btnimport" data-toggle="tooltip" title="Import Excel"> *@
+                            @* <i class="fas fa-upload"></i>  *@
+                            @* <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" /></svg> *@
+                            @* Upload
+                            </button> *@
+                            <div class="drop-zone" id="drop-zone">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 22c-9 1-8-10 0-9C6 2 23 2 22 10c10-3 10 13 1 12m-12-4l5-4l5 4m-5-4v15" /></svg>
+                                <p id="drag-file-label">Click or drag file to this area to upload</p>
+                                <input id="upload-excel" type="file" size="1" name="file" accept="excel/*" class="form-control-sm mb-1" required>
+                            </div>
+                            <div class="card-header">
+                                <p>Formats accepted are .csv and .xlsx</p>
+                            </div>
+                        </label>
+                        <div class="dl-template">
+                            <p>If you do not have a file you can use the template below:</p>
+                            <span class="btn btn-secondary template" id="add-timelogs" title="Download" onclick="downloadTemplate()">
+                                @* <i class="fa-solid fa-file-arrow-down"></i> *@ 
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="#31aa2c" stroke-linecap="round" d="M3.5 5.5h1m-1 2h1m-1 2h1m2-4h2m-2 2h2m-2 2h2m2-6.29V11c0 .28-.22.5-.5.5H2c-.28 0-.5-.22-.5-.5V1c0-.28.22-.5.5-.5h5.79c.13 0 .26.05.35.15l2.21 2.21c.1.09.15.21.15.35zM7.5.5V3c0 .28.22.5.5.5h2.5" stroke-width="1" /></svg>
+                                Download Template
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <span class="btn btn-success cancel" id="ot-close-filing-container"> Cancel</span>
+                            <button type="submit" class="btn btn-success upload" id="" data-toggle="tooltip" title="Import Excel">
+                                @* <i class="fas fa-upload"></i>  *@
+                                @* <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" /></svg> *@
+                                Upload
+                            </button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <button class="btn btn-primary" id="import-overtime" title="Import" onclick="">
+                <i class="fa-solid fa-file-import"></i> Import
             </button>
+            @* <button class="btn btn-secondary" id="add-timelogs" title="Download" onclick="downloadTemplate()">
+                <i class="fa-solid fa-file-arrow-down"></i> Download Template
+            </button> *@
         </div>
 
         <div id="time-btn-holder" class="time-btn-holder">
@@ -207,11 +244,14 @@
 <script src="~/js/overtime.js"></script>
 <script>
     var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
+    var otfilename = "";
+    const selectedOTRequest = []
     $(document).ready(function () {
         var tableId = '#overtime-table';
         if ($.fn.DataTable.isDataTable(tableId)) {
             $(tableId).DataTable().clear().destroy();
         }
+        overtimeFileDrag();
         FetchOvertimeList();
         $("#checkAll").click(function () {
             $("input:checkbox").not(this).prop("checked", this.checked);
@@ -223,9 +263,89 @@
             }
         });
     });
+    function overtimeFileDrag(){
+        const dropZone = document.getElementById("drop-zone");
+        const otfileInput = document.getElementById("upload-excel");
+
+        // Open file picker on click
+        dropZone.addEventListener("click", () => otfileInput.click());
+
+        // Highlight drop area on drag over
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("dragover");
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+          dropZone.classList.remove("dragover");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("dragover");
+
+          const files = e.dataTransfer.files;
+          othandleFiles(files);
+          if (files.length > 0) {
+                console.log('Dropped file:', files[0]);
+
+                // Optional: simulate setting the input's file list
+                const dataTransfer = new DataTransfer(); // or ClipboardEvent().clipboardData
+                for (let i = 0; i < files.length; i++) {
+                    dataTransfer.items.add(files[i]);
+                }
+                otfileInput.files = dataTransfer.files;
+
+                // Now fileInput.files has the dropped file(s)
+                // You can trigger a function to handle upload or preview
+            }
+        });
+
+        // Handle files from input
+        otfileInput.addEventListener("change", () => {
+            othandleFiles(otfileInput.files);
 
 
 
+        });
+        // fileInput.addEventListener("change", () => {
+        //     if (fileInput.files.length > 0) {
+        //     const fileName = fileInput.files[0].name;
+        //     console.log("Selected file name:", fileName);
+        //     // Optional: display the name in the UI
+        //     document.getElementById("drag-file-label").textContent = fileName;
+        //     }
+        // });
+    }
+    function othandleFiles(files) {
+        // You can upload the files here or just log them
+        console.log("Files uploaded:", files[0].name);
+        // Example: Upload to server or display preview
+        otfilename = files[0].name;
+        document.getElementById("drag-file-label").textContent = otfilename;
+        const text = document.getElementById("drag-file-label");
+        const colors = ["green"];
+        let colorIndex = 0;
+        let visible = true;
+        text.style.fontWeight = "800";
+        setInterval(() => {
+          // Toggle visibility
+          text.style.visibility = visible ? "hidden" : "visible";
+          visible = !visible;
+
+          // Change color on each blink
+          if (visible) {
+            text.style.color = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+          }
+        }, 500); // Blink interval: 500ms
+    }
+    $("#import-overtime").click(function () {
+        document.getElementById('ot-filing-container').style.display = "block";
+    });
+    $("#ot-close-filing-container").click(function () {
+        document.getElementById('ot-filing-container').style.display = "none";
+    });
     $("#otfile").on("click", function () {
         loadModal('/OverTime/OTFiling', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> New Overtime ', 'l', false)
     });
@@ -239,11 +359,11 @@
     function submitForm() {
             // Trigger form submission when a file is chosen
             document.getElementById('uploadOTForm').submit();
-            alert("Hello World!")
+            // alert("Hello World!")
         }
 
     document.addEventListener("DOMContentLoaded", function () {
-        
+
         const otmonthSelect = document.getElementById("ot-monthSelect");
         const otcurrentYear = new Date().getFullYear();
         for (let otmonth = 0; otmonth < 12; otmonth++) {
@@ -301,5 +421,105 @@
     });
     $('#ot-dateto').on('change', function () {
        FetchOvertimeList();
+    });
+    function OTConfimationmodal() {
+            var element = document.querySelectorAll(".modal-header");
+            var content = document.querySelectorAll(".modal-content");
+            var modal_span = document.querySelectorAll(".modal-header span");
+            var delete_ = '<span  value="YES" id="btn-delete_item" class="btn-pay modal-button"  onclick="deleteotitem()"/>';
+            var cancelButton = '<span  value="NO" id="btn-cancel" class="btn-NO modal-button" data-dismiss="modal"/>';
+            $('.input-container-button').empty();
+            $('.img-header').empty();
+
+            content.forEach(content => {
+                content.style.setProperty("border-radius", "15px 15px 15px 15px", "important");
+                content.style.setProperty("border-bottom", "7px #Ff0000 solid", "important");
+
+            });
+            modal_span.forEach(modal_span => {
+                modal_span.style.setProperty("text-align", "center", "important");
+                modal_span.style.setProperty("width", "100%", "important");
+            });
+            element.forEach(element => {
+                element.style.setProperty("color", "white", "important");
+                element.style.setProperty("background-color", "#Ff0000", "important");
+                element.style.setProperty("border-radius", "15px 15px 0 0", "important");
+                element.style.setProperty("text-align", "center", "important");
+            });
+            document.getElementById('message').textContent = 'Are you sure you want to delete this item?';
+            document.getElementById('validation').textContent = 'Confirmation';
+            $('.input-container-button').append(cancelButton);
+            $('.input-container-button').append(delete_);
+            $('.img-header').append('<img id="modalImage" src="/img/OPTION.webp" alt="Modal Image" />');
+        }
+    function DeleteOvertime(){
+        otStatusIdentifier = 1;
+        var checkboxes = document.querySelectorAll('.ot-list-row-checkbox');
+        var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+        if(checkedCheckboxes.length == 0){
+            // alert('Select Overtime Request First');
+            notifyMsg("Warning!",'No overtime selected', "orange", "fas fa-exclamation-triangle");
+        }
+        else{
+
+            OTConfimationmodal();
+            $("#alertmodal").modal('show');
+            selectedOTRequest.length = 0;
+            for (var checkbox of checkedCheckboxes) {
+                var value = checkbox.value;
+                selectedOTRequest.push(value);
+            }
+            console.log(selectedOTRequest);
+        }
+    }
+    function deleteotitem(){
+        // alert('Deleted');
+        const otapproval = []
+        for(var i = 0; i < selectedOTRequest.length; i++){
+            otapproval.push({ id: selectedOTRequest[i], reason: '0', hoursApproved: '0'});
+        }
+
+        var data = {};
+            data.otapproval = otapproval;
+            data.status = '2';
+            console.log(data)
+
+            $.ajax({
+                url: '/Overtime/MultiApproval',
+                data: data,
+                type: "POST",
+                dataType: "json"
+            }).done(function (data) {
+                var status = data.status;
+                console.log(status);
+                if (status === 'Entity already exists') {
+                    notifyMsg('Warning!', 'OT already exists', 'yellow', 'fas fa-check');
+                }
+                else {
+                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                }
+
+                modal = document.getElementById('defaultmodal');
+                modal.style.display = "none";
+                // window.location.reload();
+                sessionStorage.setItem("LeaveFlag", "true");
+                window.location.reload();
+            });
+    }
+    $('#overtime-table').on('click', '.checkAllOTList', function () {
+        var checkAll = document.getElementById("checkAllOTList");
+        if (checkAll.checked == true) {
+            var checkboxes = document.querySelectorAll('.ot-list-row-checkbox');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        }
+
+        else {
+            var checkboxes = document.querySelectorAll('.ot-list-row-checkbox');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = false;
+            }
+        }
     });
 </script>

@@ -19,10 +19,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
 
     <style>
-        .modal-dialog{
+        .modal-dialog {
             max-width: fit-content;
         }
-       
     </style>
 </head>
 <body>
@@ -56,19 +55,19 @@
 
         var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
         var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
-        
+
         $(document).ready(function () {
 
         initializeToApprovedOTDataTable();
         });
-        
+
         function initializeToApprovedOTDataTable() {
 
             var tableId = '#to-approve-ot-table';
             if ($.fn.DataTable.isDataTable(tableId)) {
                 $(tableId).DataTable().clear().destroy();
             }
-                
+
             let data = {
                 Id: selectedRequest
             };
@@ -145,7 +144,7 @@
                 dom: 'rtip',
                 columnDefs: [
 
-                       
+
                     {
                         targets: [0], // OT-Number column
                         width: "10%"
@@ -194,10 +193,10 @@
             $(tableId + '_filter input').attr('placeholder', 'Searching...');
             $(tableId + ' tbody').on('click', 'tr', function () {
                 var data = table.row(this).data();
-            }); 
+            });
             const inputs = document.querySelectorAll('input[type="number"].approve-hours');
             if(otStatusIdentifier == 0){
-                
+
                 inputs.forEach(function(input) {
                     input.disabled = true;  // Disable the input
                     input.value = '0';
@@ -218,7 +217,6 @@
          var otapproval = [];
          $('#approveotsumbit').submit(function (e) {
             e.preventDefault();
-
             document.querySelectorAll("textarea[data-id]").forEach(el => {
                 let hoursInput = document.querySelector(`input[data-id="${el.dataset.id}"]`); // Find the matching input field
                 // otapproval.push({ id: el.dataset.id, reason: el.value, hoursApproved: hoursInput });
@@ -257,7 +255,7 @@
          });
 
         $('#to-approve-ot-table').on('change', '.approve-hours', function () {
-            
+
             var filed = $(this).data('filed');
             var value = $(this).val();
             var id = $(this).data('id');
