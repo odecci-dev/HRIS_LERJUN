@@ -43,7 +43,7 @@ namespace AOPC.Controllers
         private string apiUrl = "http://";
         private string status = "";
         private readonly QueryValueService token_val;
-        public LogInController( IOptions<AppSettings> appSettings, IWebHostEnvironment _environment,
+        public LogInController(IOptions<AppSettings> appSettings, IWebHostEnvironment _environment,
                   IHttpContextAccessor contextAccessor,
                   IConfiguration configuration, QueryValueService _token)
         {
@@ -60,7 +60,10 @@ namespace AOPC.Controllers
         {
             // Assuming LogIn is a method that returns a status string
             var status = await LogIn(data);
-            if (status.Status == "Ok")
+            //var usertype = await GetUserType(data);
+
+            string usertype = HttpContext.Session.GetString("UserType");
+            if (status == "Ok")
             {
                 // Get the token value
                 //string token = token_val.GetValue();
@@ -101,28 +104,27 @@ namespace AOPC.Controllers
                         ? DateTime.UtcNow.AddDays(30)
                         : DateTime.UtcNow.AddMinutes(10)
                 };
-                if (data.rememberToken == true) { 
-                    await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                    HttpContext.Session.SetString("RememberMe", "1");
-                    // Set the custom rememberMeToken cookie
+                // Only create the cookie if rememberToken is true
+                if (data.rememberToken == true)
+                {
                     HttpContext.Response.Cookies.Append(
-                        "MyCookieAuth",        // Cookie name
-                        jwtoken,               // Cookie value (encrypted token)
+                        "MyCookieAuth",
+                        jwtoken,
                         new CookieOptions
                         {
-                            HttpOnly = true,       // Prevent access to the cookie via JavaScript (security measure)
-                            Secure = true,         // Ensure the cookie is sent over HTTPS only
-                            Expires = DateTime.UtcNow.AddDays(30)  // Set expiration date
+                            HttpOnly = true,
+                            Secure = true,
+                            Expires = DateTime.UtcNow.AddDays(30)
                         });
                 }
-               
+                //await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(claimsIdentity), authProperties);
                 // Redirect to the dashboard
-                if (status.UserType == "2")
+                if (usertype == "2")
                 {
                     return Json(new { redirectToUrl = Url.Action("Index", "Dashboard") });
                 }
-                else if (status.UserType == "3")
+                else if (usertype == "3")
                 {
                     return Json(new { redirectToUrl = Url.Action("Index", "TimeLogs") });
                 }
@@ -152,14 +154,10 @@ namespace AOPC.Controllers
             public string? location { get; set; }
             public bool? rememberToken { get; set; }
         }
-        public class LoginResult
+        public async Task<String> LogIn(loginCredentials data)
         {
-            public string Status { get; set; }
-            public string UserType { get; set; }
-        }
-        public async Task<LoginResult> LogIn(loginCredentials data)
-        {
-            var result = new LoginResult();
+            string result = "";
+            string status = "";
             try
             {
                 //var pass3 = Cryptography.Encrypt("odecciaccounting2025!");
@@ -211,23 +209,21 @@ namespace AOPC.Controllers
                     var token = _global.GenerateToken(data.username, _appSettings.Key.ToString());
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_val.GetValue());
                     StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-            
-                  
+
+
                     using (var response = await client.PostAsync(url, content))
                     {
 
                         status = await response.Content.ReadAsStringAsync();
                         //List<LoginStats> models = JsonConvert.DeserializeObject<List<LoginStats>>(status);
                         string asdas = JsonConvert.DeserializeObject<LoginStats>(status).Status;
-                        string utype = JsonConvert.DeserializeObject<LoginStats>(status).UserType;
 
-                        result.Status = asdas;
-                        result.UserType = utype;
+                        result = asdas;
 
                     }
-                 
-           
-                    if (result.Status == "Ok")
+
+
+                    if (result == "Ok")
                     {
                         //string action = data.Id == 0 ? "Added New" : "Updated";
                         dbmet.InsertAuditTrail("User Id: " + dt.Rows[0]["Id"].ToString() +
@@ -241,7 +237,7 @@ namespace AOPC.Controllers
                         //string test = token_val.GetValue();
                         //token_val.GetValue();
                     }
-              
+
                 }
                 else
                 {
@@ -254,8 +250,8 @@ namespace AOPC.Controllers
                        "0",
                        "2",
                        "Unknown");
-                    result.Status = "Invalid Log IN";
-                }    
+                    result = "Invalid Log IN";
+                }
             }
 
             catch (Exception ex)
@@ -263,22 +259,36 @@ namespace AOPC.Controllers
                 status = ex.GetBaseException().ToString();
             }
             return result;
-        
+
 
         }
         [HttpGet]
         public IActionResult Check()
         {
             var user = HttpContext.Session.GetString("UserName");
-
-            if (!string.IsNullOrEmpty(user))
+            if (HttpContext.Request.Cookies.ContainsKey("MyCookieAuth"))
             {
-                // Optional: re-set the same value to "touch" the session
-                HttpContext.Session.SetString("UserName", user);
+                //string cookieValue = HttpContext.Request.Cookies["MyCookieAuth"];
+                // Do something with cookieValue
                 return Json(new { isLoggedIn = true });
             }
+            else if (!string.IsNullOrEmpty(user))
+            {
 
-            return Json(new { isLoggedIn = false });
+
+                // Optional: re-set the same value to "touch" the session
+                //HttpContext.Session.SetString("UserName", user);
+                return Json(new { isLoggedIn = true });
+
+
+
+                // Cookie "qwert" does not exist
+            }
+            else
+            {
+                return Json(new { isLoggedIn = false });
+            }
+
         }
         public async Task<String> GetUserType(loginCredentials data)
         {
@@ -317,9 +327,9 @@ namespace AOPC.Controllers
             string token = HttpContext.Session.GetString("Bearer");
             string userType = HttpContext.Session.GetString("UserType");
             var cookieValue = Request.Cookies["MyCookieAuth"];
-            if(cookieValue != null)
+            if (cookieValue != null)
             {
-                string sql = $@"select * from tbl_UsersModel where RememberToken = '" + cookieValue+"'";
+                string sql = $@"select * from tbl_UsersModel where RememberToken = '" + cookieValue + "'";
                 DataTable dt = db.SelectDb(sql).Tables[0];
                 if (dt.Rows.Count != 0)
                 {
@@ -340,7 +350,7 @@ namespace AOPC.Controllers
                     return RedirectToAction("Index", "Dashboard");
                 }
             }
-            else if(token != null)
+            else if (token != null)
             {
                 if (userType != "2")
                 {
@@ -413,13 +423,10 @@ namespace AOPC.Controllers
             string rememberMe = HttpContext.Session.GetString("RememberMe") ?? "0";
 
             HttpContext.Session.SetString("Bearer", "");
-            
+
             //await HttpContext.SignOutAsync("MyCookieAuth");
             // Remove specific cookie
-            if(rememberMe == "1")
-            {
-                Response.Cookies.Delete("MyCookieAuth");
-            }
+            Response.Cookies.Delete("MyCookieAuth");
             Response.Cookies.Delete(".AspNetCore.Session");
             //return Json(result);
             return RedirectToAction("Index", "LogIn");
@@ -434,7 +441,7 @@ namespace AOPC.Controllers
         public async Task<IActionResult> SearchAccount(ForgotPasswordParam data)
         {
             string result = "";
-            
+
             try
             {
                 HttpClient client = new HttpClient();

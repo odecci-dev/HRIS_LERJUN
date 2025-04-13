@@ -18,6 +18,7 @@ using System.Security.Cryptography;
 using MimeKit;
 using System.Security.Policy;
 using MailKit.Net.Smtp;
+using System;
 
 namespace API_HRIS.Controllers
 {
@@ -38,7 +39,7 @@ namespace API_HRIS.Controllers
             public int pageSize { get; set; }
         }
 
-        public UserController(ODC_HRISContext context,DBMethods _dbmet)
+        public UserController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
             dbmet = _dbmet;
@@ -49,10 +50,9 @@ namespace API_HRIS.Controllers
         [HttpPost]
         public async Task<ActionResult<IEnumerable<TblUsersModel>>> login(loginCredentials data)
         {
-            var userModel = (dynamic)null;
-            int usertype = 0;
-            var loginstats = dbmet.GetUserLogIn(data.username, data.password, data.ipaddress, data.location);
-           
+
+
+            var item = new StatusReturns();
             //if (!data.rememberToken.IsNullOrEmpty())
             //{
 
@@ -65,23 +65,33 @@ namespace API_HRIS.Controllers
             //    string tbl_UsersModel_update = $@"UPDATE [dbo].[tbl_UsersModel] SET 
             //                                 [FirstName] = '" + data.rememberToken + "'" +
             //                            " WHERE id = '" + userModel.Id + "'";
-               
+
             //    string result = db.DB_WithParam(tbl_UsersModel_update);
             //}
-            
-            
-            var item = new StatusReturns();
-            item.Status = loginstats.Status;
-            item.Message = loginstats.Message;
-            item.JwtToken = loginstats.JwtToken;
-            item.UserType = loginstats.UserType;
+
+            var isLoggedin = _context.TblUsersModels.Where(a => a.Username == data.username && a.Password == Cryptography.Encrypt(data.password) && a.isLoggedIn == true).ToList().Count() > 0;
+            if (isLoggedin)
+            {
+                item.Status = "Error! Your account is active on another device or browser!";
+                item.Message = "Invalid Log In";
+                item.JwtToken = "";
+                item.UserType = "";
+            }
+            else
+            {
+                var loginstats = dbmet.GetUserLogIn(data.username, data.password, data.ipaddress, data.location);
+                item.Status = loginstats.Status;
+                item.Message = loginstats.Message;
+                item.JwtToken = loginstats.JwtToken;
+                item.UserType = loginstats.UserType;
+            }
 
             return Ok(item);
         }
         [HttpPost]
         public async Task<ActionResult<IEnumerable<TblUsersModel>>> isLoggedIn(loginCredentials data)
         {
-            
+
             string status = "";
             var result = (dynamic)null;
             data.password = Cryptography.Encrypt(data.password);
@@ -92,7 +102,8 @@ namespace API_HRIS.Controllers
                 status = "Logged In";
                 return Ok(result);
             }
-            else {
+            else
+            {
                 status = "You're not logged in in HRIS";
                 return Ok(status);
             }
@@ -111,12 +122,12 @@ namespace API_HRIS.Controllers
             string status = "";
             var result = (dynamic)null;
             bool existing = _context.TblUsersModels.Where(a => a.Email == data.email).ToList().Count() > 0;
-            if(existing == true)
+            if (existing == true)
             {
                 bool isActive = _context.TblUsersModels.Where(a => a.Email == data.email && a.Active == 1 && a.DeleteFlag == false).ToList().Count() > 0;
-                if(isActive == true)
+                if (isActive == true)
                 {
-                    var existingItem =  _context.TblUsersModels.Where(a => a.Email == data.email).ToList().FirstOrDefault();
+                    var existingItem = _context.TblUsersModels.Where(a => a.Email == data.email).ToList().FirstOrDefault();
                     if (existingItem != null)
                     {
                         const string chars = "0123456789";
@@ -137,7 +148,7 @@ namespace API_HRIS.Controllers
                         var message = new MimeMessage();
 
                         message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
-                        
+
                         //url = registrationDomain + "registration?empid=" + data.EmployeeId[x] + "&compid=" + data.CompanyId[x] + "&email=" + data.Email[x];
                         message.To.Add(new MailboxAddress(existingItem.Fullname, existingItem.Email));
 
@@ -264,7 +275,7 @@ namespace API_HRIS.Controllers
             bool existing = _context.TblUsersModels.Where(a => a.Email == data.email && a.Active == 1 && a.DeleteFlag == false && a.verificationCode == data.vcode).ToList().Count() > 0;
             if (existing == true)
             {
-               status = "Ok";
+                status = "Ok";
                 return Ok(status);
             }
             else

@@ -54,7 +54,7 @@ namespace API_HRIS.Controllers
                 DateTime startD = DateTime.ParseExact(data.StartDate, "yyyy-MM-dd", null);
                 DateTime endD = DateTime.ParseExact(data.EndDate, "yyyy-MM-dd", null);
                 var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false && a.EmployeeNo == data.EmployeeNo && a.Date >= startD && a.Date <= endD).ToList();
-                
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace API_HRIS.Controllers
                 //var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false && a.Status == 1004).ToList();
 
 
-                var result = 
+                var result =
                     from lr in _context.TblLeaveRequestModel
 
                     join user in _context.TblUsersModels
@@ -378,8 +378,17 @@ namespace API_HRIS.Controllers
                         {
                             existingItem.Status = 5;
                         }
+
+                        else if (data.Status == 2)
+                        {
+                            existingItem.isDeleted = true;
+
+                        }
                         existingItem.ApprovalReason = data.lrapproval[i].reason;
-                        _context.TblLeaveRequestModel.Update(existingItem);
+                        _context.Entry(existingItem).Property(x => x.Status).IsModified = true;
+                        _context.Entry(existingItem).Property(x => x.ApprovalReason).IsModified = true;
+                        _context.Entry(existingItem).Property(x => x.isDeleted).IsModified = true;
+                        //_context.TblLeaveRequestModel.Update(existingItem);
                         await _context.SaveChangesAsync();
                         status = "Leave request successfully deleted";
                         dbmet.InsertAuditTrail("Update Leave request" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Leave request Module", "User", "0");

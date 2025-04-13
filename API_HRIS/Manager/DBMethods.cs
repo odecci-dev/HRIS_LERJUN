@@ -16,7 +16,7 @@ using System.Text;
 using static API_HRIS.ApplicationModel.EntityModels;
 namespace API_HRIS.Manager
 {
-    public class DBMethods 
+    public class DBMethods
     {
         private readonly ODC_HRISContext _context;
         string sql = "";
@@ -132,7 +132,7 @@ namespace API_HRIS.Manager
             decimal employerSSS = (sssRate.Employer_RegularSS ?? 0) + (sssRate.Employer_MPF ?? 0) + (sssRate.Employer_EC ?? 0);
 
             // Compute Total SSS Contribution
-             totalSSSContribution = employeeSSS/* + employerSSS;*/;
+            totalSSSContribution = employeeSSS/* + employerSSS;*/;
             //decimal totalSSSContribution = employeeSSS + employerSSS;
 
             return Math.Round(totalSSSContribution, 2); // Employee's deduction only
@@ -205,7 +205,7 @@ namespace API_HRIS.Manager
 
             return db.DB_WithParam(Insert);
         }
-        public List<TimelogsVM>  TimeLogsData()
+        public List<TimelogsVM> TimeLogsData()
         {
             var result = new List<TimelogsVM>();
 
@@ -218,7 +218,7 @@ namespace API_HRIS.Manager
                     item.Id = dr["Id"].ToString();
                     item.UserId = dr["UserId"].ToString();
                     item.Date = Convert.ToDateTime(dr["Date"].ToString()).ToString("yyyy-MM-dd");
-                    item.TimeIn = dr["TimeIn"].ToString() == null ? "0:00": dr["TimeIn"].ToString();
+                    item.TimeIn = dr["TimeIn"].ToString() == null ? "0:00" : dr["TimeIn"].ToString();
                     item.TimeOut = dr["TimeOut"].ToString() == null ? "0:00" : dr["TimeOut"].ToString();
                     item.RenderedHours = dr["RenderedHours"].ToString() == null ? "0.00" : dr["RenderedHours"].ToString();
                     item.Username = dr["Username"].ToString();
@@ -250,22 +250,7 @@ namespace API_HRIS.Manager
             var result = new List<TblUsersModel>();
             bool compr_user = false;
             string utype = "";
-            var isLoggedin = _context.TblUsersModels.Where(a => a.Username == username && a.Password == Cryptography.Encrypt(password) && a.isLoggedIn == true).ToList().Count() > 0;
-            if (isLoggedin)
-            {
-                Stats = "Error! Your account is active on another device or browser!";
-                Mess = "Invalid Log In";
-                JWT = "";
 
-                StatusReturns isLoggedINresult = new StatusReturns
-                {
-                    Status = Stats,
-                    Message = Mess,
-                    JwtToken = JWT,
-                    UserType = utype
-                };
-                return isLoggedINresult;
-            }
             if (username.Length != 0 || password.Length != 0)
             {
                 var param = new IDataParameter[]
@@ -305,7 +290,7 @@ namespace API_HRIS.Manager
                             case "6":
                             //APPROVED
                             case "1003":
-                            //ONBOARDING
+                                //ONBOARDING
                                 compr_user = String.Equals(dt.Rows[0]["Username"].ToString().Trim(), username, StringComparison.Ordinal);
 
                                 if (compr_user)
@@ -325,7 +310,7 @@ namespace API_HRIS.Manager
                                             letter = Convert.ToChar(shift + 2);
                                             str_build.Append(letter);
                                         }
-                                        var RememberMeToken = Cryptography.Encrypt(username+"odecci2025!"+username);
+                                        var RememberMeToken = Cryptography.Encrypt(username + "odecci2025!" + username);
                                         //gv.AudittrailLogIn("Successfully", "Log In Form", dt.Rows[0]["EmployeeID"].ToString(), 7);
                                         var token = Cryptography.Encrypt(str_build.ToString());
                                         string strtokenresult = token;
@@ -519,7 +504,7 @@ namespace API_HRIS.Manager
                 //item.UserTypeName = dr["name"].ToString();
                 item.StatusName = dr["StatusName"].ToString();
 
-              
+
                 result.Add(item);
             }
             return result;
