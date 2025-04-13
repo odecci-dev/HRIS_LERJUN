@@ -149,7 +149,7 @@
 
 
 @section Scripts {
-    
+
     <script>
         const selectedRequest = []
         let otStatusIdentifier = 0;
@@ -174,6 +174,174 @@
             // Leave End
         });
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const potmonthSelect = document.getElementById("pot-monthSelect");
+            const potcurrentYear = new Date().getFullYear();
+            for (let potmonth = 0; potmonth < 12; potmonth++) {
+                const potmonthName = new Date(potcurrentYear, potmonth).toLocaleString('default', { month: 'long' });
+                const potoption = document.createElement("option");
+                potoption.value = `${potcurrentYear}-${String(potmonth + 1).padStart(2, '0')}`;
+                potoption.text = `${potmonthName} ${potcurrentYear}`;
+                potmonthSelect.appendChild(potoption);
+            }
+            // Set default to current month
+            potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            setCutOffDatesPOT();
+        });
+        function setCutOffDatesPOT() {
+            const potselectedMonth = document.getElementById("pot-monthSelect").value;
+            const potCuttOff = document.getElementById("potCuttOff").value;
+            const [year, month] = potselectedMonth.split('-').map(Number);
+            let fromDate, toDate;
+            //console.log(month);
+            if (potCuttOff == 0) {
+                fromDate = new Date(year, month - 2, 26);
+                toDate = new Date(year, month - 1, 10);
+            } else if (potCuttOff == 1) {
+                fromDate = new Date(year, month - 1, 11);
+                toDate = new Date(year, month - 1, 25);
+            }
+
+            // Format as YYYY-MM-DD
+            const formatFromDate = (fromDate) => {
+                let year = fromDate.getFullYear();
+                let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = fromDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            const formatToDate = (toDate) => {
+                let year = toDate.getFullYear();
+                let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = toDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            document.getElementById('pot-datefrom').value = formatFromDate(fromDate);
+            document.getElementById('pot-dateto').value = formatToDate(toDate);
+
+        }
+        $('#potCuttOff').on('change', function () {
+            setCutOffDatesPOT();
+            initializeOTDataTable();
+        });
+        $('#pot-monthSelect').on('change', function () {
+            setCutOffDatesPOT();
+            initializeOTDataTable();
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const plrmonthSelect = document.getElementById("plr-monthSelect");
+            const plrcurrentYear = new Date().getFullYear();
+
+            for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
+                const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
+                const plroption = document.createElement("option");
+                plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
+                plroption.text = `${plrmonthName} ${plrcurrentYear}`;
+                plrmonthSelect.appendChild(plroption);
+            }
+            plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            setCutOffDatesPLR();
+            //const lrmonthSelect = document.getElementById("lr-monthSelect");
+            //const lrcurrentYear = new Date().getFullYear();
+            //for (let lrmonth = 0; lrmonth < 12; lrmonth++) {
+            //    const lrmonthName = new Date(lrcurrentYear, lrmonth).toLocaleString('default', { month: 'long' });
+            //    const lroption = document.createElement("option");
+            //    lroption.value = `${lrcurrentYear}-${String(lrmonth + 1).padStart(2, '0')}`;
+            //    lroption.text = `${lrmonthName} ${lrcurrentYear}`;
+            //    lrmonthSelect.appendChild(lroption);
+            //}
+            //// Set default to current month
+            //potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            //plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            //setCutOffDatesPLR();
+        });
+        function setCutOffDatesPLR() {
+            //const lrselectedMonth = document.getElementById("lr-monthSelect").value;
+            //const lrCuttOff = document.getElementById("lrCuttOff").value;;
+            //const [year, month] = lrselectedMonth.split('-').map(Number);
+            const plrselectedMonth = document.getElementById("plr-monthSelect").value;
+            const plrCuttOff = document.getElementById("plrCuttOff").value
+            const [plryear, plrmonth] = plrselectedMonth.split('-').map(Number);
+
+            //let fromDate, toDate;
+            //console.log(month);
+            //if (lrCuttOff == 0) {
+            //    fromDate = new Date(year, month - 2, 26);
+            //    toDate = new Date(year, month - 1, 10);
+            //} else if (lrCuttOff == 1) {
+            //    fromDate = new Date(year, month - 1, 11);
+            //    toDate = new Date(year, month - 1, 25);
+            //}
+            if (plrCuttOff == 0) {
+                plrfromDate = new Date(plryear, plrmonth - 2, 26);
+                plrtoDate = new Date(plryear, plrmonth - 1, 10);
+            } else if (plrCuttOff == 1) {
+                plrfromDate = new Date(plryear, plrmonth - 1, 11);
+                plrtoDate = new Date(plryear, plrmonth - 1, 25);
+            }
+            // Adjust to weekday if falls on weekend
+            //fromDate = stladjustToWeekday(fromDate);
+            //toDate = stladjustToWeekday(toDate);
+            // Adjust to weekday if falls on weekend
+            plrfromDate = stladjustToWeekday(plrfromDate);
+            plrtoDate = stladjustToWeekday(plrtoDate);
+
+            //// Format as YYYY-MM-DD
+            //const formatFromDate = (fromDate) => {
+            //    let year = fromDate.getFullYear();
+            //    let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+            //    let day = fromDate.getDate();
+            //    // Ensure month and day are always two digits
+            //    if (month < 10) month = '0' + month;
+            //    if (day < 10) day = '0' + day;
+            //    return `${year}-${month}-${day}`;
+            //};
+            //const formatToDate = (toDate) => {
+            //    let year = toDate.getFullYear();
+            //    let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
+            //    let day = toDate.getDate();
+            //    // Ensure month and day are always two digits
+            //    if (month < 10) month = '0' + month;
+            //    if (day < 10) day = '0' + day;
+            //    return `${year}-${month}-${day}`;
+            //};
+            const formatPLRFromDate = (plrfromDate) => {
+                let year = plrfromDate.getFullYear();
+                let month = plrfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = plrfromDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            const formatPLRToDate = (plrtoDate) => {
+                let year = plrtoDate.getFullYear();
+                let month = plrtoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = plrtoDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            //document.getElementById('lr-datefrom').value = formatFromDate(fromDate);
+            //document.getElementById('lr-dateto').value = formatToDate(toDate);
+            document.getElementById('plr-datefrom').value = formatPLRFromDate(plrfromDate);
+            document.getElementById('plr-dateto').value = formatPLRToDate(plrtoDate);
+        }
+
+        $('#plrCuttOff').on('change', function () {
+            setCutOffDatesPLR();
+            initializeLeaveDataTable();
+        });
+        $('#plr-monthSelect').on('change', function () {
+            setCutOffDatesPLR();
+            initializeLeaveDataTable();
+        });
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
 
@@ -298,7 +466,7 @@
         }
         function approvedLR() {
 
-            console.log(selectedRequest.length);
+           // console.log(selectedRequest.length);
 
            const lrapproval = []
            for(var i = 0; i < selectedRequest.length; i++){
@@ -347,26 +515,55 @@
                 }
            }
         });
+        $('#pending-overtime-table').on('click', '.ot-row-checkbox', function () {
+            var refreshot = document.getElementById("refresh-ot");
+            var declineot = document.getElementById("decline-ot");
+            var approveot = document.getElementById("approve-ot");
+            var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+            checkboxes.forEach(checkbox => {
+                this.addEventListener('change', () => {
+                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
+                    if (checkedCount > 0) {
+                        refreshot.style.display = "none";
+                        declineot.style.display = "flex";
+                        approveot.style.display = "flex";
+                    } else {
+                        refreshot.style.display = "flex";
+                        declineot.style.display = "none";
+                        approveot.style.display = "none";
+                    }
+                });
+            });
+        });
         $('#pending-overtime-table').on('click', '.checkAllOT', function () {
-            
+
            var checkAllPending = document.getElementById("checkAllOT");
+           var refreshot = document.getElementById("refresh-ot");
+           var declineot = document.getElementById("decline-ot");
+           var approveot = document.getElementById("approve-ot");
            if(checkAllPending.checked == true){
                var checkboxes = document.querySelectorAll('.ot-row-checkbox');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = this.checked;
+                    refreshot.style.display = "none";
+                    declineot.style.display = "flex";
+                    approveot.style.display = "flex";
                 }
            }
            else{
                var checkboxes = document.querySelectorAll('.ot-row-checkbox');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = false;
+                    refreshot.style.display = "flex";
+                    declineot.style.display = "none";
+                    approveot.style.display = "none";
                 }
            }
         });
 
         $('#pending-timelogs-table').on('click', '.checkAllTL', function () {
-            alert('Hello');
+
            var checkAllPending = document.getElementById("checkAllTL");
            if(checkAllPending.checked == true){
                var checkboxes = document.querySelectorAll('.tl-row-checkbox');
@@ -456,7 +653,9 @@
                 console.log(selectedRequest);
             }
         }
+
+
     </script>
-    
-    
+
+
 }

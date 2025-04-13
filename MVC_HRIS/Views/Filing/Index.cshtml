@@ -10,32 +10,31 @@
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor Accessor;
 <style>
-   .tab {
+    .tab {
         display: flex;
         border-bottom: 2px solid #ddd;
         padding-bottom: 5px;
         gap: 10px;
         justify-content: flex-start;
-        }
+    }
 
-        /* Tab buttons */
-        .tablinks {
-            background: #f8f9fa;
-            border: none;
-            padding: 12px 18px;
-            font-size: 16px;
-            border-radius: 8px 8px 0 0;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-            outline: none;
-            font-weight: 500;
-            border-top-left-radius: 30px;
-            color: #333;
-        }
+    /* Tab buttons */
+    .tablinks {
+        background: #f8f9fa;
+        border: none;
+        padding: 12px 18px;
+        font-size: 16px;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        outline: none;
+        font-weight: 500;
+        border-top-left-radius: 30px;
+        color: #333;
+    }
 
         /* Hover effect */
         .tablinks:hover {
-
             background: var(--dark);
             color: white;
         }
@@ -49,27 +48,34 @@
             box-shadow: 0px -3px 8px rgba(0, 123, 255, 0.3);
         }
 
-        /* Tab content */
-        .tab-content {
-            display: none;
-            padding: 20px;
-            border-radius: 0 0 8px 8px;
-            background: #fff;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+    /* Tab content */
+    .tab-content {
+        display: none;
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+        background: #fff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+        animation: fadeIn 0.3s ease-in-out;
+    }
 
         /* Active tab content */
         .tab-content.active {
             display: block;
         }
 
-        /* Fade-in effect */
-        @@keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+    /* Fade-in effect */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
         }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
 <div id="dashboard-main-container">
@@ -99,18 +105,15 @@
             </div>
 
             <div id="Tab3" class="tab-content">
-              
             </div>
             <div id="Tab4" class="tab-content">
-              
-
             </div>
             <div id="Tab5" class="tab-content">
-              
+
                 @await Html.PartialAsync("~/Views/Leave/_LeaveTypeMaintenance.cshtml")
             </div>
             <div id="Tab6" class="tab-content">
-               
+
                 @await Html.PartialAsync("~/Views/Leave/_LeaveTypeMaintenance.cshtml")
             </div>
         </div>
@@ -131,6 +134,7 @@
 </div>
 
 
+
 <script src="~/js/leave.js"></script>
 
 @section Scripts {
@@ -139,12 +143,26 @@
             if (sessionStorage.getItem("LeaveFlag") === "true") {
                 sessionStorage.removeItem("LeaveFlag"); // Remove flag to avoid repeat execution
                 document.getElementById('leavefiling').click();
+                alertMessage();
                 FetchLeaveRequestList();
             }
         });
         $(document).ready(function () {
 
         });
+        function alertMessage(){
+            const message = "@message";
+            if(message != ''){
+                if (message.includes("Error")) {
+
+                    notifyMsg("Warning!",message, "orange", "fas fa-exclamation-triangle");
+                }
+                else{
+                    notifyMsg("Success!",message, "green", "fas fa-check");
+
+                }
+            }
+        }
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
 
@@ -163,6 +181,5 @@
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.classList.add("active");
         }
-     
     </script>
 }

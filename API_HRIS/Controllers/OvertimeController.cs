@@ -26,7 +26,7 @@ namespace API_HRIS.Controllers
         public OvertimeController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
-            this.dbmet = _dbmet; 
+            this.dbmet = _dbmet;
         }
         public class EmployeeIdFilter
         {
@@ -71,7 +71,7 @@ namespace API_HRIS.Controllers
                                  StatusName = status != null ? status.Status : "Unknown", // Handle NULL values
                                  ot.Status
                              };
-               return Ok(result);
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -104,62 +104,62 @@ namespace API_HRIS.Controllers
             DateTime endD = DateTime.ParseExact(data.endDate, "yyyy-MM-dd", null);
             var result = from ot in _context.TblOvertimeModel
 
-                    join user in _context.TblUsersModels
-                    on ot.EmployeeNo equals user.EmployeeId
+                         join user in _context.TblUsersModels
+                         on ot.EmployeeNo equals user.EmployeeId
 
-                    join department in _context.TblDeparmentModels
-                    on user.Department equals department.Id into departmentgroup
-                    from department in departmentgroup.DefaultIfEmpty()
+                         join department in _context.TblDeparmentModels
+                         on user.Department equals department.Id into departmentgroup
+                         from department in departmentgroup.DefaultIfEmpty()
 
-                    join position in _context.TblPositionModels
-                    on user.Position equals position.Id into positiongroup
-                    from position in positiongroup.DefaultIfEmpty()
-                     
-                    join positionlvl in _context.TblPositionLevelModels
-                    on user.PositionLevelId equals positionlvl.Id into positionlvlgroup
-                    from positionlvl in positionlvlgroup.DefaultIfEmpty()
-                     
-                    join employeeType in _context.TblEmployeeTypes
-                    on user.EmployeeType equals employeeType.Id into employeeTypegroup
-                    from employeeType in employeeTypegroup.DefaultIfEmpty()
+                         join position in _context.TblPositionModels
+                         on user.Position equals position.Id into positiongroup
+                         from position in positiongroup.DefaultIfEmpty()
 
-                    join leave in _context.TblLeaveTypeModel
-                    on ot.LeaveId equals leave.Id into leavegroup
-                    from leave in leavegroup.DefaultIfEmpty()
+                         join positionlvl in _context.TblPositionLevelModels
+                         on user.PositionLevelId equals positionlvl.Id into positionlvlgroup
+                         from positionlvl in positionlvlgroup.DefaultIfEmpty()
 
-                    join status in _context.TblStatusModels
-                    on ot.Status equals status.Id into statusgroup
-                    from status in statusgroup.DefaultIfEmpty()
+                         join employeeType in _context.TblEmployeeTypes
+                         on user.EmployeeType equals employeeType.Id into employeeTypegroup
+                         from employeeType in employeeTypegroup.DefaultIfEmpty()
 
-                    where ot.isDeleted == false && ot.Date >= startD && ot.Date <= endD
+                         join leave in _context.TblLeaveTypeModel
+                         on ot.LeaveId equals leave.Id into leavegroup
+                         from leave in leavegroup.DefaultIfEmpty()
 
-                    select new
-                     {
-                         ot.Id,
-                         ot.OTNo,
-                         ot.EmployeeNo,
-                         Date = ot.Date != null ? ot.Date.Value.ToString("yyyy-MM-dd") : null,
-                         user.Fullname,
-                         Department = department.DepartmentName,
-                         Position = position.Name,
-                         PositionLevel = positionlvl.Level,
-                         EmployeeType = employeeType.Title,
-                         ManagerId = user.ManagerId,
-                         ot.StartTime,
-                         ot.EndTime,
-                         StartDate = ot.StartDate != null ? ot.StartDate.Value.ToString("yyyy-MM-dd") : null,
-                         EndDate = ot.EndDate != null ? ot.EndDate.Value.ToString("yyyy-MM-dd") : null,
-                         ot.HoursFiled,
-                         ot.HoursApproved,
-                         ot.Remarks,
-                         ot.ConvertToLeave,
-                         leave.Name,
-                         LeaveName = leave != null ? leave.Name : "No Leave", // Handle NULL values
-                         LeaveRemarks = leave != null ? leave.Remarks : "",
-                         StatusName = status != null ? status.Status : "Unknown", // Handle NULL values
-                         Status= ot.Status
-                     };
-            
+                         join status in _context.TblStatusModels
+                         on ot.Status equals status.Id into statusgroup
+                         from status in statusgroup.DefaultIfEmpty()
+
+                         where ot.isDeleted == false && ot.Date >= startD && ot.Date <= endD
+
+                         select new
+                         {
+                             ot.Id,
+                             ot.OTNo,
+                             ot.EmployeeNo,
+                             Date = ot.Date != null ? ot.Date.Value.ToString("yyyy-MM-dd") : null,
+                             user.Fullname,
+                             Department = department.DepartmentName,
+                             Position = position.Name,
+                             PositionLevel = positionlvl.Level,
+                             EmployeeType = employeeType.Title,
+                             ManagerId = user.ManagerId,
+                             ot.StartTime,
+                             ot.EndTime,
+                             StartDate = ot.StartDate != null ? ot.StartDate.Value.ToString("yyyy-MM-dd") : null,
+                             EndDate = ot.EndDate != null ? ot.EndDate.Value.ToString("yyyy-MM-dd") : null,
+                             ot.HoursFiled,
+                             ot.HoursApproved,
+                             ot.Remarks,
+                             ot.ConvertToLeave,
+                             leave.Name,
+                             LeaveName = leave != null ? leave.Name : "No Leave", // Handle NULL values
+                             LeaveRemarks = leave != null ? leave.Remarks : "",
+                             StatusName = status != null ? status.Status : "Unknown", // Handle NULL values
+                             Status = ot.Status
+                         };
+
             if (data.status == 0)
             {
                 result = result.Where(a => a.Status == 1004);
@@ -231,7 +231,7 @@ namespace API_HRIS.Controllers
                     string query = $@"INSERT INTO [TblOvertimeModel] 
                      ([EmployeeNo],[Date],[StartTime],[EndTime],[StartDate],[EndDate],[HoursFiled],[Remarks],[ConvertToLeave],[ConvertToOffset],[DateCreated],[isDeleted],[CreatedBy],[Status])
                      VALUES ('" + data.EmployeeNo + "','" + data.Date + "','" + data.StartTime + "','" + data.EndTime + "','" + data.StartDate + "','" + data.EndDate + "','" + data.HoursFiled + "','" + data.Remarks + "','" + data.ConvertToLeave + "','" + data.ConvertToOffset + "','" + DateTime.Now.ToString("yyyy-MM-dd") + "','0','" + data.CreatedBy + "','1004');";
-                    
+
                     db.AUIDB_WithParam(query);
                     //_context.TblOvertimeModel.Add(data);
 
@@ -320,6 +320,16 @@ namespace API_HRIS.Controllers
 	                            SET Status = '5'"
                                 + ", ApprovalReason  = '" + data.otapproval[i].reason + "'"
                                 + ", HoursApproved = '" + data.otapproval[i].HoursApproved + "'"
+                            + " WHERE Id = '" + data.otapproval[i].Id + "'";
+                            db.AUIDB_WithParam(query);
+                        }
+
+                        else if (data.Status == 2)
+                        {
+                            existingItem.Status = 5;
+
+                            string query = $@"UPDATE TblOvertimeModel
+	                            SET isDeleted = '1'"
                             + " WHERE Id = '" + data.otapproval[i].Id + "'";
                             db.AUIDB_WithParam(query);
                         }
@@ -412,7 +422,7 @@ namespace API_HRIS.Controllers
         }
         public partial class TblOvertimeImportModel
         {
-            
+
             public string? EmployeeNo { get; set; }
             public string? Date { get; set; }
             public string? StartTime { get; set; }

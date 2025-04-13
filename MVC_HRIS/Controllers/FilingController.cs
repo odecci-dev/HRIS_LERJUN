@@ -71,7 +71,8 @@ namespace MVC_HRIS.Controllers
         {
             System.Text.Encoding.RegisterProvider(
             System.Text.CodePagesEncodingProvider.Instance);
-            try { 
+            try
+            {
                 if (file == null)
                 {
                     ViewData["Message"] = "Error: Please select a file.";
@@ -130,7 +131,7 @@ namespace MVC_HRIS.Controllers
                                 // Process the row
                                 data.Add(new TblOvertimeImportModel
                                 {
-                                    
+
                                     HoursFiled = reader.GetValue(5)?.ToString() ?? "",
                                     Remarks = reader.GetValue(6)?.ToString() ?? "",
                                     ConvertToLeave = reader.GetValue(7)?.ToString() ?? "",
@@ -170,7 +171,7 @@ namespace MVC_HRIS.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 return Problem(ex.GetBaseException().ToString());
             }
             return View("Index");
@@ -294,15 +295,15 @@ namespace MVC_HRIS.Controllers
         }
         public IActionResult Index()
         {
-            string token = HttpContext.Session.GetString("Bearer");
-            if (token == null)
-            {
-                return RedirectToAction("Index", "LogIn");
-            }
+            //string token = HttpContext.Session.GetString("Bearer");
+            //if (token == null)
+            //{
+            //    return RedirectToAction("Index", "LogIn");
+            //}
 
             return View();
         }
-       
+
 
 
     }

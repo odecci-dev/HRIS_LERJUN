@@ -328,7 +328,7 @@ function initializeOTDataTable() {
     //empNo = document.getElementById('selectUserOTPending').value;
     empNo = empNo === '' ? '0' : empNo;
     var sdate = document.getElementById('pot-datefrom').value;
-    var edate = document.getElementById('pot-dateto').value; 
+    var edate = document.getElementById('pot-dateto').value;
     var managerId = 0;
     if (userType != 'Admin') {
         managerId = userId
@@ -412,18 +412,7 @@ function initializeOTDataTable() {
                     });
                 }
 
-                $('#customFilterButtons').html(`
-                    <button class="btn btn-warning" id="refresh-ot" title="Refresh" onclick="initializeOTDataTable()">
-                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
-                    </button>
-                    <button class="btn btn-danger" id="decline-ot" title="Reject" onclick="DeclineOvertime()">
-                        <i class="fa-solid fa-circle-minus"></i> Decline
-                    </button>
-                    <button class="btn btn-success" id="approve-ot" title="Approve" onclick="ApproveOvertime()">
-                        <i class="fa-solid fa-file-arrow-down"></i> Approve
-                    </button>
 
-                `);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -716,7 +705,7 @@ function initializeOTDataTable() {
     table = $(tableId).DataTable(dtProperties);
     $(tableId + '_filter input').attr('placeholder', 'Searching...');
     $(tableId + ' tbody').on('click', 'tr', function () {
-    var data = table.row(this).data();
+        var data = table.row(this).data();
 
     });
 
@@ -729,7 +718,7 @@ function initializeOTDataTable() {
         else {
             table.column('department:name').search('^' + departmentval + '$', true, false).draw();
         }
-        
+
     });
 
     $(document).on('change', '#positionFilter', function () {
@@ -1113,7 +1102,7 @@ function initializeLeaveDataTable() {
             },
             {
                 "title": "Fullname",
-                "data": "fullname", 
+                "data": "fullname",
                 name: "fullname",
                 visible: false,
                 searchable: true

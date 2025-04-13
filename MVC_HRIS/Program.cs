@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MVC_HRIS.Manager;
 using MVC_HRIS.Models;
 
@@ -12,7 +13,15 @@ var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 // Register IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSession();
+builder.Services.AddSession(
+    options =>
+    {
+        options.IdleTimeout = TimeSpan.FromMinutes(10);  // Set session timeout
+        //options.IdleTimeout = TimeSpan.FromSeconds(5);  // Set session timeout
+        options.Cookie.HttpOnly = true;  // Make session cookie HttpOnly
+        options.Cookie.IsEssential = true;  // Make session cookie essential
+    }
+);
 // Register other services
 builder.Services.AddTransient<QueryValueService>();
 builder.Services.AddCors();
@@ -27,6 +36,16 @@ builder.Services.AddCors(options =>
         });
 });
 
+
+builder.Services.AddAuthentication("MyCookieAuth")
+    .AddCookie("MyCookieAuth", options =>
+    {
+
+        options.ExpireTimeSpan = TimeSpan.FromDays(14); // How long the cookie is valid
+        options.SlidingExpiration = true; // Extend expiration with activity
+        options.LoginPath = "/Login/Index"; // your login path
+        options.AccessDeniedPath = "/Login/Index";
+    });
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -40,12 +59,30 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
+
 app.UseRouting();
-app.UseAuthorization();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Middleware to redirect to login if session is expired
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.ToString().ToLower();
+
+    // Avoid infinite loop by excluding the login page and static files
+    if (!path.StartsWith("/login") && !path.StartsWith("/css") && !path.StartsWith("/js") && !context.Session.Keys.Contains("UserName"))
+    {
+        context.Response.Redirect("/Login/Index");
+        return;
+    }
+
+    await next();
+});
+
 app.UseCookiePolicy();
-app.UseSession();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=LogIn}/{action=Index}/{id?}");
