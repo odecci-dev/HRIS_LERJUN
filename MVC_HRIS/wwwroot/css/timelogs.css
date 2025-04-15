@@ -321,7 +321,7 @@ table .child ul li .dtr-data .action {
 #schedule-table_wrapper .row:first-of-type,
 #etype-table_wrapper .row:first-of-type,
 #pending-overtime-table_wrapper .row:first-of-type {
-    background-color: var(--dark);
+/*    background-color: var(--dark);*/
     padding: 10px;
     color: white;
     margin: 0;
@@ -350,6 +350,7 @@ table .child ul li .dtr-data .action {
 #pending-overtime-table_wrapper .row:first-of-type label,
 #pending-overtime-table_wrapper .row:first-of-type label select  {
     margin: 0 !important;
+    
 }
 
 .action-navbar {

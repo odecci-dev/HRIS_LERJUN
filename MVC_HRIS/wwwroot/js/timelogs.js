@@ -26,7 +26,7 @@ async function timeLogs() {
         data.deleteFlag = 1;
         data.Remarks = mtlremarks;
         data.Identifier = "Manual";
-        console.log(data);
+        //console.log(data);
         $.ajax({
             url: '/TimeLogs/ManualLogs',
             data: data,
@@ -59,7 +59,7 @@ async function timeLogs() {
             ndata.notification = notifmessage;
             ndata.date = mtldate;
             ndata.statusId = 3;
-            console.log(ndata);
+            //console.log(ndata);
             $.ajax({
                 url: '/TimeLogs/LogsNotification',
                 data: ndata,
@@ -127,7 +127,7 @@ function delete_item_timelogs() {
     data.TaskId = manualtask;
     data.deleteFlag = 0;
     data.Remarks = mtlremarks;
-    console.log(data);
+    //console.log(data);
     $.ajax({
         url: '/TimeLogs/ManualLogs',
         data: data,

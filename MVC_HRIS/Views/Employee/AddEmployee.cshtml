@@ -34,9 +34,9 @@
 
                                             <div class="input-container-whole1">
 
-                                                <div class="upload-image-preview1" id="upload-image-preview" style="background-color: gainsboro;">
+                                                <div class="upload-image-preview1" id="upload-image-preview" style="background-color: gainsboro; display: flex; justify-content: center">
                                                     <img width="100%"
-                                                         src="/img//emptypic.png"
+                                                         src="/img//blank-profile-picture-png.webp"
                                                          alt="" />
                                                 </div>
                                                 <div style="margin: 10px 0px 25px 0px;display: flex;">
@@ -365,9 +365,13 @@
         $('#employeeForm').submit(function (e) {
             e.preventDefault();
             filename = $("#img").val().replace(/.*(\/|\\)/, '');
+            // filename = "/img/"+filename;
             // console.log(filename);
             if (filename == "" || filename == null) {
-                filename = img_edit;
+                filename = "";
+            }
+            else{
+                filename = "/img/"+filename;
             }
             // console.log(filename);
             var Id = localStorage.getItem('id');
@@ -415,7 +419,7 @@
             // Prepare data object to send via AJAX
             var data = {
                 Department: department,
-                FilePath: "/img/"+filename,
+                FilePath: filename,
                 Id: Id,
                 UserType: emptype,
                 EmployeeType: uType,
@@ -539,7 +543,7 @@
                     },
                     datatype: "json",
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         var array = response[0].address.split(',');
                         // console.log(array[1].replace(' ', ''));
                         // console.log(array[2].replace(' ', ''));
@@ -650,7 +654,7 @@
                         }
                         let date = new Date(response[0].dateStarted);
                         let formattedDate = date.toISOString().split('T')[0];
-                        $('#empid').val(response[0].employeeId);
+                        $('#empid').val(response[0].employeeID);
                         $('#position').val(response[0].position);
                         $('#poslevel').val(response[0].positionLevelId);
                         $('#manager').val(response[0].managerId);
@@ -673,7 +677,26 @@
                         $('#daysinmonth').val(response[0].daysInMonth);
                         img_edit = response[0].filePath;
                         // console.log(img_edit);
-                        if (img_edit != "OPTION.webp") {
+                        // if (img_edit != "" || img_edit != null) {
+                        //     var img = $('<img>').attr('src',img_edit);
+                        //     img.attr('height', '100%');
+                        //     img.attr('width', '100%');
+                        //     img.css({
+                        //         'object-fit': 'cover',  // Ensures the image covers the container
+                        //         'object-position': 'top',  // Centers the image
+                        //         'height': '100%',  // Sets height
+                        //         'width': '100%',   // Sets width
+                        //         'display': 'block'  // Ensures proper layout
+                        //     });
+                        //     $('.upload-image-preview1').html(img);
+                        // }
+                        if (img_edit == "" || img_edit == null) {
+                            var img = $('<img>').attr('src', '/img/blank-profile-picture-png.webp');
+                            // img.attr('height', '100%');
+                            // img.attr('width', '100%');
+                            $('.upload-image-preview1').html(img);
+                        }
+                        else{
                             var img = $('<img>').attr('src',img_edit);
                             img.attr('height', '100%');
                             img.attr('width', '100%');
@@ -685,13 +708,6 @@
                                 'display': 'block'  // Ensures proper layout
                             });
                             $('.upload-image-preview1').html(img);
-                        }
-                        else {
-                            var img = $('<img>').attr('src', '/img/' + img_edit);
-                            img.attr('height', '100%');
-                            img.attr('width', '100%');
-                            $('.upload-image-preview1').html(img);
-
                         }
 
                     },

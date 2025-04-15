@@ -36,6 +36,7 @@ using Net.SourceForge.Koogra.Excel2007.OX;
 using ExcelDataReader;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using API_HRIS.Models;
+using static MVC_HRIS.Controllers.OverTimeController;
 namespace MVC_HRIS.Controllers
 {
     public class TimeLogsController : Controller
@@ -57,7 +58,10 @@ namespace MVC_HRIS.Controllers
             apiUrl = _configuration.GetValue<string>("AppSettings:WebApiURL");
             _appSettings = appSettings.Value;
         }
-
+        public IActionResult TLApproval()
+        {
+            return PartialView("TLApproval");
+        }
         public IActionResult Index()
         {//update
             string token = HttpContext.Session.GetString("Bearer");
@@ -162,13 +166,47 @@ namespace MVC_HRIS.Controllers
             }
             return Json(new { status = res });
         }
+        //[HttpPost]
+        //public async Task<IActionResult> TimeOut(User data)
+        //{
+        //    string res = "";
+        //    try
+        //    {
+
+        //        HttpClient client = new HttpClient();
+        //        var url = DBConn.HttpString + "/TimeLogs/TimeOut";
+
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+        //        StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+        //        using (var response = await client.PostAsync(url, content))
+        //        {
+        //            HttpStatusCode statusCode = response.StatusCode;
+        //            int numericStatusCode = (int)statusCode;
+        //            if (numericStatusCode == 200)
+        //            {
+        //                res = numericStatusCode.ToString();
+        //            }
+        //            else
+        //            {
+        //                res = await response.Content.ReadAsStringAsync();
+        //            }
+        //        }
+
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        status = ex.GetBaseException().ToString();
+        //    }
+        //    return Json(new { status = res });
+        //}
+
         [HttpPost]
         public async Task<IActionResult> TimeOut(User data)
         {
             string res = "";
             try
             {
-
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/TimeLogs/TimeOut";
 
@@ -1112,6 +1150,91 @@ namespace MVC_HRIS.Controllers
         {
 
             return PartialView("TaskModal");
+        }
+        public class CheckedTLRequestListParam
+        {
+            public string[]? Id { get; set; }
+        }
+        public partial class TblTimelogsVM
+        {
+            public string? Id { get; set; }
+            public string? fullname { get; set; }
+            public string? Remarks { get; set; }
+            public string? TimeIn { get; set; }
+            public string? TimeOut { get; set; }
+            public string? RenderedHours { get; set; }
+            public string? ApprovalReason { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCheckedTLRequestList(CheckedTLRequestListParam data)
+        {
+            string result = "";
+            var list = new List<TblTimelogsVM>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/TimeLogs/CheckedTLRequestList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblTimelogsVM>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+        }
+
+        public class multiApprovalParamTLList
+        {
+            public int? Id { get; set; }
+            public string? reason { get; set; }
+        }
+        public class multiApprovalTLParam
+        {
+            public int? Status { get; set; }
+            public List<multiApprovalParamTLList>? tlapproval { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> MultiApproval(multiApprovalTLParam data)
+        {
+            string res = "";
+            try
+            {
+
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Timelogs/MultiUpdateStatus";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    if (numericStatusCode == 200)
+                    {
+                        res = numericStatusCode.ToString();
+                    }
+                    else
+                    {
+                        res = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                status = ex.GetBaseException().ToString();
+            }
+            return Json(new { status = res });
         }
     }
 }

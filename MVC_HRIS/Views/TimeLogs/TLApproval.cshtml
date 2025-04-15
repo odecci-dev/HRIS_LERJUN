@@ -28,10 +28,10 @@
     <header>
     </header>
     <div>
-        <form id="approveotsumbit">
+        <form id="approvetlsumbit">
 
             <div class="content-filter-tbl">
-                <table id="to-approve-ot-table" class="table table-bordered table-hover w-100">
+                <table id="to-approve-tl-table" class="table table-bordered table-hover w-100">
                     <thead>
                     </thead>
                     <tbody>
@@ -63,7 +63,7 @@
 
         function initializeToApprovedOTDataTable() {
 
-            var tableId = '#to-approve-ot-table';
+            var tableId = '#to-approve-tl-table';
             if ($.fn.DataTable.isDataTable(tableId)) {
                 $(tableId).DataTable().clear().destroy();
             }
@@ -75,7 +75,7 @@
             var dtProperties = {
 
                 ajax: {
-                    url: '/Overtime/GetCheckedOTRequestList',
+                    url: '/TimeLogs/GetCheckedTLRequestList',
                     type: "POST",
                     async: false,
                     data: {
@@ -97,38 +97,24 @@
                 responsive: false,
                 "columns": [
                     {
-                        "title": "OT-Number",
-                        "data": "otNo", "orderable": false
+                        "title": "Fullname",
+                        "data": "fullname", "orderable": false
                     },
                     {
-                        "title": "Employee No",
-                        "data": "employeeNo", "orderable": false
-                    },
-                    {
-                        "title": "Start Time",
-                        "data": "startTime", "orderable": false
-                    },
-                    {
-                        "title": "End Time",
-                        "data": "endTime", "orderable": false
-                    },
-                    {
-                        "title": "Hours Filed",
-                        "data": "hoursFiled", "orderable": false
-                    },
-                    {
-                        "title": "Reason",
+                        "title": "Task Description",
                         "data": "remarks", "orderable": false
                     },
                     {
-                        "title": "Approve Hours",
-                        "data": "hoursFiled",
-                        "render": function (data, type, row) {
-                            var textfield = "";
-                                textfield = `<input type="number" id="approve-hours" class="approve-hours" data-id="${row.id}" data-filed="${data}" value="${data}" required>`;
-
-                            return textfield;
-                        }
+                        "title": "Time In",
+                        "data": "timeIn", "orderable": false
+                    },
+                    {
+                        "title": "Time Oute",
+                        "data": "timeOut", "orderable": false
+                    },
+                    {
+                        "title": "Rendered Hours",
+                        "data": "renderedHours", "orderable": false
                     },
                     {
                         "title": "Add Reason",
@@ -173,10 +159,6 @@
                     {
                         targets: [5], // OT-Number column
                         width: "30%"
-                    },
-                    {
-                        targets: [6], // OT-Number column
-                        width: "15%"
                     }
                 ]
             };
@@ -214,25 +196,24 @@
                 });
             }
         }
-         var otapproval = [];
-         $('#approveotsumbit').submit(function (e) {
+         var tlapproval = [];
+         $('#approvetlsumbit').submit(function (e) {
             e.preventDefault();
             document.querySelectorAll("textarea[data-id]").forEach(el => {
-                let hoursInput = document.querySelector(`input[data-id="${el.dataset.id}"]`); // Find the matching input field
+                
                 // otapproval.push({ id: el.dataset.id, reason: el.value, hoursApproved: hoursInput });
-                otapproval.push({
+                tlapproval.push({
                     id: el.dataset.id,
                     reason: el.value,
-                    hoursApproved: hoursInput ? hoursInput.value : 0  // Use input value, default to 0 if not found
                 });
             });
             var data = {};
-            data.otapproval = otapproval;
-            data.status = otStatusIdentifier;
-            console.log(data)
+            data.tlapproval = tlapproval;
+            data.status = tlStatusFilter;
+            console.log(data);
 
             $.ajax({
-                url: '/Overtime/MultiApproval',
+                url: '/Timelogs/MultiApproval',
                 data: data,
                 type: "POST",
                 dataType: "json"
@@ -240,7 +221,7 @@
                 var status = data.status;
                 console.log(status);
                 if (status === 'Entity already exists') {
-                    notifyMsg('Warning!', 'OT already exists', 'yellow', 'fas fa-check');
+                    notifyMsg('Warning!', 'TL already exists', 'yellow', 'fas fa-check');
                 }
                 else {
                     notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
@@ -250,8 +231,8 @@
                 modal.style.display = "none";
                 // window.location.reload();
                 sessionStorage.setItem("LeaveFlag", "false");
-                sessionStorage.setItem("TLFlag", "false");
-                sessionStorage.setItem("OTFlag", "true");
+                sessionStorage.setItem("TLFlag", "true");
+                sessionStorage.setItem("OTFlag", "false");
                 window.location.reload();
             });
          });

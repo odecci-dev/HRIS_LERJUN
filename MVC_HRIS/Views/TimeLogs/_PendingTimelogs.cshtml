@@ -22,7 +22,7 @@
                             <select id="selectUserPending">
                                 <option value="" selected disabled> Select User</option>
                             </select>
-                            <button class="btn btn-warning" id="refresh-tl" title="Refresh">
+                            @* <button class="btn btn-warning" id="refresh-tl" title="Refresh">
                                 <i class="fa-solid fa-arrows-rotate"></i> Refresh
                             </button>
                             <button class="btn btn-danger" id="decline-tl" title="Delete">
@@ -30,7 +30,7 @@
                             </button>
                             <button class="btn btn-success" id="approve-tl" title="Approve" onclick="">
                                 <i class="fa-solid fa-file-arrow-down"></i> Approve
-                            </button>
+                            </button> *@
                         </div>
                     </div>
                 </div>
@@ -45,6 +45,24 @@
 
                 </table>
                 <div id="table-footer">
+                    <div class="customFilterButtonsContainer" id="">
+                        <div class="customFilterButtons" id="customFilterButtons">
+                            <button class="refresh-btn" id="refresh-tl" title="Refresh" onclick="initializeTimlogsDataTable()">
+                                <i class="fa-solid fa-arrow-rotate-right" style="color: #ffffff;"></i> Refresh
+                            </button>
+                            <button class="decline-btn" id="decline-tl" title="Reject" onclick="DeclineTimelogs()">
+                                <i class="fa-solid fa-circle-xmark" style="color: #ec1c24;"></i> Decline
+                            </button>
+                            <button class="approve-btn" id="approve-tl" title="Approve" onclick="ApproveTimelogs()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 92 92" fill="none">
+                                    <rect width="92" height="92" rx="46" fill="#205375" />
+                                    <path d="M66.4191 41.8339C67.3705 46.5033 66.6925 51.3577 64.4979 55.5877C62.3034 59.8176 58.7251 63.1674 54.3597 65.0783C49.9944 66.9893 45.1058 67.346 40.5093 66.0889C35.9128 64.8317 31.8861 62.0368 29.1009 58.1702C26.3157 54.3036 24.9402 49.599 25.2038 44.841C25.4674 40.083 27.3542 35.5591 30.5496 32.0239C33.745 28.4886 38.0557 26.1557 42.763 25.414C47.4702 24.6724 52.2895 25.567 56.417 27.9485" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M39.75 43.9154L46 50.1654L66.8333 29.332" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                Approve
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
             </div>

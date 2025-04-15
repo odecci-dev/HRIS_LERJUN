@@ -197,6 +197,17 @@ function initializeTimlogsDataTable() {
                     return button;
                 }
             }
+            //,
+            //{
+            //    "title": "Add Reason:",
+            //    "data": "id",
+            //    //"render": function (data, type, row) {
+            //    //    var textfield = "";
+            //    //    textfield = ``;
+
+            //    //    return textfield;
+            //    //},
+            //}
         ]
         , responsive: true
         // , columnDefs:  columnDefsConfig
@@ -226,19 +237,23 @@ function initializeTimlogsDataTable() {
                 targets: [9],
                 width: "5%", "className": "text-center", "targets": "7"
             },
+            //{
+            //    targets: 10,
+            //    "visible": false
+            //},
         ],
         order: [[1, 'desc']] // Sort the second column (index 1) by descending order
     };
 
-    var table = $(tableId).DataTable(dtProperties);
-
+    //var table = $(tableId).DataTable(dtProperties);
+    tltable = $(tableId).DataTable(dtProperties);
     // Attach computeTotalRenderedHours to the search event
     $(tableId + '_filter input').on('keyup', function () {
         computeTotalRenderedHours();
     });
 
     $('#time-table').on('page.dt', function () {
-        var info = table.page.info();
+        var info = tltable.page.info();
         var url = new URL(window.location.href);
         url.searchParams.set('page01', (info.page + 1));
         window.history.replaceState(null, null, url);
@@ -247,21 +262,17 @@ function initializeTimlogsDataTable() {
     $(tableId + '_filter input').attr('placeholder', 'Search anything here...');
 
     $(tableId + ' tbody').on('click', 'tr', function () {
-        var data = table.row(this).data();
+        var data = tltable.row(this).data();
         // console.log(data);
         // Remove highlight from the previously selected row
         if (lastSelectedRow) {
             $(lastSelectedRow).removeClass('selected-row');
         }
-
         // Highlight the currently selected row
         $(this).addClass('selected-row');
         lastSelectedRow = this;
         // console.log(data);
-
     });
-
-
 }
 function timelogsTableMOD() {
     $('#selectUserPending').on('change', function () {
@@ -794,8 +805,6 @@ function OTTableMOD() {
     });
 
 }
-
-
 function OTapprovemodal() {
     var element = document.querySelectorAll(".modal-header");
     var content = document.querySelectorAll(".modal-content");
@@ -986,18 +995,18 @@ function initializeLeaveDataTable() {
                     });
                 }
 
-                $('#lrcustomFilterButtons').html(`
-                    <button class="btn btn-warning" id="refresh-leave" title="Refresh" onclick="initializeLeaveDataTable()">
-                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
-                    </button>
-                    <button class="btn btn-danger" id="decline-leave" title="Delete" onclick="rejectLeave()">
-                        <i class="fa-solid fa-circle-minus"></i> Decline
-                    </button>
-                    <button class="btn btn-success" id="approve-leave" title="Approve" onclick="approveLeave()">
-                        <i class="fa-solid fa-file-arrow-down"></i> Approve
-                    </button>
+                //$('#lrcustomFilterButtons').html(`
+                //    <button class="btn btn-warning" id="refresh-leave" title="Refresh" onclick="initializeLeaveDataTable()">
+                //        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                //    </button>
+                //    <button class="btn btn-danger" id="decline-leave" title="Delete" onclick="rejectLeave()">
+                //        <i class="fa-solid fa-circle-minus"></i> Decline
+                //    </button>
+                //    <button class="btn btn-success" id="approve-leave" title="Approve" onclick="approveLeave()">
+                //        <i class="fa-solid fa-file-arrow-down"></i> Approve
+                //    </button>
 
-                `);
+                //`);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -1158,16 +1167,16 @@ function initializeLeaveDataTable() {
             },
         ],
         buttons: [
-            {
-                extend: 'pdf',
-                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
-                title: 'Leave Request List', // Set custom title in the file
-                filename: 'Leave_Request_List', // Custom file name
-                className: 'btn btn-info',
-                exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
-                }
-            },
+            //{
+            //    extend: 'pdf',
+            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
+            //    title: 'Leave Request List', // Set custom title in the file
+            //    filename: 'Leave_Request_List', // Custom file name
+            //    className: 'btn btn-info',
+            //    exportOptions: {
+            //        columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+            //    }
+            //},
             {
                 extend: 'excel',
                 text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',

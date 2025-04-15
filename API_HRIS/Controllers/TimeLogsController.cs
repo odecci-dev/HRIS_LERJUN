@@ -315,47 +315,7 @@ namespace API_HRIS.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpPost]
-        public async Task<ActionResult<TblTimeLog>> TimeOut(User tblTimeLog)
-        {
-
-            var lastTimein = _context.TblTimeLogs.AsNoTracking().Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeIn != null && timeLogs.TimeOut == null).OrderByDescending(timeLogs => timeLogs.UserId).FirstOrDefault();
-            if (lastTimein != null)
-            {
-
-                if (lastTimein.TimeOut.IsNullOrEmpty())
-                {
-                    // Parse the string to DateTime
-                    DateTime date = DateTime.Parse(lastTimein.TimeIn);
-                    string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
-                    string todate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                    //lastTimein.TimeOut = DateTime.Now.ToString("hh:mm:ss tt");
-                    lastTimein.TimeOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                    DateTime lastTi = DateTime.Parse(formattedTime);
-                    DateTime datetimeToday = DateTime.Parse(todate);
-                    TimeSpan times = datetimeToday.Subtract(lastTi);
-                    //lastTimein.RenderedHours = decimal.Parse(times.Hours.ToString() + "." + times.Minutes.ToString());
-                    double decimalHours = Math.Round(times.TotalHours, 2);
-                    lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2"));
-                    _context.Entry(lastTimein).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    //string query = $@"UPDATE [tbl_TimeLogs]"
-                    //                + "TimeOut = '" + lastTimein.TimeOut + "',"
-                    //                + "RenderedHours = '" + lastTimein.RenderedHours 
-                    //                + " WHERE Id = '" + lastTimein.Id + "'";
-                    //db.AUIDB_WithParam(query);
-                }
-                string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isOnline] = '0'" +
-                                       " WHERE id = '" + tblTimeLog.UserId + "'";
-                db.DB_WithParam(queryIsLoggedIn);
-                return Ok("TimeOut");
-            }
-            else
-            {
-                return BadRequest("Error!");
-            }
-
-        }
+        
         public partial class BreakTimeParam
         {
             public int? UserId { get; set; }
@@ -515,89 +475,190 @@ namespace API_HRIS.Controllers
         [HttpPost]
         public async Task<ActionResult<TblTimeLog>> RegularTimeOut(User tblTimeLog)
         {
-
+            var userType = _context.TblUsersModels.Where(a => a.Id == tblTimeLog.UserId && a.EmployeeType == 1).FirstOrDefault();
             var lastTimein = _context.TblTimeLogs.AsNoTracking().Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeIn != null && timeLogs.TimeOut == null).OrderByDescending(timeLogs => timeLogs.UserId).FirstOrDefault();
-            if (lastTimein != null)
+
+            if (userType != null)
             {
-
-                if (lastTimein.TimeOut.IsNullOrEmpty())
+                if (lastTimein != null)
                 {
-                    if (lastTimein.LunchIn == null)
-                    {
-                        lastTimein.LunchIn = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        if (lastTimein.TimeOut.IsNullOrEmpty())
+                        {
+                            if (lastTimein.LunchIn == null)
+                            {
+                                lastTimein.LunchIn = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
-                    }
-                    if (lastTimein.LunchOut == null)
-                    {
-                        lastTimein.LunchOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        // Parse the string to DateTime
-                        DateTime Breakdate = DateTime.Parse(lastTimein.LunchIn);
-                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
-                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
-                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
-                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
-                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
-                        lastTimein.TotalLunchHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
-                    }
-                    if (lastTimein.BreakInAm == null)
-                    {
-                        lastTimein.BreakInAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                            }
+                            if (lastTimein.LunchOut == null)
+                            {
+                                lastTimein.LunchOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                // Parse the string to DateTime
+                                DateTime Breakdate = DateTime.Parse(lastTimein.LunchIn);
+                                string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                                string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                                DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                                TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                                double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                                lastTimein.TotalLunchHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                            }
+                            if (lastTimein.BreakInAm == null)
+                            {
+                                lastTimein.BreakInAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
-                    }
-                    if (lastTimein.BreakOutAm == null)
-                    {
-                        lastTimein.BreakOutAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        // Parse the string to DateTime
-                        DateTime Breakdate = DateTime.Parse(lastTimein.BreakInAm);
-                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
-                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
-                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
-                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
-                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
-                        lastTimein.TotalBreakAmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
-                    }
-                    if (lastTimein.BreakInPm == null)
-                    {
-                        lastTimein.BreakInPm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                            }
+                            if (lastTimein.BreakOutAm == null)
+                            {
+                                lastTimein.BreakOutAm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                // Parse the string to DateTime
+                                DateTime Breakdate = DateTime.Parse(lastTimein.BreakInAm);
+                                string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                                string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                                DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                                TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                                double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                                lastTimein.TotalBreakAmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                            }
+                            if (lastTimein.BreakInPm == null)
+                            {
+                                lastTimein.BreakInPm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
 
-                    }
-                    if (lastTimein.BreakOutPm == null)
-                    {
-                        lastTimein.BreakOutPm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        // Parse the string to DateTime
-                        DateTime Breakdate = DateTime.Parse(lastTimein.BreakInPm);
-                        string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
-                        string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                        DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
-                        DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
-                        TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
-                        double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
-                        lastTimein.TotalBreakPmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
-                    }
-                    // Parse the string to DateTime
-                    DateTime date = DateTime.Parse(lastTimein.TimeIn);
-                    string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
-                    string todate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                    lastTimein.TimeOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
-                    DateTime lastTi = DateTime.Parse(formattedTime);
-                    DateTime datetimeToday = DateTime.Parse(todate);
-                    TimeSpan times = datetimeToday.Subtract(lastTi);
-                    double decimalHours = Math.Round(times.TotalHours, 2);
-                    lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2")) - lastTimein.TotalLunchHours;
+                            }
+                            if (lastTimein.BreakOutPm == null)
+                            {
+                                lastTimein.BreakOutPm = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                // Parse the string to DateTime
+                                DateTime Breakdate = DateTime.Parse(lastTimein.BreakInPm);
+                                string BreakformattedTime = Breakdate.ToString("yyyy-MM-ddTHH:mm");
+                                string Breaktodate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                                DateTime BreaklastTi = DateTime.Parse(BreakformattedTime);
+                                DateTime BreakdatetimeToday = DateTime.Parse(Breaktodate);
+                                TimeSpan Breaktimes = BreakdatetimeToday.Subtract(BreaklastTi);
+                                double BreakdecimalHours = Math.Round(Breaktimes.TotalHours, 2);
+                                lastTimein.TotalBreakPmHours = decimal.Parse(BreakdecimalHours.ToString("F2"));
+                            }
+                            // Parse the string to DateTime
+                            DateTime date = DateTime.Parse(lastTimein.TimeIn);
+                            string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
+                            string todate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                            lastTimein.TimeOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                            DateTime lastTi = DateTime.Parse(formattedTime);
+                            DateTime datetimeToday = DateTime.Parse(todate);
+                            TimeSpan times = datetimeToday.Subtract(lastTi);
+                            double decimalHours = Math.Round(times.TotalHours, 2);
+                            lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2")) - lastTimein.TotalLunchHours;
 
-                    string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isOnline] = '0'" +
-                                           " WHERE id = '" + tblTimeLog.UserId + "'";
-                    db.DB_WithParam(queryIsLoggedIn);
-                    _context.Entry(lastTimein).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+                            string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isOnline] = '0'" +
+                                                   " WHERE id = '" + tblTimeLog.UserId + "'";
+                            db.DB_WithParam(queryIsLoggedIn);
+                            _context.Entry(lastTimein).State = EntityState.Modified;
+                            await _context.SaveChangesAsync();
+                        }
+                        return Ok("TimeOut");
+                
                 }
-                return Ok("TimeOut");
+                else
+                {
+                    return BadRequest("Error!");
+                }
             }
             else
             {
-                return BadRequest("Error!");
+                //var lastTimein = _context.TblTimeLogs.AsNoTracking().Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeIn != null && timeLogs.TimeOut == null).OrderByDescending(timeLogs => timeLogs.UserId).FirstOrDefault();
+                if (lastTimein != null)
+                {
+                    if (lastTimein.TimeOut.IsNullOrEmpty())
+                    {
+                        // Parse the string to DateTime
+                        DateTime date = DateTime.Parse(lastTimein.TimeIn);
+                        string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
+                        string todate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        //lastTimein.TimeOut = DateTime.Now.ToString("hh:mm:ss tt");
+                        DateTime lastTi = DateTime.Parse(formattedTime);
+                        DateTime datetimeToday = DateTime.Parse(todate);
+                        TimeSpan times = datetimeToday.Subtract(lastTi);
+                        //lastTimein.RenderedHours = decimal.Parse(times.Hours.ToString() + "." + times.Minutes.ToString());
+                        double decimalHours = Math.Round(times.TotalHours, 2);
+                        lastTimein.TimeOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2"));
+                        _context.Entry(lastTimein).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                        //string query = $@"UPDATE [tbl_TimeLogs]"
+                        //                + "TimeOut = '" + lastTimein.TimeOut + "',"
+                        //                + "RenderedHours = '" + lastTimein.RenderedHours 
+                        //                + " WHERE Id = '" + lastTimein.Id + "'";
+                        //db.AUIDB_WithParam(query);
+                        string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isOnline] = '0'" +
+                                               " WHERE id = '" + tblTimeLog.UserId + "'";
+                        db.DB_WithParam(queryIsLoggedIn);
+                        return Ok("TimeOut");
+                    }
+                    else
+                    {
+                        return BadRequest("Error!");
+                    }
+
+                }
+                else
+                {
+                    return BadRequest("Error!");
+                }
+            }
+
+        }
+        [HttpPost]
+        public async Task<ActionResult<TblTimeLog>> TimeOut(User tblTimeLog)
+        {
+            try
+            {
+                var lastTimein = _context.TblTimeLogs.AsNoTracking().Where(timeLogs => timeLogs.UserId == tblTimeLog.UserId && timeLogs.TimeIn != null && timeLogs.TimeOut == null).OrderByDescending(timeLogs => timeLogs.UserId).FirstOrDefault();
+                bool hasOpenTimeLog = _context.TblTimeLogs
+                        .AsNoTracking()
+                        .Any(timeLogs => timeLogs.UserId == tblTimeLog.UserId
+                                      && timeLogs.TimeIn != null
+                                      && timeLogs.TimeOut == null);
+                //if (lastTimein != null)
+                if (hasOpenTimeLog)
+                {
+
+                    if (lastTimein.TimeOut.IsNullOrEmpty())
+                    {
+                        // Parse the string to DateTime
+                        DateTime date = DateTime.Parse(lastTimein.TimeIn);
+                        string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
+                        string todate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        //lastTimein.TimeOut = DateTime.Now.ToString("hh:mm:ss tt");
+                        DateTime lastTi = DateTime.Parse(formattedTime);
+                        DateTime datetimeToday = DateTime.Parse(todate);
+                        TimeSpan times = datetimeToday.Subtract(lastTi);
+                        //lastTimein.RenderedHours = decimal.Parse(times.Hours.ToString() + "." + times.Minutes.ToString());
+                        double decimalHours = Math.Round(times.TotalHours, 2);
+                        lastTimein.TimeOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                        lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2"));
+                        _context.Entry(lastTimein).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
+                        //string query = $@"UPDATE [tbl_TimeLogs]"
+                        //                + "TimeOut = '" + lastTimein.TimeOut + "',"
+                        //                + "RenderedHours = '" + lastTimein.RenderedHours 
+                        //                + " WHERE Id = '" + lastTimein.Id + "'";
+                        //db.AUIDB_WithParam(query);
+                    }
+                    string queryIsLoggedIn = $@"UPDATE [dbo].[tbl_UsersModel] SET [isOnline] = '0'" +
+                                           " WHERE id = '" + tblTimeLog.UserId + "'";
+                    db.DB_WithParam(queryIsLoggedIn);
+                    return Ok("TimeOut");
+                }
+                else
+                {
+                    return BadRequest("Error!");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //return BadRequest($"Error: {ex.Message}");
+                return Problem(ex.GetBaseException().ToString());
             }
 
         }
@@ -1181,5 +1242,60 @@ namespace API_HRIS.Controllers
             }
         }
 
+        public class CheckedTLRequestListParam
+        {
+            public string[]? Id { get; set; }
+        }
+        public partial class TblTimelogsVM
+        {
+            public string? Id { get; set; }
+            public string? fullname { get; set; }
+            public string? Remarks { get; set; }
+            public string? TimeIn { get; set; }
+            public string? TimeOut { get; set; }
+            public string? RenderedHours { get; set; }
+            public string? ApprovalReason { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckedTLRequestList(CheckedTLRequestListParam data)
+        {
+            try
+            {
+                //var filter = new CheckedLeaveRequestListParam;
+                string sql = "";
+                //var result = _context.TblLeaveRequestModel.Where(a => a.isDeleted == false).ToList();
+                var result = (dynamic)null;
+                sql = $@" SELECT tl.id, um.fullname, tl.Remarks, tl.TimeIn, tl.TimeOut, tl.RenderedHours, tl.ApprovalReason
+                            FROM tbl_TimeLogs tl with(nolock)
+                            inner join tbl_UsersModel um with(nolock)
+                            on um.id = tl.UserId";
+                sql += " WHERE tl.Id in (";
+                for (int x = 0; x < data.Id.Length; x++)
+                {
+                    sql += data.Id[x] + ',';
+                }
+                sql += "'0')";
+                result = new List<TblTimelogsVM>();
+                DataTable table = db.SelectDb(sql).Tables[0];
+                foreach (DataRow dr in table.Rows)
+                {
+                    var item = new TblTimelogsVM();
+                    item.Id = dr["Id"].ToString();
+                    item.fullname = dr["fullname"].ToString();
+                    item.Remarks = dr["Remarks"].ToString();
+                    item.TimeIn = dr["TimeIn"].ToString();
+                    item.TimeOut = dr["TimeOut"].ToString();
+                    item.RenderedHours = dr["RenderedHours"].ToString();
+                    item.ApprovalReason = dr["ApprovalReason"].ToString();
+                    result.Add(item);
+                }
+                //result = result.Where(a => filter.Id?.Contains(a) == true).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

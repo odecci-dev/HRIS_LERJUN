@@ -96,7 +96,7 @@ namespace MVC_HRIS.Controllers
         public async Task<IActionResult> GetEmployeeDetails(IdFilter data)
         {
             string result = "";
-            var list = new List<TblUsersModel>();
+            var list = new List<GetAllUserDetailsResult>();
             try
             {
                 HttpClient client = new HttpClient();
@@ -106,7 +106,7 @@ namespace MVC_HRIS.Controllers
                 using (var response = await client.PostAsync(url, content))
                 {
                     string res = await response.Content.ReadAsStringAsync();
-                    list = JsonConvert.DeserializeObject<List<TblUsersModel>>(res);
+                    list = JsonConvert.DeserializeObject<List<GetAllUserDetailsResult>>(res);
 
                 }
             }
