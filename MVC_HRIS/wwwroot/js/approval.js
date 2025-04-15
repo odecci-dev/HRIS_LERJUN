@@ -1297,4 +1297,26 @@ function initializeLeaveDataTable() {
         }
     });
 }
+function viewRejectedLR() {
+    var statusLabel = document.getElementById('StatusLabel');
+    if (plrStatusFilter == 0) {
+        plrStatusFilter = 1;
+        showodcloading();
+        setTimeout(function () {
+            initializeLeaveDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Pending"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
 
+
+    }
+    else {
+        plrStatusFilter = 0;
+        showodcloading();
+        setTimeout(function () {
+            initializeLeaveDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Rejected"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
+}
