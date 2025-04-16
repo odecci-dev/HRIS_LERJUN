@@ -189,7 +189,15 @@
                 if (data.status == '200') {
 
                     // notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
-                    var data = {
+                    
+                    // window.location.href = '@Url.Action("Index", "Timelogs")';
+                }
+                else {
+                    // notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                }
+
+            });
+            var data = {
                         TaskId: $("#task").val(),
                         userid: @Accessor.HttpContext.Session.GetString("Id"),
                         Remarks: $("#remarks").val(),
@@ -216,13 +224,6 @@
 
                     });
 
-                    // window.location.href = '@Url.Action("Index", "Timelogs")';
-                }
-                else {
-                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
-                }
-
-            });
             
         });
 

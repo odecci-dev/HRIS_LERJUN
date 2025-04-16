@@ -378,20 +378,53 @@
                     {
                         "title": "Profile",
                         "data": "id", "orderable": false,
+                        // "render": function (data, type, row) {
+                        //     var images = row['filePath'] == null ? img : row['filePath'];
+                        //     //var images = img;
+                        //     var fullname = row.fname + " " + row.lname;
+                        //     var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
+                        //                     <div class="data-img">
+                        //                         <img src='${images}' width="100%" />
+                        //                     </div>
+                        //                     <div style="align-items: center;">
+                        //                         <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                        //                         <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                        //                     </div>
+                        //                 </div>`;
+                        //     return btn;
+                        // }
                         "render": function (data, type, row) {
-                            var images = row['filePath'] == null ? img : row['filePath'];
-                            //var images = img;
+
+                            var images = "../../" + row['filePath'] == null ? img : "../../" + row['filePath'];
+                            let profile = "";
+                            var initial = row['fname'].charAt(0) + row['lname'].charAt(0);
                             var fullname = row.fname + " " + row.lname;
-                            var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
-                                            <div class="data-img">
-                                                <img src='${images}' width="100%" />
+                            initial = initial.toUpperCase()
+                            if (row['filePath'] == "" || row['filePath'] == null) {
+                                profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                                <div class="data-img">
+                                                    <div class="initial"> ${initial} </div>
+                                                </div>
+                                                <div style="align-items: center;">
+                                                    <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                                    <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                                </div>
                                             </div>
-                                            <div style="align-items: center;">
-                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
-                                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                            `;
+                            }
+                            else {
+                                profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                                <div class="data-img">
+                                                    <img src='${images}' width="100%" />
+                                                </div>
+                                                <div style="align-items: center;">
+                                                    <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                                    <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                                </div>
                                             </div>
-                                        </div>`;
-                            return btn;
+                                            `;
+                            }
+                            return profile;
                         }
                     },
                     // {
@@ -451,6 +484,9 @@
                     {
                         "title": "Rendered Hours",
                         "data": "renderedHours", "orderable": false
+                    },{
+                         "title": "",
+                        "data": "statusName"
                     },
                     {
                         "title": "",
@@ -477,10 +513,14 @@
 
                                         badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #b2651b; font-size: .8rem'>Undertime</span>";
                                     }
+                                    else if(row.timelogStatus === "ONTIME" && row.isUnderTime === "0"){
+
+                                        badge += "";
+                                    }
                                     else if(row.timelogStatus === "RestDayOverTime"){
                                         badge += "";
                                     }
-                                    else{
+                                    else if(row.timelogStatus == 'Late'  && row.isUnderTime == '1'){
                                         badge += "&nbsp;<span class='p-1 px-3 text-light' style='border-radius: 15px;background-color: #ac1616; font-size: .8rem'>Late & Undertime</span>";
                                     }
                                 }

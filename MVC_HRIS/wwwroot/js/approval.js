@@ -41,20 +41,54 @@ function initializeTimlogsDataTable() {
             {
                 "title": "Profile",
                 "data": "id",
+                //"render": function (data, type, row) {
+                //    var images = row['filePath'] == null ? img : row['filePath'];
+                //    //var images = img;
+                //    var fullname = row.fname + " " + row.lname;
+                //    var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
+                //                            <div class="data-img">
+                //                                <img src='${images}' width="100%" />
+                //                            </div>
+                //                            <div style="align-items: center;">
+                //                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                //                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                //                            </div>
+                //                        </div>`;
+                //    return btn;
+                //}
                 "render": function (data, type, row) {
-                    var images = row['filePath'] == null ? img : row['filePath'];
-                    //var images = img;
+
+                    // var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
+                    var images = "../../" + row['filePath'] == null ? img : "../../" + row['filePath'];
+                    let profile = "";
+                    var initial = row['fname'].charAt(0) + row['lname'].charAt(0);
                     var fullname = row.fname + " " + row.lname;
-                    var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
-                                            <div class="data-img">
-                                                <img src='${images}' width="100%" />
-                                            </div>
-                                            <div style="align-items: center;">
-                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
-                                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
-                                            </div>
-                                        </div>`;
-                    return btn;
+                    initial = initial.toUpperCase()
+                    if (row['filePath'] == "" || row['filePath'] == null) {
+                        profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                        <div class="data-img">
+                                            <div class="initial"> ${initial} </div>
+                                        </div>
+                                        <div style="align-items: center;">
+                                            <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                            <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                        </div>
+                                    </div>
+                                    `;
+                    }
+                    else {
+                        profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                        <div class="data-img">
+                                            <img src='${images}' width="100%" />
+                                        </div>
+                                        <div style="align-items: center;">
+                                            <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                            <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                        </div>
+                                    </div>
+                                    `;
+                    }
+                    return profile;
                 }
             },
             // {

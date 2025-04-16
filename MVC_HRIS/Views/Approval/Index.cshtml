@@ -183,18 +183,22 @@
             fetchtimlogsuserpendingselect();
             initializeTimlogsDataTable();
             timelogsTableMOD();
+            setCutOffDatesPTL();
             // Timelogs End
             // Overtime Start
             // fetchOTuserpendingselect();
             initializeOTDataTable();
             OTTableMOD();
+            setCutOffDatesPOT();
             // Overtime End
             // Leave Start
             initializeLeaveDataTable();
+            setCutOffDatesPLR();
             // Leave End
         });
 
         document.addEventListener("DOMContentLoaded", function () {
+            // Pending Over Time Start
             const potmonthSelect = document.getElementById("pot-monthSelect");
             const potcurrentYear = new Date().getFullYear();
             for (let potmonth = 0; potmonth < 12; potmonth++) {
@@ -206,7 +210,36 @@
             }
             // Set default to current month
             potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            setCutOffDatesPOT();
+            // Pending Over Time End
+
+
+            // Pending Tmelogs Start
+            const ptlmonthSelect = document.getElementById("ptl-monthSelect");
+            const ptlcurrentYear = new Date().getFullYear();
+            for (let ptlmonth = 0; ptlmonth < 12; ptlmonth++) {
+                const ptlmonthName = new Date(ptlcurrentYear, ptlmonth).toLocaleString('default', { month: 'long' });
+                const ptloption = document.createElement("option");
+                ptloption.value = `${ptlcurrentYear}-${String(ptlmonth + 1).padStart(2, '0')}`;
+                ptloption.text = `${ptlmonthName} ${ptlcurrentYear}`;
+                ptlmonthSelect.appendChild(ptloption);
+            }
+            // Set default to current month
+            ptlmonthSelect.value = `${ptlcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            // Pending Tmelogs End
+
+            // Pending Leave Request Start
+            const plrmonthSelect = document.getElementById("plr-monthSelect");
+            const plrcurrentYear = new Date().getFullYear();
+
+            for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
+                const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
+                const plroption = document.createElement("option");
+                plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
+                plroption.text = `${plrmonthName} ${plrcurrentYear}`;
+                plrmonthSelect.appendChild(plroption);
+            }
+            plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            // Pending Leave Request End
         });
         function setCutOffSelected(){
             const today = new Date();
@@ -215,13 +248,16 @@
             if(dd > 10 && dd <26){
                  document.getElementById("potCuttOff").value = 1;
                  document.getElementById("plrCuttOff").value = 1;
+                 document.getElementById("ptlCuttOff").value = 1;
             }
             else{
                  document.getElementById("potCuttOff").value = 0;
                  document.getElementById("plrCuttOff").value = 0;
+                 document.getElementById("ptlCuttOff").value = 0;
             }
 
         }
+
         async function setCutOffDatesPOT() {
             const potselectedMonth = document.getElementById("pot-monthSelect").value;
             const potCuttOff = document.getElementById("potCuttOff").value;
@@ -259,6 +295,43 @@
             document.getElementById('pot-dateto').value = formatToDate(toDate);
 
         }
+        async function setCutOffDatesPTL() {
+            const ptlselectedMonth = document.getElementById("ptl-monthSelect").value;
+            const ptlCuttOff = document.getElementById("ptlCuttOff").value;
+            const [year, month] = ptlselectedMonth.split('-').map(Number);
+            let fromDate, toDate;
+            //console.log(month);
+            if (ptlCuttOff == 0) {
+                fromDate = new Date(year, month - 2, 26);
+                toDate = new Date(year, month - 1, 10);
+            } else if (ptlCuttOff == 1) {
+                fromDate = new Date(year, month - 1, 11);
+                toDate = new Date(year, month - 1, 25);
+            }
+
+            // Format as YYYY-MM-DD
+            const formatFromDate = (fromDate) => {
+                let year = fromDate.getFullYear();
+                let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = fromDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            const formatToDate = (toDate) => {
+                let year = toDate.getFullYear();
+                let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = toDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            document.getElementById('ptl-datefrom').value = formatFromDate(fromDate);
+            document.getElementById('ptl-dateto').value = formatToDate(toDate);
+
+        }
         $('#potCuttOff').on('change', function () {
             setCutOffDatesPOT();
             initializeOTDataTable();
@@ -267,33 +340,32 @@
             setCutOffDatesPOT();
             initializeOTDataTable();
         });
-        document.addEventListener("DOMContentLoaded", function () {
-            const plrmonthSelect = document.getElementById("plr-monthSelect");
-            const plrcurrentYear = new Date().getFullYear();
+        // document.addEventListener("DOMContentLoaded", function () {
+        //     const plrmonthSelect = document.getElementById("plr-monthSelect");
+        //     const plrcurrentYear = new Date().getFullYear();
 
-            for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
-                const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
-                const plroption = document.createElement("option");
-                plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
-                plroption.text = `${plrmonthName} ${plrcurrentYear}`;
-                plrmonthSelect.appendChild(plroption);
-            }
-            plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            setCutOffDatesPLR();
-            //const lrmonthSelect = document.getElementById("lr-monthSelect");
-            //const lrcurrentYear = new Date().getFullYear();
-            //for (let lrmonth = 0; lrmonth < 12; lrmonth++) {
-            //    const lrmonthName = new Date(lrcurrentYear, lrmonth).toLocaleString('default', { month: 'long' });
-            //    const lroption = document.createElement("option");
-            //    lroption.value = `${lrcurrentYear}-${String(lrmonth + 1).padStart(2, '0')}`;
-            //    lroption.text = `${lrmonthName} ${lrcurrentYear}`;
-            //    lrmonthSelect.appendChild(lroption);
-            //}
-            //// Set default to current month
-            //potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            //plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            //setCutOffDatesPLR();
-        });
+        //     for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
+        //         const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
+        //         const plroption = document.createElement("option");
+        //         plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
+        //         plroption.text = `${plrmonthName} ${plrcurrentYear}`;
+        //         plrmonthSelect.appendChild(plroption);
+        //     }
+        //     plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        //     //const lrmonthSelect = document.getElementById("lr-monthSelect");
+        //     //const lrcurrentYear = new Date().getFullYear();
+        //     //for (let lrmonth = 0; lrmonth < 12; lrmonth++) {
+        //     //    const lrmonthName = new Date(lrcurrentYear, lrmonth).toLocaleString('default', { month: 'long' });
+        //     //    const lroption = document.createElement("option");
+        //     //    lroption.value = `${lrcurrentYear}-${String(lrmonth + 1).padStart(2, '0')}`;
+        //     //    lroption.text = `${lrmonthName} ${lrcurrentYear}`;
+        //     //    lrmonthSelect.appendChild(lroption);
+        //     //}
+        //     //// Set default to current month
+        //     //potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        //     //plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        //     //setCutOffDatesPLR();
+        // });
         async function setCutOffDatesPLR() {
             //const lrselectedMonth = document.getElementById("lr-monthSelect").value;
             //const lrCuttOff = document.getElementById("lrCuttOff").value;;

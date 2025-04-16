@@ -17,12 +17,12 @@
                 <div class="mod-form">
 
                     <div class="action-navbar">
-                        <div class="input-holder">
-                            <span class="text-left">Filter User:</span>
+                        @*<div class="input-holder">
+                             <span class="text-left">Filter User:</span>
                             <select id="selectUserPending">
                                 <option value="" selected disabled> Select User</option>
-                            </select>
-                            @* <button class="btn btn-warning" id="refresh-tl" title="Refresh">
+                            </select> 
+                             <button class="btn btn-warning" id="refresh-tl" title="Refresh">
                                 <i class="fa-solid fa-arrows-rotate"></i> Refresh
                             </button>
                             <button class="btn btn-danger" id="decline-tl" title="Delete">
@@ -30,7 +30,38 @@
                             </button>
                             <button class="btn btn-success" id="approve-tl" title="Approve" onclick="">
                                 <i class="fa-solid fa-file-arrow-down"></i> Approve
-                            </button> *@
+                            </button>
+                        </div> *@
+                        <div class="layer">
+                            <div class="input-holder">
+                                <span class="text-left text-dark">From:</span>
+                                <div class="date-input">
+                                    <input type="date" id="ptl-datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <span class="text-left text-dark">To:</span>
+                                <div class="date-input">
+                                    <input type="date" id="ptl-dateto" class="mod-inputs-nw" placeholder="Date" />
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <div class="date-input">
+                                    <select id="ptl-monthSelect" class="form-control"></select>
+                                </div>
+                            </div>
+
+                            <div class="input-holder">
+                                <select id="ptlCuttOff">
+                                    <option value="0" selected> First Cutt-off</option>
+                                    <option value="1"> Second Cutt-off</option>
+                                </select>
+                            </div>
+                            <div class="input-holder">
+                                <a href="#" class="text-white" id="" title="View" onclick="viewRejectedLR()">
+                                    View <span id="ptlStatusLabel" style="color: #fff;font-weight: 400">Rejected</span> Timelogs <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

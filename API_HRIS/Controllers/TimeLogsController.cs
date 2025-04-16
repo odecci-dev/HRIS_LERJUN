@@ -59,11 +59,11 @@ namespace API_HRIS.Controllers
                 //
                 if (validation.UsertypeId != "2")
                 {
-                    result = dbmet.TimeLogsData().Where(a => a.UserId == data.UserId && Convert.ToDateTime(a.Date) >= Convert.ToDateTime(data.datefrom) && Convert.ToDateTime(a.Date) <= Convert.ToDateTime(data.dateto)).OrderByDescending(a => a.Id).ToList();
+                    result = dbmet.TimeLogsData().Where(a => a.UserId == data.UserId && a.StatusId != "5" && Convert.ToDateTime(a.Date) >= Convert.ToDateTime(data.datefrom) && Convert.ToDateTime(a.Date) <= Convert.ToDateTime(data.dateto)).OrderByDescending(a => a.Id).ToList();
                 }
                 else
                 {
-                    result = dbmet.TimeLogsData().Where(a => Convert.ToDateTime(a.Date) >= Convert.ToDateTime(data.datefrom) && Convert.ToDateTime(a.Date) <= Convert.ToDateTime(data.dateto)).OrderByDescending(a => a.Id).ToList();
+                    result = dbmet.TimeLogsData().Where(a => Convert.ToDateTime(a.Date) >= Convert.ToDateTime(data.datefrom) && a.StatusId != "5" && Convert.ToDateTime(a.Date) <= Convert.ToDateTime(data.dateto)).OrderByDescending(a => a.Id).ToList();
                 }
             }
             else
@@ -364,7 +364,7 @@ namespace API_HRIS.Controllers
         public async Task<ActionResult<TblTimeLog>> RegularTimeIn(TblTimeLog data)
         {
             var lastTimein = _context.TblTimeLogs.AsNoTracking()
-                    .Where(timeLogs => timeLogs.UserId == data.UserId && timeLogs.TimeIn != null && timeLogs.TimeOut == null)
+                    .Where(timeLogs => timeLogs.UserId == data.UserId && timeLogs.TimeIn != null && timeLogs.TimeOut == null && timeLogs.StatusId != 5)
                     .OrderByDescending(timeLogs => timeLogs.UserId).FirstOrDefault();
             if (lastTimein == null)
             {
@@ -876,7 +876,7 @@ namespace API_HRIS.Controllers
                         ON ts.StatusId = tl.StatusId
                         LEFT JOIN tbl_TaskModel t WITH(NOLOCK)
                         ON t.Id = tl.TaskId
-                        WHERE tl.DeleteFlag = 1 AND  tl.Date between '" + data.datefrom + "' AND '" + data.dateto + "'";
+                        WHERE tl.StatusId != 5 AND tl.DeleteFlag = 1 AND  tl.Date between '" + data.datefrom + "' AND '" + data.dateto + "'";
 
 
                 if (data.Department != "0")
