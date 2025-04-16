@@ -96,6 +96,7 @@ namespace MVC_HRIS.Controllers
 
             public string? datefrom { get; set; }
             public string? dateto { get; set; }
+            public int? status { get; set; }
             public string? Department { get; set; }
         }
         public partial class User

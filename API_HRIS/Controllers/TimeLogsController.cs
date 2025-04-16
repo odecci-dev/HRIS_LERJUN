@@ -28,14 +28,7 @@ namespace API_HRIS.Controllers
             dbmet = _dbmet;
         }
 
-        public class TimeLogsParam
-        {
-            public string? Usertype { get; set; }
-            public string? UserId { get; set; }
-            public string? datefrom { get; set; }
-            public string? dateto { get; set; }
-            public string? Department { get; set; }
-        }
+        
         public class CheckBreakTimeParameter
         {
             public int userId { get; set; }
@@ -74,22 +67,75 @@ namespace API_HRIS.Controllers
 
             return Ok(result);
         }
+        public class TimeLogsParam
+        {
+            public string? Usertype { get; set; }
+            public string? UserId { get; set; }
+            public string? datefrom { get; set; }
+            public string? dateto { get; set; }
+            public int? status { get; set; }
+            public string? Department { get; set; }
+        }
         [HttpPost]
         public async Task<IActionResult> TimeLogsPending(TimeLogsParam data)
         {
-            var result = (dynamic)null;
-            if (data.UserId == "0")
+            try
             {
-                result = dbmet.TimeLogsData().Where(a => a.StatusId == "0").OrderByDescending(a => a.Id).ToList();
+                var result = (dynamic)null;
+                
+                DateTime startD = DateTime.ParseExact(data.datefrom, "yyyy-MM-dd", null);
+                DateTime endD = DateTime.ParseExact(data.dateto, "yyyy-MM-dd", null);
+                if (data.UserId == "0")
+                {
+                    
 
+                    if (data.status == 0)
+                    {
+                        result = dbmet.TimeLogsData()
+                        .Where(a => a.StatusId == "0" &&
+                        Convert.ToDateTime(a.Date) >= startD &&
+                        Convert.ToDateTime(a.Date) <= endD)
+                        .OrderByDescending(a => a.Id).ToList();
+                    }
+                    else
+                    {
+                        result = dbmet.TimeLogsData()
+                        .Where(a => a.StatusId == "2" &&
+                        Convert.ToDateTime(a.Date) >= startD &&
+                        Convert.ToDateTime(a.Date) <= endD)
+                        .OrderByDescending(a => a.Id).ToList();
+                    }
+
+                }
+                else
+                {
+                    
+                    if (data.status == 0)
+                    {
+                        result = dbmet.TimeLogsData()
+                        .Where(a => a.StatusId == "0" && a.UserId == data.UserId &&
+                        Convert.ToDateTime(a.Date) >= startD &&
+                        Convert.ToDateTime(a.Date) <= endD)
+                        .OrderByDescending(a => a.Id).ToList();
+                    }
+                    else
+                    {
+                        result = dbmet.TimeLogsData()
+                        .Where(a => a.StatusId == "2" && a.UserId == data.UserId &&
+                        Convert.ToDateTime(a.Date) >= startD &&
+                        Convert.ToDateTime(a.Date) <= endD)
+                        .OrderByDescending(a => a.Id).ToList();
+                    }
+                }
+
+                return Ok(result);
             }
-            else
+            catch (Exception ex)
             {
-                result = dbmet.TimeLogsData().Where(a => a.StatusId == "0" && a.UserId == data.UserId).OrderByDescending(a => a.Id).ToList();
+                //return BadRequest($"Error: {ex.Message}");
+                return Problem(ex.GetBaseException().ToString());
             }
-
-
-            return Ok(result);
+            
         }
         [HttpPost]
         public async Task<IActionResult> NotificationList(TblNotification data)

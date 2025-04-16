@@ -155,7 +155,9 @@
         let otStatusIdentifier = 0;
         let otStatusFilter = 0;
         let plrStatusFilter = 0;
+        let plrStatusIdentifier = 0;
         let tlStatusFilter = 0;
+        let tlStatusIdentifier = 0;
 
         var userType = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
         var userId = "@Accessor.HttpContext.Session.GetString("UserID")";
@@ -181,19 +183,19 @@
             setCutOffSelected();
             // Timelogs Start
             fetchtimlogsuserpendingselect();
-            initializeTimlogsDataTable();
             timelogsTableMOD();
             setCutOffDatesPTL();
+            initializeTimlogsDataTable();
             // Timelogs End
             // Overtime Start
             // fetchOTuserpendingselect();
-            initializeOTDataTable();
             OTTableMOD();
             setCutOffDatesPOT();
+            initializeOTDataTable();
             // Overtime End
             // Leave Start
-            initializeLeaveDataTable();
             setCutOffDatesPLR();
+            initializeLeaveDataTable();
             // Leave End
         });
 
@@ -339,6 +341,21 @@
         $('#pot-monthSelect').on('change', function () {
             setCutOffDatesPOT();
             initializeOTDataTable();
+        });
+        $('#ptlCuttOff').on('change', function () {
+            setCutOffDatesPTL();
+            initializeTimlogsDataTable();
+        });
+        $('#ptl-monthSelect').on('change', function () {
+            setCutOffDatesPTL();
+            initializeTimlogsDataTable();
+        });
+
+        $('#ptl-datefrom').on('change', function () {
+            initializeTimlogsDataTable();
+        });
+        $('#ptl-dateto').on('change', function () {
+            initializeTimlogsDataTable();
         });
         // document.addEventListener("DOMContentLoaded", function () {
         //     const plrmonthSelect = document.getElementById("plr-monthSelect");
@@ -507,7 +524,9 @@
 
         const lrapprovallist = []
         function rejectLeave(){
-           var checkboxes = document.querySelectorAll('.row-checkbox');
+
+            plrStatusIdentifier = 0;
+            var checkboxes = document.querySelectorAll('.row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             if(checkedCheckboxes.length == 0){
                 alert('Select Leave Request First');
@@ -523,6 +542,8 @@
             }
         }
         function approveLeave(){
+
+            plrStatusIdentifier = 1;
             var checkboxes = document.querySelectorAll('.row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             if(checkedCheckboxes.length == 0){
@@ -818,13 +839,12 @@
                     selectedRequest.push(value);
                 }
 
-                console.log(selectedRequest);
+                // console.log(selectedRequest);
             }
         }
 
         function DeclineTimelogs(){
-            tlStatusFilter = 0;
-            console.log(otStatusIdentifier);
+            tlStatusIdentifier = 0;
             var checkboxes = document.querySelectorAll('.tl-row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             if(checkedCheckboxes.length == 0){
@@ -842,7 +862,7 @@
             }
         }
         function ApproveTimelogs(){
-            tlStatusFilter = 1;
+            tlStatusIdentifier = 1;
             console.log(otStatusIdentifier);
             var checkboxes = document.querySelectorAll('.tl-row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);

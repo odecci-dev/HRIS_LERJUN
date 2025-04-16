@@ -8,10 +8,15 @@ function initializeTimlogsDataTable() {
         $(tableId).DataTable().clear().destroy();
     }
     var user = $('#selectUserPending').val() ? $('#selectUserPending').val() : 0;
+    var dateF = document.getElementById('ptl-datefrom').value;
+    var datet = document.getElementById('ptl-dateto').value;
     const data = {
-        UserId: user
+        UserId: user,
+        datefrom: dateF,
+        dateto: datet,
+        status: tlStatusFilter
     };
-    // console.log(data);
+     //console.log(data);
     var dtProperties = {
         ajax: {
             url: '/TimeLogs/GetPedingTimelogsList',
@@ -359,6 +364,30 @@ function decline_item() {
         }
         initializeTimlogsDataTable();
     });
+}
+
+function viewRejectedTL() {
+    var statusLabel = document.getElementById('TLStatusLabel');
+    if (tlStatusFilter == 0) {
+        tlStatusFilter = 1;
+        showodcloading();
+        setTimeout(function () {
+            initializeTimlogsDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Pending"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+
+
+    }
+    else {
+        tlStatusFilter = 0;
+        showodcloading();
+        setTimeout(function () {
+            initializeTimlogsDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Rejected"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
 }
 //OverTime Tab
 
