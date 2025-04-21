@@ -106,6 +106,10 @@ namespace API_HRIS.ApplicationModel
             public string? TaskId { get; set; }
             public string? Task { get; set; }
             public string? Department { get; set; }
+            public string? DepartmentName { get; set; }
+            public string? Position { get; set; }
+            public string? PositionLevel { get; set; }
+            public string? EmployeeType { get; set; }
         }
         public class UserTypePaginateModel
         {

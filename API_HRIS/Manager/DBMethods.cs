@@ -240,6 +240,10 @@ namespace API_HRIS.Manager
                     item.TaskId = dr["TaskId"].ToString();
                     item.Task = dr["Task"].ToString();
                     item.Department = dr["Department"].ToString();
+                    item.DepartmentName = dr["DepartmentName"].ToString();
+                    item.Position = dr["Position"].ToString();
+                    item.PositionLevel = dr["PositionLevel"].ToString();
+                    item.EmployeeType = dr["EmployeeType"].ToString();
                     result.Add(item);
                 }
             }

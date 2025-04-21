@@ -75,7 +75,8 @@
 .filing-container .filing-card .template {
     background-color: transparent;
     color: var(--dark);
-    border-color: var(--dark)
+    border-color: var(--dark);
+    font-weight: 400;
 }
 
 .filing-container .filing-card label {

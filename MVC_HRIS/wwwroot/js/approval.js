@@ -26,7 +26,7 @@ function initializeTimlogsDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
@@ -35,12 +35,65 @@ function initializeTimlogsDataTable() {
 
                 // Compute total rendered hours after data is loaded
                 //computeTotalRenderedHours();
+
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const tldepartments = [...new Set(data.map(item => item.departmentName))];
+                const $tldeptFilter = $('#tldepartmentFilter');
+                if ($tldeptFilter.length && $tldeptFilter.children('option').length <= 1) {
+                    tldepartments.forEach(dep => {
+                        if (dep) {
+                            $tldeptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+                // Populate Position filter
+                const tlpositions = [...new Set(data.map(item => item.position))];
+                const $tlposFilter = $('#tlpositionFilter');
+                if ($tlposFilter.length && $tlposFilter.children('option').length <= 1) {
+                    tlpositions.forEach(pos => {
+                        if (pos) {
+                            $tlposFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const tlpositionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $tlposlvlFilter = $('#tlpositionLevelFilter');
+                if ($tlposlvlFilter.length && $tlposlvlFilter.children('option').length <= 1) {
+                    tlpositionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $tlposlvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const tlemployeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $tlemployeeTypeFilter = $('#tlemployeeType');
+                if ($tlemployeeTypeFilter.length && $tlemployeeTypeFilter.children('option').length <= 1) {
+                    tlemployeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $tlemployeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const tlfullnames = [...new Set(data.map(item => item.fname+' '+item.lname))];
+                const $tlfullnameFilter = $('#tlfullname');
+                if ($tlfullnameFilter.length && $tlfullnameFilter.children('option').length <= 1) {
+                    tlfullnames.forEach(fullname => {
+                        if (fullname) {
+                            $tlfullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
             },
             error: function (err) {
                 alert(err.responseText);
             }
         },
-        dom: 'rtip',
+        dom: 'Brtip',
         columns: [
             { "title": "<input type='checkbox' id='checkAllTL' class='checkAllTL'>", "data": null, "orderable": false },
             {
@@ -235,6 +288,45 @@ function initializeTimlogsDataTable() {
                     }
                     return button;
                 }
+            },
+            {
+                "title": "Department",
+                "data": "departmentName",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Position",
+                "data": "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "PositionLevel",
+                "data": "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "EmployeeType",
+                "data": "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Fullname",
+                "data": "fname",
+                name: "fullname",
+                visible: true,
+                searchable: true,
+                "render": function (data,row) {
+                    return data+" "+row.lname;
+                }
+
             }
             //,
             //{
@@ -247,6 +339,56 @@ function initializeTimlogsDataTable() {
             //    //    return textfield;
             //    //},
             //}
+        ],
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            {
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="tldepartmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="tlpositionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="tlpositionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="tlemployeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="tlfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                                
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
+                }
+            }
         ]
         , responsive: true
         // , columnDefs:  columnDefsConfig
@@ -311,6 +453,53 @@ function initializeTimlogsDataTable() {
         $(this).addClass('selected-row');
         lastSelectedRow = this;
         // console.log(data);
+    });
+
+    $(document).on('change', '#tldepartmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+    });
+
+    $(document).on('change', '#tlpositionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlpositionLevelFilter', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlemployeeType', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlfullname', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
     });
 }
 function timelogsTableMOD() {
@@ -1230,16 +1419,6 @@ function initializeLeaveDataTable() {
             },
         ],
         buttons: [
-            //{
-            //    extend: 'pdf',
-            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
-            //    title: 'Leave Request List', // Set custom title in the file
-            //    filename: 'Leave_Request_List', // Custom file name
-            //    className: 'btn btn-info',
-            //    exportOptions: {
-            //        columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
-            //    }
-            //},
             {
                 extend: 'excel',
                 text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
@@ -1250,13 +1429,6 @@ function initializeLeaveDataTable() {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
                 }
             },
-            //{
-            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
-            //    className: 'btn btn-danger',
-            //    action: function () {
-            //        DeclineOvertime(); // Call your custom function
-            //    }
-            //},
             {
                 text: 'Filters',
                 action: function () { },

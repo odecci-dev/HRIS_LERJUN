@@ -76,6 +76,7 @@ namespace API_HRIS.Controllers
             public int? status { get; set; }
             public string? Department { get; set; }
         }
+        
         [HttpPost]
         public async Task<IActionResult> TimeLogsPending(TimeLogsParam data)
         {
@@ -1343,5 +1344,64 @@ namespace API_HRIS.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        public partial class TblTimelogsImportModel
+        {
+            public string? UserId { get; set; }
+            public string? Date { get; set; }
+            public string? TimeIn { get; set; }
+            public string? TimeOut { get; set; }
+            public string? TaskId { get; set; }
+            public string? Remarks { get; set; }
+            public string? TotalLunchHours { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Import(List<TblTimelogsImportModel> list)
+        {
+            string result = "";
+            string status = "";
+            try
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = new TblTimeLog();
+                    item.Id = 0;
+                    item.UserId = int.Parse(list[0].UserId);
+                    item.Date = DateTime.Parse(list[i].Date);
+                    item.TimeIn = list[i].TimeIn;
+                    item.TimeOut = list[i].TimeOut;
+
+                    // Parse the string to DateTime
+                    DateTime date = DateTime.Parse(list[i].TimeIn);
+                    string formattedTime = date.ToString("yyyy-MM-ddTHH:mm");
+                    string todate = list[i].TimeOut;
+                    //lastTimein.TimeOut = DateTime.Now.ToString("hh:mm:ss tt");
+                    DateTime lastTi = DateTime.Parse(formattedTime);
+                    DateTime datetimeToday = DateTime.Parse(todate);
+                    TimeSpan times = datetimeToday.Subtract(lastTi);
+                    //lastTimein.RenderedHours = decimal.Parse(times.Hours.ToString() + "." + times.Minutes.ToString());
+                    double decimalHours = Math.Round(times.TotalHours, 2)- int.Parse(list[0].TotalLunchHours);
+                    item.RenderedHours = decimal.Parse(decimalHours.ToString("F2"));
+                    item.DeleteFlag = 1;
+                    item.StatusId = 0;
+                    item.Identifier = "Import";
+                    item.Remarks = list[i].Remarks;
+                    item.TaskId = int.Parse(list[0].TaskId); ;
+                    item.DateCreated = DateTime.Now.Date;
+                    item.DateUpdated = null;
+                    item.DateDeleted = null;
+                    _context.TblTimeLogs.Add(item);
+                    await _context.SaveChangesAsync();
+                    status = "Inserted Successfully";
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.GetBaseException().ToString());
+
+            }
+
+            return Content(status);
+        }
+
     }
 }
