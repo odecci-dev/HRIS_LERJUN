@@ -142,7 +142,37 @@ namespace API_HRIS.Controllers
         {
             try
             {
-                var result = _context.TblUsersModels.Where(a => a.Id == data.Id).OrderByDescending(a => a.DateCreated).ThenByDescending(a => a.DateUpdated).ToList();
+                //var result = _context.TblUsersModels.Where(a => a.Id == data.Id).OrderByDescending(a => a.DateCreated).ThenByDescending(a => a.DateUpdated).ToList();
+                var result = _context.GetEmployees().Where(a => a.Id == data.Id)
+                    .Select(a => new {
+                    a.Id,
+                    a.Username,
+                    a.Fullname,
+                    a.Fname,
+                    a.Lname,
+                    a.Mname,
+                    a.Suffix,
+                    a.Email,
+                    a.Gender,
+                    Status = a.StatusId,
+                    EmployeeId = a.EmployeeID,
+                    a.FilePath,
+                    a.Cno,
+                    a.Address,
+                    a.Department,
+                    UserType = a.UserTypeId,
+                    a.EmployeeType,
+                    SalaryType = a.SalaryTypeId,
+                    a.Rate,
+                    a.DaysInMonth,
+                    PayrollType = a.PayrollTypeId,
+                    a.DateStarted,
+                    a.Position,
+                    a.PositionLevelId,
+                    a.ManagerId
+                     // skip IsActive, RoleId, etc. if they're problematic
+                 })
+                                    .ToList();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -246,7 +276,8 @@ namespace API_HRIS.Controllers
 
             catch (Exception ex)
             {
-                return BadRequest("ERROR");
+                //return BadRequest("ERROR");
+                return BadRequest(ex.GetBaseException().ToString());
             }
         }
 
@@ -473,11 +504,8 @@ namespace API_HRIS.Controllers
             try
             {
                 userModel.DeleteFlag = true;
-                userModel.Active = 1;
                 userModel.DateDeleted = DateTime.Now;
                 userModel.DeletedBy = data.deletedBy;
-                userModel.DateRestored = null;
-                userModel.RestoredBy = "";
                 _context.Entry(userModel).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 

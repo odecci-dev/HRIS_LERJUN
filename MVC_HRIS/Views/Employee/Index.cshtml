@@ -99,13 +99,14 @@
                     complete: function (xhr) {
                         var url = new URL(window.location.href);
                         var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                        console.log('table1', _currentPage);
+                        // console.log('table1', _currentPage);
                         table.page(_currentPage - 1).draw('page');
                     },
                     error: function (err) {
                         alert(err.responseText);
                     }
                 },
+                responsive: true,
                 "columns": [
 
                     {
@@ -201,7 +202,7 @@
                         }
                     }
                 ],
-                pageLength: 5,
+                pageLength: 10,
                 order: [[0, 'desc']], // Sort the second column (index 1) by descending order
                 columnDefs: [
                     {

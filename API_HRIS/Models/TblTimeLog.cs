@@ -10,8 +10,8 @@ public partial class TblTimeLog
     public int Id { get; set; }
     public int? UserId { get; set; }
     public DateTime? Date { get; set; }
-    public string TimeIn { get; set; }
-    public string TimeOut { get; set; }
+    public string? TimeIn { get; set; }
+    public string? TimeOut { get; set; }
     public decimal? RenderedHours { get; set; }
     public string? LunchIn { get; set; }
     public string? LunchOut { get; set; }

@@ -84,9 +84,9 @@
     <div class="main-container">
         <div class="content-filter">
             <div class="tab">
-                <button class="tablinks active" onclick="openTab(event, 'Tab1')">Timelogs</button>
-                <button class="tablinks" onclick="openTab(event, 'Tab2')">Leave</button>
-                <button class="tablinks" onclick="openTab(event, 'Tab3')">Overtime</button>
+                <button class="tablinks active" onclick="openTab(event, 'Tab1')" id="TLApproval">Timelogs</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab2')" id="LRApproval">Leave</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab3')" id="OTApproval">Overtime</button>
             </div>
             <div id="Tab1" class="tab-content active">
                 @* <h3>Tab 1 Content</h3> *@
@@ -155,26 +155,52 @@
         let otStatusIdentifier = 0;
         let otStatusFilter = 0;
         let plrStatusFilter = 0;
+        let plrStatusIdentifier = 0;
+        let tlStatusFilter = 0;
+        let tlStatusIdentifier = 0;
 
         var userType = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
         var userId = "@Accessor.HttpContext.Session.GetString("UserID")";
+
+        window.addEventListener("load", function () {
+            if (sessionStorage.getItem("LeaveFlag") === "true") {
+                sessionStorage.removeItem("LeaveFlag"); // Remove flag to avoid repeat execution
+                document.getElementById('LRApproval').click();
+                alertMessage();
+                FetchLeaveRequestList();
+            }
+            else if(sessionStorage.getItem("OTFlag") === "true") {
+                sessionStorage.removeItem("OTFlag"); // Remove flag to avoid repeat execution
+                document.getElementById('OTApproval').click();
+            }
+            else if(sessionStorage.getItem("TLFlag") === "true") {
+                sessionStorage.removeItem("TLFlag"); // Remove flag to avoid repeat execution
+                document.getElementById('TLApproval').click();
+            }
+        });
+
         $(document).ready(function () {
+            setCutOffSelected();
             // Timelogs Start
             fetchtimlogsuserpendingselect();
-            initializeTimlogsDataTable();
             timelogsTableMOD();
+            setCutOffDatesPTL();
+            initializeTimlogsDataTable();
             // Timelogs End
             // Overtime Start
             // fetchOTuserpendingselect();
-            initializeOTDataTable();
             OTTableMOD();
+            setCutOffDatesPOT();
+            initializeOTDataTable();
             // Overtime End
             // Leave Start
+            setCutOffDatesPLR();
             initializeLeaveDataTable();
             // Leave End
         });
 
         document.addEventListener("DOMContentLoaded", function () {
+            // Pending Over Time Start
             const potmonthSelect = document.getElementById("pot-monthSelect");
             const potcurrentYear = new Date().getFullYear();
             for (let potmonth = 0; potmonth < 12; potmonth++) {
@@ -186,9 +212,55 @@
             }
             // Set default to current month
             potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            setCutOffDatesPOT();
+            // Pending Over Time End
+
+
+            // Pending Tmelogs Start
+            const ptlmonthSelect = document.getElementById("ptl-monthSelect");
+            const ptlcurrentYear = new Date().getFullYear();
+            for (let ptlmonth = 0; ptlmonth < 12; ptlmonth++) {
+                const ptlmonthName = new Date(ptlcurrentYear, ptlmonth).toLocaleString('default', { month: 'long' });
+                const ptloption = document.createElement("option");
+                ptloption.value = `${ptlcurrentYear}-${String(ptlmonth + 1).padStart(2, '0')}`;
+                ptloption.text = `${ptlmonthName} ${ptlcurrentYear}`;
+                ptlmonthSelect.appendChild(ptloption);
+            }
+            // Set default to current month
+            ptlmonthSelect.value = `${ptlcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            // Pending Tmelogs End
+
+            // Pending Leave Request Start
+            const plrmonthSelect = document.getElementById("plr-monthSelect");
+            const plrcurrentYear = new Date().getFullYear();
+
+            for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
+                const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
+                const plroption = document.createElement("option");
+                plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
+                plroption.text = `${plrmonthName} ${plrcurrentYear}`;
+                plrmonthSelect.appendChild(plroption);
+            }
+            plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            // Pending Leave Request End
         });
-        function setCutOffDatesPOT() {
+        function setCutOffSelected(){
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0'); // Ensures two digits
+
+            if(dd > 10 && dd <26){
+                 document.getElementById("potCuttOff").value = 1;
+                 document.getElementById("plrCuttOff").value = 1;
+                 document.getElementById("ptlCuttOff").value = 1;
+            }
+            else{
+                 document.getElementById("potCuttOff").value = 0;
+                 document.getElementById("plrCuttOff").value = 0;
+                 document.getElementById("ptlCuttOff").value = 0;
+            }
+
+        }
+
+        async function setCutOffDatesPOT() {
             const potselectedMonth = document.getElementById("pot-monthSelect").value;
             const potCuttOff = document.getElementById("potCuttOff").value;
             const [year, month] = potselectedMonth.split('-').map(Number);
@@ -225,6 +297,43 @@
             document.getElementById('pot-dateto').value = formatToDate(toDate);
 
         }
+        async function setCutOffDatesPTL() {
+            const ptlselectedMonth = document.getElementById("ptl-monthSelect").value;
+            const ptlCuttOff = document.getElementById("ptlCuttOff").value;
+            const [year, month] = ptlselectedMonth.split('-').map(Number);
+            let fromDate, toDate;
+            //console.log(month);
+            if (ptlCuttOff == 0) {
+                fromDate = new Date(year, month - 2, 26);
+                toDate = new Date(year, month - 1, 10);
+            } else if (ptlCuttOff == 1) {
+                fromDate = new Date(year, month - 1, 11);
+                toDate = new Date(year, month - 1, 25);
+            }
+
+            // Format as YYYY-MM-DD
+            const formatFromDate = (fromDate) => {
+                let year = fromDate.getFullYear();
+                let month = fromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = fromDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            const formatToDate = (toDate) => {
+                let year = toDate.getFullYear();
+                let month = toDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = toDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            document.getElementById('ptl-datefrom').value = formatFromDate(fromDate);
+            document.getElementById('ptl-dateto').value = formatToDate(toDate);
+
+        }
         $('#potCuttOff').on('change', function () {
             setCutOffDatesPOT();
             initializeOTDataTable();
@@ -233,34 +342,48 @@
             setCutOffDatesPOT();
             initializeOTDataTable();
         });
-        document.addEventListener("DOMContentLoaded", function () {
-            const plrmonthSelect = document.getElementById("plr-monthSelect");
-            const plrcurrentYear = new Date().getFullYear();
-
-            for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
-                const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
-                const plroption = document.createElement("option");
-                plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
-                plroption.text = `${plrmonthName} ${plrcurrentYear}`;
-                plrmonthSelect.appendChild(plroption);
-            }
-            plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            setCutOffDatesPLR();
-            //const lrmonthSelect = document.getElementById("lr-monthSelect");
-            //const lrcurrentYear = new Date().getFullYear();
-            //for (let lrmonth = 0; lrmonth < 12; lrmonth++) {
-            //    const lrmonthName = new Date(lrcurrentYear, lrmonth).toLocaleString('default', { month: 'long' });
-            //    const lroption = document.createElement("option");
-            //    lroption.value = `${lrcurrentYear}-${String(lrmonth + 1).padStart(2, '0')}`;
-            //    lroption.text = `${lrmonthName} ${lrcurrentYear}`;
-            //    lrmonthSelect.appendChild(lroption);
-            //}
-            //// Set default to current month
-            //potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            //plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-            //setCutOffDatesPLR();
+        $('#ptlCuttOff').on('change', function () {
+            setCutOffDatesPTL();
+            initializeTimlogsDataTable();
         });
-        function setCutOffDatesPLR() {
+        $('#ptl-monthSelect').on('change', function () {
+            setCutOffDatesPTL();
+            initializeTimlogsDataTable();
+        });
+
+        $('#ptl-datefrom').on('change', function () {
+            initializeTimlogsDataTable();
+        });
+        $('#ptl-dateto').on('change', function () {
+            initializeTimlogsDataTable();
+        });
+        // document.addEventListener("DOMContentLoaded", function () {
+        //     const plrmonthSelect = document.getElementById("plr-monthSelect");
+        //     const plrcurrentYear = new Date().getFullYear();
+
+        //     for (let plrmonth = 0; plrmonth < 12; plrmonth++) {
+        //         const plrmonthName = new Date(plrcurrentYear, plrmonth).toLocaleString('default', { month: 'long' });
+        //         const plroption = document.createElement("option");
+        //         plroption.value = `${plrcurrentYear}-${String(plrmonth + 1).padStart(2, '0')}`;
+        //         plroption.text = `${plrmonthName} ${plrcurrentYear}`;
+        //         plrmonthSelect.appendChild(plroption);
+        //     }
+        //     plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        //     //const lrmonthSelect = document.getElementById("lr-monthSelect");
+        //     //const lrcurrentYear = new Date().getFullYear();
+        //     //for (let lrmonth = 0; lrmonth < 12; lrmonth++) {
+        //     //    const lrmonthName = new Date(lrcurrentYear, lrmonth).toLocaleString('default', { month: 'long' });
+        //     //    const lroption = document.createElement("option");
+        //     //    lroption.value = `${lrcurrentYear}-${String(lrmonth + 1).padStart(2, '0')}`;
+        //     //    lroption.text = `${lrmonthName} ${lrcurrentYear}`;
+        //     //    lrmonthSelect.appendChild(lroption);
+        //     //}
+        //     //// Set default to current month
+        //     //potmonthSelect.value = `${potcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        //     //plrmonthSelect.value = `${plrcurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        //     //setCutOffDatesPLR();
+        // });
+        async function setCutOffDatesPLR() {
             //const lrselectedMonth = document.getElementById("lr-monthSelect").value;
             //const lrCuttOff = document.getElementById("lrCuttOff").value;;
             //const [year, month] = lrselectedMonth.split('-').map(Number);
@@ -379,7 +502,6 @@
         //         console.log(selectedRequest);
         //     }
         // }
-        const lrapprovallist = []
         // document.getElementById("approve-leave").onclick = function () {
 
         //     var checkboxes = document.querySelectorAll('.row-checkbox');
@@ -400,8 +522,11 @@
         //     }
         // }
 
+        const lrapprovallist = []
         function rejectLeave(){
-           var checkboxes = document.querySelectorAll('.row-checkbox');
+
+            plrStatusIdentifier = 0;
+            var checkboxes = document.querySelectorAll('.row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             if(checkedCheckboxes.length == 0){
                 alert('Select Leave Request First');
@@ -417,6 +542,8 @@
             }
         }
         function approveLeave(){
+
+            plrStatusIdentifier = 1;
             var checkboxes = document.querySelectorAll('.row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             if(checkedCheckboxes.length == 0){
@@ -497,21 +624,50 @@
                 }
             });
         }
-        // document.getElementById("checkAllLeave").onclick = function () {
-        //    alert('checkAll');
-        // }
+        
+        // Approval Button DOM Start
+        $('#pending-leave-table').on('click', '.row-checkbox', function () {
+            var refreshlr = document.getElementById("refresh-leave");
+            var declinelr = document.getElementById("decline-leave");
+            var approvelr = document.getElementById("approve-leave");
+            var checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(checkbox => {
+                this.addEventListener('change', () => {
+                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+                    if (checkedCount > 0) {
+                        refreshlr.style.display = "none";
+                        declinelr.style.display = "flex";
+                        approvelr.style.display = "flex";
+                    } else {
+                        refreshlr.style.display = "flex";
+                        declinelr.style.display = "none";
+                        approvelr.style.display = "none";
+                    }
+                });
+            });
+        });
         $('#pending-leave-table').on('click', '.checkAllLeave', function () {
            var checkAllPending = document.getElementById("checkAllLeave");
+           var refreshlr = document.getElementById("refresh-leave");
+           var declinelr = document.getElementById("decline-leave");
+           var approvelr = document.getElementById("approve-leave");
            if(checkAllPending.checked == true){
                var checkboxes = document.querySelectorAll('.row-checkbox');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = this.checked;
+                    refreshlr.style.display = "none";
+                    declinelr.style.display = "flex";
+                    approvelr.style.display = "flex";
                 }
            }
            else{
                var checkboxes = document.querySelectorAll('.row-checkbox');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = false;
+                    refreshlr.style.display = "flex";
+                    declinelr.style.display = "none";
+                    approvelr.style.display = "none";
                 }
            }
         });
@@ -561,14 +717,42 @@
                 }
            }
         });
+        var tltable = "";
+        $('#pending-timelogs-table').on('click', '.tl-row-checkbox', function () {
+            var refreshtl = document.getElementById("refresh-tl");
+            var declinetl = document.getElementById("decline-tl");
+            var approvetl = document.getElementById("approve-tl");
+            var checkboxes = document.querySelectorAll('.tl-row-checkbox');
+            checkboxes.forEach(checkbox => {
+                this.addEventListener('change', () => {
+                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
+                    if (checkedCount > 0) {
+                        refreshtl.style.display = "none";
+                        declinetl.style.display = "flex";
+                        approvetl.style.display = "flex";
+                    } else {
+                        refreshtl.style.display = "flex";
+                        declinetl.style.display = "none";
+                        approvetl.style.display = "none";
+                    }
+                    
+                });
+            });
+        });
         $('#pending-timelogs-table').on('click', '.checkAllTL', function () {
 
            var checkAllPending = document.getElementById("checkAllTL");
+           var refreshtl = document.getElementById("refresh-tl");
+           var declinetl = document.getElementById("decline-tl");
+           var approvetl = document.getElementById("approve-tl");
            if(checkAllPending.checked == true){
                var checkboxes = document.querySelectorAll('.tl-row-checkbox');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = this.checked;
+                    refreshtl.style.display = "none";
+                    declinetl.style.display = "flex";
+                    approvetl.style.display = "flex";
                 }
            }
 
@@ -576,10 +760,13 @@
                var checkboxes = document.querySelectorAll('.tl-row-checkbox');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = false;
+                    refreshtl.style.display = "flex";
+                    declinetl.style.display = "none";
+                    approvetl.style.display = "none";
                 }
            }
         });
-
+        // Approval Button DOM End
         // document.getElementById("decline-ot").onclick = function () {
         //     otStatusIdentifier = 0;
         //     console.log(otStatusIdentifier);
@@ -598,25 +785,6 @@
         //         console.log(selectedRequest);
         //     }
         // }
-        function DeclineOvertime(){
-            otStatusIdentifier = 0;
-            console.log(otStatusIdentifier);
-            var checkboxes = document.querySelectorAll('.ot-row-checkbox');
-            var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
-            if(checkedCheckboxes.length == 0){
-                alert('Select Overtime Request First');
-            }
-            else{
-                loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Overtime ', 'l', false);
-                selectedRequest.length = 0;
-                for (var checkbox of checkedCheckboxes) {
-                    var value = checkbox.value;
-                    selectedRequest.push(value);
-                }
-
-                console.log(selectedRequest);
-            }
-        }
         // document.getElementById("approve-ot").onclick = function () {
         //     otStatusIdentifier = 1;
         //     console.log(otStatusIdentifier);
@@ -635,6 +803,8 @@
         //         console.log(selectedRequest);
         //     }
         // }
+        
+        //
         function ApproveOvertime(){
             otStatusIdentifier = 1;
             console.log(otStatusIdentifier);
@@ -653,8 +823,63 @@
                 console.log(selectedRequest);
             }
         }
+        function DeclineOvertime(){
+            otStatusIdentifier = 0;
+            console.log(otStatusIdentifier);
+            var checkboxes = document.querySelectorAll('.ot-row-checkbox');
+            var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+            if(checkedCheckboxes.length == 0){
+                alert('Select Overtime Request First');
+            }
+            else{
+                loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Overtime ', 'l', false);
+                selectedRequest.length = 0;
+                for (var checkbox of checkedCheckboxes) {
+                    var value = checkbox.value;
+                    selectedRequest.push(value);
+                }
 
+                // console.log(selectedRequest);
+            }
+        }
 
+        function DeclineTimelogs(){
+            tlStatusIdentifier = 0;
+            var checkboxes = document.querySelectorAll('.tl-row-checkbox');
+            var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+            if(checkedCheckboxes.length == 0){
+                alert('Select Overtime Request First');
+            }
+            else{
+                loadModal('/Timelogs/TLApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Timelogs ', 'l', false);
+                selectedRequest.length = 0;
+                for (var checkbox of checkedCheckboxes) {
+                    var value = checkbox.value;
+                    selectedRequest.push(value);
+                }
+
+                console.log(selectedRequest);
+            }
+        }
+        function ApproveTimelogs(){
+            tlStatusIdentifier = 1;
+            console.log(otStatusIdentifier);
+            var checkboxes = document.querySelectorAll('.tl-row-checkbox');
+            var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
+            if(checkedCheckboxes.length == 0){
+                alert('Select Overtime Request First');
+            }
+            else{
+                loadModal('/Timelogs/TLApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Timelogs ', 'l', false);
+                selectedRequest.length = 0;
+                for (var checkbox of checkedCheckboxes) {
+                    var value = checkbox.value;
+                    selectedRequest.push(value);
+                }
+
+                console.log(selectedRequest);
+            }
+        }
     </script>
 
 

@@ -69,23 +69,27 @@ namespace API_HRIS.Controllers
             //    string result = db.DB_WithParam(tbl_UsersModel_update);
             //}
 
-            var isLoggedin = _context.TblUsersModels.Where(a => a.Username == data.username && a.Password == Cryptography.Encrypt(data.password) && a.isLoggedIn == true).ToList().Count() > 0;
-            if (isLoggedin)
-            {
-                item.Status = "Error! Your account is active on another device or browser!";
-                item.Message = "Invalid Log In";
-                item.JwtToken = "";
-                item.UserType = "";
-            }
-            else
-            {
-                var loginstats = dbmet.GetUserLogIn(data.username, data.password, data.ipaddress, data.location);
-                item.Status = loginstats.Status;
-                item.Message = loginstats.Message;
-                item.JwtToken = loginstats.JwtToken;
-                item.UserType = loginstats.UserType;
-            }
-
+            //var isLoggedin = _context.TblUsersModels.Where(a => a.Username == data.username && a.Password == Cryptography.Encrypt(data.password) && a.isLoggedIn == true).ToList().Count() > 0;
+            //if (isLoggedin)
+            //{
+            //    item.Status = "Error! Your account is active on another device or browser!";
+            //    item.Message = "Invalid Log In";
+            //    item.JwtToken = "";
+            //    item.UserType = "";
+            //}
+            //else
+            //{
+            //    var loginstats = dbmet.GetUserLogIn(data.username, data.password, data.ipaddress, data.location);
+            //    item.Status = loginstats.Status;
+            //    item.Message = loginstats.Message;
+            //    item.JwtToken = loginstats.JwtToken;
+            //    item.UserType = loginstats.UserType;
+            //}
+            var loginstats = dbmet.GetUserLogIn(data.username, data.password, data.ipaddress, data.location);
+            item.Status = loginstats.Status;
+            item.Message = loginstats.Message;
+            item.JwtToken = loginstats.JwtToken;
+            item.UserType = loginstats.UserType;
             return Ok(item);
         }
         [HttpPost]
