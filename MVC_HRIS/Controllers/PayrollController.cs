@@ -299,6 +299,9 @@ namespace MVC_HRIS.Controllers
                 TotalDeductions = result.TotalDeductions,
                 OvertimeHours = result.OvertimeHours,
                 OvertimePay = result.OvertimePay,
+                DaysAbsent= result.DaysAbsent,
+                DaysPresent= result.DaysPresent,
+                AbsentDeduction= result.AbsentDeduction
             };
             return PartialView("_Payslip", model);
         }
