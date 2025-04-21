@@ -311,17 +311,17 @@ table {
 
 .mod-form span {
     font-size: 13px;
-    font-weight: 900;
+/*    font-weight: 900;*/
     color: var(--gray-dark);
-    height: 50px;
+/*    height: 50px;*/
     font-size: 17px !important;
 }
 
 .mod-forms span {
     font-size: 13px;
-    font-weight: 900;
+/*    font-weight: 900;*/
     color: var(--gray-dark);
-    height: 50px;
+/*    height: 50px;*/
     font-size: 17px !important;
 }
 

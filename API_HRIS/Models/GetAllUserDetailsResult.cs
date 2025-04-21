@@ -44,5 +44,12 @@ namespace API_HRIS.Models
         public int UserTypeId { get; set; }
         public string UserType { get; set; }
         public DateTime? DateStarted { get; set; }
+        public int? Position { get; set; }
+        public int? PositionLevelId { get; set; }
+        public int? EmployeeType { get; set; }
+        public int? ManagerId { get; set; }
+        public int? PayrollTypeId { get; set; }
+        public int? SalaryTypeId { get; set; }
+        public string? DaysInMonth { get; set; }
     }
 }

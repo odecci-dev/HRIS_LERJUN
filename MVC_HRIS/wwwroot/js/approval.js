@@ -8,10 +8,15 @@ function initializeTimlogsDataTable() {
         $(tableId).DataTable().clear().destroy();
     }
     var user = $('#selectUserPending').val() ? $('#selectUserPending').val() : 0;
+    var dateF = document.getElementById('ptl-datefrom').value;
+    var datet = document.getElementById('ptl-dateto').value;
     const data = {
-        UserId: user
+        UserId: user,
+        datefrom: dateF,
+        dateto: datet,
+        status: tlStatusFilter
     };
-    // console.log(data);
+     //console.log(data);
     var dtProperties = {
         ajax: {
             url: '/TimeLogs/GetPedingTimelogsList',
@@ -21,7 +26,7 @@ function initializeTimlogsDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
@@ -30,31 +35,118 @@ function initializeTimlogsDataTable() {
 
                 // Compute total rendered hours after data is loaded
                 //computeTotalRenderedHours();
+
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const tldepartments = [...new Set(data.map(item => item.departmentName))];
+                const $tldeptFilter = $('#tldepartmentFilter');
+                if ($tldeptFilter.length && $tldeptFilter.children('option').length <= 1) {
+                    tldepartments.forEach(dep => {
+                        if (dep) {
+                            $tldeptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+                // Populate Position filter
+                const tlpositions = [...new Set(data.map(item => item.position))];
+                const $tlposFilter = $('#tlpositionFilter');
+                if ($tlposFilter.length && $tlposFilter.children('option').length <= 1) {
+                    tlpositions.forEach(pos => {
+                        if (pos) {
+                            $tlposFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const tlpositionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $tlposlvlFilter = $('#tlpositionLevelFilter');
+                if ($tlposlvlFilter.length && $tlposlvlFilter.children('option').length <= 1) {
+                    tlpositionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $tlposlvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const tlemployeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $tlemployeeTypeFilter = $('#tlemployeeType');
+                if ($tlemployeeTypeFilter.length && $tlemployeeTypeFilter.children('option').length <= 1) {
+                    tlemployeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $tlemployeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const tlfullnames = [...new Set(data.map(item => item.fname+' '+item.lname))];
+                const $tlfullnameFilter = $('#tlfullname');
+                if ($tlfullnameFilter.length && $tlfullnameFilter.children('option').length <= 1) {
+                    tlfullnames.forEach(fullname => {
+                        if (fullname) {
+                            $tlfullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
             },
             error: function (err) {
                 alert(err.responseText);
             }
         },
-        dom: 'rtip',
+        dom: 'Brtip',
         columns: [
             { "title": "<input type='checkbox' id='checkAllTL' class='checkAllTL'>", "data": null, "orderable": false },
             {
                 "title": "Profile",
                 "data": "id",
+                //"render": function (data, type, row) {
+                //    var images = row['filePath'] == null ? img : row['filePath'];
+                //    //var images = img;
+                //    var fullname = row.fname + " " + row.lname;
+                //    var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
+                //                            <div class="data-img">
+                //                                <img src='${images}' width="100%" />
+                //                            </div>
+                //                            <div style="align-items: center;">
+                //                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                //                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                //                            </div>
+                //                        </div>`;
+                //    return btn;
+                //}
                 "render": function (data, type, row) {
-                    var images = row['filePath'] == null ? img : row['filePath'];
-                    //var images = img;
+
+                    // var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
+                    var images = "../../" + row['filePath'] == null ? img : "../../" + row['filePath'];
+                    let profile = "";
+                    var initial = row['fname'].charAt(0) + row['lname'].charAt(0);
                     var fullname = row.fname + " " + row.lname;
-                    var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
-                                            <div class="data-img">
-                                                <img src='${images}' width="100%" />
-                                            </div>
-                                            <div style="align-items: center;">
-                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
-                                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
-                                            </div>
-                                        </div>`;
-                    return btn;
+                    initial = initial.toUpperCase()
+                    if (row['filePath'] == "" || row['filePath'] == null) {
+                        profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                        <div class="data-img">
+                                            <div class="initial"> ${initial} </div>
+                                        </div>
+                                        <div style="align-items: center;">
+                                            <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                            <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                        </div>
+                                    </div>
+                                    `;
+                    }
+                    else {
+                        profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                        <div class="data-img">
+                                            <img src='${images}' width="100%" />
+                                        </div>
+                                        <div style="align-items: center;">
+                                            <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                            <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                        </div>
+                                    </div>
+                                    `;
+                    }
+                    return profile;
                 }
             },
             // {
@@ -196,6 +288,106 @@ function initializeTimlogsDataTable() {
                     }
                     return button;
                 }
+            },
+            {
+                "title": "Department",
+                "data": "departmentName",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Position",
+                "data": "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "PositionLevel",
+                "data": "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "EmployeeType",
+                "data": "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Fullname",
+                "data": "fname",
+                name: "fullname",
+                visible: true,
+                searchable: true,
+                "render": function (data,row) {
+                    return data+" "+row.lname;
+                }
+
+            }
+            //,
+            //{
+            //    "title": "Add Reason:",
+            //    "data": "id",
+            //    //"render": function (data, type, row) {
+            //    //    var textfield = "";
+            //    //    textfield = ``;
+
+            //    //    return textfield;
+            //    //},
+            //}
+        ],
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            {
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="tldepartmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="tlpositionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="tlpositionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="tlemployeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="tlfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                                
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
+                }
             }
         ]
         , responsive: true
@@ -226,19 +418,23 @@ function initializeTimlogsDataTable() {
                 targets: [9],
                 width: "5%", "className": "text-center", "targets": "7"
             },
+            //{
+            //    targets: 10,
+            //    "visible": false
+            //},
         ],
         order: [[1, 'desc']] // Sort the second column (index 1) by descending order
     };
 
-    var table = $(tableId).DataTable(dtProperties);
-
+    //var table = $(tableId).DataTable(dtProperties);
+    tltable = $(tableId).DataTable(dtProperties);
     // Attach computeTotalRenderedHours to the search event
     $(tableId + '_filter input').on('keyup', function () {
         computeTotalRenderedHours();
     });
 
     $('#time-table').on('page.dt', function () {
-        var info = table.page.info();
+        var info = tltable.page.info();
         var url = new URL(window.location.href);
         url.searchParams.set('page01', (info.page + 1));
         window.history.replaceState(null, null, url);
@@ -247,21 +443,64 @@ function initializeTimlogsDataTable() {
     $(tableId + '_filter input').attr('placeholder', 'Search anything here...');
 
     $(tableId + ' tbody').on('click', 'tr', function () {
-        var data = table.row(this).data();
+        var data = tltable.row(this).data();
         // console.log(data);
         // Remove highlight from the previously selected row
         if (lastSelectedRow) {
             $(lastSelectedRow).removeClass('selected-row');
         }
-
         // Highlight the currently selected row
         $(this).addClass('selected-row');
         lastSelectedRow = this;
         // console.log(data);
-
     });
 
+    $(document).on('change', '#tldepartmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+    });
 
+    $(document).on('change', '#tlpositionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlpositionLevelFilter', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlemployeeType', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlfullname', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
+    });
 }
 function timelogsTableMOD() {
     $('#selectUserPending').on('change', function () {
@@ -314,6 +553,30 @@ function decline_item() {
         }
         initializeTimlogsDataTable();
     });
+}
+
+function viewRejectedTL() {
+    var statusLabel = document.getElementById('TLStatusLabel');
+    if (tlStatusFilter == 0) {
+        tlStatusFilter = 1;
+        showodcloading();
+        setTimeout(function () {
+            initializeTimlogsDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Pending"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+
+
+    }
+    else {
+        tlStatusFilter = 0;
+        showodcloading();
+        setTimeout(function () {
+            initializeTimlogsDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Rejected"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
 }
 //OverTime Tab
 
@@ -794,8 +1057,6 @@ function OTTableMOD() {
     });
 
 }
-
-
 function OTapprovemodal() {
     var element = document.querySelectorAll(".modal-header");
     var content = document.querySelectorAll(".modal-content");
@@ -986,18 +1247,18 @@ function initializeLeaveDataTable() {
                     });
                 }
 
-                $('#lrcustomFilterButtons').html(`
-                    <button class="btn btn-warning" id="refresh-leave" title="Refresh" onclick="initializeLeaveDataTable()">
-                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
-                    </button>
-                    <button class="btn btn-danger" id="decline-leave" title="Delete" onclick="rejectLeave()">
-                        <i class="fa-solid fa-circle-minus"></i> Decline
-                    </button>
-                    <button class="btn btn-success" id="approve-leave" title="Approve" onclick="approveLeave()">
-                        <i class="fa-solid fa-file-arrow-down"></i> Approve
-                    </button>
+                //$('#lrcustomFilterButtons').html(`
+                //    <button class="btn btn-warning" id="refresh-leave" title="Refresh" onclick="initializeLeaveDataTable()">
+                //        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                //    </button>
+                //    <button class="btn btn-danger" id="decline-leave" title="Delete" onclick="rejectLeave()">
+                //        <i class="fa-solid fa-circle-minus"></i> Decline
+                //    </button>
+                //    <button class="btn btn-success" id="approve-leave" title="Approve" onclick="approveLeave()">
+                //        <i class="fa-solid fa-file-arrow-down"></i> Approve
+                //    </button>
 
-                `);
+                //`);
             },
             error: function (err) {
                 alert(err.responseText);
@@ -1159,16 +1420,6 @@ function initializeLeaveDataTable() {
         ],
         buttons: [
             {
-                extend: 'pdf',
-                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
-                title: 'Leave Request List', // Set custom title in the file
-                filename: 'Leave_Request_List', // Custom file name
-                className: 'btn btn-info',
-                exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
-                }
-            },
-            {
                 extend: 'excel',
                 text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
                 title: 'Leave Request List', // Set custom title in the file
@@ -1178,13 +1429,6 @@ function initializeLeaveDataTable() {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
                 }
             },
-            //{
-            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
-            //    className: 'btn btn-danger',
-            //    action: function () {
-            //        DeclineOvertime(); // Call your custom function
-            //    }
-            //},
             {
                 text: 'Filters',
                 action: function () { },
@@ -1288,4 +1532,26 @@ function initializeLeaveDataTable() {
         }
     });
 }
+function viewRejectedLR() {
+    var statusLabel = document.getElementById('StatusLabel');
+    if (plrStatusFilter == 0) {
+        plrStatusFilter = 1;
+        showodcloading();
+        setTimeout(function () {
+            initializeLeaveDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Pending"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
 
+
+    }
+    else {
+        plrStatusFilter = 0;
+        showodcloading();
+        setTimeout(function () {
+            initializeLeaveDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Rejected"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
+}

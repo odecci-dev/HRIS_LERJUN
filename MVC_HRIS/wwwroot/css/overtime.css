@@ -34,60 +34,60 @@
     background-color: rgba(0, 0, 0, 0.2); /* Optional for a frosted glass look */
     display: none;
 }
+.filing-container .filing-card {
+    width: 500px;
+    background-color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    padding: 30px;
+    border-radius: 3%;
+}
 
-    .filing-container .filing-card {
-        width: 500px;
-        background-color: #fff;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%,-50%);
-        padding: 30px;
-        border-radius: 3%;
-    }
+.filing-container .filing-card .card-header {
+    padding-left: 0;
+    margin-bottom: 15px;
+}
 
-        .filing-container .filing-card .card-header {
-            padding-left: 0;
-            margin-bottom: 15px;
-        }
+.filing-container .filing-card .card-header h4 {
+    font-weight: 600;
+    margin: 0;
+}
 
-            .filing-container .filing-card .card-header h4 {
-                font-weight: 600;
-                margin: 0;
-            }
+.filing-container .filing-card .card-footer {
+    border-top: 1px solid rgba(0, 0, 0, .125);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+    margin-top: 50px;
+}
 
-        .filing-container .filing-card .card-footer {
-            border-top: 1px solid rgba(0, 0, 0, .125);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: end;
-            gap: 15px;
-            margin-top: 50px;
-        }
+.filing-container .filing-card .card-footer .upload {
+    background-color: var(--dark);
+}
 
-            .filing-container .filing-card .card-footer .upload {
-                background-color: var(--dark);
-            }
+.filing-container .filing-card .card-footer .cancel,
+.filing-container .filing-card .template {
+    background-color: transparent;
+    color: var(--dark);
+    border-color: var(--dark);
+    font-weight: 400;
+}
 
-            .filing-container .filing-card .card-footer .cancel,
-            .filing-container .filing-card .template {
-                background-color: transparent;
-                color: var(--dark);
-                border-color: var(--dark)
-            }
+.filing-container .filing-card label {
+    width: 100%;
+}
 
-        .filing-container .filing-card label {
-            width: 100%;
-        }
-
-            .filing-container .filing-card label p {
-                margin: 0;
-                font-size: 13.5px;
-                color: rgba(0, 0, 0, .5);
-            }
+.filing-container .filing-card label p {
+    margin: 0;
+    font-size: 13.5px;
+    color: rgba(0, 0, 0, .5);
+}
 
 .drop-zone {
     border: 2px dashed #999;
@@ -149,31 +149,27 @@
     background-color: rgba(255, 255, 255, .8);
     border-radius: 8px;
 }
-
 .decline-btn {
     color: #ec1c24;
     display: none;
 }
 
-    .decline-btn i {
-        font-size: 50px;
-    }
-
+.decline-btn i {
+    font-size: 50px;
+}
 .approve-btn {
     color: #205375;
     display: none;
 }
-
 .refresh-btn {
     color: #205375;
 }
-
-    .refresh-btn i {
-        background-color: #205375;
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-    }
+.refresh-btn i {
+    background-color: #205375;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}

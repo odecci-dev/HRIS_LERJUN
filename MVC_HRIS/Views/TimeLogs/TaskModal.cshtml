@@ -146,22 +146,50 @@
 
         $('#add-time-in-form').on('submit', function (event) {
             event.preventDefault();
+            // alert("Submited");
+            // var data = {
+            //     userid: @Accessor.HttpContext.Session.GetString("Id")
+
+            //                             };
+            // $.ajax({
+            //     url: '/TimeLogs/RegularTimeOut',
+            //     data: {
+            //         data: data,
+            //     },
+            //     type: "POST",
+            //     datatype: "json"
+            // }).done(function (data) {
+            //     // console.log(data);
+            //     if (data.status == '200') {
+
+            //         // notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+            //         // window.location.href = '@Url.Action("Index", "Timelogs")';
+            //     }
+            //     else {
+            //         // notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+            //     }
+
+            // });
             var data = {
                 userid: @Accessor.HttpContext.Session.GetString("Id")
-
-                                        };
+                                                };
             $.ajax({
-                url: '/TimeLogs/TimeOut',
+                url: '/TimeLogs/RegularTimeOut',
                 data: {
                     data: data,
                 },
                 type: "POST",
-                datatype: "json"
+                datatype: "json",
+                complete: function (xhr) {
+
+                },
             }).done(function (data) {
                 // console.log(data);
+                // alert(data.status);
                 if (data.status == '200') {
 
                     // notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    
                     // window.location.href = '@Url.Action("Index", "Timelogs")';
                 }
                 else {
@@ -170,31 +198,33 @@
 
             });
             var data = {
-                TaskId: $("#task").val(),
-                userid: @Accessor.HttpContext.Session.GetString("Id"),
-                Remarks: $("#remarks").val(),
-                StatusId: 1
+                        TaskId: $("#task").val(),
+                        userid: @Accessor.HttpContext.Session.GetString("Id"),
+                        Remarks: $("#remarks").val(),
+                        StatusId: 1
 
-            };
-            $.ajax({
-                url: '/TimeLogs/TimeIn',
-                data: {
-                    data: data,
-                },
-                type: "POST",
-                datatype: "json"
-            }).done(function (data) {
-                console.log(data);
-                if (data.status == '200') {
+                    };
+                    $.ajax({
+                        url: '/TimeLogs/TimeIn',
+                        data: {
+                            data: data,
+                        },
+                        type: "POST",
+                        datatype: "json"
+                    }).done(function (data) {
+                        console.log(data);
+                        if (data.status == '200') {
 
-                    notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
-                    window.location.href = '@Url.Action("Index", "Timelogs")';
-                }
-                else {
-                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
-                }
+                            notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                            window.location.href = '@Url.Action("Index", "Timelogs")';
+                        }
+                        else {
+                            notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
+                        }
 
-            });
+                    });
+
+            
         });
 
     </script>

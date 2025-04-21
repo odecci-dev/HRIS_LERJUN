@@ -36,6 +36,8 @@ using Net.SourceForge.Koogra.Excel2007.OX;
 using ExcelDataReader;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using API_HRIS.Models;
+using static MVC_HRIS.Controllers.OverTimeController;
+using static MVC_HRIS.Controllers.FilingController;
 namespace MVC_HRIS.Controllers
 {
     public class TimeLogsController : Controller
@@ -57,7 +59,10 @@ namespace MVC_HRIS.Controllers
             apiUrl = _configuration.GetValue<string>("AppSettings:WebApiURL");
             _appSettings = appSettings.Value;
         }
-
+        public IActionResult TLApproval()
+        {
+            return PartialView("TLApproval");
+        }
         public IActionResult Index()
         {//update
             string token = HttpContext.Session.GetString("Bearer");
@@ -92,6 +97,7 @@ namespace MVC_HRIS.Controllers
 
             public string? datefrom { get; set; }
             public string? dateto { get; set; }
+            public int? status { get; set; }
             public string? Department { get; set; }
         }
         public partial class User
@@ -162,13 +168,47 @@ namespace MVC_HRIS.Controllers
             }
             return Json(new { status = res });
         }
+        //[HttpPost]
+        //public async Task<IActionResult> TimeOut(User data)
+        //{
+        //    string res = "";
+        //    try
+        //    {
+
+        //        HttpClient client = new HttpClient();
+        //        var url = DBConn.HttpString + "/TimeLogs/TimeOut";
+
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+        //        StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+        //        using (var response = await client.PostAsync(url, content))
+        //        {
+        //            HttpStatusCode statusCode = response.StatusCode;
+        //            int numericStatusCode = (int)statusCode;
+        //            if (numericStatusCode == 200)
+        //            {
+        //                res = numericStatusCode.ToString();
+        //            }
+        //            else
+        //            {
+        //                res = await response.Content.ReadAsStringAsync();
+        //            }
+        //        }
+
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        status = ex.GetBaseException().ToString();
+        //    }
+        //    return Json(new { status = res });
+        //}
+
         [HttpPost]
         public async Task<IActionResult> TimeOut(User data)
         {
             string res = "";
             try
             {
-
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/TimeLogs/TimeOut";
 
@@ -1003,7 +1043,6 @@ namespace MVC_HRIS.Controllers
             }
             return Json(new { status = res });
         }
-
         [HttpPost]
         public async Task<IActionResult> ManualLogs(TblTimeLog data)
         {
@@ -1112,6 +1151,310 @@ namespace MVC_HRIS.Controllers
         {
 
             return PartialView("TaskModal");
+        }
+        public class CheckedTLRequestListParam
+        {
+            public string[]? Id { get; set; }
+        }
+        public partial class TblTimelogsVM
+        {
+            public string? Id { get; set; }
+            public string? fullname { get; set; }
+            public string? Remarks { get; set; }
+            public string? TimeIn { get; set; }
+            public string? TimeOut { get; set; }
+            public string? RenderedHours { get; set; }
+            public string? ApprovalReason { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCheckedTLRequestList(CheckedTLRequestListParam data)
+        {
+            string result = "";
+            var list = new List<TblTimelogsVM>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/TimeLogs/CheckedTLRequestList";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblTimelogsVM>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+
+            return Json(new { draw = 1, data = list, recordFiltered = list?.Count, recordsTotal = list?.Count });
+        }
+
+        public class multiApprovalParamTLList
+        {
+            public int? Id { get; set; }
+            public string? reason { get; set; }
+        }
+        public class multiApprovalTLParam
+        {
+            public int? Status { get; set; }
+            public List<multiApprovalParamTLList>? tlapproval { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> MultiApproval(multiApprovalTLParam data)
+        {
+            string res = "";
+            try
+            {
+
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Timelogs/MultiUpdateStatus";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    if (numericStatusCode == 200)
+                    {
+                        res = numericStatusCode.ToString();
+                    }
+                    else
+                    {
+                        res = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                status = ex.GetBaseException().ToString();
+            }
+            return Json(new { status = res });
+        }
+
+        public partial class TblTimelogsImportModel
+        {
+            public string? UserId { get; set; }
+            public string? Date { get; set; }
+            public string? TimeIn { get; set; }
+            public string? TimeOut { get; set; }
+            public string? TaskId { get; set; }
+            public string? Remarks { get; set; }
+            public string? TotalLunchHours { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> TLIndex(IFormFile file, [FromServices] IWebHostEnvironment hostingEnvironment)
+        {
+            System.Text.Encoding.RegisterProvider(
+            System.Text.CodePagesEncodingProvider.Instance);
+            try
+            {
+                if (file == null)
+                {
+                    ViewData["Message"] = "Error: Please select a file.";
+                }
+                else
+                {
+                    if (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx"))
+                    {
+                        ViewData["Message"] = "Error: Invalid file.";
+                        string filename = $"{hostingEnvironment.WebRootPath}\\excel\\{file.FileName}";
+                        using (FileStream fileStream = System.IO.File.Create(filename))
+                        {
+                            file.CopyTo(fileStream);
+                            fileStream.Flush();
+                        }
+
+                        IExcelDataReader reader = null;
+                        FileStream stream = System.IO.File.Open(filename, FileMode.Open, FileAccess.Read);
+
+                        if (file.FileName.EndsWith("xls"))
+                        {
+                            reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                        }
+                        if (file.FileName.EndsWith("xlsx"))
+                        {
+                            reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                        }
+                        int i = 0;
+
+                        var data = new List<TblTimelogsImportModel>();
+
+                        while (reader.Read())
+                        {
+                            i++;
+
+                            if (i > 1) // Skipping header row
+                            {
+                                // Check if at least one column has data
+                                if (string.IsNullOrWhiteSpace(reader.GetValue(0)?.ToString()) &&
+                                    string.IsNullOrWhiteSpace(reader.GetValue(1)?.ToString())
+                                    )
+                                {
+                                    continue; // Skip this row
+                                }
+
+                                // Process the row
+                                data.Add(new TblTimelogsImportModel
+                                {
+
+                                    UserId = reader.GetValue(12)?.ToString() ?? "",
+                                    TimeIn = reader.GetValue(3)?.ToString() ?? "",
+                                    TimeOut = reader.GetValue(6)?.ToString() ?? "",
+                                    TaskId = reader.GetValue(9)?.ToString() ?? "",
+                                    Remarks = reader.GetValue(10)?.ToString() ?? "",
+                                    Date = reader.GetValue(0)?.ToString() ?? "",
+                                    TotalLunchHours = reader.GetValue(7)?.ToString() ?? ""
+                                });
+                            }
+                        }
+                        reader.Close();
+                        System.IO.File.Delete(filename);
+
+                        //Send Data to API
+                        var status = "";
+                        HttpClient client = new HttpClient();
+                        var url = DBConn.HttpString + "/TimeLogs/Import";
+
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                        StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                        using (var response = await client.PostAsync(url, content))
+                        {
+                            status = await response.Content.ReadAsStringAsync();
+                        }
+
+                        ViewData["Message"] = "New Entry" + status;
+                    }
+                    else
+                    {
+                        ViewData["Message"] = "Error: Invalid file.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.GetBaseException().ToString());
+            }
+            return View("Index");
+        }
+
+        public IActionResult DownloadHeader()
+        {
+            var stream = new MemoryStream();
+            using (var pck = new ExcelPackage(stream))
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet 1");
+                ws.Cells["A1"].Value = "Shift Date";
+                ws.Cells["B1"].Value = "Start Date";
+                ws.Cells["C1"].Value = "Start Time";
+                ws.Cells["D1"].Value = "Time In";
+                ws.Cells["E1"].Value = "End Date";
+                ws.Cells["F1"].Value = "End Time";
+                ws.Cells["G1"].Value = "Time Out";
+                ws.Cells["H1"].Value = "Break (Hour/s)";
+                ws.Cells["I1"].Value = "Task";
+                ws.Cells["J1"].Value = "TaskId";
+                ws.Cells["K1"].Value = "Task Description";
+
+                ws.Cells["L1"].Value = "Employee No.";
+                ws.Cells["M1"].Value = "UserID";
+
+
+                // Apply Custom Formatting
+                ws.Cells["A:A"].Style.Numberformat.Format = "yyyy-mm-dd"; // Date format with microseconds
+                ws.Cells["B:B"].Style.Numberformat.Format = "@";
+                ws.Cells["C:C"].Style.Numberformat.Format = "@";
+                ws.Cells["E:E"].Style.Numberformat.Format = "@";
+                ws.Cells["F:F"].Style.Numberformat.Format = "@";
+                ws.Cells["H:H"].Style.Numberformat.Format = "0.00";
+
+                ws.Cells["A2"].Value = "yyyy-mm-dd";
+                ws.Cells["B2"].Value = "yyyy-mm-dd";
+                ws.Cells["C2"].Value = "hh:mm:ss";
+                ws.Cells["E2"].Value = "yyyy-mm-dd";
+                ws.Cells["F2"].Value = "hh:mm:ss";
+                ws.Cells["H2"].Value = "0.00";
+
+                ws.Cells["L2"].Value = HttpContext.Session.GetString("EmployeeID");
+                ws.Cells["M2"].Value = HttpContext.Session.GetString("Id");
+                // Enforce Boolean (Dropdown with TRUE/FALSE)
+                for (var col = 1; col <= 12; col++)
+                {
+                    ws.Cells[1, col].Style.Font.Bold = true;
+                }
+
+
+
+
+                ws.Cells["Q1:Q2"].Style.Font.Italic = true;
+                ws.Cells["Q1:Q2"].Style.Font.Color.SetColor(Color.Red);
+                ws.Cells["Q1"].Value = "All Fields are required";
+                ws.Cells["Q2"].Value = "Please follow the format shown in the first row.";
+                string sqlTask = $@"SELECT [Id], [Title] FROM [ODC_HRIS].[dbo].[tbl_TaskModel] WHERE isBreak = 0";
+                var dataSet = db.SelectDb(sqlTask);
+
+                if (dataSet == null || dataSet.Tables.Count == 0)
+                {
+                    return BadRequest("No Task found in the database.");
+                }
+
+                DataTable dt = dataSet.Tables[0];
+                int ctr = 2;
+                var validation = ws.DataValidations.AddListValidation("I2:I1000");
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ws.Cells["R" + ctr].Value = dr["Title"].ToString();
+                    ws.Cells["S" + ctr].Value = dr["Id"].ToString();
+                    // Add a dropdown list in A2 (below the header)
+                    validation.Formula.Values.Add(dr["Title"].ToString());
+                    ctr++;
+                }
+                validation.ShowErrorMessage = true;
+                validation.ErrorTitle = "Invalid Selection";
+                validation.Error = "Please select a valid option from the dropdown list.";
+                int ctrTierId = 50;
+                for (int i = 2; i < ctrTierId; i++)
+                {
+                    ws.Cells["J" + i].Formula = "=IFERROR(VLOOKUP(I" + i + ",R2:S10,2,FALSE),\"\")";
+                }
+                for (int row = 2; row <= 50; row++)
+                {
+                    ws.Cells[$"D{row}"].Formula = $"=IF(B{row}=\"\",\"\",CONCAT(B{row},\"T\",C{row}))";
+                    ws.Cells[$"G{row}"].Formula = $"=IF(E{row}=\"\",\"\",CONCAT(E{row},\"T\",F{row}))";
+                }
+                ws.Cells.AutoFitColumns();
+                //int[] lockedColumns = { 4, 10, 11, 12, 13, 14, 15, 16, 17 };
+
+                int[] hideColumns = { 4, 7, 10, 12, 13, 14, 15, 16, 18, 19 };
+                //foreach (int col in lockedColumns)
+                //{
+                //    ws.Column(col).Style.Locked = true; // Lock column
+                //}
+                foreach (int col in hideColumns)
+                {
+                    //ws.Column(col).Hidden = true;       // Hide column
+                    ws.Column(col).Style.Locked = true; // Lock column
+                }
+                ws.Cells["A:C"].Style.Locked = false;
+                ws.Cells["E:F"].Style.Locked = false;
+                ws.Cells["H:I"].Style.Locked = false;
+                ws.Cells["K:K"].Style.Locked = false;
+                //// Protect the worksheet to enforce the lock
+
+                ws.Protection.IsProtected = true;
+                pck.Save();
+            }
+
+            stream.Position = 0;
+            string excelName = "Request-Timelog-Template.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
     }
 }
