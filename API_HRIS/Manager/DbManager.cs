@@ -16,6 +16,11 @@ namespace API_HRIS.Manager
         public SqlDataAdapter da = new SqlDataAdapter();
         string cnnstr = "";
         DBConn db = new DBConn();
+
+        IConfiguration config = new ConfigurationBuilder()
+          .SetBasePath(Path.GetPathRoot(Environment.SystemDirectory))
+          .AddJsonFile("app/hris/appconfig.json", optional: true, reloadOnChange: true)
+          .Build();
         public string DB_WithParam(string strSql, params IDataParameter[] sqlParams)
         {
             try
@@ -53,36 +58,17 @@ namespace API_HRIS.Manager
                 return ex.Message + "!";
             }
         }
-        //public bool InitializeConnection()
-        //{
-        //    bool isSuccess = false;
-        //    try
-        //    {
-        //        this.Connection = new SqlConnection(DBConn.ConnectionString);
-        //        this.Connection.Open();
-        //        isSuccess = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        isSuccess = false;
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-        //        this.Connection.Close();
-        //    }
-        //    return isSuccess;
-        //}
         public void ConnectioStr()
         {
-            // cnnstr = "Data Source=DESKTOP-9P0BJ07;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
-             //cnnstr = "Data Source=LAPTOP-SULGD5RQ;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
+            var url = config["ConnectionStrings:Hris_Constrings"];
+            //  cnnstr = "Data Source=DESKTOP-9P0BJ07;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
+            //  //cnnstr = "Data Source=LAPTOP-SULGD5RQ;Initial Catalog=ODC_HRIS;User ID=test;Password=1234";
 
-            ////cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
+            // ////cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
 
-            cnnstr = "Data Source=LAPTOP-3191GBJB\\SQLEXPRESS;Initial Catalog=ODC_HRIS;User ID=test;Password=1234;"; // France
-            //cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
-            conn = new SqlConnection(cnnstr);
+            //// cnnstr = "Data Source=LAPTOP-3191GBJB\\SQLEXPRESS;Initial Catalog=ODC_HRIS;User ID=test;Password=1234;"; // France
+            // //cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
+            conn = new SqlConnection(url);
         }
         public DataSet SelectDb(string value)
         {

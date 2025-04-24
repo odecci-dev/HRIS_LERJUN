@@ -12,6 +12,7 @@ public partial class ODC_HRISContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<TblHolidayModel> TblHolidayModel { get; set; }
     public virtual DbSet<TblEmergencyContactsModel> TblEmergencyContactsModel { get; set; }
     public virtual DbSet<TblAddressInfo> TblAddressInfos { get; set; }
 

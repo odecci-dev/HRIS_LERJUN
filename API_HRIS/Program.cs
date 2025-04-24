@@ -3,6 +3,10 @@ using API_HRIS;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using API_HRIS.Manager;
+IConfiguration config = new ConfigurationBuilder()
+        .SetBasePath(Path.GetPathRoot(Environment.SystemDirectory))
+        .AddJsonFile("app/hris/appconfig.json", optional: true, reloadOnChange: true)
+        .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 // Add services to the container.
 builder.Services.AddDbContext<ODC_HRISContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+options.UseSqlServer((config["ConnectionStrings:DevConnection"])));
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Configuration.AddJsonFile("appconfig.json", optional: true, reloadOnChange: true);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<DBMethods>();
 builder.Services.AddSwaggerGen(s =>
