@@ -33,8 +33,14 @@ public partial class TblPayslipModel
     public decimal RenderedHours { get; set; }
     [Column(TypeName = "decimal(18,2)")]
     public decimal OTHours { get; set; }
+
+
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public string PayslipNumber { get; set; }
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal AbsentDeduction { get; set; }
+    public int? DaysPresent { get; set; }
+    public int? DaysAbsent { get; set; }
     public int? Status { get; set; }
     public DateTime? DateCreated { get; set; } = DateTime.Now;
     public int? CreatedBy { get; set; }

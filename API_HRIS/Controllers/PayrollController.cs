@@ -18,6 +18,7 @@ using static API_HRIS.ApplicationModel.EntityModels;
 using System.Runtime.Intrinsics.X86;
 using System.Linq;
 using API_HRIS.Migrations;
+using static API_HRIS.Controllers.TicketingController;
 
 namespace API_HRIS.Controllers
 {
@@ -103,7 +104,10 @@ namespace API_HRIS.Controllers
                                OtherDeductions = "0.00",
                                TotalDeductions = py.TaxDeduction + py.SSSDeduction + py.PhilHealthDeduction + py.PagIbigDeduction,
                                     OvertimeHours = py.OTHours,
-                               OvertimePay = py.OTPay
+                               OvertimePay = py.OTPay,
+                               DaysAbsent = py.DaysAbsent,
+                               DaysPresent = py.DaysPresent,
+                               AbsentDeduction = py.AbsentDeduction
                            })
                      .Where(x => x.EmployeeNumber == employee.EmployeeId.ToString())
                      .ToList();
@@ -139,34 +143,59 @@ namespace API_HRIS.Controllers
             await _context.SaveChangesAsync(); // Save changes to the database
             for (int x = 0; x < emplist.Count; x++)
             {
+                // Step 1: Get holidays from DB
+                var holidays = _context.TblHolidayModel
+                    .Where(h => h.Date >= Convert.ToDateTime(data.datefrom) && 
+                    h.Date <= Convert.ToDateTime(data.dateto))
+                    .Select(h => h.Date)
+                    .ToList(); // List<DateTime>
+
                 var records = _context.TblTimeLogs
-                      .Where(r => r.Date >= Convert.ToDateTime(data.datefrom) && r.Date <= Convert.ToDateTime(data.dateto)
-                      && r.UserId == emplist[x].Id )
-                      .Select(r => r.Date) // Remove time component
-                      .Distinct()
-                      .ToList();
+                               .Where(r => r.Date >= Convert.ToDateTime(data.datefrom) &&
+                                           r.Date <= Convert.ToDateTime(data.dateto) &&
+                                           r.UserId == emplist[x].Id)
+                               .Select(r => r.Date.Value) // Remove time part
+                               .Distinct()
+                               .ToList();
+                DateTime fromDate = Convert.ToDateTime(data.datefrom);
+                DateTime toDate = Convert.ToDateTime(data.dateto);
 
-                // Step 2: Generate all dates within the range
-                var allDates = GetAllDatesInRange(Convert.ToDateTime(data.datefrom), Convert.ToDateTime(data.dateto));
-
-                // Step 3: Find missing dates
-                var missingDates = allDates.Except(allDates).ToList();
-
-                // Step 4: Build the response
+                var allWorkingDays = Enumerable.Range(0, (toDate - fromDate).Days + 1)
+                                      .Select(offset => fromDate.AddDays(offset))
+                                      .Where(d =>
+                                          d.DayOfWeek != DayOfWeek.Saturday &&
+                                          d.DayOfWeek != DayOfWeek.Sunday &&
+                                          !holidays.Contains(d)
+                                      )
+                                      .ToList();
+                var timeLogDates = _context.TblTimeLogs
+                                .Where(t => t.UserId == emplist[x].Id && t.Date >= fromDate && t.Date <= toDate)
+                                .Select(t => t.Date.Value)
+                                .Distinct()
+                                .ToList(); // List<DateTime>
+                var missingDates = allWorkingDays.Except(records).ToList();
+                var presentOnHolidays = timeLogDates
+                                        .Intersect(holidays)
+                                        .ToList(); // List<DateTime>
                 var response = new
                 {
                     TotalUniqueRecords = records.Count,
-                    ExpectedTotalDates = allDates.Count,
-                    MissingDates = missingDates
+                    ExpectedWorkingDays = allWorkingDays.Count,
+                    MissingWorkingDates = allWorkingDays.Except(records).ToList(),
+                    MissingCount = allWorkingDays.Except(records).Count()
                 };
-                var othours = _context.TblOvertimeModel.Where(a => a.EmployeeNo == emplist[x].EmployeeId).Sum(a => a.HoursFiled);
+                var othours = _context.TblOvertimeModel
+                    .Where(a => a.EmployeeNo == emplist[x].EmployeeId
+                                && a.Date >= fromDate
+                                && a.Date <= toDate)
+                    .Sum(a => a.HoursFiled ?? 0); 
 
                 var excludedTaskIds = new List<int> { 10, 11, 12 };
                 var empid = emplist[x].EmployeeId;
             
                 var existingRecord = await _context.TblPayslipModel.Where(a => a.EmployeeId == emplist[x].EmployeeId.ToString()).FirstOrDefaultAsync();
-
-          
+                var totalSalary = (dynamic)null;
+              
                 decimal renderedHours = dbmet.TimeLogsData()
                                       .ToList()
                                       .Where(a => !excludedTaskIds.Contains(int.Parse(a.TaskId))
@@ -175,22 +204,50 @@ namespace API_HRIS.Controllers
                                           && Convert.ToDateTime(a.Date) <= Convert.ToDateTime(data.dateto)
                                           && a.StatusId == "1")
                                       .Sum(a => decimal.TryParse(a.RenderedHours ?? "0", out decimal value) ? value : 0);
-                
-                decimal rates = emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate);
-                
-                var totalSalary = renderedHours * rates;
+
+                decimal rates = 0;
+                //decimal rates = emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate);
+                if (emplist[x].SalaryType == 1)
+                {
+                    rates = emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate);
+                    totalSalary = renderedHours * rates;
+           
+                }
+                else if (emplist[x].SalaryType == 2)
+                {
+                    rates = emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate) / int.Parse(emplist[x].DaysInMonth);
+                    totalSalary = rates;
+                   
+                }
+                else if (emplist[x].SalaryType == 1003)
+                {
+                    rates = (emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate) / int.Parse(emplist[x].DaysInMonth)) / 8;
+                    totalSalary = decimal.Parse(emplist[x].Rate) / 2;
+
+                }
+                else
+                {
+                    rates = emplist[x].Rate == null ? 0 : decimal.Parse(emplist[x].Rate) / int.Parse(emplist[x].DaysInMonth);
+                    totalSalary = emplist[x].Rate;
+                }
+                decimal absent_deduct = 0;
+                int daysabenst = allWorkingDays.Except(records).ToList().Count(); 
+                if (allWorkingDays.Except(records).ToList().Count() > 0 )
+                {
+                    absent_deduct = rates * daysabenst;
+                }
                 var total_otpay = rates * 1.25m * othours;
                 if (!decimal.TryParse(totalSalary.ToString(), out decimal grossSalary))
                     throw new InvalidOperationException("Employee salary rate is invalid.");
 
        
-                decimal sssDeduction = await dbmet.ComputeSSSContribution(grossSalary);
-                decimal philHealthDeduction = await dbmet.ComputePhilHealthDeduction(grossSalary);
-                decimal pagIbigDeduction = await dbmet.ComputePagIbigDeduction(grossSalary);
-                decimal taxDeduction = await dbmet.ComputeWithholdingTax(grossSalary, emplist[x].PayrollType);
-                decimal totalDeduction = (sssDeduction + philHealthDeduction + pagIbigDeduction);
+                decimal sssDeduction = emplist[x].EmployeeType == 1 ? await dbmet.ComputeSSSContribution(grossSalary) : 0;
+                decimal philHealthDeduction = emplist[x].EmployeeType == 1 ?  await dbmet.ComputePhilHealthDeduction(grossSalary) : 0;
+                decimal pagIbigDeduction = emplist[x].EmployeeType == 1 ?  await dbmet.ComputePagIbigDeduction(grossSalary) : 0;
+                decimal taxDeduction =  await dbmet.ComputeWithholdingTax(grossSalary, emplist[x].PayrollType);
+                decimal totalDeduction = (sssDeduction + philHealthDeduction + pagIbigDeduction + absent_deduct);
                 decimal taxableIncome = grossSalary - totalDeduction;
-                decimal netSalary = (taxableIncome - taxDeduction) + total_otpay ?? 0;
+                decimal netSalary = (taxableIncome - taxDeduction) + total_otpay;
 
                 var payslip = new TblPayslipModel
                 {
@@ -203,8 +260,12 @@ namespace API_HRIS.Controllers
                     TaxDeduction = taxDeduction,
                     NetSalary = netSalary,
                     DateCreated = DateTime.Now,
-                    OTHours=othours ?? 0,
-                    OTPay=total_otpay ?? 0
+                    OTHours = othours,
+                    OTPay = total_otpay,
+                    DaysAbsent = allWorkingDays.Except(records).ToList().Count(),
+                    DaysPresent = records.Count,
+                    AbsentDeduction = absent_deduct
+
                 };
 
                 _context.TblPayslipModel.Add(payslip);

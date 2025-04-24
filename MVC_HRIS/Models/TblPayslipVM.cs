@@ -37,4 +37,8 @@ public partial class TblPayslipVM
     public decimal PagIbig { get; set; }
     public decimal OtherDeductions { get; set; }
     public decimal TotalDeductions { get; set; }
+    public decimal AbsentDeduction { get; set; }
+    public int? DaysPresent { get; set; }
+    public int? DaysAbsent { get; set; }
+
 }

@@ -309,7 +309,7 @@
                 </div>
                 <div class="d-flex-col w-100" style="margin-top:15px">
                     <div>
-                        <label>--</label>
+                        <label>@Model.DaysPresent @((Model.DaysPresent == 1) ? "Day" : "Days")</label>
                     </div>
                     <div>
                         <label>@Model.OvertimeHours</label>
@@ -448,7 +448,7 @@
                 </div>
                 <div class="d-flex-col w-100">
                     <div>
-                        <label>@($"₱ {Model.OtherDeductions:N2}")</label>
+                        <label>@($"₱ {Model.AbsentDeduction:N2}")</label>
                     </div>
                     <div>
                         <label>@($"₱ {Model.TotalDeductions:N2}")</label>
