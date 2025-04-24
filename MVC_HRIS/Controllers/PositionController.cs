@@ -49,7 +49,11 @@ namespace MVC_HRIS.Controllers
             apiUrl = _configuration.GetValue<string>("AppSettings:WebApiURL");
             _appSettings = appSettings.Value;
         }
-        
+        public IActionResult PositionModal()
+        {
+
+            return PartialView("_PositionModal");
+        }
         public IActionResult Index()
         {
             //string  token = HttpContext.Session.GetString("Bearer");

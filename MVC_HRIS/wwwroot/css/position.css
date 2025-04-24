@@ -1,0 +1,62 @@
+.pencil-action {
+    padding: 20px;
+    position: fixed;
+    z-index: 99999;
+    right: 50px;
+    bottom: 80px;
+    background-color: #205274;
+    border-radius: 50%;
+    cursor: pointer;
+
+/*    display: none;*/
+}
+..pencil-action svg{
+    
+}
+.pencil-action svg path {
+    fill: #fff;
+}
+.action-navbar.pos {
+    position: fixed !important;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    background-color: rgba(0,0,0, .8) !important;
+    padding: 0;
+    border-radius: 0;
+    display: none;
+}
+
+.action-navbar.pos button {
+    border-radius: 100% ;
+    padding: 20px;
+    background-color: #205274;
+    border: 0;
+    border-radius: 50%;
+}
+.action-navbar.pos .input-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: fixed;
+    z-index: 99999;
+    right: 50px;
+    bottom: 80px;
+    color: #fff;
+    ;
+    font-weight: 400 !important;
+}
+.action-navbar.pos .input-container.delete-pos{
+    bottom: 170px;
+    
+}
+.action-navbar.pos button#delete-pos {
+    background: #FFC1C3;
+    padding: 15px;
+    color: #EC1C24;
+}
+#pos-table_filter{
+    width: 100%;
+}

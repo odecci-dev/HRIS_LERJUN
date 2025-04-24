@@ -1,35 +1,24 @@
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor Accessor;
 <style>
-    .selected {
-        background-color: #17a2b8;
-        color: var(--light);
-    }
-
-    .sub-nav-highlight {
-        background-color: #17a2b8;
-        color: var(--light);
-    }
+    
 </style>
 
 <div class="sidebar" id="mysidebar">
-    <div>
+    @* <div>
         <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item" id="toggle-sidebar">
             <i class="fa-solid fa-bars"></i>
         </a>
-    </div>
-
+    </div> *@
     <div class="img-container">
 
-        <div class="image-box">
+        <div class="image-box" id="img-logo">
         </div>
-        <div class="emp-info">
+        @* <div class="emp-info">
             <span style="color: white;font-weight:bolder">@Accessor.HttpContext.Session.GetString("Name")</span>
             <span style="color: white;">@Accessor.HttpContext.Session.GetString("UserTypeName")</span>
             <span style="color: white;">@Accessor.HttpContext.Session.GetString("EmployeeID")</span>
-        </div>
-
-
+        </div> *@
     </div>
     <ul class="sidebar-content">
         <div class="content-item">
@@ -45,7 +34,8 @@
             </li> *@
             <li style="width: 100%;">
                 <button style="display: flex; align-items: center; gap: 5px; background: transparent; border: none; width: 100%" class="nav-item" id="logout" onclick="logout()">
-                    <i class="fa-solid fa-right-from-bracket" style="font-size: 23px;margin-right:5px"></i>
+                    @* <i class="fa-solid fa-right-from-bracket" style="font-size: 23px;margin-right:5px"></i> *@
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.125 12a.75.75 0 0 0-.75-.75H4.402l1.961-1.68a.75.75 0 1 0-.976-1.14l-3.5 3a.75.75 0 0 0 0 1.14l3.5 3a.75.75 0 1 0 .976-1.14l-1.96-1.68h10.972a.75.75 0 0 0 .75-.75" clip-rule="evenodd" /><path fill="currentColor" d="M9.375 8c0 .702 0 1.053.169 1.306a1 1 0 0 0 .275.275c.253.169.604.169 1.306.169h4.25a2.25 2.25 0 0 1 0 4.5h-4.25c-.702 0-1.053 0-1.306.168a1 1 0 0 0-.275.276c-.169.253-.169.604-.169 1.306c0 2.828 0 4.243.879 5.121c.878.879 2.292.879 5.12.879h1c2.83 0 4.243 0 5.122-.879c.879-.878.879-2.293.879-5.121V8c0-2.828 0-4.243-.879-5.121S19.203 2 16.375 2h-1c-2.829 0-4.243 0-5.121.879c-.879.878-.879 2.293-.879 5.121" /></svg>
                     <span>LogOut</span>
                 </button>
             </li>

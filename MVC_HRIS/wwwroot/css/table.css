@@ -35,27 +35,8 @@ th {
     background-color: var(--table-header);
     color: white; 
 }
-/*div.dataTables_wrapper div.dataTables_filter {
-    text-align: right;
-    position: absolute;
-    bottom: 10px;
-    justify-content: flex-end;
-    right: 12px;
-    margin-bottom:30px;
-}
-    div.dataTables_wrapper div.dataTables_filter label {
-        font-weight: normal;
-        white-space: nowrap !important;
-        text-align: left !important;
-        display: flex !important;
-        flex-direction: column !important;
-        font-size: 25px;
-        font-weight: bolder !important ; 
-        margin-left:50px !important;
-
-    }*/
 div.dataTables_wrapper div.dataTables_filter input {
-    font-size: 1.2rem;
+  /*  font-size: 1.2rem;
     height: 35px;
     outline: none;
     border: 1px solid #e7e6e6;
@@ -63,7 +44,7 @@ div.dataTables_wrapper div.dataTables_filter input {
     border-radius: 5px;
     width: 100%;
     color: var(--secondary-dark);
-    margin:0 auto !important;
+    margin:0 auto !important;*/
       
 }
 
@@ -86,11 +67,87 @@ thead tr {
 table.dataTable > thead > tr > td,
 table.dataTable > tbody > tr > td {
     align-content: center;
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
     border-left: 0;
     border-right: 0;
 }
 .popup{
     margin: 0 !important
+}
+thead tr th {
+    color: var(--table-head);
+    text-align: center !important;
+    font-size: 16px;
+    border: none;
+    border-bottom: 2px solid #A7A7A7 !important;
+}
+tbody tr td {
+    border-bottom: .1px solid #F4F5F9 !important;
+    /*    border-bottom: 2px solid red !important;*/
+}
+.dataTables_paginate .pagination {
+    display: flex;
+    gap: 20px;
+}
+.paginate_button,
+.paginate_button:hover{
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+.pagination .previous .page-link,
+.pagination .next .page-link {
+    display: none;
+    color: transparent !important;
+}
+.pagination .previous:after,
+.pagination .next:after {
+    color: #737373;
+    content: "<" !important;
+    font-size: 25px !important;
+    font-weight: 700 !important;
+    background-color: #EBF4FF;
+    padding: 0 15px;
+    display: flex;
+    align-items: center !important;
+    padding-bottom: 5px;
+    border-radius: 10px
+}
+.pagination .next:after {
+    content: ">" !important;
+}
+.paginate_button .page-link {
+    border: none !important;
+    background-color: #EBF4FF !important;
+    border-radius: 10px !important;
+    font-weight: 600;
+    padding: 10px 15px
+}
+.paginate_button.page-item.active .page-link {
+    background-color: #205375 !important;
+}
+table.dataTable.no-footer {
+    border: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: transparent !important;
+}
+div.dataTables_wrapper div.dataTables_filter input {
+    width: 100%
+}
+.dataTables_filter label {
+    width: 103% !important;
+    padding: 20px 0;
+    border-bottom: 1px solid #A7A7A7;
+    border-top: 1px solid #A7A7A7;
+    margin-left: -1.5% !important;
+    background: #F0F1F2
+}
+.dataTables_filter label input {
+    height: 50px;
+    background: #F5F9FF !important;
+/*    border:1px solid #205274 !important;*/
+    border: none !important;
+    width: 99% !important;
 }

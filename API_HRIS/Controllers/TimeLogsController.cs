@@ -683,6 +683,10 @@ namespace API_HRIS.Controllers
                         double decimalHours = Math.Round(times.TotalHours, 2);
                         lastTimein.TimeOut = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
                         lastTimein.RenderedHours = decimal.Parse(decimalHours.ToString("F2"));
+                        if(lastTimein.RenderedHours > 12)
+                        {
+                            lastTimein.StatusId = 2;
+                        }
                         _context.Entry(lastTimein).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
                         //string query = $@"UPDATE [tbl_TimeLogs]"
