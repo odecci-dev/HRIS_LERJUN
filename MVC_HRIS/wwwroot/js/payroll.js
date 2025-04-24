@@ -11,8 +11,6 @@ function payrollModalOpen() {
     modal = document.getElementById('payroll-modal');
     modal.style.display = "flex";
 }
-
-
 function payrollDOM() {
 
     $('#payroll-table').on('click', '.tbl-edit', function () {
@@ -76,7 +74,6 @@ function payrollDOM() {
 
     });
 }
-
 function delete_item_payroll() {
     //alert("Payroll Deleted");
 

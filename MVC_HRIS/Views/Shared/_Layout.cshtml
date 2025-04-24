@@ -25,7 +25,10 @@
     <link rel="stylesheet" href="~/css/department.css" />
     <link rel="stylesheet" href="~/css/overtime.css" />
     <link rel="stylesheet" href="~/css/actiondropdown.css" />
-    <link rel="stylesheet" href="~/css/employee.css   />
+    <link rel="stylesheet" href="~/css/employee.css"/>
+    <link rel="stylesheet" href="~/css/position.css" />
+    <link rel="stylesheet" href="~/css/topbar.css" />
+    <link rel="stylesheet" href="~/css/tab.css" />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css">
 
@@ -194,7 +197,6 @@
     <script src="/js/app.js"></script>
     <script src="~/js/iziToast.min.js"></script>
     <script src="~/js/timelogs.js"></script>
-    <script src="~/js/position.js"></script>
     <script src="~/js/employee.js"></script>
     <script src="~/js/schedule.js"></script>
     <script src="~/js/department.js"></script>
@@ -203,6 +205,11 @@
     <script src="~/js/employmenttype.js"></script>
     <script src="~/js/approval.js"></script>
     <script src="~/js/overtime.js"></script>
+    <script src="~/js/pagibig.js"></script>
+    <script src="~/js/philhealth.js"></script>
+    <script src="~/js/tax.js"></script>
+    <script src="~/js/sss.js"></script>
+    <script src="~/js/position.js"></script>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -223,6 +230,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+
+
+    <!-- Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="~/js/leave.js"></script>
     <div class="footer"></div>
     <script type="text/javascript">
@@ -400,61 +412,74 @@
                                                         <div>
                                                             <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
 
-                                                                                <i class="fa-solid fa-chart-line" style="font-size: 20px;margin-right:5px"></i>
-                                                                <span style="color: white;">Dashboard</span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M14 9q-.425 0-.712-.288T13 8V4q0-.425.288-.712T14 3h6q.425 0 .713.288T21 4v4q0 .425-.288.713T20 9zM4 13q-.425 0-.712-.288T3 12V4q0-.425.288-.712T4 3h6q.425 0 .713.288T11 4v8q0 .425-.288.713T10 13zm10 8q-.425 0-.712-.288T13 20v-8q0-.425.288-.712T14 11h6q.425 0 .713.288T21 12v8q0 .425-.288.713T20 21zM4 21q-.425 0-.712-.288T3 20v-4q0-.425.288-.712T4 15h6q.425 0 .713.288T11 16v4q0 .425-.288.713T10 21z"/></svg>
+                                                                <span>Dashboard</span>
                                                             </a>
                                                         </div>
                                                     </li>
                                                     <li class="maintenance" id="maintenance">
                                                         <div>
                                                             <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
-                                                                <i class="fa-sharp fa-solid fa-screwdriver-wrench" style="font-size: 20px;margin-right:5px"></i>
-                                                                <span style="color: white;">Maintenance</span>
-
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512"><path fill="currentColor" fill-rule="evenodd" d="M362.667 106.667L448 192v277.334H106.667V106.667zm-17.673 42.667h-195.66v277.333h256V209.673zM298.667 42.667l42.667 42.667h-256v320H42.667V42.667zM286.97 209.842c16.137 20.982 21.58 46.795 16.41 65.64q-.969 4.653 68.231 72.545q22.627 22.627 0 45.255q-21.296 21.297-42.593 2.506l-74.869-71.075c-18.847 5.172-44.659-.273-65.64-16.41c-15.39-20.235-20.698-46.684-16.41-65.64l32.82 32.82l32.82-16.41l16.41-32.821l-32.82-32.82c18.956-4.287 45.406 1.02 65.64 16.41"/></svg>
+                                                                <span>Maintenance</span>
                                                                 <i class="fa-solid fa-chevron-down" id="maintenanceArrow"></i>
                                                             </a>
                                                         </div>
                                                     </li>
                                                     <ul class="sub-nav" id="subnav">
-                                                        <li><a href="../../Employee/Index" style="display: flex; align-items: center; gap: 13px;"><i class="fa-solid fa-users"></i> Employee</a></li>
-                                                        <li><a href="../../Position/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-user"></i> Position</a></li>
-                                                        <li><a href="../../Department/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-sitemap"></i> Department</a></li>
+                                                        <li>
+                                                            <a href="../../Employee/Index" style="display: flex; align-items: center; gap: 13px;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 36 36"><path fill="currentColor" d="M16.43 16.69a7 7 0 1 1 7-7a7 7 0 0 1-7 7m0-11.92a5 5 0 1 0 5 5a5 5 0 0 0-5-5M22 17.9a25.4 25.4 0 0 0-16.12 1.67a4.06 4.06 0 0 0-2.31 3.68v5.95a1 1 0 1 0 2 0v-5.95a2 2 0 0 1 1.16-1.86a22.9 22.9 0 0 1 9.7-2.11a23.6 23.6 0 0 1 5.57.66Zm.14 9.51h6.14v1.4h-6.14z"/><path fill="currentColor" d="M33.17 21.47H28v2h4.17v8.37H18v-8.37h6.3v.42a1 1 0 0 0 2 0V20a1 1 0 0 0-2 0v1.47H17a1 1 0 0 0-1 1v10.37a1 1 0 0 0 1 1h16.17a1 1 0 0 0 1-1V22.47a1 1 0 0 0-1-1"/></svg>
+                                                                Employee
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="../../Position/Index" style="display: flex; align-items: center; gap: 15px;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.891 7.556c-.55.316-1.992.96-1.114 1.768c.43.394.907.676 1.508.676h3.43c.6 0 1.079-.282 1.508-.676c.879-.807-.564-1.452-1.114-1.768a4.28 4.28 0 0 0-4.218 0M13.5 3.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0m2.891 16.056c-.55.316-1.992.96-1.114 1.768c.43.394.907.676 1.508.676h3.43c.6 0 1.079-.282 1.508-.676c.879-.808-.564-1.453-1.114-1.768a4.28 4.28 0 0 0-4.218 0M20 15.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0M3.391 19.556c-.55.316-1.992.96-1.114 1.768c.43.394.907.676 1.508.676h3.43c.6 0 1.079-.282 1.508-.676c.878-.808-.564-1.453-1.114-1.768a4.28 4.28 0 0 0-4.218 0M7 15.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0m5-2.5v2.5m0 0l2.5 1.5M12 15.5L9.5 17" color="currentColor"/></svg>
+                                                                Position
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="../../Department/Index" style="display: flex; align-items: center; gap: 15px;">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="currentColor"><path d="M15 5a3 3 0 1 1-6 0a3 3 0 0 1 6 0M8 19a3 3 0 1 1-6 0a3 3 0 0 1 6 0m14 0a3 3 0 1 1-6 0a3 3 0 0 1 6 0"/><path d="M12 8v4m0 0H8.5c-1.65 0-2.475 0-2.987.44C5 12.878 5 13.585 5 15v1m7-4h3.5c1.65 0 2.475 0 2.987.44C19 12.878 19 13.585 19 15v1"/></g></svg>
+                                                                Department
+                                                            </a>
+                                                        </li>
                                                         <li><a href="../../Payroll/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-hand-holding-dollar"></i> Payroll Type</a></li>
                                                         <li><a href="../../Salary/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-money-bill-wave"></i> Salary Type</a></li>
                                                         <li><a href="../../Schedule/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-clock"></i> Schedule</a></li>
-                                                                <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
+                                                        <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
+                                                        <li><a href="../../Deduction/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-circle-minus"></i> Deduction</a></li>
                                                     </ul>
                                                     <li>
                                                         <div>
                                                             <a href="../../TimeLogs/ManagerIndex" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-                                                                <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
-                                                                <span style="color: white;">TimeSheet</span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20a8 8 0 0 0 8-8a8 8 0 0 0-8-8a8 8 0 0 0-8 8a8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10a10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67l-.75 1.23L11 13V7z"/></svg>
+                                                                <span>TimeSheet</span>
                                                             </a>
                                                         </div>
                                                     </li>
                                                     <li class="approval">
                                                         <div>
                                                             <a href="../../Approval/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-                                                                <i class="fa-sharp fa-solid fa-check-to-slot" style="font-size: 20px;"></i>
-                                                                <span style="color: white;">Approvals</span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M12.925 11.05L8.675 6.8L10.1 5.4l2.825 2.825l5.675-5.65l1.4 1.4zM14 22.5l-7-1.95V22H1V11h7.95L17 14v2h5v4zM3 20h2v-7H3zm10.95.4l5.95-1.85V18h-7.075L9.7 16.95l.6-1.9l2.925.95H15v-.65L8.6 13H7v5.5z"/></svg>
+                                                                <span>Approvals</span>
                                                             </a>
                                                         </div>
                                                     </li>
                                                       <li class="filing">
                                                         <div>
                                                             <a href="../../Filing/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-
-                                                                <i class="fas fa-file-signature" style="font-size: 20px;"></i>
-                                                                <span style="color: white;">Filing</span>
+                                                                <svg class="svg-filing" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"><path stroke-linecap="round" d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.342a2 2 0 0 0-.602-1.43l-4.44-4.342A2 2 0 0 0 13.56 2H6a2 2 0 0 0-2 2m5 9h6m-6 4h3"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></g></svg>
+                                                                <span>Filing</span>
                                                             </a>
                                                         </div>
                                                     </li>
                                                        <li class="reports">
                                                         <div>
-                                                                    <a href="../../Report/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-
-                                                                        <i class="fa-solid fa-chart-column" style="font-size: 20px;"></i>
-                                                                <span style="color: white;">Reports</span>
+                                                                <a href="../../Report/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M7 16a1.5 1.5 0 0 0 1.5-1.5a1 1 0 0 0 0-.15l2.79-2.79h.46l1.61 1.61v.08a1.5 1.5 0 1 0 3 0v-.08L20 9.5A1.5 1.5 0 1 0 18.5 8a1 1 0 0 0 0 .15l-3.61 3.61h-.16L13 10a1.49 1.49 0 0 0-3 0l-3 3a1.5 1.5 0 0 0 0 3m13.5 4h-17V3a1 1 0 0 0-2 0v18a1 1 0 0 0 1 1h18a1 1 0 0 0 0-2"/></svg>
+                                                                <span>Reports</span>
                                                             </a>
                                                         </div>
                                                     </li>
@@ -486,6 +511,7 @@
                                                                 <li><a href="../../Salary/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-money-bill-wave"></i> Salary Type</a></li>
                                                                 <li><a href="../../Schedule/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-clock"></i> Schedule</a></li>
                                                                 <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
+                                                                <li><a href="../../Deduction/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-circle-minus"></i> Deduction</a></li>
                                                             </ul>
                                                             <li>
                                                                 <div>

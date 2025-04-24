@@ -13,7 +13,9 @@
 @import "calendar.css";
 @import "overtime.css";
 @import "employee.css";
-
+@import "position.css";
+@import "topbar.css";
+@import "tab.css";
 * {
     margin: 0;
     box-sizing: border-box;
@@ -128,7 +130,7 @@ body {
     }
 
     .top-bar {
-        display: flex;
+        display: none;
         background: var(--dark);
         width: 100vw;
         position: fixed;
@@ -138,73 +140,84 @@ body {
         z-index: 1 !important
     }
 
-        .top-bar .logo-box {
-            width: 50% !important;
-            height: 100px !important;
-            padding: 10px;
-            background-image: url(/img/logo-04.png);
-            background-size: contain !important;
-            background-repeat: no-repeat;
-            background-position: left;
-        }
+    .top-bar .logo-box {
+        width: 50% !important;
+        height: 100px !important;
+        padding: 10px;
+        background-image: url(/img/logo-04.png);
+        background-size: contain !important;
+        background-repeat: no-repeat;
+        background-position: left;
+    }
 
-        .top-bar .navigation {
-            width: 50%;
-            height: 100px !important;
-            display: flex;
-            align-items: center;
-            justify-content: end
-        }
+    .top-bar .navigation {
+        width: 50%;
+        height: 100px !important;
+        display: flex;
+        align-items: center;
+        justify-content: end
+    }
 
-            .top-bar .navigation i {
-                color: var(--light);
-                font-size: 35px
-            }
+    .top-bar .navigation i {
+        color: var(--light);
+        font-size: 35px
+    }
 
-        .top-bar .menu {
-            background: red;
-            width: 50vw;
-            height: 100vh;
-            position: absolute;
-            top: 100px;
-            right: 0;
-            padding: 50px;
-            background-color: var(--dark);
-            display: none;
-        }
+    .top-bar .menu {
+        background: red;
+        width: 50vw;
+        height: 100vh;
+        position: absolute;
+        top: 100px;
+        right: 0;
+        padding: 50px;
+        background-color: var(--dark);
+        display: none;
+    }
 
-            .top-bar .menu li {
-                margin: 40px 0 !important;
-                font-size: 28px;
-            }
+    .top-bar .menu li {
+        margin: 40px 0 !important;
+        font-size: 28px;
+    }
 
-                .top-bar .menu li a {
-                    color: var(--light);
-                }
+    .top-bar .menu li a {
+        color: var(--light);
+    }
 
-            .top-bar .menu .emp-info {
-                padding-bottom: 50px;
-                border-bottom: 1px solid var(--light);
-            }
+    .top-bar .menu .emp-info {
+        padding-bottom: 50px;
+        border-bottom: 1px solid var(--light);
+    }
 
-                .top-bar .menu .emp-info span {
-                    font-size: 28px;
-                }
-
+    .top-bar .menu .emp-info span {
+        font-size: 28px;
+    }
+    body{
+        margin: 0 !important;
+    }
+    .title-main-container{
+        margin: 0;
+    }
+    .title-main-container .content-container {
+        border-radius: 0 !important;
+    }
     #dashboard-main-container,
     dashboard-main-container {
         display: flex;
+        flex-direction: column;
         width: 100vw;
         margin: 0 !important;
-        margin-top: 120px !important;
+        padding: 0 !important;
     }
-
+    #dashboard-main-container .main-container{
+        padding: 50px;
+    }
     .paginate_button {
         z-index: -1 !important;
     }
 
     .sidebar {
-        display: none;
+/*        display: none;*/
     }
 
     #close-nav {

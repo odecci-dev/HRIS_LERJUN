@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
+
+
+<div class="avatar">
+    <div class="user">
+        <div class="profile">
+            <img src="@Accessor.HttpContext.Session.GetString("ImgUrl")" alt="Ali" width="50px" />
+        </div>
+        <div class="info">
+            <p class="name">@Accessor.HttpContext.Session.GetString("Name")</p>
+            <p class="empid">@Accessor.HttpContext.Session.GetString("UserTypeName") | @Accessor.HttpContext.Session.GetString("EmployeeID")</p>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+    </script>
+}

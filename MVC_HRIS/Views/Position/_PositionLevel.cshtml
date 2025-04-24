@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+   
+</style>
+<div>
+    <div class="mod-form action-navbar" style="margin-bottom: 2px;">
+        <div class="input-container">
+            <button class="btn btn-info" id="add-pos" title="Add New Employee" onclick="myFunctionOpenModal()">
+                <i class="fas fa-user-plus"></i> Create Position
+            </button>
+        </div>
+    </div>
+
+    @* </div style=" display: flex;flex-direction: column;> *@
+    <div id="register-table_wrapper" class="dataTables_wrapper no-footer" style="width:100%">
+        <table id="poslevel-table" class="myTableLarge">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<script>
+    
+</script>

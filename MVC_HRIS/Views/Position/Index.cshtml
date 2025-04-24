@@ -7,15 +7,79 @@
         message = ViewData["Message"].ToString();
     }
 }
+<style>
+    .tab {
+        display: flex;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 5px;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+
+    .tablinks {
+        background: #f8f9fa;
+        border: none;
+        padding: 12px 18px;
+        font-size: 16px;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        outline: none;
+        font-weight: 500;
+        border-top-left-radius: 30px;
+        color: #333;
+    }
+
+        .tablinks:hover {
+            background: var(--dark);
+            color: white;
+        }
+        /* Active tab */
+        .tablinks.active {
+            border-top-left-radius: 30px;
+            background: var(--dark);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0px -3px 8px rgba(0, 123, 255, 0.3);
+        }
+    /* Tab content */
+    .tab-content {
+        display: none;
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+        background: #fff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+        /* Active tab content */
+        .tab-content.active {
+            display: block;
+        }
+    /* Fade-in effect */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 <div id="dashboard-main-container">
     <div class="title-main-container">
         <div class="content-container">
-            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+            <h4 style="font-size: 26px;" class="text-left">@ViewData["Title"].ToString()</h4>
+            @Html.Partial("_UserDetails")
         </div>
+
     </div>
     <div class="main-container">
 
-        <div class="mod-form action-navbar" style="margin-bottom: 2px;">
+        @* <div class="mod-form action-navbar" style="margin-bottom: 2px;">
             <div class="input-container">
                 <button class="btn btn-info" id="add-pos" title="Add New Employee" onclick="myFunctionOpenModal()">
                     <i class="fas fa-user-plus"></i> Create Position
@@ -23,7 +87,7 @@
             </div>
         </div>
 
-        @* </div style=" display: flex;flex-direction: column;> *@
+        </div style=" display: flex;flex-direction: column;> 
         <div id="register-table_wrapper" class="dataTables_wrapper no-footer" style="width:100%">
             <table id="pos-table" class="myTableLarge">
                 <thead>
@@ -32,10 +96,25 @@
                 </tbody>
 
             </table>
+        </div> *@
+        <div class="content-filter">
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'Tab1')">Position</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab2')" id="leavefiling">Position Level</button>
+            </div>
+            <div id="Tab1" class="tab-content active">
+                @await Html.PartialAsync("~/Views/Position/_Position.cshtml")
+            </div>
+            <div id="Tab2" class="tab-content">
+                @await Html.PartialAsync("~/Views/Position/_PositionLevel.cshtml")
+            </div>
         </div>
     </div>
+    @await Html.PartialAsync("~/Views/Position/_PositionForm.cshtml")
 </div>
-<div class="modal" id="positionmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
+
+@* @await Html.PartialAsync("~/Views/Position/_PositionModal.cshtml") *@
+@* <div class="modal" id="positionmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
      aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
 
     <div class="modal-dialog modal-error-dialog">
@@ -69,7 +148,7 @@
                     <div class="actions" style="align-items: center;">
                         <div class="actionss">
                             @* <button class="register" type="button" style ="margin-bottom: 5px;font-size: 13px;    padding: 5px 15px 5px 5px;height: 25px;font-size: clamp(0.5rem, 2vw, 0.7rem);" title="Add New" id="add Mechanics"><i class="fas fa-id-card"></i>Add Mechanics</button> *@
-                            @* <input type="button" value="Add Mechanics" id="btn-register"/> <i class="fas fa-cogs"></i> *@
+                            @* <input type="button" value="Add Mechanics" id="btn-register"/> <i class="fas fa-cogs"></i> 
 
                         </div>
 
@@ -83,155 +162,43 @@
         </div>
     </div>
 
-</div>
+</div> *@
 
 
 @section Scripts {
     <script>
         var pmodal = document.getElementById('positionmodal');
+
+        var actionPos = document.getElementById('action-navbar-pos');
+        var pencil = document.getElementById('pencil-action');
         position();
         $(document).ready(function () {
 
-            initializeDataTable();
+            initializePositionDataTable();
             // alert(tableId);
 
         });
-        function initializeDataTable() {
-            var tableId = '#pos-table';
-            var lastSelectedRow = null;
-            // Check if DataTable is already initialized
-            if ($.fn.DataTable.isDataTable(tableId)) {
-                // Destroy the existing DataTable instance
-                $(tableId).DataTable().clear().destroy();
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
             }
-            var dtProperties = {
-                ajax: {
-                    url: '/Position/GetPositionList',
-                    type: "GET",
-                    data: {
+            // Remove active class from all tab buttons
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
 
-                    },
-                    dataType: "json",
-                    processing: true,
-                    serverSide: true,
-                    complete: function (xhr) {
-                        var url = new URL(window.location.href);
-                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                        // console.log('table1', _currentPage);
-                        table.page(_currentPage - 1).draw('page');
-
-                    },
-                    error: function (err) {
-                        alert(err.responseText);
-                    }
-                },
-                columns: [
-                    {
-                        "title": "Description",
-                        "data": "description"
-                    },
-                    {
-                        "title": "Date Created",
-                        "data": "dateCreated"
-                    },
-                    {
-                        "title": "Action",
-                        "data": "id",
-                        "render": function (data, type, row) {
-
-                            var button = `<div class="action">
-                                                            <button class="tbl-delete btn btn-danger" id="" title="Delete"
-                                                                data-id="${data}"
-                                                                data-status="${row.status}"
-                                                                data-name="${row.name}"
-                                                                data-description="${row.description}"
-                                                                data-date="${row.dateCreated}"
-                                                                data-positionid="${row.positionId}"
-                                                            >
-                                                            <i class="fa-solid fa-trash"></i> delete
-                                                        </button>
-                                                            <button class="edit-table btn btn-info" id="" title="Time Out"
-                                                                data-id="${data}"
-                                                                data-status="${row.status}"
-                                                                data-name="${row.name}"
-                                                                data-description="${row.description}"
-                                                                data-date="${row.dateCreated}"
-                                                                data-positionid="${row.positionId}"
-                                                            >
-                                                                <i class="fa-solid fa-pen-to-square"></i> edit
-                                                            </button>
-                                                </div>`;
-                            return button;
-                        }
-                    }
-                ],
-                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
-                columnDefs: [
-                    {
-                        targets: 1,
-                        type: 'date' // Ensure DataTables recognizes this column as date type
-                    },
-                    {
-
-                        width: '10%', targets: 2
-                    },
-                    {
-
-                        width: '50%', targets: 0
-                    }
-                ]
-            };
-
-            var table = $(tableId).DataTable(dtProperties);
-
-            $('#time-table').on('page.dt', function () {
-                var info = table.page.info();
-                var url = new URL(window.location.href);
-                url.searchParams.set('page01', (info.page + 1));
-                window.history.replaceState(null, null, url);
-            });
-
-            $(tableId + '_filter input').attr('placeholder', 'Search Here');
-
-            $(tableId + ' tbody').on('click', 'tr', function () {
-                var data = table.row(this).data();
-                // console.log(data);
-                // Remove highlight from the previously selected row
-                if (lastSelectedRow) {
-                    $(lastSelectedRow).removeClass('selected-row');
-                }
-                // Highlight the currently selected row
-                $(this).addClass('selected-row');
-                lastSelectedRow = this;
-            });
-
+            // Show the current tab and add active class
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active");
         }
 
-        $('#pos-table').on('click', '.tbl-delete', function () {
-            var id = $(this).data('id');
-            var name = $(this).data('name');
-            var description = $(this).data('name');
+        
 
-            //var status = $(this).data('status');
-            //var task = $(this).data('task');
-            //var dateString = $(this).data('date');
-            //var timein = $(this).data('timein');
-            //var timeout = $(this).data('timeout');
-            //var remarks = $(this).data('remarks');
-            //var userid = $(this).data('userid');
-            localStorage.setItem('posid', id);
-            localStorage.setItem('posname', name);
-            localStorage.setItem('posdesc', description);
-            //localStorage.setItem('status', status);
-            //localStorage.setItem('task', task);
-            //localStorage.setItem('dateString', dateString);
-            //localStorage.setItem('timein', timein);
-            //localStorage.setItem('timeout', timeout);
-            //localStorage.setItem('remarks', remarks);
-            //localStorage.setItem('userid', userid);
-
-            deletemodal();
-            $("#alertmodal").modal('show');
-        });
+       
     </script>
 }
