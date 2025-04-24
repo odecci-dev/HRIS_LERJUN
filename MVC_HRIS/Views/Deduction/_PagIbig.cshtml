@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+   
+</style>
+<div>
+    
+    <div>
+        <div class="d-flex action-navbar">
+            <div class="filing-container" id="pagibig-filing-container">
+                <div class="filing-card">
+                    <div class="card-header">
+                        <h4>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M12 4v10m0 0l3-3m-3 3l-3-3" /><path d="M12 20a8 8 0 0 1-8-8m16 0a7.99 7.99 0 0 1-3 6.245" /></g></svg>
+                            Import
+                        </h4>
+                    </div>
+                    @using (Html.BeginForm("PagibigIndex", "Deduction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <label for="file" class="" style="font-weight: 400">
+                            <div class="drop-zone" id="pagibig-drop-zone">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 22c-9 1-8-10 0-9C6 2 23 2 22 10c10-3 10 13 1 12m-12-4l5-4l5 4m-5-4v15" /></svg>
+                                <p id="pagibig-drag-file-label">Click or drag file to this area to upload</p>
+                                <input id="pagibig-upload-excel" type="file" size="1" name="file" accept="excel/*" class="form-control-sm mb-1" required>
+                            </div>
+                            <div class="card-header">
+                                <p>Formats accepted are .csv and .xlsx</p>
+                            </div>
+                        </label>
+                        <div class="dl-template">
+                            <p>If you do not have a file you can use the template below:</p>
+                            <span class="btn btn-secondary template" id="add-timelogs" title="Download" onclick="downloadPagibigTemplate()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="#31aa2c" stroke-linecap="round" d="M3.5 5.5h1m-1 2h1m-1 2h1m2-4h2m-2 2h2m-2 2h2m2-6.29V11c0 .28-.22.5-.5.5H2c-.28 0-.5-.22-.5-.5V1c0-.28.22-.5.5-.5h5.79c.13 0 .26.05.35.15l2.21 2.21c.1.09.15.21.15.35zM7.5.5V3c0 .28.22.5.5.5h2.5" stroke-width="1" /></svg>
+                                Download Template
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <span class="btn btn-success cancel" id="pagibig-close-filing-container"> Cancel</span>
+                            <button type="submit" class="btn btn-success upload" id="" data-toggle="tooltip" title="Import Excel">
+                                Upload
+                            </button>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <button class="btn btn-primary" id="import-pagibig" title="Import" onclick="">
+                <i class="fa-solid fa-file-import"></i> Import
+            </button>
+        </div>
+        <div>
+            <table id="pagibig-table" class="table table-bordered table-hover w-100" style="margin-top:0px !important">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+
+            </table>
+            <div id="table-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+</script>

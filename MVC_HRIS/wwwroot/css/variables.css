@@ -33,6 +33,10 @@
     --data-width: 600px;
     --top-corp-graph-width: 60px;
     --shade: #576a76;
+    /*New Variable*/
+    --gradiant: linear-gradient(45deg, #205375, #EC1C24) !important;
+    --table-head: #205274;
+    --header: #205274;
 }
 
 .darkmode {

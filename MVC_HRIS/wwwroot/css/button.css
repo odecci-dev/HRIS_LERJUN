@@ -20,6 +20,20 @@
     transform: scale(1.1);
 
 }
-.btn{
+.btn {
     margin: 2.5px !important;
+}
+.act-btn {
+    width: 100% !important;
+    display: flex !important;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 !important;
+    margin-bottom: 5px !important;
+}
+.edit-table.act-btn {
+    background-color: #205375 !important;
+}
+.tbl-delete.act-btn {
+    background-color: #EC1C24 !important;
 }

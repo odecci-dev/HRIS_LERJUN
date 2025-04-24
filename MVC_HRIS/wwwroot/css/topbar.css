@@ -1,0 +1,26 @@
+.title-main-container .content-container {
+    background-color: var(--header);
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+}
+.avatar .user {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 30px;
+    align-items: center;
+}
+.avatar .user p{
+    margin: 0;
+    text-align: right
+}
+.avatar .user .profile img{
+    border-radius: 50%
+}
+.avatar .user p.name{
+    font-weight: 600
+}

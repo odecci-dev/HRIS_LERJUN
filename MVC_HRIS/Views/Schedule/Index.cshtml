@@ -16,7 +16,8 @@
 <div id="dashboard-main-container">
     <div class="title-main-container">
         <div class="content-container">
-            <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+            <h4 style="font-size: 26px;" class="text-left">@ViewData["Title"].ToString()</h4>
+            @Html.Partial("_UserDetails")
         </div>
         <div class="top-main-container ">
         </div>

@@ -182,7 +182,7 @@ namespace AOPC.Controllers
                 if (dt.Rows.Count != 0)
                 {
                     string fname = dt.Rows[0]["Fname"].ToString();
-                    HttpContext.Session.SetString("Name", dt.Rows[0]["Fname"].ToString() + dt.Rows[0]["Lname"].ToString());
+                    HttpContext.Session.SetString("Name", dt.Rows[0]["Fname"].ToString() + " " + dt.Rows[0]["Lname"].ToString());
                     //HttpContext.Session.SetString("Position", dt.Rows[0]["PositionName"].ToString());
                     //HttpContext.Session.SetString("UserType", dt.Rows[0]["UserType"].ToString());
                     //HttpContext.Session.SetString("CorporateName", dt.Rows[0]["CorporateName"].ToString());

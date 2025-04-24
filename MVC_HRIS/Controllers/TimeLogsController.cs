@@ -1439,7 +1439,7 @@ namespace MVC_HRIS.Controllers
                 //}
                 foreach (int col in hideColumns)
                 {
-                    //ws.Column(col).Hidden = true;       // Hide column
+                    ws.Column(col).Hidden = true;       // Hide column
                     ws.Column(col).Style.Locked = true; // Lock column
                 }
                 ws.Cells["A:C"].Style.Locked = false;

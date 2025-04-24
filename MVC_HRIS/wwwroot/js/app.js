@@ -2,12 +2,42 @@
 let toggle = document.querySelector("#toggleButton");
 
 
-document.getElementById('toggle-sidebar').addEventListener('click', () => {
-    let isActive = localStorage.getItem('sidebar-active') === 'true';
-    localStorage.setItem('sidebar-active', !isActive);
+//document.getElementById('toggle-sidebar').addEventListener('click', () => {
+//    let isActive = localStorage.getItem('sidebar-active') === 'true';
+//    localStorage.setItem('sidebar-active', !isActive);
 
-    updateSidebar();
+//    updateSidebar();
+//});
+
+document.getElementById('mysidebar').addEventListener('mouseenter', () => {
+    
+    const activelogo = document.getElementById('img-logo');
+    const activemaintenanceArrow = document.getElementById('maintenanceArrow');
+    const activesidebar = document.getElementById('mysidebar');
+    const activedashboaradsidebar = document.getElementById('dashboard-main-container') == null ? document.getElementById('emp-main-container') : document.getElementById('dashboard-main-container');
+    activesidebar.classList.add('active');
+    activedashboaradsidebar.classList.add('active');
+    activemaintenanceArrow.style.display = "block";
+    activelogo.style.marginTop = "40px";
 });
+document.getElementById('mysidebar').addEventListener('mouseleave', () => {
+    const notactivelogo = document.getElementById('img-logo');
+    const notactivemaintenanceArrow = document.getElementById('maintenanceArrow');
+    const notactivesidebar = document.getElementById('mysidebar');
+    const notactivedashboaradsidebar = document.getElementById('dashboard-main-container') == null ? document.getElementById('emp-main-container') : document.getElementById('dashboard-main-container');
+    notactivesidebar.classList.remove('active');
+    notactivedashboaradsidebar.classList.remove('active');
+    notactivemaintenanceArrow.style.display = "none";
+    notactivelogo.style.marginTop = "0";
+    var subnav = document.getElementById('subnav');
+    subnav.style.display = 'none';
+    localStorage.setItem('subnav', 0);
+    const arrow = document.getElementById('maintenanceArrow');
+    // Remove a class
+    arrow.classList.remove('fa-chevron-up');
+    // Add a class
+    arrow.classList.add('fa-chevron-down');
+})
 function refreshPage() {
     window.location.reload();
 }
@@ -28,7 +58,7 @@ function updateSidebar() {
         sidebar.classList.remove('active');
         //subnav.classList.remove('active');
         dashboaradsidebar.classList.remove('active');
-        dashboaradsidebar.classList.remove('active');
+        //dashboaradsidebar.classList.remove('active');
         //empdashboard.classList.remove('active');
     }
 }
