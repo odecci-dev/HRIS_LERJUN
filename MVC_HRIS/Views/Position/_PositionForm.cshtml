@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+   
+</style>
+<div class="">
+    <div class="hrismodal-holder" id="positionmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
+         aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
+
+        <div class="hris-modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-name">Position Details Form</h4>
+                <button type="button" id="h-close" class="close" data-dismiss="modal"  onclick="myFunction()">x</button>
+            </div>
+            <div class="" style="margin:10px">
+
+                <form action="" class="mod-form" id="submitpos">
+
+                    <div class="mod-form-row">
+                        <div class="input-container-whole">
+                            <label for="employeeID">Position Name<span class="req">*</span></label>
+                            <input type="hidden" value="" id="posid" class="mod-input" />
+                            <input type="hidden" value="" id="posdate" class="mod-input" />
+                            <input type="text" value="" id="posname" class="mod-input" required />
+                        </div>
+                    </div>
+                    <div class="mod-form-row">
+                        <div class="input-container-whole">
+                            <label for="email">Position Description</label>
+                            <input type="text" value="" id="desc" class="mod-input" />
+                        </div>
+                    </div>
+
+
+                    <div class="actions" style="align-items: center;">
+
+                        <a data-dismiss="modal" aria-hidden="false" style="cursor:pointer" class="cancel btn" onclick="myFunction()">Cancel</a>
+                        <input class="btn" type="submit" value="Submit" id="btn-save" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+</script>

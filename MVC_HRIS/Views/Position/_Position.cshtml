@@ -31,63 +31,30 @@
     </div>
 
     @* </div style=" display: flex;flex-direction: column;> *@
-    <div id="register-table_wrapper" class="dataTables_wrapper no-footer">
+    @* <div id="register-table_wrapper" class="dataTables_wrapper no-footer">
         <table id="pos-table" class="">
             <thead>
             </thead>
             <tbody>
             </tbody>
         </table>
+    </div> *@
+
+    <div class="content-filter-tbl">
+        <table id="pos-table" class="table table-bordered table-hover w-100">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+        <div id="table-footer">
+        </div>
+
     </div>
 </div>
 <div class="pencil-action" id="pencil-action" onclick="PosActionFunction();">
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M6.414 15.89L16.556 5.748l-1.414-1.414L5 14.476v1.414zm.829 2H3v-4.243L14.435 2.212a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414zM3 19.89h18v2H3z" /></svg>
-</div>
-<div class="modal" id="positionmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
-     aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
-
-    <div class="modal-dialog modal-error-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modal-name">Position Details Form</h4>
-                <button type="button" id="h-close" class="close" data-dismiss="modal" aria-hidden="false" onclick="myFunction()">x</button>
-            </div>
-            <div class="" style="margin:10px">
-
-                <form action="" class="mod-form" id="submitpos">
-
-                    <div class="mod-form-row">
-                        <div class="input-container-whole">
-                            <label for="employeeID">Position Name<span class="req">*</span></label>
-
-                            <input type="hidden" value="" id="posid" class="mod-input" />
-                            <input type="hidden" value="" id="posdate" class="mod-input" />
-                            <input type="text" value="" id="posname" class="mod-input" required />
-                        </div>
-
-                    </div>
-                    <div class="mod-form-row">
-                        <div class="input-container-whole">
-                            <label for="email">Position Description</label>
-                            <input type="text" value="" id="desc" class="mod-input" />
-                        </div>
-                    </div>
-
-
-                    <div class="actions" style="align-items: center;">
-                        <div class="actionss">
-                            @* <button class="register" type="button" style ="margin-bottom: 5px;font-size: 13px;    padding: 5px 15px 5px 5px;height: 25px;font-size: clamp(0.5rem, 2vw, 0.7rem);" title="Add New" id="add Mechanics"><i class="fas fa-id-card"></i>Add Mechanics</button> *@
-                            @* <input type="button" value="Add Mechanics" id="btn-register"/> <i class="fas fa-cogs"></i> *@
-
-                        </div>
-
-                        <a data-dismiss="modal" aria-hidden="false" style="cursor:pointer" class="cancel"><u>Cancel</u></a>
-                        <input type="submit" value="Submit" id="btn-save" />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 <script>
     

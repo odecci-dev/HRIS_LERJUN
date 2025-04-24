@@ -59,7 +59,7 @@ async function position() {
             console.log(data);
             notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
             pmodal.style.display = "none";
-            initializeDataTable();
+            initializePositionDataTable();
         });
 
     });
@@ -145,7 +145,7 @@ function delete_item() {
         //console.log(data);
         notifyMsg('Success!', 'Successfully Deleted', 'red', 'fas fa-check');
         $("#alertmodal").modal('hide');
-        initializeDataTable();
+        initializePositionDataTable();
     });
 
 }
@@ -167,7 +167,7 @@ function initializePositionDataTable() {
             },
             dataType: "json",
             processing: true,
-            //serverSide: true,
+            serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
@@ -181,6 +181,7 @@ function initializePositionDataTable() {
         },
         lengthChange: false,
         dom: 'frtip',
+        responsive: true,
         columns: [
             { "title": "<input type='checkbox' id='checkAllpos' class='checkAllpos'>", "data": null, "orderable": false },
             {
@@ -289,7 +290,7 @@ function initializePositionDataTable() {
 
     var table = $(tableId).DataTable(dtProperties);
 
-    $('#time-table').on('page.dt', function () {
+    $('#pos-table').on('page.dt', function () {
         var info = table.page.info();
         var url = new URL(window.location.href);
         url.searchParams.set('page01', (info.page + 1));

@@ -1,5 +1,5 @@
 .title-main-container .content-container {
-    background-color: #205274;
+    background-color: var(--header);
     display: flex;
     flex-direction:row;
     justify-content: space-between;
