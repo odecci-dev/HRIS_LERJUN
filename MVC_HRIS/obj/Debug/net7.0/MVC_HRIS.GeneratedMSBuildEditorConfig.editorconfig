@@ -9,175 +9,247 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AOPC_CMSv2
 build_property.RootNamespace = AOPC_CMSv2
-build_property.ProjectDir = C:\DEVELOPMENT\HRIS_LERJUN\MVC_HRIS\
+build_property.ProjectDir = D:\DEVELOPMENT\ODC_HRIS_V2_LERJUN\HRIS_LERJUN\MVC_HRIS\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\DEVELOPMENT\HRIS_LERJUN\MVC_HRIS
+build_property.MSBuildProjectDirectory = D:\DEVELOPMENT\ODC_HRIS_V2_LERJUN\HRIS_LERJUN\MVC_HRIS
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Approval/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Approval/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwcm92YWxcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Approval/RegistrationApproval.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Approval/RegistrationApproval.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwcm92YWxcUmVnaXN0cmF0aW9uQXBwcm92YWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Approval/TaskApproval.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Approval/TaskApproval.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwcm92YWxcVGFza0FwcHJvdmFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Approval/TimelogsApproval.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Approval/TimelogsApproval.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwcm92YWxcVGltZWxvZ3NBcHByb3ZhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Dashboard/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Department/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Deduction/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVkdWN0aW9uXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Deduction/_PagIbig.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVkdWN0aW9uXF9QYWdJYmlnLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Deduction/_PhilHealth.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVkdWN0aW9uXF9QaGlsSGVhbHRoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Deduction/_SSS.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVkdWN0aW9uXF9TU1MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Deduction/_Tax.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVkdWN0aW9uXF9UYXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Department/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVwYXJ0bWVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/EmployeeType/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/EmployeeType/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVUeXBlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Employee/AddEmployee.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Employee/AddEmployee.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcQWRkRW1wbG95ZWUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Employee/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Employee/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Filing/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Filing/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmlsaW5nXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Leave/_LeaveTypeMaintenance.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Leave/LeaveApproval.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVcTGVhdmVBcHByb3ZhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Leave/LeaveFiling.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVcTGVhdmVGaWxpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Leave/_Leave.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVcX0xlYXZlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Leave/_LeaveTypeMaintenance.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVcX0xlYXZlVHlwZU1haW50ZW5hbmNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Leave/_PendingLeaveRequest.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Leave/_PendingLeaveRequest.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVcX1BlbmRpbmdMZWF2ZVJlcXVlc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/LogIn/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/LogIn/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nSW5cRm9yZ290UGFzc3dvcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/LogIn/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nSW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/OverTime/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/OverTime/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3ZlclRpbWVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/OverTime/OTFiling.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/OverTime/OTApproval.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3ZlclRpbWVcT1RBcHByb3ZhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/OverTime/OTFiling.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3ZlclRpbWVcT1RGaWxpbmcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/OverTime/_OverTime.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/OverTime/_OverTime.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3ZlclRpbWVcX092ZXJUaW1lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/OverTime/_PendingOverTime.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/OverTime/_PendingOverTime.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3ZlclRpbWVcX1BlbmRpbmdPdmVyVGltZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Payroll/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Payroll/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Payroll/_Payroll.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Payroll/_Payroll.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFxfUGF5cm9sbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Payroll/_Payslip.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Payroll/_Payslip - Copy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFxfUGF5c2xpcCAtIENvcHkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Payroll/_Payslip.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFxfUGF5c2xpcC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Position/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Payroll/_PayslipAdmin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFxfUGF5c2xpcEFkbWluLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Position/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zaXRpb25cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Registration/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Position/_Position.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zaXRpb25cX1Bvc2l0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Position/_PositionForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zaXRpb25cX1Bvc2l0aW9uRm9ybS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Position/_PositionLevel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9zaXRpb25cX1Bvc2l0aW9uTGV2ZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Registration/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVnaXN0cmF0aW9uXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Report/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Report/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Salary/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Salary/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FsYXJ5XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Schedule/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Schedule/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Settings/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Settings/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0dGluZ3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/Error.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/LogIn.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/LogIn.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExvZ0luLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/_Main.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/_Main.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9NYWluLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/_SideBar.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/_SideBar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TaWRlQmFyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/_TopBar.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/_TopBar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Ub3BCYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/_TopBarCorporate.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Ub3BCYXJDb3Jwb3JhdGUuY3NodG1s
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/_UserDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Vc2VyRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/Index.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/ManagerIndex.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/ManagerIndex.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcTWFuYWdlckluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/ManagerNotification.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/ManagerNotification.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcTWFuYWdlck5vdGlmaWNhdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/TaskModal.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/TaskModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcVGFza01vZGFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/_PendingTimelogs.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/TLApproval.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcVExBcHByb3ZhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/_loader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcX2xvYWRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/_PendingTimelogs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcX1BlbmRpbmdUaW1lbG9ncy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/_ViewImports.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/TimeLogs/_SummaryTimelogs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGltZUxvZ3NcX1N1bW1hcnlUaW1lbG9ncy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/_ViewStart.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/DEVELOPMENT/HRIS_LERJUN/MVC_HRIS/Views/Shared/_Layout.cshtml]
+[D:/DEVELOPMENT/ODC_HRIS_V2_LERJUN/HRIS_LERJUN/MVC_HRIS/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-gtpfe42w06
