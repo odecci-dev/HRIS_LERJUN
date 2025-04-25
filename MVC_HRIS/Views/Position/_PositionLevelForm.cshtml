@@ -10,35 +10,33 @@
 @inject IHttpContextAccessor Accessor;
 
 <style>
-
+   
 </style>
 <div class="">
-    <div class="hrismodal-holder" id="positionmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
+    <div class="hrismodal-holder" id="positionlevelmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
          aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
 
         <div class="hris-modal-content">
             <div class="hris-modal-header">
-                <h4 class="modal-title" id="modal-name">Position Details Form</h4>
-                <button type="button" id="h-close" class="close" data-dismiss="modal" onclick="myFunction()">x</button>
+                <h4 class="modal-title" id="modal-name">Position Level Details Form</h4>
+                <button type="button" id="h-close" class="close" data-dismiss="modal"  onclick="myFunction()">x</button>
             </div>
             <div class="" style="margin:10px">
 
-                <form action="" class="mod-form" id="submitpos">
+                <form action="" class="mod-form" id="submitposlevel">
 
                     <div class="mod-form-row">
                         <div class="input-container-whole">
-                            <label for="employeeID">Position Name<span class="req">*</span></label>
-                            <input type="hidden" value="" id="posid" class="mod-input" />
-                            <input type="hidden" value="" id="posdate" class="mod-input" />
-                            <input type="text" value="" id="posname" class="mod-input" required />
+                            <label for="employeeID">Position Level<span class="req">*</span></label>
+                            <input type="hidden" value="0" id="poslevelid" class="mod-input" />
+                            <input type="text" value="" id="poslevel" class="mod-input" required />
                         </div>
                     </div>
                     <div class="mod-form-row">
                         <div class="input-container-whole">
-                            <label for="email">Position Description</label>
-                            @* <input type="text" value="" id="desc" class="mod-input" /> *@
-
-                            <textarea id="desc" class="mod-input"></textarea>
+                            <label for="email">Position Level Description</label>
+                            @* <input type="text" value="" id="posleveldesc" class="mod-input" /> *@
+                            <textarea id="posleveldesc" class="mod-input"></textarea>
                         </div>
                     </div>
 
@@ -55,5 +53,5 @@
 </div>
 
 <script>
-
+    
 </script>

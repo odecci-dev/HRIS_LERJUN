@@ -8,6 +8,7 @@
     gap: 10px;
     padding: 10px;
 }
+
 #dashboard {
     width: calc(99vw - var(--sidebarwidth));
     /*height: calc(100vh - var(--topbarheight));*/
@@ -18,6 +19,7 @@
     gap: 10px;
     padding: 10px;
 }
+
 .register-main-container {
     width: calc(99vw - var(--sidebarwidth));
     /*height: calc(100vh - var(--topbarheight));*/
@@ -28,6 +30,7 @@
     gap: 10px;
     padding: 10px;
 }
+
 #dashboard-main-container {
     display: grid;
     width: calc(99vw - var(--sidebarwidth));
@@ -45,6 +48,7 @@
     gap: 10px;
     /*padding: 10px;*/
 }
+
 #grid-main-container {
     display: grid;
     width: 100%;
@@ -62,6 +66,7 @@
     gap: 10px;
     /*padding: 10px;*/
 }
+
 #emp-main-container {
     width: calc(100vw - var(--sidebarwidth));
     height: 100vh;
@@ -70,19 +75,20 @@
     display: flex;
     flex-direction: column;
 }
-#emp-main-container.active {
+
+    #emp-main-container.active {
         /*display: grid;*/
         width: calc(100vw - var(--sidebarwidth-active));
         height: 100vh;
         margin-left: var(--sidebarwidth-active);
         gap: 10px;
         /*padding: 10px;*/
-}
+    }
+
 .btype-data {
     grid-area: data2;
     height: 100%;
     width: 100%;
-   
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -91,22 +97,22 @@
 }
 
 #dashboard-main-container.active {
-        display: grid;
-        width: calc(99vw - var(--sidebarwidth-active));
-        height: 100vh;
-        margin-left: var(--sidebarwidth-active);
-        grid-template-areas:
-            "data9 data1 data1 data1 data1 data10"
-            "data9 data2 data2 data2 data2 data10"
-            "data9 data3 data3 data3 data3 data10"
-            "data9 data5 data5 data5 data5 data10"
-            "data9 data4 data7 data7 data4 data10";
-        /*margin-top: var(--topbarheight);*/
-        grid-template-columns: 0.1fr 1fr 1fr 1fr 1fr 0.1fr;
-        grid-template-rows: 0.4fr 1fr 740fr 580fr 140fr 1fr;
-        gap: 10px;
-        /*padding: 10px;*/
-    }
+    display: grid;
+    width: calc(99vw - var(--sidebarwidth-active));
+    height: 100vh;
+    margin-left: var(--sidebarwidth-active);
+    grid-template-areas:
+        "data9 data1 data1 data1 data1 data10"
+        "data9 data2 data2 data2 data2 data10"
+        "data9 data3 data3 data3 data3 data10"
+        "data9 data5 data5 data5 data5 data10"
+        "data9 data4 data7 data7 data4 data10";
+    /*margin-top: var(--topbarheight);*/
+    grid-template-columns: 0.1fr 1fr 1fr 1fr 1fr 0.1fr;
+    grid-template-rows: 0.4fr 1fr 740fr 580fr 140fr 1fr;
+    gap: 10px;
+    /*padding: 10px;*/
+}
 
 .title-main-container {
     grid-area: data1;
@@ -153,12 +159,14 @@
     font-size: 35px;
     font-weight: bolder;
 }
+
 .body-container {
     width: 100%;
     display: flex;
     justify-content: space-around;
     margin: 20px 0;
 }
+
 body-container {
     width: 100%;
     display: flex;
@@ -171,7 +179,7 @@ body-container {
     justify-content: flex-start;
     width: 22%;
     margin-left: 50px;
-    margin-top:11px;
+    margin-top: 11px;
     margin-right: 40px;
 }
 
@@ -218,6 +226,7 @@ body-container {
     object-fit: contain;
     background-color: black;
 }
+
 .boder-line-none {
     width: 100%;
     margin-right: 50px
@@ -242,6 +251,7 @@ body-container {
     color: var(--dark);
     font-weight: bolder;
 }
+
 .top-main-container {
     grid-area: data2;
     width: 100%;
@@ -270,7 +280,7 @@ body-container {
 
 .main-container {
     grid-area: data3;
-    padding: 25px;
+    /*    padding: 25px;*/
     width: 100%;
     /* box-shadow: 1px 1px 5px 2px var(--shadow);*/
     border-radius: 10px;
@@ -322,11 +332,13 @@ body-container {
     border-radius: 10px;
     height: 100vh;
 }
+
 .content-main {
     margin: 25px;
     border-radius: 10px;
     height: 100vh;
 }
+
 .footer-container-cb {
     grid-area: data4;
     width: 100%;
@@ -354,20 +366,22 @@ body-container {
 }
 
 .content-filter {
-   /* margin: 10px 30px 10px 30px;*/
+    /* margin: 10px 30px 10px 30px;*/
     display: flex;
     flex-direction: column;
 }
+
 .content-filter-tbl {
     margin: 2px 0px;
     display: flex;
     flex-direction: column;
 }
-.content-filter-nm {
 
+.content-filter-nm {
     display: flex;
     flex-direction: column;
 }
+
 .content-filter-cb {
     /*margin: 10px 30px 10px 30px;*/
     display: flex;
@@ -444,15 +458,18 @@ body-container {
     border: 2px solid #dce4ec;
     border-radius: 15px;
 }
+
 .data-img {
     overflow: hidden;
     width: 50px;
     height: 50px;
     border-radius: 20%;
 }
+
 .tbl-edit {
     background-color: #138496
 }
+
 .tbl-edit,
 .tbl-approve,
 .tbl-view,
@@ -469,6 +486,7 @@ body-container {
     width: 100%;
     font-size: 12px !important;
 }
+
 table.dataTable thead th:first-child {
     width: 150px; /* Adjust this value as needed */
 }
@@ -488,6 +506,7 @@ table.dataTable thead th:first-child {
     color: white;
     width: 100%;
 }
+
 .tbl-email {
     display: flex;
     gap: 5px;
@@ -500,6 +519,7 @@ table.dataTable thead th:first-child {
     color: white;
     width: 100%;
 }
+
 .actions {
     /*display: flex;*/
     /* width: 100%; */
@@ -515,17 +535,20 @@ table.dataTable thead th:first-child {
     margin-top: 5px;
     flex-direction: row;
 }
+
 .input-container-whole_ {
     display: flex;
     flex-direction: column;
     width: 100%;
     position: relative;
 }
+
 .mod-form-row1 {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
+
 .list-title {
     width: 100%;
     background-color: var(--dark);
@@ -535,6 +558,7 @@ table.dataTable thead th:first-child {
     display: flex;
     align-items: center;
 }
+
 label[for="img"] {
     margin: auto;
     background-color: var(--dark);
@@ -546,32 +570,34 @@ label[for="img"] {
     transition: all 0.5s ease-in-out;
     box-shadow: 1px 2px 2px 1px rgba(116, 113, 113, 0.5);
 }
+
 .mod-form-row2 {
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
-    .input-container-whole_ i {
-        position: absolute;
-        top: 35%;
-        right: 1rem;
-        width: 1.2rem;
-        height: 30%;
-        cursor: pointer;
-    }
-    .form-container .bg-blur {
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(104, 104, 104, 0.321);
-        box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.66);
-        filter: blur(1px);
-        z-index: 3;
-    }
+.input-container-whole_ i {
+    position: absolute;
+    top: 35%;
+    right: 1rem;
+    width: 1.2rem;
+    height: 30%;
+    cursor: pointer;
+}
+
+.form-container .bg-blur {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(104, 104, 104, 0.321);
+    box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.66);
+    filter: blur(1px);
+    z-index: 3;
+}
 
 .login-logo-conctainer {
     margin: 200px auto 0 auto;
@@ -628,6 +654,7 @@ label[for="img"] {
     justify-content: space-around;
     margin: 10px 0;
 }
+
 .background-image-container {
     width: 100vw; /* Adjust the width as needed */
     height: 100vh; /* Adjust the height as needed */
@@ -635,6 +662,7 @@ label[for="img"] {
     background-position: center; /* Center the background image */
     /* Optional: Add border for visualization */
 }
+
 .hero-container {
     display: flex;
     justify-content: center; /* Centers items horizontally */
@@ -644,6 +672,7 @@ label[for="img"] {
     /* border: 1px solid #ccc; */
     flex-direction: column;
 }
+
 .hero-container2 {
     display: flex;
     justify-content: center;
@@ -656,6 +685,7 @@ label[for="img"] {
     width: 100%;
     height: 100%;
 }
+
 #userhour-table_length {
     display: none !important;
 }
@@ -677,12 +707,15 @@ label[for="img"] {
 .w-70 {
     width: 70%;
 }
+
 .w-50 {
     width: 50%;
 }
+
 .w-30 {
     width: 30%;
 }
+
 .d-flex-row {
     display: flex;
     flex-direction: row;
@@ -711,9 +744,11 @@ label[for="img"] {
 .gap-35 {
     gap: 35px;
 }
+
 .gap-20 {
     gap: 20px;
 }
+
 .pad-15 {
     padding: 15px;
 }
@@ -795,6 +830,6 @@ label[for="img"] {
 
     #loadingOverlay img {
         width: 100px;*/ /* Adjust size if needed */
-    /*}*/
+/*}*/
 
 /* Overlay to cover the whole screen */
