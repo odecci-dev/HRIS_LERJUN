@@ -16,13 +16,15 @@
     transition: all 0.5s ease-in-out;
     border-radius: 10px;
 }
-.btn-submit:hover {
-    transform: scale(1.1);
 
-}
+    .btn-submit:hover {
+        transform: scale(1.1);
+    }
+
 .btn {
     margin: 2.5px !important;
 }
+
 .act-btn {
     width: 100% !important;
     display: flex !important;
@@ -31,9 +33,12 @@
     margin: 0 !important;
     margin-bottom: 5px !important;
 }
-.edit-table.act-btn {
+
+.edit-table.act-btn,
+.tbl-edit.act-btn {
     background-color: #205375 !important;
 }
+
 .tbl-delete.act-btn {
     background-color: #EC1C24 !important;
 }

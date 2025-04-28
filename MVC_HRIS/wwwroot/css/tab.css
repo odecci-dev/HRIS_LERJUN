@@ -1,13 +1,16 @@
 .tablinks {
     border-radius: 8px 8px 0 0 !important;
 }
-.tablinks.active {
-    background: var(--gradiant) !important;
-}
-.tablinks:hover {
-    background: var(--gradiant) !important;
-}
+
+    .tablinks.active {
+        background: var(--gradiant) !important;
+    }
+
+    .tablinks:hover {
+        background: var(--gradiant) !important;
+    }
+
 .tab-content {
-    padding-top: 0 !important;
+    padding: 0 !important;
     margin-top: 2px !important;
 }

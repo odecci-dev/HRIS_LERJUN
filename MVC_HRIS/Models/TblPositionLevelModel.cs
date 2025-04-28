@@ -10,7 +10,6 @@ public partial class TblPositionLevelModel
     public int Id { get; set; }
 
     public string? Level { get; set; }
-
     public string? Description { get; set; }
 
     public DateTime? DateCreated { get; set; }

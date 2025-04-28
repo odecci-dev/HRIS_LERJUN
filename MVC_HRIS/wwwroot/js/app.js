@@ -10,7 +10,7 @@ let toggle = document.querySelector("#toggleButton");
 //});
 
 document.getElementById('mysidebar').addEventListener('mouseenter', () => {
-    
+
     const activelogo = document.getElementById('img-logo');
     const activemaintenanceArrow = document.getElementById('maintenanceArrow');
     const activesidebar = document.getElementById('mysidebar');
@@ -208,7 +208,7 @@ async function fetchmanagerselect() {
                 $("#manager").append('<option value="' + data[i].id + '">' + data[i].name + "</option>");
             }
             $("#departmenthead").empty();
-            $("#departmenthead").append('<option value="" disabled selected>Select Department Head</option>');
+            $("#departmenthead").append('<option value="" selected>Select Department Head</option>');
             for (var i = 0; i < data.length; i++) {
                 $("#departmenthead").append('<option value="' + data[i].id + '">' + data[i].name + "</option>");
             }

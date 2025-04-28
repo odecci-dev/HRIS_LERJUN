@@ -40,11 +40,43 @@ namespace API_HRIS.Controllers
             _context = context;
             dbmet = _dbmet;
         }
-
+        public partial class DeparmentModelList
+        {
+            public int Id { get; set; }
+            public string? DepartmentName { get; set; }
+            public string? Description { get; set; }
+            public int? DepartmentHead { get; set; }
+            public string? DepartmentHeadName { get; set; }
+            public DateTime? DateCreated { get; set; }
+        }
         [HttpGet]
         public async Task<IActionResult> DepartmentList()
         {
-            return Ok(_context.TblDeparmentModels.Where(a => a.DeleteFlag == 0).OrderByDescending(a => a.Id).ToList());
+            var departmentdb = _context.TblDeparmentModels
+                .Where(a => a.DeleteFlag == 0)
+                .OrderByDescending(a => a.Id)
+                .ToList();
+
+            var departmentheadedb = _context.TblUsersModels
+                .OrderByDescending(a => a.Id)
+                .ToList();
+
+            var result = from department in departmentdb
+                         join departmenthead in departmentheadedb
+                         on department.DepartmentHead equals departmenthead.Id into empDept
+                         from ed in empDept.DefaultIfEmpty()
+                         select new DeparmentModelList
+                         {
+                             Id = department.Id,
+                             DepartmentName = department.DepartmentName ?? "",
+                             Description = department.Description ?? "",
+                             DateCreated = department.DateCreated,
+                             DepartmentHead = department.DepartmentHead,
+                             DepartmentHeadName = ed != null ? ed.Fullname : "No Department Head"
+                         };
+
+            return Ok(result.ToList());
+
         }
         [HttpPost]
         public async Task<IActionResult> DepartmentPaginationList(FilterDepartment data)
@@ -103,7 +135,7 @@ namespace API_HRIS.Controllers
                 return Problem("Entity set 'ODC_HRISContext.TblDeparmentModels'  is null.");
             }
             bool hasDuplicateOnSave = (_context.TblDeparmentModels?.Any(departmentModel => departmentModel.DepartmentName == tblDeparmentModel.DepartmentName && departmentModel.DeleteFlag != 1)).GetValueOrDefault();
-            if(tblDeparmentModel.DepartmentName == null)
+            if (tblDeparmentModel.DepartmentName == null)
             {
 
                 string query = $@"UPDATE tbl_DeparmentModel
@@ -133,11 +165,11 @@ namespace API_HRIS.Controllers
                 }
                 else
                 {
-                  
+
                     _context.Entry(tblDeparmentModel).State = EntityState.Modified;
                     status = "Department successfully updated";
-                    
-                    
+
+
                 }
 
                 await _context.SaveChangesAsync();
@@ -160,7 +192,7 @@ namespace API_HRIS.Controllers
                 return Problem("Entity set 'ODC_HRISContext.TblDeparmentModels'  is null.");
             }
 
-            var departmentModel = _context.TblDeparmentModels.AsNoTracking().Where(departmentModel =>  departmentModel.Id == id).FirstOrDefault();
+            var departmentModel = _context.TblDeparmentModels.AsNoTracking().Where(departmentModel => departmentModel.Id == id).FirstOrDefault();
 
             if (departmentModel == null)
             {
@@ -228,9 +260,9 @@ namespace API_HRIS.Controllers
                 dbmet.InsertAuditTrail("Delete Department" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Department Module", deletionModel.deletedBy, "0");
                 return Problem(ex.GetBaseException().ToString());
             }
-            }
+        }
 
-            [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> restore(RestorationModel restorationModel)
         {
 
