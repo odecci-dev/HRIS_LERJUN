@@ -2,20 +2,21 @@
     padding: 20px;
     position: fixed;
     z-index: 99999;
-    right: 50px;
+    right: 80px;
     bottom: 80px;
     background-color: #205274;
     border-radius: 50%;
     cursor: pointer;
+    /*    display: none;*/
+}
 
-/*    display: none;*/
-}
-..pencil-action svg{
-    
-}
-.pencil-action svg path {
-    fill: #fff;
-}
+    .pencil-action svg {
+    }
+
+        .pencil-action svg path {
+            fill: #fff;
+        }
+
 .action-navbar.pos {
     position: fixed !important;
     width: 100vw;
@@ -29,92 +30,38 @@
     display: none;
 }
 
-.action-navbar.pos button {
-    border-radius: 100% ;
-    padding: 20px;
-    background-color: #205274;
-    border: 0;
-    border-radius: 50%;
-}
-.action-navbar.pos .input-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    position: fixed;
-    z-index: 99999;
-    right: 50px;
-    bottom: 80px;
-    color: #fff;
-    ;
-    font-weight: 400 !important;
-}
-.action-navbar.pos .input-container.delete-pos{
-    bottom: 170px;
-    
-}
-.action-navbar.pos button#delete-pos {
-    background: #FFC1C3;
-    padding: 15px;
-    color: #EC1C24;
-}
-#pos-table_filter{
-    width: 100%;
-}
-#positionmodal {
-    position: fixed !important;
-    width: 100vw;
-    height: 100vh;
-    left: 0 ;
-    top: 0;
-    background-color: rgba(0,0,0, .8) !important;
-    z-index:9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.hris-modal-content{
-    background: var(--light);
-    width: 500px;
-    margin: 25px !important;
-    border-radius: 10px;
-}
-.hris-modal-content .modal-header{
-    background-color: var(--header);
-}
-.hris-modal-content .modal-header h4,
-.hris-modal-content .modal-header button{
-    color: #fff
-}
+    .action-navbar.pos button {
+        border-radius: 100%;
+        padding: 20px;
+        background-color: #205274;
+        border: 0;
+        border-radius: 50%;
+    }
 
-.hris-modal-content .mod-form
-{
-    padding: 20px;
-}
-.hris-modal-content .mod-form label{
-    font-weight: 500 !important;
-}
-.hris-modal-content .mod-form label .req{
-    color: red
-}
-.hris-modal-content .mod-form .mod-form-row input{
-    border: 1px solid var(--dark);
-    height: 40px;
-    box-shadow: none;
-    background: transparent;
-}
-.hris-modal-content .mod-form .mod-form-row input#desc{
-    height: 80px;
-}
-.hris-modal-content .actions .btn
-{
-    width: 50% !important;
-        
-}
-.hris-modal-content .actions input.btn {
-    background-color: var(--header)
-}
-.hris-modal-content .actions a.cancel{
-    color: #EC1C24;
-    border: 1px solid #EC1C24;
-    text-decoration: none !important;
+    .action-navbar.pos .input-container {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: fixed;
+        z-index: 99999;
+        right: 50px;
+        bottom: 80px;
+        color: #fff;
+        ;
+        font-weight: 400 !important;
+    }
+
+        .action-navbar.pos .input-container.delete-pos {
+            bottom: 170px;
+        }
+
+    .action-navbar.pos button#delete-pos {
+        background: #FFC1C3;
+        padding: 15px;
+        color: #EC1C24;
+    }
+
+#pos-table_filter,
+.dataTables_filter {
+    width: 100%;
 }

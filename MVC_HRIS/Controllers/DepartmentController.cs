@@ -98,6 +98,15 @@ namespace MVC_HRIS.Controllers
             }
             return Json(list);
         }
+        public partial class DeparmentModelList
+        {
+            public int Id { get; set; }
+            public string? DepartmentName { get; set; }
+            public string? Description { get; set; }
+            public int? DepartmentHead { get; set; }
+            public string? DepartmentHeadName { get; set; }
+            public DateTime? DateCreated { get; set; }
+        }
         [HttpGet]
         public async Task<IActionResult> GetDepartmentList()
         {
@@ -107,7 +116,7 @@ namespace MVC_HRIS.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
 
             string response = await client.GetStringAsync(url);
-            List<TblDeparmentModel> models = JsonConvert.DeserializeObject<List<TblDeparmentModel>>(response);
+            List<DeparmentModelList> models = JsonConvert.DeserializeObject<List<DeparmentModelList>>(response);
             return Json(new { draw = 1, data = models, recordFiltered = models?.Count, recordsTotal = models?.Count });
         }
 

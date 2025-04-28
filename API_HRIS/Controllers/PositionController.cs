@@ -35,7 +35,7 @@ namespace API_HRIS.Controllers
             public int pageSize { get; set; }
         }
 
-        public PositionController(ODC_HRISContext context,DBMethods _dbmet)
+        public PositionController(ODC_HRISContext context, DBMethods _dbmet)
         {
             _context = context;
             dbmet = _dbmet;
@@ -45,7 +45,64 @@ namespace API_HRIS.Controllers
         {
             return Ok(_context.TblPositionModels.Where(a => a.DeleteFlag == 0).OrderByDescending(a => a.Id).ToList());
         }
+        [HttpGet]
+        public async Task<IActionResult> PositionLevelList()
+        {
+            return Ok(_context.TblPositionLevelModels.Where(a => a.DeleteFlag == false).OrderByDescending(a => a.Id).ToList());
+        }
+        [HttpPost]
+        public async Task<ActionResult<TblPositionLevelModel>> savePositionLevel(TblPositionLevelModel data)
+        {
+            if (_context.TblPositionLevelModels == null)
+            {
+                return Problem("Entity set 'ODC_HRISContext.TblPositionModels'  is null.");
+            }
+            bool hasDuplicateOnSave = (_context.TblPositionLevelModels?.Any(schedule => schedule.Level == data.Level && schedule.DeleteFlag == false)).GetValueOrDefault();
 
+            if (data.Id == 0)
+            {
+                if (hasDuplicateOnSave)
+                {
+                    return Conflict("Entity already exists");
+                }
+            }
+            try
+            {
+                //_context.TblPositionModels.Add(tblPositionModel);
+                if (data.Id == 0)
+                {
+                    data.DateCreated = DateTime.Now;
+                    data.DeleteFlag = false;
+                    _context.TblPositionLevelModels.Add(data);
+                }
+                else
+                {
+
+                    var existingEntity = _context.TblPositionLevelModels.FirstOrDefault(e => e.Id == data.Id);
+                    if (data.Level != "" && data.Level != null)
+                    {
+                        existingEntity.Level = data.Level;
+                        existingEntity.Description = data.Description;
+                        _context.Entry(existingEntity).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        existingEntity.DeleteFlag = true;
+                        _context.Entry(existingEntity).State = EntityState.Modified;
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                string status = "Position Level successfully saved";
+                dbmet.InsertAuditTrail("Save Position Level" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Position Level Module", "User", "0");
+                return CreatedAtAction("save", new { id = data.Id }, data);
+            }
+            catch (Exception ex)
+            {
+                dbmet.InsertAuditTrail("Save Position Level" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Position Level sModule", "User", "0");
+                return Problem(ex.GetBaseException().ToString());
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> PositionPaginationList(FilterPosition data)
         {

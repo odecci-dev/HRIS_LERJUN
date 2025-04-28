@@ -145,33 +145,33 @@ namespace API_HRIS.Controllers
                 //var result = _context.TblUsersModels.Where(a => a.Id == data.Id).OrderByDescending(a => a.DateCreated).ThenByDescending(a => a.DateUpdated).ToList();
                 var result = _context.GetEmployees().Where(a => a.Id == data.Id)
                     .Select(a => new {
-                    a.Id,
-                    a.Username,
-                    a.Fullname,
-                    a.Fname,
-                    a.Lname,
-                    a.Mname,
-                    a.Suffix,
-                    a.Email,
-                    a.Gender,
-                    Status = a.StatusId,
-                    EmployeeId = a.EmployeeID,
-                    a.FilePath,
-                    a.Cno,
-                    a.Address,
-                    a.Department,
-                    UserType = a.UserTypeId,
-                    a.EmployeeType,
-                    SalaryType = a.SalaryTypeId,
-                    a.Rate,
-                    a.DaysInMonth,
-                    PayrollType = a.PayrollTypeId,
-                    a.DateStarted,
-                    a.Position,
-                    a.PositionLevelId,
-                    a.ManagerId
-                     // skip IsActive, RoleId, etc. if they're problematic
-                 })
+                        a.Id,
+                        a.Username,
+                        a.Fullname,
+                        a.Fname,
+                        a.Lname,
+                        a.Mname,
+                        a.Suffix,
+                        a.Email,
+                        a.Gender,
+                        Status = a.StatusId,
+                        EmployeeId = a.EmployeeID,
+                        a.FilePath,
+                        a.Cno,
+                        a.Address,
+                        a.Department,
+                        UserType = a.UserTypeId,
+                        a.EmployeeType,
+                        SalaryType = a.SalaryTypeId,
+                        a.Rate,
+                        a.DaysInMonth,
+                        PayrollType = a.PayrollTypeId,
+                        a.DateStarted,
+                        a.Position,
+                        a.PositionLevelId,
+                        a.ManagerId
+                        // skip IsActive, RoleId, etc. if they're problematic
+                    })
                                     .ToList();
                 return Ok(result);
             }
@@ -767,8 +767,7 @@ namespace API_HRIS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetManager()
         {
-            string sql = $@"SELECT Id ,Fullname FROM tbl_UsersModel with(nolock) where PositionLevelId = '5'
-";
+            string sql = $@"SELECT Id ,Fullname FROM tbl_UsersModel with(nolock) where PositionLevelId = '5' or UserType = '2'";
 
             // Assuming `db.SelectDb(sql)` executes the query and returns a DataSet
             DataTable table = db.SelectDb(sql).Tables[0];

@@ -45,7 +45,7 @@
     /* Tab content */
     .tab-content {
         display: none;
-        padding: 20px;
+        padding: 0px !important;
         border-radius: 0 0 8px 8px;
         background: #fff;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -111,6 +111,7 @@
         </div>
     </div>
     @await Html.PartialAsync("~/Views/Position/_PositionForm.cshtml")
+    @await Html.PartialAsync("~/Views/Position/_PositionLevelForm.cshtml")
 </div>
 
 @* @await Html.PartialAsync("~/Views/Position/_PositionModal.cshtml") *@
@@ -148,7 +149,7 @@
                     <div class="actions" style="align-items: center;">
                         <div class="actionss">
                             @* <button class="register" type="button" style ="margin-bottom: 5px;font-size: 13px;    padding: 5px 15px 5px 5px;height: 25px;font-size: clamp(0.5rem, 2vw, 0.7rem);" title="Add New" id="add Mechanics"><i class="fas fa-id-card"></i>Add Mechanics</button> *@
-                            @* <input type="button" value="Add Mechanics" id="btn-register"/> <i class="fas fa-cogs"></i> 
+@* <input type="button" value="Add Mechanics" id="btn-register"/> <i class="fas fa-cogs"></i> 
 
                         </div>
 
@@ -168,13 +169,18 @@
 @section Scripts {
     <script>
         var pmodal = document.getElementById('positionmodal');
-
         var actionPos = document.getElementById('action-navbar-pos');
         var pencil = document.getElementById('pencil-action');
+
+
+        var plmodal = document.getElementById('positionlevelmodal');
+        var actionPosLvl = document.getElementById('action-navbar-poslevel');
+        var pencilPosLvl = document.getElementById('pencil-action-poslevel');
         position();
         $(document).ready(function () {
 
             initializePositionDataTable();
+            initializePositionLevelDataTable();
             // alert(tableId);
 
         });
@@ -197,8 +203,8 @@
             evt.currentTarget.classList.add("active");
         }
 
-        
 
-       
+
+
     </script>
 }

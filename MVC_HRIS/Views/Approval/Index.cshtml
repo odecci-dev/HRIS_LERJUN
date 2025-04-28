@@ -624,7 +624,7 @@
                 }
             });
         }
-        
+
         // Approval Button DOM Start
         $('#pending-leave-table').on('click', '.row-checkbox', function () {
             var refreshlr = document.getElementById("refresh-leave");
@@ -736,7 +736,7 @@
                         declinetl.style.display = "none";
                         approvetl.style.display = "none";
                     }
-                    
+
                 });
             });
         });
@@ -803,7 +803,7 @@
         //         console.log(selectedRequest);
         //     }
         // }
-        
+
         //
         function ApproveOvertime(){
             otStatusIdentifier = 1;
@@ -825,7 +825,7 @@
         }
         function DeclineOvertime(){
             otStatusIdentifier = 0;
-            console.log(otStatusIdentifier);
+            // console.log(otStatusIdentifier);
             var checkboxes = document.querySelectorAll('.ot-row-checkbox');
             var checkedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             if(checkedCheckboxes.length == 0){

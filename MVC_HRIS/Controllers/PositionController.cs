@@ -40,7 +40,7 @@ namespace MVC_HRIS.Controllers
         public readonly QueryValueService token_;
         private IConfiguration _configuration;
         private string apiUrl = "http://";
-        public PositionController(IOptions<AppSettings> appSettings,  QueryValueService _token,
+        public PositionController(IOptions<AppSettings> appSettings, QueryValueService _token,
                   IHttpContextAccessor contextAccessor,
                   IConfiguration configuration)
         {
@@ -49,7 +49,7 @@ namespace MVC_HRIS.Controllers
             apiUrl = _configuration.GetValue<string>("AppSettings:WebApiURL");
             _appSettings = appSettings.Value;
         }
-       
+
         public IActionResult Index()
         {
             //string  token = HttpContext.Session.GetString("Bearer");
@@ -117,6 +117,19 @@ namespace MVC_HRIS.Controllers
             List<TblPositionModel> models = JsonConvert.DeserializeObject<List<TblPositionModel>>(response);
             return Json(new { draw = 1, data = models, recordFiltered = models?.Count, recordsTotal = models?.Count });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPositionLevelList()
+        {
+            string test = token_.GetValue();
+            var url = DBConn.HttpString + "/Position/PositionLevelList";
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+
+            string response = await client.GetStringAsync(url);
+            List<TblPositionLevelModel> models = JsonConvert.DeserializeObject<List<TblPositionLevelModel>>(response);
+            return Json(new { draw = 1, data = models, recordFiltered = models?.Count, recordsTotal = models?.Count });
+        }
         [HttpPost]
         public async Task<IActionResult> SavePosition(TblPositionModel data)
         {
@@ -126,6 +139,40 @@ namespace MVC_HRIS.Controllers
 
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/Position/save";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    if (numericStatusCode == 200)
+                    {
+                        res = numericStatusCode.ToString();
+                    }
+                    else
+                    {
+                        res = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                status = ex.GetBaseException().ToString();
+            }
+            return Json(new { status = res });
+        }
+        [HttpPost]
+        public async Task<IActionResult> SavePositionLevel(TblPositionLevelModel data)
+        {
+            string res = "";
+            try
+            {
+
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Position/savePositionLevel";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");

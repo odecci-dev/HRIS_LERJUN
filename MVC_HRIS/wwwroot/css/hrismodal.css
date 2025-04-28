@@ -1,0 +1,64 @@
+
+.hrismodal-holder {
+    position: fixed !important;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0, .8) !important;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hris-modal-content{
+    background: var(--light);
+    width: 500px;
+    margin: 25px !important;
+    border-radius: 10px;
+}
+.hris-modal-content .hris-modal-header{
+    background-color: var(--header) !important;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px 10px 0 0;
+}
+.hris-modal-content .hris-modal-header h4,
+.hris-modal-content .hris-modal-header button{
+    color: #fff !important;
+}
+
+.hris-modal-content .mod-form
+{
+    padding: 20px;
+}
+.hris-modal-content .mod-form label{
+    font-weight: 500 !important;
+}
+.hris-modal-content .mod-form label .req{
+    color: red
+}
+.hris-modal-content .mod-form .mod-form-row input,
+.hris-modal-content .mod-form .mod-form-row textarea,
+.hris-modal-content .mod-form .mod-form-row select{
+    border: 1px solid var(--dark);
+    height: 40px;
+    box-shadow: none;
+    background: transparent;
+}
+.hris-modal-content .mod-form .mod-form-row textarea{
+    height: 80px;
+}
+.hris-modal-content .actions .btn
+{
+    width: 50% !important;   
+}
+.hris-modal-content .actions input.btn {
+    background-color: var(--header)
+}
+.hris-modal-content .actions a.cancel{
+    color: #EC1C24 !important;
+    border: 1px solid #EC1C24 !important;
+    text-decoration: none !important;
+}
