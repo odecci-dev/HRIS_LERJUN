@@ -8,8 +8,10 @@
             //return "Data Source=192.168.0.84,36832;Initial Catalog=EQMS;User ID=randy;Password=otik"; //test
             //return "Data Source=192.168.0.222,36832;Initial Catalog=EQMS;User ID=randy;Password=otik"; //live
             //return "Data Source=LERJUN-PC;Initial Catalog=AOPCDB;User ID=test;Password=1234"; //live
+
+            //return "Data Source=EC2AMAZ-AN808JE\\MSSQLSERVER01;Initial Catalog=AOPCDB;User ID=test;Password=1234"; //server staging
             //return "Data Source=EC2AMAZ-AN808JE\\MSSQLSERVER01;Initial Catalog=AOPCDB;User ID=test;Password=1234"; //server
-            return "Data Source=LAPTOP-3191GBJB\\SQLEXPRESS;Initial Catalog=ODC_HRIS;User ID=test;Password=1234;"; // France
+            return "Data Source=LAPTOP-3191GBJB\\SQLEXPRESS;Initial Catalog=ODC_HRIS_STAGING;User ID=test;Password=1234;"; // France
         }
         private static string GetHttpString()
         {
@@ -17,6 +19,7 @@
             return "http://localhost:64181"; // local live
           // return "http://localhost:8089"; // local live
             //return "http://ec2-54-251-135-135.ap-southeast-1.compute.amazonaws.com:8089"; //ODC-HRIS
+            //return "http://ec2-54-251-135-135.ap-southeast-1.compute.amazonaws.com:9091"; //ODC-HRIS Staging
         }
 
         private static string GetPath()

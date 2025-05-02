@@ -1,8 +1,7 @@
 .initial {
     background-color: var(--dark);
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 50%;
     font-weight: 600;
     color: #fff;
     font-size: 15px;
@@ -10,4 +9,355 @@
     justify-content: center;
     align-items: center;
     cursor:default;
+}
+.employee-info-section{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+.employeeprofile {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.empdetails{
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+.empdetails strong{
+    font-size: .9rem
+}
+
+/*Wizzard progress steps*/
+.wizzard-progress-steps{
+    display: flex;
+    justify-content: center;
+/*    justify-content: space-between*/
+
+}
+.wizzard-progress-steps .page-indicator{
+/*    padding: 20px;*/
+    position: relative;
+    margin-right: 40px;
+    width: 100%;
+    
+}
+.wizzard-progress-steps .page-indicator .page {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 5px 15px;
+    border-radius: 8px;
+    height: 60px;
+}
+
+.wizzard-progress-steps .page-indicator .page p{
+    margin: 0;
+}
+.wizzard-progress-steps .page-indicator .page p.page-number{
+    border: 2px solid var(--dark);
+    padding: 8px;
+    border-radius: 50%
+}
+
+.wizzard-progress-steps .page-indicator .active p.page-number {
+    border-color: #fff
+}
+.wizzard-progress-steps .page-indicator .active {
+    
+    background: #194d6f;
+    color: #fff
+}
+.wizzard-progress-steps .page-indicator .page.active::before {
+    content: "";
+    background: red;
+    height: 45px;
+    width: 5px;
+    position: absolute;
+    left: -15px;
+}
+.wizzard-progress-steps .page-indicator .page.active::after {
+    content: "";
+    background: #194d6f;
+    color: transparent;
+    padding: 15px;
+    position: absolute;
+    right: -17px;
+    height: 45px;
+    width: 45px;
+    transform: rotate(45deg);
+    border-radius: 8px;
+    z-index: -1;
+}
+.wizzard-progress-steps .page-indicator .page svg{
+    display: none;
+}
+.wizzard-progress-steps .page-indicator .page.completed p.page-number{
+    display: none;
+}
+
+.wizzard-progress-steps .page-indicator .page.completed svg{
+    display: block;
+}
+.wizzard-progress-button{
+    display:flex;
+    justify-content: space-between;
+    margin: 50px 0
+
+}
+.wizzard-progress-button a,
+.wizzard-progress-button button{
+    padding: 15px;
+    width: 200px;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    background: #ABB7C2;
+    cursor: pointer;
+}
+.wizzard-progress-button a#wizzard-next,
+.wizzard-progress-button button#add-info{
+    background-color: var(--dark);
+    color: var(--light);
+    font-weight: 600
+}
+.page-container{
+    background: #fff
+}
+.body-container{
+    display: flex;
+    flex-direction: column
+}
+.body-container .page-title-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.body-container .page-title{
+    width: 50%;
+
+}
+.body-container h4{
+    font-weight: 700;
+    font-size: 2rem;
+    padding-bottom: 15px;
+}
+.body-container .title-underline{
+    width: 35%;
+    height: 5px;
+    border-end-start-radius: 8px;
+    border-end-end-radius: 8px;
+    border-bottom: 7px solid red;
+}
+.body-container .profile-container{
+    width: 20% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:0;
+    gap: 15px;
+    background: #EBF4FF;
+    height: 100% !important;
+    padding: 50px 0
+}
+.body-container .profile-container .upload-image-preview1 {
+    background-color: gainsboro;
+    width: 250px !important;
+    height: 250px !important;
+    border-radius: 50%;
+    display: flex; 
+    justify-content: center;
+    margin: 0;
+
+}
+.body-container .profile-container .button-holder  {
+    display: flex;
+    justify-content: end;
+}
+.body-container .profile-container .button-holder label[for="img"]{
+    width: 100%;
+}
+.page-container {
+    display: none;
+}
+
+#page-1-container {
+    display: flex;
+}
+.page-container input{
+    border: none !important;
+}
+
+
+#employeeForm .body-container .payroll-section .mod-form-row,
+#employeeForm .body-container .address-section .mod-form-row,
+#employeeForm .body-container .contact-section .mod-form-row {
+    flex-direction: column !important;
+    padding: 0 200px !important
+}
+#employeeForm .body-container .payroll-section .mod-form-row .input-container-whole{
+    
+}
+
+/*Input*/
+
+#employeeForm .mod-form-row {
+    gap: 20px;
+}
+#employeeForm .mod-form-row .input-container-whole{
+/*    background: red*/
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 40px;
+    z-index: 1;
+}
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:valid ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:valid ~ .label, #employeeForm .mod-form-row .input-container-whole select:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole select:valid ~ .label,
+#employeeForm .mod-form-row .input-container-whole.focus-field .label,
+#employeeForm .mod-form-row .input-container-whole.date .label {
+    top: -15px;
+    background: #fff;
+    z-index: 2;
+    padding: 5px;
+    color: var(--dark) !important;
+    
+}
+#employeeForm .mod-form-row .input-container-whole.empid input{
+    background-color: transparent !important;
+    z-index: 3;
+}
+#employeeForm .mod-form-row .input-container-whole .label {
+    position: absolute;
+    left: 15px;
+    top: 18px;
+    color: #A7A7A7;
+    font-weight: 400;
+    z-index: 1;
+
+}
+
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:focus ~ .underline,
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:valid ~ .underline,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:focus ~ .underline,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:valid ~ .underline,
+#employeeForm .mod-form-row .input-container-whole select:focus ~ .underline,
+#employeeForm .mod-form-row .input-container-whole select:valid ~ .underline,
+#employeeForm .mod-form-row .input-container-whole.focus-field .underline,
+#employeeForm .mod-form-row .input-container-whole.date .underline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #333;
+    border-radius: 4px;
+    pointer-events: none;
+    border-color: var(--dark);
+    background: #fff !important;
+}
+#employeeForm .mod-form-row .input-container-whole input,
+#employeeForm .mod-form-row .input-container-whole select{
+    box-shadow: none;
+    border: none;
+    border-bottom: 2px solid var(--dark) !important;
+    border-radius: 0;
+    margin: 0;
+    height: 60px;
+    z-index: 5;
+    background: transparent
+}
+
+
+/*Required Documents*/
+
+.upload-container {
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+.drop-area {
+    border: 2px dashed #ccc;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.file-item {
+    background: #f0f7ff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.progress-bar {
+    height: 5px;
+    background: #007bff;
+    width: 0%;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.file-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.file-actions a {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+.browse-file-btn {
+    background-color: #05294d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.card-holder-row {
+    margin-top: 50px;
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    align-items: stretch;
+}
+.required-documents-card {
+    padding: 20px;
+    width: 400px;
+    height: 100%;
+    height: inherit;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+.required-documents-card h4{
+    font-size: 1.2rem;
+    padding: 0;
+    margin: 0;
+}
+.required-documents-card span{
+    font-size: .8rem !important;
+}
+.required-documents-card .mod-form-row .input-container-whole {
+    margin: 0 !important;
+    z-index: 3 !important;
+
 }

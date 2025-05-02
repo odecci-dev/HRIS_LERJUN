@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+
+</style>
+<div>
+    <div class="content-filter action-navbar">
+        <div class="sub-content">
+            <div class="mod-form ">
+                <div class="">
+                    @*         <a href="@Url.Action("AddEmployee", "Employee")"> *@
+                    <button class="btn btn-info" id="add-employee" title="Add New Employee">
+                        <i class="fas fa-user-plus"></i> Create Employee
+                    </button>
+                    @* </a> *@
+                </div>
+            </div>
+            <div class="mod-form-2">
+            </div>
+        </div>
+    </div>
+    <div class="content-filter-tbl">
+        @* <table id="myTable"> *@
+        <table id="emp-table" class="table table-bordered table-hover w-100">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+        <div id="table-footer">
+        </div>
+
+    </div>
+</div>
+@* <div class="pencil-action" id="pencil-action" onclick="PosActionFunction();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M6.414 15.89L16.556 5.748l-1.414-1.414L5 14.476v1.414zm.829 2H3v-4.243L14.435 2.212a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414zM3 19.89h18v2H3z" /></svg>
+</div> *@
+<script>
+
+</script>

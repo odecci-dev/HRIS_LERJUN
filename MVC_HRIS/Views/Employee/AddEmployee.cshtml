@@ -10,185 +10,366 @@
     }
 }
 
-<div id="emp-main-container">
+<div id="dashboard-main-container">
+    @* <div class="title-main-container">
+        <div class="content-container">
+            <h4 style="font-size: 26px;" class="text-left"> <a href="@Url.Action("Index", "Employee")"> 
+                <i class="fa-solid fa-arrow-left" style="margin: 25px;font-size: 25px;"></i></a> <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+        </div>
+    </div> *@
     <div class="title-main-container">
         <div class="content-container">
-            <h4 style="font-size: 26px;" class="text-left"> <a href="@Url.Action("Index", "Employee")"> <i class="fa-solid fa-arrow-left" style="margin: 25px;font-size: 25px;"></i></a> <i class="fa-solid fa-users" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
+            <div style="display: flex; align-items: center;">
+                @* <a href="@Url.Action("Index", "Employee")">
+                    <i class="fa-solid fa-arrow-left" style="margin: 25px;font-size: 25px;"></i>
+                </a> *@
+                <h4 style="font-size: 26px;" class="text-left">@ViewData["Title"].ToString()</h4>
+            </div>
+            @Html.Partial("_UserDetails")
         </div>
     </div>
-    <div class="content-main">
-        <div id="grid-main-container">
+    <div class="main-container">
+        @* <div id="grid-main-container">
             <div class="title-main-container-2">
                 <div class="content-container" style="flex-direction: column; border-bottom: 1px solid var(--secondary-dark);">
                     <span class="text-left">Employee Information</span>
                 </div>
             </div>
-            <div class="top-main-container">
+        </div> *@
+        @* <div class="wizzard-progress-button">
+            <button id="wizzard-prev">Previous</button>
+            <button id="wizzard-next">Next</button>
+        </div> *@
+        <div class="wizzard-progress-steps">
+            
+            <div class="page-indicator">
+                <div class="page active" id="page-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="page-number">01</p>
+                    <p class="page-title">Employee Information</p>
+                </div>
+            </div>
+            <div class="page-indicator">
+                <div class="page " id="page-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="page-number">02</p>
+                    <p class="page-title">Required Documents</p>
+                </div>
+            </div>
+            <div class="page-indicator">
+                <div class="page" id="page-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="page-number">03</p>
+                    <p class="page-title">Payroll Information</p>
+                </div>
+            </div>
+            <div class="page-indicator">
+                <div class="page" id="page-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="page-number">04</p>
+                    <p class="page-title">Address Information</p>
+                </div>
+            </div>
+            <div class="page-indicator">
+                <div class="page" id="page-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path fill="currentColor" fill-rule="evenodd" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18m-.232-5.36l5-6l-1.536-1.28l-4.3 5.159l-2.225-2.226l-1.414 1.414l3 3l.774.774z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="page-number">05</p>
+                    <p class="page-title">Contact Information</p>
+                </div>
+            </div>
+        </div>
+        <div class="top-main-container">
                 <div class="content-filter-nm">
                     <div class="sub-content">
                         <form action="" class="mod-form" id="employeeForm">
-                            <div class="body-container">
-                                <div class="emp_title">
-                                    <div class="mod-form-row2">
-                                        <div class="input-container-whole">
+                            <div class="body-container page-container" id="page-1-container">
+                                <div class="page-title-header">
+                                    <div class="page-title">
+                                        <h4>Employee Information</h4>
+                                        <div class="title-underline"></div>
+                                    </div>
+                                </div>
 
-                                            <div class="input-container-whole1">
-
-                                                <div class="upload-image-preview1" id="upload-image-preview" style="background-color: gainsboro; display: flex; justify-content: center">
-                                                    <img width="100%"
-                                                         src="/img//blank-profile-picture-png.webp"
-                                                         alt="" />
-                                                </div>
-                                                <div style="margin: 10px 0px 25px 0px;display: flex;">
-                                                    <label for="img">Upload Image</label>
-                                                    <input type="file"
-                                                           value=""
-                                                           id="img"
-                                                           class="mod-input img-choose"
-                                                           name="uploadimg" accept="image" />
-                                                </div>
-
+                                <div class="employee-info-section">
+                                    <div class="profile-container">
+                                        <div class="upload-image-preview1" id="upload-image-preview" >
+                                            <img src="/img//blank-profile-picture-png.webp" alt="" />
+                                        </div>
+                                        <div class="button-holder">
+                                            <label for="img">Upload Image</label>
+                                            <input type="file"
+                                                   value=""
+                                                   id="img"
+                                                   class="mod-input img-choose"
+                                                   name="uploadimg"  accept=".webp, .gif, .png,.jpg"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-holder">
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole focus-field">
+                                                <input type="text" value="" id="empid" class="mod-input" disabled focus/>
+                                                <label class="label-color label" for="empid">Employee ID #</label>
+                                                <div class="underline"></div>
                                             </div>
-
+                                            <div class="input-container-whole">
+                                                <select id="department" class="mod-input" style="width:100%" required>
+                                                    <option value="" disabled selected>Select Department</option>
+                                                </select>
+                                                <label class="label-color label" for="department">Department </label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <select id="position" class="mod-input" style="width:100%" required>
+                                                    <option value="" disabled selected>Select Position</option>
+                                                </select>
+                                                <label class="label-color label" for="department">Postion </label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <select id="poslevel" class="mod-input" style="width:100%" required>
+                                                    <option value="" disabled selected>Select Position Level</option>
+                                                </select>
+                                                <label class="label-color label" for="department">Postion Level</label>
+                                                <div class="underline"></div>
+                                            </div>
                                         </div>
-
-                                    </div>
-
-
-
-                                </div>
-
-                                <div class="boder-line-none">
-                                    <div class="mod-form-row">
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="empid">Employee ID #</label>
-                                            <input type="text" value="" id="empid" class="mod-input" disabled />
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <select id="emptype" class="mod-input" style="width:100%" required>
+                                                    <option value="" disabled selected>Select Employee Type</option>
+                                                </select>
+                                                <label class="label-color label" for="department">User Type</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <select id="uType" class="mod-input" required>
+                                                    <option value="" disabled selected>Select Employee Type</option>
+                                                </select>
+                                                <label class="label-color label" for="department">Employee Type</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <select id="manager" class="mod-input" style="width:100%" required>
+                                                    <option value="" disabled selected>Select manager</option>
+                                                </select>
+                                                <label class="label-color label" for="department">Manager</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole date">
+                                                <label class="label-color label" for="datehired">Date Hired</label>
+                                                <input type="date" id="datehired" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
+                                                <div class="underline"></div>
+                                            </div>
                                         </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="department">Department </label>
-                                            <select id="department" class="mod-input" style="width:100%" required>
-                                                <option value="" disabled selected>Select Department</option>
-                                            </select>
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="lname" class="mod-input" required />
+                                                <label class="label-color label" for="lname">Last Name</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="fname" class="mod-input" required />
+                                                <label class="label-color label" for="fname">First Name</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="mname" class="mod-input" required />
+                                                <label class="label-color label" for="mname">Middle Name</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="suffix" class="mod-input"  />
+                                                <label class="label-color label" for="mname">Suffix</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            @*<div class="input-container-whole">
+                                                <input type="text" value="" id="suffix" class="mod-input" />
+                                                <label class="label-color label" for="suffix">Suffix</label>
+                                                <div class="underline"></div>
+                                            </div> *@
                                         </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="position">Postion  </label>
-                                            <select id="position" class="mod-input" style="width:100%" required>
-                                                <option value="" disabled selected>Select Position</option>
-                                            </select>
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="emptype">Position Level  </label>
-                                            <select id="poslevel" class="mod-input" style="width:100%" required>
-                                                <option value="" disabled selected>Select Position Level</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mod-form-row">
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="emptype">User Type  </label>
-                                            <select id="emptype" class="mod-input" style="width:100%" required>
-                                                <option value="" disabled selected>Select Employee Type</option>
-                                            </select>
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="gender">Employee Type</label>
-                                            <select id="uType" class="mod-input" required>
-                                                <option value="" disabled selected>Select Employee Type</option>
-                                            </select>
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="manager">Manager </label>
-                                            <select id="manager" class="mod-input" style="width:100%" required>
-                                                <option value="" disabled selected>Select manager</option>
-                                            </select>
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="datehired">Date Hired</label>
-                                            <input type="date" id="datehired" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
-                                        </div>
-
-
-
-                                    </div>
-                                    <div class="mod-form-row">
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="lname">Last Name</label>
-                                            <input type="text" value="" id="lname" class="mod-input" required />
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="fname">First Name</label>
-                                            <input type="text" value="" id="fname" class="mod-input" required />
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="mname">Middle Name</label>
-                                            <input type="text" value="" id="mname" class="mod-input" required />
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="suffix">Suffix</label>
-                                            <input type="text" value="" id="suffix" class="mod-input" />
-                                        </div>
-                                    </div>
-
-                                    <div class="mod-form-row">
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="gender">Gender</label>
-                                            <select id="gender" class="mod-input" required>
-                                                <option value="" disabled selected>Select your option</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                            </select>
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="email">Email</label>
-                                            <input type="text" value="" id="email" class="mod-input" required />
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="doamin">Domain</label>
-                                            <input type="text" value="@@odecci.com" id="domain" class="mod-input" @*disabled*@ />
-                                        </div>
-                                        <div class="input-container-whole">
-                                            <label class="label-color" for="cno">Contact #</label>
-                                            <input type="text" value="" id="cno" class="mod-input" required />
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <select id="gender" class="mod-input" required>
+                                                    <option value="" disabled selected></option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                                <label class="label-color label" for="gender">Gender</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="email" class="mod-input" required />
+                                                <label class="label-color label" for="email">Email</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole focus-field">
+                                                <input type="text" value="@@odecci.com" id="domain" class="mod-input"  disabled focus/>
+                                                <label class="label-color  label" for="doamin">Domain</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                            <div class="input-container-whole">
+                                                <input type="number" value="" id="cno" class="mod-input" required />
+                                                <label class="label-color label" for="cno">Contact #</label>
+                                                <div class="underline"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="body-container">
-                                <div class="emp_title">
-                                    <p>Payroll Information</p>
-
-                                </div>
-
-                                <div class="boder-line">
-                                </div>
-
-                            </div>
-                            <div class="body-container">
-                                <div class="emp_title">
-                                    <div class="input-container-whole">
-                                        <label class="label-color" for="payrolltype">Payroll Type  </label>
-                                        <select id="payrolltype" class="mod-input" style="width:100%" required>
-                                            <option value="" disabled selected>Select Payroll Type</option>
-                                        </select>
+                            <div class="body-container page-container" id="page-2-container">
+                                <div class="page-title-header">
+                                    <div class="page-title">
+                                        <h4>Required Documents</h4>
+                                        <div class="title-underline"></div>
                                     </div>
                                 </div>
-
-                                <div class="boder-line-none">
+                                <div class="card-holder-row">
+                                    @* SSS *@
+                                    <div class="required-documents-card">
+                                        <h4>Socail Security System (SSS)</h4>
+                                        <span>Please upload file in pdf format and make sure the file size is under 25 MB</span>
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="sss-id" class="mod-input" required />
+                                                <label class="label-color label" for="email">SSS Number</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                        </div>
+                                        <div class="upload-container">
+                                            <div class="drop-area" id="drop-area">
+                                                <p>Choose a file or drag & drop it here</p>
+                                                <input type="file" id="sssfile" accept=".pdf" hidden />
+                                                <a class="browse-file-btn"onclick="document.getElementById('sssfile').click()">Browse File</a>
+                                            </div>
+                                            <div id="file-list"></div>
+                                        </div>
+                                    </div>
+                                    @* Pagibig *@
+                                    <div class="required-documents-card">
+                                        <h4>PagIbig</h4>
+                                        <span>Please upload file in pdf format and make sure the file size is under 25 MB</span>
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="pagibig-id" class="mod-input" required />
+                                                <label class="label-color label" for="email">PagIbig MID Number</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                        </div>
+                                        <div class="upload-container">
+                                        <div class="drop-area" id="pagibig-drop-area">
+                                                <p>Choose a file or drag & drop it here</p>
+                                                <input type="file" id="pagibigfile" accept=".pdf" hidden />
+                                                <a class="browse-file-btn"onclick="document.getElementById('pagibigfile').click()">Browse File</a>
+                                            </div>
+                                            <div id="pagibig-file-list"></div>
+                                        </div>
+                                    </div>
+                                    @* PhilHealth *@
+                                    <div class="required-documents-card">
+                                        <h4>PhilHealth</h4>
+                                        <span>Please upload file in pdf format and make sure the file size is under 25 MB</span>
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="philhealth-id" class="mod-input" required />
+                                                <label class="label-color label" for="email">PhilHealth MID Number</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                        </div>
+                                        <div class="upload-container">
+                                            <div class="drop-area" id="philhealth-drop-area">
+                                                <p>Choose a file or drag & drop it here</p>
+                                                <input type="file" id="philhealthfile" accept=".pdf" hidden />
+                                                <a class="browse-file-btn"onclick="document.getElementById('philhealthfile').click()">Browse File</a>
+                                            </div>
+                                            <div id="philhealth-file-list"></div>
+                                        </div>
+                                    </div>
+                                    @* Tax *@
+                                    <div class="required-documents-card">
+                                        <h4>Tax Identification Number</h4>
+                                        <span>Please upload file in pdf format and make sure the file size is under 25 MB</span>
+                                        <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="tax-id" class="mod-input" required />
+                                                <label class="label-color label" for="email">Tax Identification Number</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                        </div>
+                                        <div class="upload-container">
+                                        <div class="drop-area" id="tax-drop-area">
+                                                <p>Choose a file or drag & drop it here</p>
+                                                <input type="file" id="taxfile" accept=".pdf" hidden />
+                                            <a class="browse-file-btn" onclick="document.getElementById('taxfile').click()">Browse File</a>
+                                            </div>
+                                        <div id="tax-file-list"></div>
+                                        </div>
+                                    </div>
+                                    @* Other *@
+                                    <div class="required-documents-card">
+                                        <h4>Other Document</h4>
+                                        <span>Please upload file in pdf format and make sure the file size is under 25 MB</span>
+                                        @* <div class="mod-form-row">
+                                            <div class="input-container-whole">
+                                                <input type="text" value="" id="tax-id" class="mod-input" required />
+                                                <label class="label-color label" for="email">Tax Identification Number</label>
+                                                <div class="underline"></div>
+                                            </div>
+                                        </div> *@
+                                        <div class="upload-container">
+                                            <div class="drop-area" id="other-drop-area">
+                                                <p>Choose a file or drag & drop it here</p>
+                                                <input type="file" id="otherfile" multiple accept=".pdf,.png,.jpg" hidden />
+                                                <a class="browse-file-btn" onclick="document.getElementById('otherfile').click()">Browse File</a>
+                                            </div>
+                                        <div id="other-file-list"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body-container page-container" id="page-3-container">
+                                <div class="page-title-header">
+                                    <div class="page-title">
+                                        <h4>Payroll Information</h4>
+                                        <div class="title-underline"></div>
+                                    </div>
+                                </div>
+                                <div class="payroll-section"> 
                                     <div class="mod-form-row">
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="salarytype">Salary Type </label>
                                             <select id="salarytype" class="mod-input" style="width:100%" required>
                                                 <option value="" disabled selected>Select Salary Type</option>
                                             </select>
+                                            <label class="label-color label" for="salarytype">Salary Type </label>
+                                            <div class="underline"></div>
+                                        </div>
+                                        <div class="input-container-whole">
+                                            <select id="payrolltype" class="mod-input" style="width:100%" required>
+                                                <option value="" disabled selected>Select Payroll Type</option>
+                                            </select>
+                                            <label class="label-color label" for="payrolltype">Payroll Type </label>
+                                            <div class="underline"></div>
                                         </div>
                                         <div class="input-container-whole">
 
-                                            <label class="label-color" for="rate">Rate</label>
                                             <input type="number" value="" id="rate" class="mod-input" required />
+                                        <label class="label-color label" for="rate">Rate</label>
+                                            <div class="underline"></div>
                                         </div>
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="daysinmonth">Days in Month</label>
                                             <input type="number" value="" id="daysinmonth" class="mod-input" required step="0.01" min="0" />
+                                            <label class="label-color label" for="daysinmonth">Days in Month</label>
+                                            <div class="underline"></div>
                                         </div>
                                         @* <div class="input-container-whole">
                                         <label class="label-color" for="status">Status </label>
@@ -200,109 +381,107 @@
                                         </div> *@
 
                                     </div>
-
                                 </div>
                             </div>
-                            <div class="body-container">
-                                <div class="emp_title">
-                                    <p>Address Information</p>
-
+                            <div class="body-container page-container" id="page-4-container">
+                                <div class="page-title-header">
+                                    <div class="page-title">
+                                        <h4>Address Information</h4>
+                                        <div class="title-underline"></div>
+                                    </div>
                                 </div>
-
-                                <div class="boder-line">
-                                </div>
-
-                            </div>
-                            <div class="body-container">
-                                <div class="emp_title">
+                                @* <div class="emp_title">
                                     <div class="input-container-whole">
                                         <label class="label-color" for="cob">Country of Birth  </label>
                                         <input type="text" value="" id="cob" class="mod-input" required />
                                     </div>
-                                </div>
+                                </div> *@
 
-                                <div class="boder-line-none">
+                                <div class="address-section">
                                     <div class="mod-form-row">
                                         @* <div class="input-container-whole">
                                         <label class="label-color" for="region">Region</label>
                                         <input type="text" value="" id="region" class="mod-input"required />
                                         </div> *@
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="region">Region</label>
+                                            <input type="text" value="" id="cob" class="mod-input" required />
+                                            <label class="label-color label" for="cob">Country of Birth  </label>
+                                            <div class="underline"></div>
+                                        </div>
+                                        <div class="input-container-whole">
                                             <select id="region" class="mod-input" style="width:100%" required>
-                                                <option value="0" disabled selected>Select Region</option>
+                                                <option value="0" disabled selected>1</option>
                                             </select>
+                                            <label class="label-color label" for="region">Region</label>
+                                            <div class="underline"></div>
                                         </div>
                                         @* <div class="input-container-whole">
                                         <label class="label-color" for="province">Province</label>
                                         <input type="text" value="" id="province" class="mod-input" required/>
                                         </div> *@
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="province">Province</label>
                                             <select id="province" class="mod-input" style="width:100%" required>
-                                                <option value="0" disabled selected>Select Province</option>
+                                                <option value="0" disabled selected></option>
                                             </select>
+                                            <label class="label-color label" for="province">Province</label>
+                                            <div class="underline"></div>
                                         </div>
                                         @* <div class="input-container-whole">
                                         <label class="label-color" for="municipality">Municipality </label>
                                         <input type="text" value="" id="municipality" class="mod-input" required/>
                                         </div> *@
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="province">Municipality</label>
                                             <select id="municipality" class="mod-input" style="width:100%" required>
-                                                <option value="0" disabled selected>Select Municipality</option>
+                                                <option value="0" disabled selected></option>
                                             </select>
+                                            <label class="label-color label" for="province">Municipality</label>
+                                            <div class="underline"></div>
                                         </div>
                                         @* <div class="input-container-whole">
                                         <label class="label-color" for="barangay">Barangay </label>
                                         <input type="text" value="" id="barangay" class="mod-input"required  />
                                         </div> *@
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="province">Barangay</label>
                                             <select id="barangay" class="mod-input" style="width:100%" required>
-                                                <option value="0" disabled selected>Select Barangay</option>
+                                                <option value="0" disabled selected></option>
                                             </select>
+                                            <label class="label-color label" for="province">Barangay</label>
+                                            <div class="underline"></div>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-
-                            <div class="body-container">
-                                <div class="emp_title">
-                                    <p>Emergency Contact</p>
-
-                                </div>
-
-                                <div class="boder-line">
-                                </div>
-
-                            </div>
-                            <div class="body-container">
-                                <div class="emp_title">
-                                    <div class="input-container-whole">
-                                        <label class="label-color" for="ecname">Contact Name  </label>
-                                        <input type="text" value="" id="ecname" class="mod-input" required />
-                                        <input type="hidden" value="0" id="ecid" class="mod-input" />
+                            <div class="body-container page-container" id="page-5-container">
+                                <div class="page-title-header">
+                                    <div class="page-title">
+                                    <h4>Emergency Contact</h4>
+                                        <div class="title-underline"></div>
                                     </div>
                                 </div>
-
-                                <div class="boder-line-none">
+                                <div class="contact-section">
                                     <div class="mod-form-row">
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="relationship">Relationship</label>
-                                            <input type="text" value="" id="relationship" class="mod-input" required />
+                                            <input type="text" value="" id="ecname" class="mod-input" required />
+                                            <input type="hidden" value="0" id="ecid" class="mod-input" />
+                                            <label class="label-color label" for="ecname">Contact Name  </label>
+                                            <div class="underline"></div>
                                         </div>
                                         <div class="input-container-whole">
-                                            <label class="label-color" for="ecnumber">Contact Number</label>
+                                            <input type="text" value="" id="relationship" class="mod-input" required />
+                                            <label class="label-color label" for="relationship">Relationship</label>
+                                            <div class="underline"></div>
+                                        </div>
+                                        <div class="input-container-whole">
                                             <input type="text" value="" id="ecnumber" class="mod-input" required />
+                                            <label class="label-color label" for="ecnumber">Contact Number</label>
+                                            <div class="underline"></div>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-
-                            <div class="tbl-btn-container">
+                            @* <div class="tbl-btn-container  page-container">
                                 <div class="btn-footer-container" style="margin-right:45px; gap:20px">
                                     <button type="button" class="btn btn-danger" id="cancel-button" onclick="window.location.href='@Url.Action("Index", "Employee")'">
                                         <i class="fa-solid fa-xmark"></i> Cancel
@@ -311,23 +490,42 @@
                                         <i class="fa-solid fa-floppy-disk"></i> Save Information
                                     </button>
                                 </div>
-                            </div>
-                        </form>
+                            </div> *@
 
+                        <div class="wizzard-progress-button">
+                            <a type="button" class="btn btn-danger" id="employee-cancel-button" onclick="window.location.href='@Url.Action("Index", "Employee")'">
+                                @* <i class="fa-solid fa-xmark"></i> *@ Cancel
+                            </a>
+                            <a id="wizzard-prev">Previous</a>
+                            <a id="wizzard-next">Next</a>
+                            <button class="btn btn-primary" id="employee-add-info" title="Add New Employee">
+                                @* <i class="fa-solid fa-floppy-disk"></i> *@ Save Information
+                            </button>
+                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
 
 
 </div>
-</div>
 
 @section Scripts {
     <script>
-
+        let wizzardPage = 1;
+        let page1 = document.getElementById('page-1');
+        let page2 = document.getElementById('page-2');
+        let page3 = document.getElementById('page-3');
+        let page4 = document.getElementById('page-4');
+        let page5 = document.getElementById('page-5');
+        let pagecontainer1 = document.getElementById('page-1-container');
+        let pagecontainer2 = document.getElementById('page-2-container');
+        let pagecontainer3 = document.getElementById('page-3-container');
+        let pagecontainer4 = document.getElementById('page-4-container');
+        let pagecontainer5 = document.getElementById('page-5-container');
+        var defaultCreadedBy = @Accessor.HttpContext.Session.GetString("Id");
         async function runFunction() {
             await addressDOM();
             getempdetails();
@@ -336,8 +534,14 @@
         $(document).ready(function () {
             getRegionsData();
             addressDOM();
-
+            WizzardFunction();
             getempdetails();
+
+            sssfilesUpload();
+            pagibigfilesUpload();
+            philhealthUpload();
+            taxUpload();
+            otherUpload();
             // runFunction();
             $("input[name=uploadimg]").change(function () {
 
@@ -362,171 +566,7 @@
         fetchsalarytypeselect();
         fetchstatusselect();
         GetETypeListOption();
-        $('#employeeForm').submit(function (e) {
-            e.preventDefault();
-            filename = $("#img").val().replace(/.*(\/|\\)/, '');
-            // filename = "/img/"+filename;
-            // console.log(filename);
-            if (filename == "" || filename == null) {
-                filename = "";
-            }
-            else{
-                filename = "/img/"+filename;
-            }
-            // console.log(filename);
-            var Id = localStorage.getItem('id');
-            var department = document.getElementById('department').value;
-            var position = document.getElementById('position').value;
-            var emptype = document.getElementById('emptype').value;
-            var uType = document.getElementById('uType').value;
-            var lname = document.getElementById('lname').value;
-            var fname = document.getElementById('fname').value;
-            var mname = document.getElementById('mname').value;
-            var suffix = document.getElementById('suffix').value;
-            var email = document.getElementById('email').value;
-            var domain = document.getElementById('domain').value;
-            var gender = document.getElementById('gender').value;
-            var datehired = document.getElementById('datehired').value;
-            var payrolltype = document.getElementById('payrolltype').value;
-            var salarytype = document.getElementById('salarytype').value
-            var rate = document.getElementById('rate').value;
-            var daysInMonth = document.getElementById('daysinmonth').value;
-            if (Id == null) {
-                var status = '1003'; //document.getElementById('status').value;
-            }
-            else {
-                var status = '6';
-            }
-
-            var address = document.getElementById('cob').value + ", " + document.getElementById('region').value + ", "
-                + document.getElementById('province').value + ", "
-                + document.getElementById('municipality').value
-                + ", " + document.getElementById('barangay').value;
-            var cno = document.getElementById('cno').value;
-            var createdby = @Accessor.HttpContext.Session.GetString("Id");
-            var username = email.toLowerCase();
-            var password = (Math.random() + 1).toString(36).substring(4);
-            var pass = password;
-            var positionlevel = document.getElementById('poslevel').value;
-            var manager = document.getElementById('manager').value;
-            // Emergency Contact
-            var ecid = document.getElementById('ecid').value;
-            var ecname = document.getElementById('ecname').value;
-            var relationship = document.getElementById('relationship').value;
-            var ecnumber = document.getElementById('ecnumber').value;
-            // Gather other fields similarly
-            // console.log(position);
-            // Prepare data object to send via AJAX
-            var data = {
-                Department: department,
-                FilePath: filename,
-                Id: Id,
-                UserType: emptype,
-                EmployeeType: uType,
-                Cno: cno,
-                Lname: lname,
-                Fname: fname,
-                Position: position,
-                Mname: mname,
-                Suffix: suffix,
-                Email: email + domain,
-                Gender: gender,
-                DateStarted: datehired,
-                SalaryType: salarytype,
-                Status: status,
-                Address: address,
-                PayrollType: payrolltype,
-                CreatedBy: createdby.toString(),
-                Username: username,
-                Password: pass,
-                PositionLevelId: positionlevel,
-                ManagerId: manager,
-                Rate: rate,
-                DaysInMonth: daysInMonth
-                // Add other fields as needed
-            };
-            // console.log(data);
-            var input = document.getElementById('img');
-            let formData = new FormData();
-            var fileUpload = $("#img").get(0);
-            var files = fileUpload.files;
-            var m_files = input.files;
-            for (var i = 0; i != m_files.length; i++) {
-                formData.append("file", m_files[i]); //loop through all files and append
-            }
-            formData.append('file', files[0]);
-            // console.log(data);
-            $.ajax({
-                url: '/Employee/SaveEmployee',
-                data: {
-                    data: data,
-                },
-                type: "POST",
-                datatype: "json"
-            }).done(function (data) {
-                // console.log(data);
-                if (data.status == '200') {
-                    $.ajax({
-                        url: '/Employee/UploadFile',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-
-                        success: function (result) {
-                            // console.log(result);
-                        }
-                    });
-                    successmodal(Id);
-                    $("#alertmodal").modal('show');
-                    if (Id == null) {
-                        var data = {};
-                        data.name = fname;
-                        data.email = email + domain;
-                        data.username = username;
-                        data.password = pass;
-                        // console.log(data);
-                        $.ajax({
-                            url: '/Employee/EmailUnregisterUser',
-                            data: {
-                                data: data,
-                            },
-                            type: "POST",
-                            datatype: "json",
-                            success: function (response) {
-
-                            }
-                        });
-                    }
-                    var ecdata = {};
-
-                    ecdata.id = ecid;
-                    ecdata.userId = Id;
-                    ecdata.name = ecname;
-                    ecdata.relationship = relationship;
-                    ecdata.phoneNumber = ecnumber;
-                    // console.log(ecdata);
-                    $.ajax({
-                        url: '/Employee/SaveEmergencyContact',
-                        data: {
-                            data: ecdata,
-                        },
-                        type: "POST",
-                        datatype: "json",
-                        success: function (response) {
-                            window.location.href = '/Employee/Index/';
-                        }
-                    });
-                    // getempdetails();
-                }
-                else {
-                    notifyMsg('Warning!', data.status, 'red', 'fas fa-exclamation-triangle');
-                }
-
-            });
-
-
-        });
+       
 
         async function getempdetails() {
             const data = { Id: localStorage.getItem('id') };
@@ -543,7 +583,7 @@
                     },
                     datatype: "json",
                     success: function (response) {
-                        // console.log(response);
+                        console.log(response);
                         var array = response[0].address.split(',');
                         // console.log(array[1].replace(' ', ''));
                         // console.log(array[2].replace(' ', ''));
@@ -675,6 +715,10 @@
                         $('#status').val(response[0].status);
                         $('#rate').val(response[0].rate);
                         $('#daysinmonth').val(response[0].daysInMonth);
+                        $('#sss-id').val(response[0].ssS_Number);
+                        $('#pagibig-id').val(response[0].pagIbig_MID_Number);
+                        $('#philhealth-id').val(response[0].philHealth_Number);
+                        $('#tax-id').val(response[0].tax_Identification_Number);
                         img_edit = response[0].filePath;
                         // console.log(img_edit);
                         // if (img_edit != "" || img_edit != null) {

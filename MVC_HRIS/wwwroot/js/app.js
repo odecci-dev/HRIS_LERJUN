@@ -163,7 +163,8 @@ async function fetchpositionselect() {
         success: function (data) {
             //console.log(data)
             $("#position").empty();
-            $("#position").append('<option value="" disabled selected>Select Position</option>');
+            $("#position").append('<option value="" disabled selected></option>');
+            $("#position").append('<option value="" disabled >Select Position</option>');
             for (var i = 0; i < data.length; i++) {
                 $("#position").append('<option value="' + data[i].id + '">' + data[i].name + "</option>");
             }
@@ -183,7 +184,8 @@ async function fetchpositionlevelselect() {
         success: function (data) {
             //console.log(data)
             $("#poslevel").empty();
-            $("#poslevel").append('<option value="" disabled selected>Select Position Level</option>');
+            $("#poslevel").append('<option value="" disabled selected></option>');
+            $("#poslevel").append('<option value="" disabled >Select Position Level</option>');
             for (var i = 0; i < data.length; i++) {
                 $("#poslevel").append('<option value="' + data[i].id + '">' + data[i].level + "</option>");
             }
@@ -203,7 +205,8 @@ async function fetchmanagerselect() {
         success: function (data) {
             //console.log(data)
             $("#manager").empty();
-            $("#manager").append('<option value="" disabled selected>Select Manager</option>');
+            $("#manager").append('<option value="" disabled selected></option>');
+            $("#manager").append('<option value="" disabled >Select Manager</option>');
             for (var i = 0; i < data.length; i++) {
                 $("#manager").append('<option value="' + data[i].id + '">' + data[i].name + "</option>");
             }
@@ -250,12 +253,13 @@ function fetchdepartmentselect() {
         success: function (data) {
             //console.log(data)
             $("#department").empty();
-            $("#department").append('<option value="0" disabled selected>-Select Department-</option>');
+            $("#department").append('<option value="" disabled selected></option>');
+            $("#department").append('<option value="0" disabled >-Select Department-</option>');
             for (var i = 0; i < data[0].items.length; i++) {
                 $("#department").append('<option value="' + data[0].items[i].id + '">' + data[0].items[i].departmentName + "</option>");
             }
             $("#selectDap").empty();
-            $("#selectDap").append('<option value="" disabled selected>Select Department</option>');
+            $("#selectDap").append('<option value="" disabled >Select Department</option>');
             $("#selectDap").append('<option value="0" >Select All</option>');
             for (var i = 0; i < data[0].items.length; i++) {
                 $("#selectDap").append('<option value="' + data[0].items[i].id + '">' + data[0].items[i].departmentName + "</option>");
@@ -395,8 +399,10 @@ function fetchusertypeselect() {
             //console.log(data)
             $("#emptype").empty();
             $("#emp_type2").empty();
-            $("#emptype").append('<option value="" disabled selected>Select Employee Type</option>');
-            $("#emp_type2").append('<option value="" disabled selected>Select Employee Type</option>');
+            $("#emptype").append('<option value="" disabled selected></option>');
+            $("#emptype").append('<option value="" disabled >Select Employee Type</option>');
+            $("#emp_type2").append('<option value="" disabled ></option>');
+            $("#emp_type2").append('<option value="" disabled >Select Employee Type</option>');
             for (var i = 0; i < data.length; i++) {
                 $("#emptype").append('<option value="' + data[i].id + '">' + data[i].userType + "</option>");
                 $("#emp_type2").append('<option value="' + data[i].id + '">' + data[i].userType + "</option>");
@@ -415,7 +421,8 @@ function fetchpayrolltypeselect() {
     }).done(function (data) { // @* //  *@
         //console.log(data)
         $("#payrolltype").empty();
-        $("#payrolltype").append('<option value="" disabled selected>Select Payroll Type</option>');
+        $("#payrolltype").append('<option value="" disabled selected></option>');
+        $("#payrolltype").append('<option value="" disabled >Select Payroll Type</option>');
         for (var i = 0; i < data.length; i++) {
             $("#payrolltype").append('<option value="' + data[i].id + '">' + data[i].payrollType + "</option>");
         }
@@ -433,7 +440,9 @@ function fetchsalarytypeselect() {
         //console.log(data)
         //$('#rate').val(data[0].rate);
         $("#salarytype").empty();
-        $("#salarytype").append('<option value="" disabled selected>Select Salary Type</option>');
+        $("#salarytype").append('<option value="" disabled selected></option>');
+
+        $("#salarytype").append('<option value="" disabled >Select Salary Type</option>');
         for (var i = 0; i < data.length; i++) {
             $("#salarytype").append('<option value="' + data[i].id + '">' + data[i].salaryType + "</option>");
         }
@@ -516,7 +525,8 @@ function GetETypeListOption() {
     }).done(function (data) { // @* //  *@
         //console.log(data)
         $("#uType").empty();
-        $("#uType").append('<option value="" disabled selected>Select Employee Type</option>');
+        $("#uType").append('<option value="" disabled selected></option>');
+        $("#uType").append('<option value="" disabled >Select Employee Type</option>');
         for (var i = 0; i < data.length; i++) {
             $("#uType").append('<option value="' + data[i].id + '">' + data[i].title + "</option>");
         }

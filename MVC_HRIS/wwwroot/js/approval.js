@@ -322,12 +322,11 @@ function initializeTimlogsDataTable() {
                 "title": "Fullname",
                 "data": "fname",
                 name: "fullname",
-                visible: false,
+                visible: true,
                 searchable: true,
-                "render": function (data,row) {
+                "render": function (data, type, row) {
                     return data+" "+row.lname;
                 }
-
             }
             //,
             //{
@@ -455,51 +454,52 @@ function initializeTimlogsDataTable() {
         lastSelectedRow = this;
         // console.log(data);
     });
-
     $(document).on('change', '#tldepartmentFilter', function () {
         const departmentval = $(this).val();
         if (departmentval == "") {
-            table.column('department:name').search(departmentval).draw();
+
+            alert("Department is null");
+            tltable.column('department:name').search(departmentval).draw();
         }
         else {
-            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+            alert("Department:" + departmentval);
+            tltable.column('department:name').search('^' + departmentval + '$', true, false).draw();
         }
     });
-
     $(document).on('change', '#tlpositionFilter', function () {
         const positionval = $(this).val();
         if (positionval == "") {
-            table.column('position:name').search(positionval).draw();
+            tltable.column('position:name').search(positionval).draw();
         }
         else {
-            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+            tltable.column('position:name').search('^' + positionval + '$', true, false).draw();
         }
     });
     $(document).on('change', '#tlpositionLevelFilter', function () {
         const val = $(this).val();
         if (val == "") {
-            table.column('positionLevel:name').search(val).draw();
+            tltable.column('positionLevel:name').search(val).draw();
         }
         else {
-            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+            tltable.column('positionLevel:name').search('^' + val + '$', true, false).draw();
         }
     });
     $(document).on('change', '#tlemployeeType', function () {
         const val = $(this).val();
         if (val == "") {
-            table.column('employeeType:name').search(val).draw();
+            tltable.column('employeeType:name').search(val).draw();
         }
         else {
-            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+            tltable.column('employeeType:name').search('^' + val + '$', true, false).draw();
         }
     });
     $(document).on('change', '#tlfullname', function () {
         const val = $(this).val();
         if (val == "") {
-            table.column('fullname:name').search(val).draw();
+            tltable.column('fullname:name').search(val).draw();
         }
         else {
-            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+            tltable.column('fullname:name').search('^' + val + '$', true, false).draw();
         }
     });
 }

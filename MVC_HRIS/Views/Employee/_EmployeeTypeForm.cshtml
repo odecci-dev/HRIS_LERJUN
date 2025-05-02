@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+   
+</style>
+<div class="">
+    <div class="hrismodal-holder" id="etypemodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
+         aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
+
+        <div class="hris-modal-content">
+            <div class="hris-modal-header">
+                <h4 class="modal-title" id="modal-name">Salary Type Details Form</h4>
+                <button type="button" id="h-close" class="close" data-dismiss="modal" onclick="closeETypeModal()">x</button>
+            </div>
+            <div class="" style="margin:10px" >
+                <form id="add-eType-form" class="mod-form">
+                    <div class="mod-form-row">
+                        <div class="input-container-whole" id="">
+                            <label class="label">Title</label>
+                            <input type="hidden" id="eTypeId" class="mod-inputs-nw" placeholder="Title" value="0" />
+                            <input type="text" id="eTypetitle" class="mod-inputs-nw" placeholder="Title" required />
+                        </div>
+                    </div>
+                    <div class="mod-form-row">
+                        <div class="input-container-whole" id="">
+                            <label class="label">Description</label>
+                            <textarea id="eTypedescription" class="mod-inputs-nw" placeholder="Description" style="min-height: 100px;" required /></textarea>
+                        </div>
+                    </div>
+                    <div class="mod-form-row">
+                        <div class="input-container-whole" id="">
+                            <label class="label">Schedule</label>
+                            <select id="schedule">
+                                <option>Select Schedule</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="actions" style="align-items: center;">
+                        <a data-dismiss="modal" aria-hidden="false" style="cursor:pointer" class="cancel btn" onclick="closeETypeModal()">Cancel</a>
+                        <input class="btn" type="submit" value="Submit" id="btn-save" />
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+</script>

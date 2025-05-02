@@ -23,15 +23,15 @@
     <div class="top-main-container ">
     </div>
     <div class="main-container">
-        <div class="content-filter action-navbar">
+        @* <div class="content-filter action-navbar">
             <div class="sub-content">
                 <div class="mod-form ">
                     <div class="">
-                        @*         <a href="@Url.Action("AddEmployee", "Employee")"> *@
+                        @*         <a href="@Url.Action("AddEmployee", "Employee")"> 
                         <button class="btn btn-info" id="add-employee" title="Add New Employee">
                             <i class="fas fa-user-plus"></i> Create Employee
                         </button>
-                        @* </a> *@
+                         </a> 
                     </div>
                 </div>
                 <div class="mod-form-2">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="content-filter-tbl">
-            @* <table id="myTable"> *@
+            @* <table id="myTable"> 
             <table id="emp-table" class="table table-bordered table-hover w-100">
                 <thead>
                 </thead>
@@ -49,7 +49,18 @@
             </table>
             <div id="table-footer">
             </div>
-
+        </div> *@
+        <div class="content-filter">
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'Tab1')">Employee List</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab2')" id="leavefiling">Employee Type</button>
+            </div>
+            <div id="Tab1" class="tab-content active">
+                @await Html.PartialAsync("~/Views/Employee/_EmployeeList.cshtml")
+            </div>
+            <div id="Tab2" class="tab-content">
+                @await Html.PartialAsync("~/Views/Employee/_EmployeeType.cshtml")
+            </div>
         </div>
     </div>
 
@@ -59,183 +70,42 @@
 
 @section Scripts {
     <script>
-
+        var etypemodal = document.getElementById('etypemodal');
+        var actionetype = document.getElementById('action-navbar-etype');
+        var penciletype = document.getElementById('etypepencil-action');
         $(document).ready(function () {
             var tableId = '#emp-table';
             if ($.fn.DataTable.isDataTable(tableId)) {
                 $(tableId).DataTable().clear().destroy();
             }
             // localStorage.clear();
-            initializeDataTable();
+            initializeEmployeeListDataTable();
+
+            // Employee Type
+            initializeEmployeeTypeDataTable();
+            GetScheduleListOption();
 
         });
 
-        function initializeDataTable() {
-            var tableId = '#emp-table';
-            var lastSelectedRow = null;
-            var img = "/img/OPTION.webp";
-            // Check if DataTable is already initialized
-            if ($.fn.DataTable.isDataTable(tableId)) {
-                // Destroy the existing DataTable instance
-                $(tableId).DataTable().clear().destroy();
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab contents
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            // Remove active class from all tab buttons
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
             }
 
-            // Get date values
-            // var data = {
-            //     datefrom: $('#datefrom_ol').val(),
-            //     dateto: $('#dateto_ol').val() // Assuming this refers to the date input element
-            // };
-            const data = { Username: 'username', Department: 'department', page: 1 };
-            // DataTable properties
-            var dtProperties = {
-                ajax: {
-                    url: '@Url.Action("GetDataRegistrationList", "Employee")',
-                    type: "POST",
-                    data: {
-                        data: data
-                    },
-                    dataType: "json",
-                    processing: true,
-                    serverSide: true,
-                    complete: function (xhr) {
-                        var url = new URL(window.location.href);
-                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                        // console.log('table1', _currentPage);
-                        table.page(_currentPage - 1).draw('page');
-                    },
-                    error: function (err) {
-                        alert(err.responseText);
-                    }
-                },
-                responsive: true,
-                "columns": [
-
-                    {
-                        "title": "Profile",
-                        "data": "id",
-                        "render": function (data, type, row) {
-
-                            // var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
-                            var images = "../../"+row['filePath'] == null ? img : "../../"+row['filePath'];
-                            let profile = "";
-                            var initial = row['fname'].charAt(0)+row['lname'].charAt(0);
-                            initial = initial.toUpperCase()
-                            if(row['filePath'] == "" || row['filePath'] == null){
-                                profile = `<div class="initial"> ${initial} </div>`;
-                            }
-                            else{
-                                 profile = `<div class="data-img"> <img src='${images}' width="100%" /> </div>`;
-                            }
-        @* let btnView = `
-
-                                    <div class="data-img"> <img src='${images}' width="100%" /> </div>
-                                    <div class="actions">
-                                    <a class="tbl-edit" data-id="${data}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                            Edit
-                                    </a>
-                                    <a class="tbl-delete" data-id="${data}">
-                                        <i class="fa-solid fa-trash"></i>
-                                        Delete
-                                    </a>
-                                    <a class="tbl-email"
-                                        data-id="${data}"
-                                        data-email="${row.email}"
-                                        data-empid="${row.employeeID}"
-                                        data-name="${row.fullname}"
-                                        >
-                                    <i class="fa-solid fa-envelope"></i>
-                                    <span>Email</span>
-                                </a>
-                            </div>`*@
-                            return profile;
-                        }
-                    },
-
-                    {
-                        "title": "Employee ID #",
-                        "data": "employeeID"
-                    },
-                    {
-                        "title": "Fullname",
-                        "data": "fullname"
-                    },
-                    {
-                        "title": "Email",
-                        "data": "email"
-                    },
-                    {
-                        "title": "Gender",
-                        "data": "gender"
-                    },
-                    {
-                        "title": "Action",
-                        "data": "id", "orderable": false,
-                        "render": function (data, type, row) {
-                            var button = `<label class="popup">
-                                                <input type="checkbox">
-                                                <div class="burger" tabindex="0">
-                                                <span></span>
-                                                <span></span>
-                                                </div>
-                                                <nav class="popup-window">
-
-                                                            <button class="tbl-edit btn btn-info" data-id="${data}" style="width: 100px; font-size:13px; padding: 5px 5px">
-                                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                                    Edit
-                                                            </button>
-                                                            <button class="tbl-delete btn btn-danger" data-id="${data}" style="width: 100px; font-size:13px; padding: 5px 5px">
-                                                                <i class="fa-solid fa-trash"></i>
-                                                                Delete
-                                                            </button>
-        @*<a class="tbl-email"
-                                                                data-id="${data}"
-                                                                data-email="${row.email}"
-                                                                data-empid="${row.employeeID}"
-                                                                data-name="${row.fullname}"
-                                                                >
-                                                            <i class="fa-solid fa-envelope"></i>
-                                                            <span>Email</span>
-                                                        </a>*@
-                                                </nav>
-                                            </label>`;
-                            return button;
-                        }
-                    }
-                ],
-                pageLength: 10,
-                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
-                columnDefs: [
-                    {
-                        targets: 0,
-                        type: 'date' // Ensure DataTables recognizes this column as date type
-                    }
-                ]
-            };
-            $('#emp-table').on('page.dt', function () {
-
-                var info = table.page.info();
-                var url = new URL(window.location.href);
-                url.searchParams.set('page01', (info.page + 1));
-                window.history.replaceState(null, null, url);
-            });
-
-            var table = $(tableId).DataTable(dtProperties);
-            $(tableId + '_filter input').attr('placeholder', 'Searching...');
-            $(tableId + ' tbody').on('click', 'tr', function () {
-                var data = table.row(this).data();
-                // console.log(data);
-                // Remove highlight from the previously selected row
-                if (lastSelectedRow) {
-                    $(lastSelectedRow).removeClass('selected-row');
-                }
-
-                // Highlight the currently selected row
-                $(this).addClass('selected-row');
-                lastSelectedRow = this;
-
-            });
+            // Show the current tab and add active class
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active");
         }
+        
         $('#emp-table').on('click', '.tbl-edit', function () {
             var id = $(this).data('id');
             localStorage.setItem('id', id);

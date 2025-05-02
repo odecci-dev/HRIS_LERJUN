@@ -51,5 +51,9 @@ namespace API_HRIS.Models
         public int? PayrollTypeId { get; set; }
         public int? SalaryTypeId { get; set; }
         public string? DaysInMonth { get; set; }
+        public string? SSS_Number { get; set; }
+        public string? PagIbig_MID_Number { get; set; }
+        public string? PhilHealth_Number { get; set; }
+        public string? Tax_Identification_Number { get; set; }
     }
 }

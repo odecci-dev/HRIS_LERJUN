@@ -153,11 +153,42 @@ namespace MVC_HRIS.Controllers
             List<TblStatusModel> models = JsonConvert.DeserializeObject<List<TblStatusModel>>(response);
             return new(models);
         }
+        public class EmployeeListViewModel
+        {
+
+            public int? Id { get; set; }
+            public string? Department { get; set; }
+            public string? UserType { get; set; }
+            public string? EmployeeType { get; set; }
+            public string? EmployeeId { get; set; }
+            public string? Lname { get; set; }
+            public string? Fname { get; set; }
+            public string? Mname { get; set; }
+            public string? Fullname { get; set; }
+            public string? Suffix { get; set; }
+            public string? Email { get; set; }
+            public string? Cno { get; set; }
+            public string? Gender { get; set; }
+            public string? DateStarted { get; set; }
+            public string? CreatedBy { get; set; }
+            public string? Address { get; set; }
+            public string? SalaryType { get; set; }
+            public string? PayrollType { get; set; }
+            public string? Status { get; set; }
+            public string? Position { get; set; }
+            public string? FilePath { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+            public int? PositionLevelId { get; set; }
+            public int? ManagerId { get; set; }
+            public string? Rate { get; set; }
+            public string? DaysInMonth { get; set; }
+        }
         [HttpPost]
         public async Task<IActionResult> GetDataRegistrationList( Filter data)
         {
             string result = "";
-            var list = new List<GetAllUserDetailsResult>();
+            var list = new List<EmployeeListViewModel>();
             try
             {
                 HttpClient client = new HttpClient();
@@ -167,7 +198,7 @@ namespace MVC_HRIS.Controllers
                 using (var response = await client.PostAsync(url, content))
                 {
                     string res = await response.Content.ReadAsStringAsync();
-                    list = JsonConvert.DeserializeObject<List<GetAllUserDetailsResult>>(res);
+                    list = JsonConvert.DeserializeObject<List<EmployeeListViewModel>>(res);
 
                 }
             }
@@ -207,6 +238,10 @@ namespace MVC_HRIS.Controllers
             public int? ManagerId { get; set; }
             public string Rate { get; set; }
             public string DaysInMonth { get; set; }
+            public string? SSS_Number { get; set; }
+            public string? PagIbig_MID_Number { get; set; }
+            public string? PhilHealth_Number { get; set; }
+            public string? Tax_Identification_Number { get; set; }
 
         }
         [HttpPost]
@@ -244,6 +279,29 @@ namespace MVC_HRIS.Controllers
                 string status = ex.GetBaseException().ToString();
             }
             return Json(new { status = res });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadDocument(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                var filePath = Path.Combine("wwwroot/uploads", file.FileName);
+
+                // Delete existing file if it exists
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                // Save new file
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                return Ok("File uploaded successfully.");
+            }
+
+            return BadRequest("No file selected.");
         }
         public async Task<IActionResult> UploadFile(List<IFormFile> postedFiles)
         {
@@ -438,6 +496,35 @@ namespace MVC_HRIS.Controllers
                     int numericStatusCode = (int)statusCode;
                     string res = await response.Content.ReadAsStringAsync();
                     list = JsonConvert.DeserializeObject<List<TblEmergencyContactsModel>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(list);
+            //return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RequiredDocuments(List<tbl_UsersRequiredDocuments> data)
+        {
+            string result = "";
+            var list = new List<tbl_UsersRequiredDocuments>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Employee/RequiredDocuments";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<tbl_UsersRequiredDocuments>>(res);
 
                 }
             }
