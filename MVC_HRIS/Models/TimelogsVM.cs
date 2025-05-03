@@ -40,5 +40,6 @@ public class TimelogsVM
     public string? Position { get; set; }
     public string? PositionLevel { get; set; }
     public string? EmployeeType { get; set; }
+    
 }
 

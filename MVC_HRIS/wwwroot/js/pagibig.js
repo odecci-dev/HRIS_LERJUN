@@ -32,27 +32,27 @@ function initializePagibigDataTable() {
             {
                 "title": "Tax From",
                 "data": "tax_From",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Tax To",
                 "data": "tax_To",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Employee Contribution Rate",
                 "data": "employee_Contribution_Rate",
-                "orderable": false
+                "orderable": true
             }, 
             {
                 "title": "Employer Contribution Rate",
                 "data": "employer_Contribution_Rate",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Total Contribution",
                 "data": "total_Contribution",
-                "orderable": false
+                "orderable": true
             }
         ],
         order: [[0, 'desc']], // Sort the second column (index 1) by descending order

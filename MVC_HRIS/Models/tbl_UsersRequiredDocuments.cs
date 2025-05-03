@@ -12,4 +12,5 @@ public partial class tbl_UsersRequiredDocuments
     public string? FileType { get; set; }
     public string? FileName { get; set; }
     public string? FilePath { get; set; }
+    public bool? isDeleted { get; set; }
 }

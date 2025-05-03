@@ -247,17 +247,6 @@ function OverTimeDOM() {
 
 }
 
-
-
-
-//$('#otCuttOff').on('change', function () {
-//    setCutOffDatesPOT();
-//    initializeLeaveDataTable();
-//});
-//$('#ot-monthSelect').on('change', function () {
-//    setCutOffDatesPOT();
-//    initializeLeaveDataTable();
-//});
 function viewRejectedOT() {
     var statusLabel = document.getElementById('StatusLabel');
     if (otStatusFilter == 0) {
@@ -285,7 +274,6 @@ function downloadTemplate() {
     location.replace('../OverTime/DownloadHeader');
 }
 function POTExportFunction() {
-    alert("Hello World!");
 
     // Create the EmployeeIdFilter object with the necessary properties
     var empNo = "0";
@@ -324,6 +312,26 @@ function POTExportFunction() {
                     $("#selectUserPending").append('<option value="' + user.userId + '"><div style="display: block"><span>' + user.fname + " " + user.lname + " </span></div></option>");
                 }
             });
+        }
+    });
+}
+
+function sendOTEmail() {
+    var data = {};
+    data.name = fname;
+    data.email = email + domain;
+    data.username = username;
+    data.password = pass;
+    // console.log(data);
+    $.ajax({
+        url: '/Employee/EmailUnregisterUser',
+        data: {
+            data: data,
+        },
+        type: "POST",
+        datatype: "json",
+        success: function (response) {
+
         }
     });
 }

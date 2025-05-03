@@ -322,7 +322,7 @@ function initializeTimlogsDataTable() {
                 "title": "Fullname",
                 "data": "fname",
                 name: "fullname",
-                visible: true,
+                visible: false,
                 searchable: true,
                 "render": function (data, type, row) {
                     return data+" "+row.lname;

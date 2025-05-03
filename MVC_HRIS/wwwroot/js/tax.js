@@ -32,12 +32,12 @@ function initializeTaxDataTable() {
             {
                 "title": "Tax From",
                 "data": "tax_From",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Tax To",
                 "data": "tax_To",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Prescribe With Holding Tax",

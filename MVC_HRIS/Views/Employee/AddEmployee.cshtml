@@ -246,7 +246,8 @@
                                                 <div class="underline"></div>
                                             </div>
                                         </div>
-                                        <div class="upload-container">
+                                        <div id="sssuploadedfile"></div>
+                                        <div class="upload-container" id="sss-upload-container">
                                             <div class="drop-area" id="drop-area">
                                                 <p>Choose a file or drag & drop it here</p>
                                                 <input type="file" id="sssfile" accept=".pdf" hidden />
@@ -266,8 +267,9 @@
                                                 <div class="underline"></div>
                                             </div>
                                         </div>
-                                        <div class="upload-container">
-                                        <div class="drop-area" id="pagibig-drop-area">
+                                        <div id="pagibiguploadedfile" ></div>
+                                        <div class="upload-container" id="pagibig-upload-container">
+                                            <div class="drop-area" id="pagibig-drop-area">
                                                 <p>Choose a file or drag & drop it here</p>
                                                 <input type="file" id="pagibigfile" accept=".pdf" hidden />
                                                 <a class="browse-file-btn"onclick="document.getElementById('pagibigfile').click()">Browse File</a>
@@ -286,7 +288,8 @@
                                                 <div class="underline"></div>
                                             </div>
                                         </div>
-                                        <div class="upload-container">
+                                        <div id="philhealthuploadedfile" ></div>
+                                        <div class="upload-container" id="philhealth-upload-container">
                                             <div class="drop-area" id="philhealth-drop-area">
                                                 <p>Choose a file or drag & drop it here</p>
                                                 <input type="file" id="philhealthfile" accept=".pdf" hidden />
@@ -306,7 +309,8 @@
                                                 <div class="underline"></div>
                                             </div>
                                         </div>
-                                        <div class="upload-container">
+                                        <div id="taxuploadedfile"></div>
+                                        <div class="upload-container" id="tax-upload-container">
                                         <div class="drop-area" id="tax-drop-area">
                                                 <p>Choose a file or drag & drop it here</p>
                                                 <input type="file" id="taxfile" accept=".pdf" hidden />
@@ -333,7 +337,8 @@
                                                 <a class="browse-file-btn" onclick="document.getElementById('otherfile').click()">Browse File</a>
                                             </div>
                                         <div id="other-file-list"></div>
-                                        </div>
+                                    </div>
+                                    <div id="otheruploadedfile"></div>
                                     </div>
                                 </div>
                             </div>
@@ -514,6 +519,7 @@
 
 @section Scripts {
     <script>
+        var userId =  localStorage.getItem('id');
         let wizzardPage = 1;
         let page1 = document.getElementById('page-1');
         let page2 = document.getElementById('page-2');
@@ -526,6 +532,7 @@
         let pagecontainer4 = document.getElementById('page-4-container');
         let pagecontainer5 = document.getElementById('page-5-container');
         var defaultCreadedBy = @Accessor.HttpContext.Session.GetString("Id");
+        // alert(userId);
         async function runFunction() {
             await addressDOM();
             getempdetails();
@@ -543,6 +550,8 @@
             taxUpload();
             otherUpload();
             // runFunction();
+
+            fetchRequiredDocuments();
             $("input[name=uploadimg]").change(function () {
 
                 if (this.files && this.files[0]) {

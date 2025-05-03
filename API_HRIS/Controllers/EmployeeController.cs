@@ -811,35 +811,67 @@ namespace API_HRIS.Controllers
         
         //Save Required Documents
         [HttpPost]
-        public async Task<ActionResult> RequiredDocuments(List<tbl_UsersRequiredDocuments> list)
+        public async Task<ActionResult> SaveRequiredDocuments(List<tbl_UsersRequiredDocuments> list)
         {
-            for (int i = 0; i < list.Count; i++)
-            {
-                var userId = list[i].UserId;
-                if (userId == null || userId == 0)
+            try 
+            { 
+                for (int i = 0; i < list.Count; i++)
                 {
-                    string sql = $@"SELECT TOP 1 ID FROM tbl_usersmodel ORDER BY ID DESC";
-                    // Fetch the result as a DataTable
-                    DataTable table = db.SelectDb(sql).Tables[0];
-                    // Check if there are any rows in the result
-                    if (table.Rows.Count > 0)
+                    if (list[i].FilePath == "" || list[i].FilePath == null)
                     {
-                        // Parse and save the ID from the first row
-                        list[i].UserId = int.Parse(table.Rows[0]["Id"].ToString());
+                        var file = _context.tbl_UsersRequiredDocuments.SingleOrDefault(a => a.Id == list[i].Id);
+                        file.isDeleted = true;
+                        await _context.SaveChangesAsync();
+                        return Ok();
                     }
-                }
-                if (list[i].Id == 0)
-                {
-                    _context.tbl_UsersRequiredDocuments.Add(list[i]);
-                }
-                else
-                {
-                    _context.Entry(list).State = EntityState.Modified;
-                }
+                
+                    var userId = list[i].UserId;
+                    if (userId == null || userId == 0)
+                    {
+                        string sql = $@"SELECT TOP 1 ID FROM tbl_usersmodel ORDER BY ID DESC";
+                        // Fetch the result as a DataTable
+                        DataTable table = db.SelectDb(sql).Tables[0];
+                        // Check if there are any rows in the result
+                        if (table.Rows.Count > 0)
+                        {
+                            // Parse and save the ID from the first row
+                            list[i].UserId = int.Parse(table.Rows[0]["Id"].ToString());
+                        }
+                    }
+                    if (list[i].Id == 0)
+                    {
+                        var item = new tbl_UsersRequiredDocuments();
+                        item.UserId = list[i].UserId;
+                        item.FileName = list[i].FileName;
+                        item.FilePath = list[i].FilePath;
+                        item.FileType = list[i].FileType;
+                        item.isDeleted = false;
+                        _context.tbl_UsersRequiredDocuments.Add(item);
+                    }
+                    else
+                    {
+                        _context.Entry(list).State = EntityState.Modified;
+                    }
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.GetBaseException().ToString());
             }
             return Ok();
+        }
+        public class RequiredDocumentsParam
+        {
+            public int UserId { get; set; }
+        }
+        [HttpPost]
+        public async Task<ActionResult> PostRequiredDocuments(RequiredDocumentsParam data)
+        {
+            var result = _context.tbl_UsersRequiredDocuments.Where(a => a.UserId == data.UserId && a.isDeleted == false).ToList();
+            
+            return Ok(result);
         }
         public class PositionLevel
         {
@@ -849,7 +881,7 @@ namespace API_HRIS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPositionLevels()
         {
-            string sql = $@"SELECT * FROM tbl_PositionLevel";
+            string sql = $@"SELECT * FROM tbl_PositionLevel where DeleteFlag = 0";
 
             // Assuming `db.SelectDb(sql)` executes the query and returns a DataSet
             DataTable table = db.SelectDb(sql).Tables[0];
@@ -878,7 +910,7 @@ namespace API_HRIS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetManager()
         {
-            string sql = $@"SELECT Id ,Fullname FROM tbl_UsersModel with(nolock) where PositionLevelId = '5' or UserType = '2'";
+            string sql = $@"SELECT Id ,Fullname FROM tbl_UsersModel with(nolock) where Delete_Flag = 0 and PositionLevelId = '5' or UserType = '2'";
 
             // Assuming `db.SelectDb(sql)` executes the query and returns a DataSet
             DataTable table = db.SelectDb(sql).Tables[0];

@@ -361,3 +361,19 @@
     z-index: 3 !important;
 
 }
+.uploaded-file {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #EBF4FF;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+#otheruploadedfile,
+#other-file-list {
+    max-height: 150px;
+    overflow-y: scroll;
+}
+.uploaded-file a {
+    cursor: pointer;
+}

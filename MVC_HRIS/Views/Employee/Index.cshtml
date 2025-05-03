@@ -73,6 +73,13 @@
         var etypemodal = document.getElementById('etypemodal');
         var actionetype = document.getElementById('action-navbar-etype');
         var penciletype = document.getElementById('etypepencil-action');
+
+
+
+        var actionemployee = document.getElementById('action-navbar-employee');
+        var pencilemployee = document.getElementById('employeepencil-action');
+
+        var defaultCreatedBy = @Accessor.HttpContext.Session.GetString("Id");
         $(document).ready(function () {
             var tableId = '#emp-table';
             if ($.fn.DataTable.isDataTable(tableId)) {
@@ -161,7 +168,8 @@
             }).done(function (data) {
                 console.log(data.stats);
                 if (data.stats == '200') {
-                    initializeDataTable();
+                    notifyMsg('Success!', 'Successfully Deleted!', 'green', 'fas fa-check');
+                    initializeEmployeeListDataTable();
                     $("#alertmodal").modal('hide');
                 }
                 else {
@@ -169,5 +177,6 @@
                 }
             });
         }
+
     </script>
 }
