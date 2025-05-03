@@ -487,10 +487,14 @@ namespace API_HRIS.Controllers
                             on ot.LeaveId equals leave.Id into leavegroup
                             from leave in leavegroup.DefaultIfEmpty()
 
-
                             join employee in _context.TblUsersModels
                             on ot.EmployeeNo equals employee.EmployeeId into employeegroup
                             from employee in employeegroup.DefaultIfEmpty()
+
+
+                            join manager in _context.TblUsersModels
+                            on employee.ManagerId equals manager.Id into managergroup
+                            from manager in managergroup.DefaultIfEmpty()
 
                             join status in _context.TblStatusModels
                             on ot.Status equals status.Id into statusgroup
@@ -520,6 +524,8 @@ namespace API_HRIS.Controllers
                                 ot.Status,
                                 Fullname = employee.Fullname,
                                 Email = employee.Email,
+                                ManagerName = manager.Fullname,
+                                ManagerEmail = manager.Email
 
                             }).FirstOrDefault();
             var message = new MimeMessage();
@@ -527,7 +533,10 @@ namespace API_HRIS.Controllers
             message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
             //url = registrationDomain + "registration?empid=" + data.EmployeeId[x] + "&compid=" + data.CompanyId[x] + "&email=" + data.Email[x];
             message.To.Add(new MailboxAddress(overtime.Fullname, overtime.Email));
-            message.To.Add(new MailboxAddress("France Samaniego", "france.samaniego@odecci.com"));
+            message.To.Add(new MailboxAddress(overtime.ManagerName, overtime.ManagerEmail));
+            message.To.Add(new MailboxAddress("John Alfred Abalos", "john.abalos@odecci.com"));
+            message.To.Add(new MailboxAddress("Odecci Payroll", "payroll@odecci.com"));
+            message.To.Add(new MailboxAddress("Ann Santos", "ann.santos@odecci.com"));
             //var recipients = data.Name.Zip(data.Email, (name, email) => new MailboxAddress(name, email)).ToList();
 
             // Add all recipients at once
@@ -604,7 +613,7 @@ namespace API_HRIS.Controllers
                                                         + "</tr>"
                                                         + "<tr>"
                                                         + "<td style='font-weight: bold;'>Status:</td>"
-                                                        + "<td>"+ overtime.Status + "</td>"
+                                                        + "<td>"+ overtime.StatusName + "</td>"
                                                         + "</tr>"
                                                     + "</table>"
 

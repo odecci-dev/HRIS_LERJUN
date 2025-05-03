@@ -512,7 +512,38 @@ namespace MVC_HRIS.Controllers
             
             return Ok(list);
         }
+        public class NewOverTimeNotificationParam
+        {
+            public string employeeId { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> NewOverTimeNotification(NewOverTimeNotificationParam data)
+        {
+            string result = "";
+            var list = new List<TblOvertimeModel>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/OverTime/NewOverTimeNotification";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblOvertimeModel>>(res);
 
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(list);
+            //return View();
+        }
         //public IActionResult ExportOTList(PedingOTFilter data)
         //{
         //    var list =  ExportPendingOvertimeList(data) ;
@@ -520,7 +551,7 @@ namespace MVC_HRIS.Controllers
         //    // Export to Excel
         //    if (list != null && list.Count > 0)
         //    {
-                
+
         //        using (var pck = new ExcelPackage(stream))
         //        {
         //            ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet 1");
