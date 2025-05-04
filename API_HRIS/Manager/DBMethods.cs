@@ -244,6 +244,7 @@ namespace API_HRIS.Manager
                     item.Position = dr["Position"].ToString();
                     item.PositionLevel = dr["PositionLevel"].ToString();
                     item.EmployeeType = dr["EmployeeType"].ToString();
+                    item.TotalLunchHours = dr["TotalLunchHours"].ToString() == null ? "0" : dr["TotalLunchHours"].ToString() == "" ? "0" : dr["TotalLunchHours"].ToString();
                     result.Add(item);
                 }
             }

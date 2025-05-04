@@ -78,4 +78,8 @@ public partial class TblUsersModel
     public int? PositionLevelId { get; set; }
     public int? ManagerId { get; set; }
     public string? verificationCode { get; set; }
+    public string? SSS_Number { get; set; }
+    public string? PagIbig_MID_Number { get; set; }
+    public string? PhilHealth_Number { get; set; }
+    public string? Tax_Identification_Number { get; set; }
 }

@@ -32,27 +32,27 @@ function initializePhilhealthDataTable() {
             {
                 "title": "Salary From",
                 "data": "salary_From",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Salary To",
                 "data": "salary_To",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Monthly Premium",
                 "data": "monthly_Premium",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Employer Share",
                 "data": "employer_Share",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Employee Share",
                 "data": "employee_Share",
-                "orderable": false
+                "orderable": true
             }
         ],
         order: [[0, 'desc']], // Sort the second column (index 1) by descending order

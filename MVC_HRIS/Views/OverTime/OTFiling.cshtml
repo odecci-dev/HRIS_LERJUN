@@ -294,6 +294,19 @@
                 }
                 else {
                     notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+                    var data = {};
+                    data.employeeId = EmployeeID;
+                    $.ajax({
+                        url: '/OverTime/NewOverTimeNotification',
+                        data: {
+                            data: data,
+                        },
+                        type: "POST",
+                        datatype: "json",
+                        success: function (response) {
+
+                        }
+                    });
                 }
                 modal = document.getElementById('defaultmodal');
                 modal.style.display = "none";

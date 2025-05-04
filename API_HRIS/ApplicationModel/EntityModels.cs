@@ -110,6 +110,8 @@ namespace API_HRIS.ApplicationModel
             public string? Position { get; set; }
             public string? PositionLevel { get; set; }
             public string? EmployeeType { get; set; }
+            public string? TotalLunchHours { get; set; }
+            
         }
         public class UserTypePaginateModel
         {
