@@ -7,7 +7,11 @@ IConfiguration config = new ConfigurationBuilder()
         .SetBasePath(Path.GetPathRoot(Environment.SystemDirectory))
         .AddJsonFile("app/hris/appconfig.json", optional: true, reloadOnChange: true)
         .Build();
-
+////STAGING
+//IConfiguration config = new ConfigurationBuilder()
+//  .SetBasePath(Path.GetPathRoot(Environment.SystemDirectory))
+//  .AddJsonFile("app/hris_staging/appconfig.json", optional: true, reloadOnChange: true)
+//  .Build();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

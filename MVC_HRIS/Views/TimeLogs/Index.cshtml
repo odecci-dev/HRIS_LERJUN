@@ -735,6 +735,7 @@
             document.getElementById('mtltimeout').value = "";
             document.getElementById('manualtask').value = "";
             document.getElementById('mtlremarks').value = "";
+            document.getElementById('mtlbreak').value = 0;
             tlmodal.style.display = "flex";
         }
 
@@ -753,6 +754,7 @@
             var timeout = $(this).data('timeout');
             var remarks = $(this).data('remarks');
             var userid = $(this).data('userid');
+            var lunch = $(this).data('lunch');
 
             // Extract the date and time part from the string
             let dateParts = dateString.split(" ")[0].split("-"); // Get "05/01/2025"
@@ -774,6 +776,7 @@
             document.getElementById('mtltimein').value = timein;
             document.getElementById('mtltimeout').value = timeout;
             document.getElementById('manualtask').value = task;
+            document.getElementById('mtlbreak').value = lunch;
             document.getElementById('mtlremarks').value = remarks;
             tlmodal.style.display = "flex";
         });
@@ -786,6 +789,7 @@
             var timeout = $(this).data('timeout');
             var remarks = $(this).data('remarks');
             var userid = $(this).data('userid');
+            var mtlbreak = $(this).data('lunch');
             localStorage.setItem('id', id);
             localStorage.setItem('status', status);
             localStorage.setItem('task', task);
@@ -794,6 +798,7 @@
             localStorage.setItem('timeout', timeout);
             localStorage.setItem('remarks', remarks);
             localStorage.setItem('userid', userid);
+            localStorage.setItem('lunch', mtlbreak);
 
             deletemodalTimelogs();
             $("#alertmodal").modal('show');

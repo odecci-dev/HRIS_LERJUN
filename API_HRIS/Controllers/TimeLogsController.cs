@@ -241,63 +241,89 @@ namespace API_HRIS.Controllers
         public async Task<ActionResult<TblTimeLog>> ManualLogs(TblTimeLog data)
         {
             //var result = _context.TblTimeLogs.Where(a => a.Id == data.Id).OrderByDescending(a => a.Id).ToList();
-            if (data.Id == 0)
+            try
             {
-                var item = new TblTimeLog();
-                item.Id = data.Id;
-                item.UserId = data.UserId;
-                item.Date = data.Date;
-                item.TimeIn = data.TimeIn;
-                item.TimeOut = data.TimeOut;
-                item.RenderedHours = data.RenderedHours;
-                item.DeleteFlag = 1;
-                item.StatusId = 0;
-                item.Identifier = "Manual";
-                item.Remarks = data.Remarks;
-                item.TaskId = data.TaskId;
-                item.DateCreated = DateTime.Now.Date;
-                item.DateUpdated = null;
-                item.DateDeleted = null;
-                _context.TblTimeLogs.Add(item);
-                await _context.SaveChangesAsync();
+                if (data.Id == 0)
+                {
+                    var item = new TblTimeLog();
+                    item.Id = data.Id;
+                    item.UserId = data.UserId;
+                    item.Date = data.Date;
+                    item.TimeIn = data.TimeIn;
+                    item.TimeOut = data.TimeOut;
+                    item.RenderedHours = data.RenderedHours;
+                    item.DeleteFlag = 1;
+                    item.StatusId = 0;
+                    item.Identifier = "Manual";
+                    item.Remarks = data.Remarks;
+                    item.TaskId = data.TaskId;
+                    item.DateCreated = DateTime.Now.Date;
+                    item.DateUpdated = null;
+                    item.DateDeleted = null;
+                    item.TotalLunchHours = data.TotalLunchHours;
+                    _context.TblTimeLogs.Add(item);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+
+                    //var item = new TblTimeLog();
+                    //item.Id = data.Id;
+                    //item.UserId = data.UserId;
+                    //item.Date = data.Date;
+                    //item.TimeIn = data.TimeIn;
+                    //item.TimeOut = data.TimeOut;
+                    //item.RenderedHours = data.RenderedHours;
+                    //item.StatusId = 0;
+                    //item.DeleteFlag = 1;
+                    //item.Identifier = "Manual";
+                    //item.Remarks = data.Remarks;
+                    //item.TaskId = data.TaskId;
+                    //item.DateCreated = result[0].DateCreated;
+                    //item.DateUpdated = DateTime.Now.Date;
+                    //item.DateDeleted = result[0].DateDeleted;
+                    DateTime getDateforUpdate = DateTime.Now.Date;
+                    var currentDate = data.Date.ToString();
+                    DateTime getDate = DateTime.Parse(currentDate);
+                    string formattedDate = getDate.ToString("yyyy-MM-dd");
+
+                    string formattedUpdateDate = getDateforUpdate.ToString("yyyy-MM-dd");
+                    string query = $@"UPDATE [tbl_TimeLogs]
+                                        SET StatusId = 0,
+                                        Date = '" + formattedDate + "',"
+                                        + "TimeIn = '" + data.TimeIn + "',"
+                                        + "TimeOut = '" + data.TimeOut + "',"
+                                        + "TaskId = '" + data.TaskId + "',"
+                                        + "RenderedHours = '" + data.RenderedHours + "',"
+                                        + "DateUpdated = '" + formattedUpdateDate + "',"
+                                        + "DeleteFlag = '" + data.DeleteFlag + "',"
+                                        + "TotalLunchHours = '" + data.TotalLunchHours + "',"
+                                        + "Remarks = '" + data.Remarks.Replace("'","''") + "' "
+                                        + " WHERE Id = '" + data.Id + "'";
+                    db.AUIDB_WithParam(query);
+                    var existingtl = await _context.TblTimeLogs.FindAsync(data.Id);
+                    //var existingtl = _context.TblTimeLogs.FirstOrDefault(e => e.Id == data.Id);
+                    //if (existingtl != null)
+                    //{
+
+                    //    existingtl.Date = DateTime.Parse(formattedDate);
+                    //    existingtl.TimeIn = data.TimeIn;
+                    //    existingtl.TimeOut = data.TimeOut;
+                    //    existingtl.TaskId = data.TaskId;
+                    //    existingtl.RenderedHours = data.RenderedHours;
+                    //    existingtl.DateUpdated = DateTime.Parse(formattedUpdateDate);
+                    //    existingtl.DeleteFlag = data.DeleteFlag;
+                    //    existingtl.Remarks = data.Remarks;
+                    //    _context.Entry(existingtl).State = EntityState.Modified;
+                    //    //await _context.SaveChangesAsync();
+                    //}
+                    //_context.Entry(item).State = EntityState.Modified;
+                }
             }
-            else
+            catch (Exception ex)
             {
 
-                //var item = new TblTimeLog();
-                //item.Id = data.Id;
-                //item.UserId = data.UserId;
-                //item.Date = data.Date;
-                //item.TimeIn = data.TimeIn;
-                //item.TimeOut = data.TimeOut;
-                //item.RenderedHours = data.RenderedHours;
-                //item.StatusId = 0;
-                //item.DeleteFlag = 1;
-                //item.Identifier = "Manual";
-                //item.Remarks = data.Remarks;
-                //item.TaskId = data.TaskId;
-                //item.DateCreated = result[0].DateCreated;
-                //item.DateUpdated = DateTime.Now.Date;
-                //item.DateDeleted = result[0].DateDeleted;
-                DateTime getDateforUpdate = DateTime.Now.Date;
-                var currentDate = data.Date.ToString();
-                DateTime getDate = DateTime.Parse(currentDate);
-                string formattedDate = getDate.ToString("yyyy-MM-dd");
-
-                string formattedUpdateDate = getDateforUpdate.ToString("yyyy-MM-dd");
-                string query = $@"UPDATE [tbl_TimeLogs]
-                                    SET StatusId = 0,
-                                    Date = '" + formattedDate + "',"
-                                    + "TimeIn = '" + data.TimeIn + "',"
-                                    + "TimeOut = '" + data.TimeOut + "',"
-                                    + "TaskId = '" + data.TaskId + "',"
-                                    + "RenderedHours = '" + data.RenderedHours + "',"
-                                    + "DateUpdated = '" + formattedUpdateDate + "',"
-                                    + "DeleteFlag = '" + data.DeleteFlag + "',"
-                                    + "Remarks = '" + data.Remarks + "' "
-                                    + " WHERE Id = '" + data.Id + "'";
-                db.AUIDB_WithParam(query);
-                //_context.Entry(item).State = EntityState.Modified;
+                return Problem(ex.GetBaseException().ToString());
             }
             return Ok();
         }

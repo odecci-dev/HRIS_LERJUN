@@ -35,22 +35,22 @@ public partial class TblUsersModel
     public string RestoredBy { get; set; }
     public int? Department { get; set; }
     public bool? AgreementStatus { get; set; }
-
     public string RememberToken { get; set; }
-
     public int? UserType { get; set; }
     public int? EmployeeType { get; set; }
     public int? SalaryType { get; set; }
     public string Rate { get; set; }
     public string DaysInMonth { get; set; }
     public int? PayrollType { get; set; }
-
     public DateTime? DateStarted { get; set; }
-
     public int? Position { get; set; }
     public int? PositionLevelId { get; set; }
     public int? ManagerId { get; set; }
     public bool isLoggedIn { get; set; }
     public bool isOnline { get; set; }
     public string? verificationCode { get; set; }
+    public string? SSS_Number { get; set; }
+    public string? PagIbig_MID_Number { get; set; }
+    public string? PhilHealth_Number { get; set; }
+    public string? Tax_Identification_Number { get; set; }
 }

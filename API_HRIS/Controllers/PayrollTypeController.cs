@@ -129,13 +129,13 @@ namespace API_HRIS.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                dbmet.InsertAuditTrail("Save Department" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Payroll Type Module", "User", "0");
+                //dbmet.InsertAuditTrail("Save Department" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Payroll Type Module", "User", "0");
 
                 return CreatedAtAction("save", new { id = tblPayrollType.Id }, tblPayrollType);
             }
             catch (Exception ex)
             {
-                dbmet.InsertAuditTrail("Save Department" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Payroll Type Module", "User", "0");
+                //dbmet.InsertAuditTrail("Save Department" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Payroll Type Module", "User", "0");
                 return Problem(ex.GetBaseException().ToString());
             }
         }

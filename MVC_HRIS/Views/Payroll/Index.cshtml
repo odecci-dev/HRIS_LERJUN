@@ -16,26 +16,42 @@
         </div>
     </div>
     <div class="main-container">
-        <div class="mod-form action-navbar" style="margin-bottom: 2px;">
+        @* <div class="mod-form action-navbar" style="margin-bottom: 2px;">
             <div class="input-container">
                 <button class="btn btn-info" id="" title="Add New Deapartment" onclick="payrollModalOpen()">
                     <i class="fas fa-user-plus"></i> Create New Payroll
                 </button>
             </div>
+        </div> *@
+        <div class="mod-form action-navbar pos" id="action-navbar-payroll" style="margin-bottom: 2px;">
+            <div class="input-container">
+                <a>Create new Payroll </a>
+                <button class="btn btn-info" id="add-pos" title="Add New Employee" onclick="payrollModalOpen()">
+                    @* <i class="fas fa-user-plus"></i> Create Position *@ 
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 28 28"><path fill="currentColor" d="M9.5 4a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9m-3 4.5a3 3 0 1 1 6 0a3 3 0 0 1-6 0M20 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-2 3.5a2 2 0 1 1 4 0a2 2 0 0 1-4 0M4.25 15A2.25 2.25 0 0 0 2 17.25v.531a2 2 0 0 0 .017.242c.017.153.049.363.11.612a5.1 5.1 0 0 0 .867 1.815C4.008 21.803 5.942 23 9.5 23c1.531 0 2.762-.222 3.747-.582a7.5 7.5 0 0 1-.236-1.518c-.836.355-1.97.6-3.511.6c-3.192 0-4.633-1.053-5.306-1.95a3.6 3.6 0 0 1-.61-1.279a3 3 0 0 1-.083-.508l-.001-.018v-.495a.75.75 0 0 1 .75-.75h9.905a7.5 7.5 0 0 1 1.168-1.426A2.3 2.3 0 0 0 14.75 15zM27 20.5a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0m-6-4a.5.5 0 0 0-1 0V20h-3.5a.5.5 0 0 0 0 1H20v3.5a.5.5 0 0 0 1 0V21h3.5a.5.5 0 0 0 0-1H21z" /></svg>
+                </button>
+            </div>
+            <div class="input-container delete-pos">
+                <a>delete </a>
+                <button class="btn btn-info" id="delete-pos" title="Add New Employee" onclick="MultiDeletePayroll()">
+                    @* <i class="fas fa-user-plus"></i> Create Position *@ 
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" /></svg>
+                </button>
+            </div>
         </div>
-
-        @* </div style=" display: flex;flex-direction: column;> *@
-        <div id="register-table_wrapper" class="dataTables_wrapper no-footer" style="width:100%">
-            <table id="payroll-table" class="myTableLarge">
+        <div class="content-filter-tbl">
+            <table id="payroll-table" class="table table-bordered table-hover w-100">
                 <thead>
                 </thead>
                 <tbody>
                 </tbody>
 
             </table>
+            <div id="table-footer">
+            </div>
         </div>
     </div>
-    <div class="add-modal-holder" id="payroll-modal">
+    @* <div class="add-modal-holder" id="payroll-modal">
         <div class="timelogsmodal">
             <div class="header">
                 <h3>Add Payroll</h3>
@@ -64,7 +80,7 @@
                     <div class="input-container">
                     <input type="number" id="rate" class="mod-inputs-nw" placeholder="" required />
                     </div>
-                    </div> *@
+                    </div> 
                     <div class="input-holder">
                         <div class="input-container">
                             <input type="submit" value="Submit" id="add-timeout" />
@@ -74,122 +90,25 @@
 
             </form>
         </div>
-    </div>
+    </div> *@
 </div>
-
+<div class="pencil-action" id="payrollpencil-action" onclick="payrollActionFunction();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M6.414 15.89L16.556 5.748l-1.414-1.414L5 14.476v1.414zm.829 2H3v-4.243L14.435 2.212a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414zM3 19.89h18v2H3z" /></svg>
+</div>
+@await Html.PartialAsync("~/Views/Payroll/_PayrollForm.cshtml")
 @section Scripts {
     <script>
+        var payrollmodal = document.getElementById('payrollmodal');
+        var actionpayroll = document.getElementById('action-navbar-payroll');
+        var pencilpayroll = document.getElementById('payrollpencil-action');
         var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
         $(document).ready(function () {
 
-            initializeDataTable();
+            initializePayrollDataTable();
             // fetchmanagerselect();
             payrollDOM();
         });
-        function initializeDataTable() {
-            var tableId = '#payroll-table';
-            var lastSelectedRow = null;
-            // Check if DataTable is already initialized
-            if ($.fn.DataTable.isDataTable(tableId)) {
-                // Destroy the existing DataTable instance
-                $(tableId).DataTable().clear().destroy();
-            }
-            var dtProperties = {
-                ajax: {
-                    url: '/Payroll/GetPayrollTypeList',
-                    type: "GET",
-                    data: {
-
-                    },
-                    dataType: "json",
-                    processing: true,
-                    serverSide: true,
-                    complete: function (xhr) {
-                        var url = new URL(window.location.href);
-                        var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
-                        // console.log('table1', _currentPage);
-                        table.page(_currentPage - 1).draw('page');
-
-                    },
-                    error: function (err) {
-                        alert(err.responseText);
-                    }
-                },
-                columns: [
-                    {
-                        "title": "Payroll Type",
-                        "data": "payrollType"
-                    },
-                    {
-                        "title": "Description",
-                        "data": "description"
-                    }
-                    ,
-                    {
-                        "title": "Action",
-                        "data": "id",
-                        "render": function (data, type, row) {
-                            var button = `<div class="action">
-                                                                    <button class="tbl-delete btn btn-danger" id="" title="Delete"
-                                                                        data-id="${data}"
-                                                                        data-payrolltype="${row.payrollType}"
-                                                                        data-description="${row.description}"
-                                                                        data-createdby="${row.createdBy}"
-                                                                        data-deleteflag="${row.deleteFlag}"
-                                                                    >
-                                                                    <i class="fa-solid fa-trash"></i> delete
-                                                                </button>
-                                                                    <button class="tbl-edit btn btn-info" id="" title="Time Out"
-                                                                        data-id="${data}"
-                                                                        data-payrolltype="${row.payrollType}"
-                                                                        data-description="${row.description}"
-                                                                        data-createdby="${row.createdBy}"
-                                                                        data-deleteflag="${row.deleteFlag}"
-                                                                    >
-                                                                        <i class="fa-solid fa-pen-to-square"></i> edit
-                                                                    </button>
-                                                        </div>`;
-                            return button;
-                        }
-                    }
-                ],
-                order: [[0, 'desc']], // Sort the second column (index 1) by descending order
-                columnDefs: [
-                    {
-                        targets: 1,
-                        type: 'date' // Ensure DataTables recognizes this column as date type
-                    },
-                    {
-
-                        width: '50%', targets: 0
-                    }
-                ]
-            };
-
-            var table = $(tableId).DataTable(dtProperties);
-
-            $('#payroll-table').on('page.dt', function () {
-                var info = table.page.info();
-                var url = new URL(window.location.href);
-                url.searchParams.set('page01', (info.page + 1));
-                window.history.replaceState(null, null, url);
-            });
-
-            $(tableId + '_filter input').attr('placeholder', 'Search Here');
-
-            $(tableId + ' tbody').on('click', 'tr', function () {
-                var data = table.row(this).data();
-                // console.log(data);
-                // Remove highlight from the previously selected row
-                if (lastSelectedRow) {
-                    $(lastSelectedRow).removeClass('selected-row');
-                }
-                // Highlight the currently selected row
-                $(this).addClass('selected-row');
-                lastSelectedRow = this;
-            });
-
-        }
+        
 
 
     </script>

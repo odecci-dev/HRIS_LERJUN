@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+
+</style>
+<div>
+    @* <div class="content-filter action-navbar">
+        <div class="sub-content">
+            <div class="mod-form ">
+                <div class="">
+                    @*         <a href="@Url.Action("AddEmployee", "Employee")"> 
+                    <button class="btn btn-info" id="add-employee" title="Add New Employee">
+                        <i class="fas fa-user-plus"></i> Create Employee
+                    </button>
+                    @* </a> 
+                </div>
+            </div>
+            <div class="mod-form-2">
+            </div>
+        </div>
+    </div> *@
+    <div class="filing-container" id="employee-filing-container">
+        <div class="filing-card">
+            <div class="card-header">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M12 4v10m0 0l3-3m-3 3l-3-3" /><path d="M12 20a8 8 0 0 1-8-8m16 0a7.99 7.99 0 0 1-3 6.245" /></g></svg>
+                    Import
+                </h4>
+            </div>
+            @using (Html.BeginForm("SSSIndex", "Deduction", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <label for="file" class="" style="font-weight: 400">
+                    <div class="drop-zone" id="sss-drop-zone">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 22c-9 1-8-10 0-9C6 2 23 2 22 10c10-3 10 13 1 12m-12-4l5-4l5 4m-5-4v15" /></svg>
+                        <p id="sss-drag-file-label">Click or drag file to this area to upload</p>
+                        <input id="sss-upload-excel" type="file" size="1" name="file" accept="excel/*" class="form-control-sm mb-1" required>
+                    </div>
+                    <div class="card-header">
+                        <p>Formats accepted are .csv and .xlsx</p>
+                    </div>
+                </label>
+                <div class="dl-template">
+                    <p>If you do not have a file you can use the template below:</p>
+                    <span class="btn btn-secondary template" id="add-timelogs" title="Download" onclick="downloadSSSTemplate()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="#31aa2c" stroke-linecap="round" d="M3.5 5.5h1m-1 2h1m-1 2h1m2-4h2m-2 2h2m-2 2h2m2-6.29V11c0 .28-.22.5-.5.5H2c-.28 0-.5-.22-.5-.5V1c0-.28.22-.5.5-.5h5.79c.13 0 .26.05.35.15l2.21 2.21c.1.09.15.21.15.35zM7.5.5V3c0 .28.22.5.5.5h2.5" stroke-width="1" /></svg>
+                        Download Template
+                    </span>
+                </div>
+                <div class="card-footer">
+                    <span class="btn btn-success cancel" id="employee-close-filing-container"> Cancel</span>
+                    <button type="submit" class="btn btn-success upload" id="" data-toggle="tooltip" title="Import Excel">
+                        Upload
+                    </button>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="mod-form action-navbar pos" id="action-navbar-employee" style="margin-bottom: 2px;">
+        <div class="action-btns">
+            <div class="input-container">
+                <a>Create new Employee </a>
+                <button class="btn btn-info" id="add-employee" title="Add New Employee" onclick="">
+                    @* <i class="fas fa-user-plus"></i> Create Position *@ 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 28 28"><path fill="currentColor" d="M9.5 4a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9m-3 4.5a3 3 0 1 1 6 0a3 3 0 0 1-6 0M20 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-2 3.5a2 2 0 1 1 4 0a2 2 0 0 1-4 0M4.25 15A2.25 2.25 0 0 0 2 17.25v.531a2 2 0 0 0 .017.242c.017.153.049.363.11.612a5.1 5.1 0 0 0 .867 1.815C4.008 21.803 5.942 23 9.5 23c1.531 0 2.762-.222 3.747-.582a7.5 7.5 0 0 1-.236-1.518c-.836.355-1.97.6-3.511.6c-3.192 0-4.633-1.053-5.306-1.95a3.6 3.6 0 0 1-.61-1.279a3 3 0 0 1-.083-.508l-.001-.018v-.495a.75.75 0 0 1 .75-.75h9.905a7.5 7.5 0 0 1 1.168-1.426A2.3 2.3 0 0 0 14.75 15zM27 20.5a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0m-6-4a.5.5 0 0 0-1 0V20h-3.5a.5.5 0 0 0 0 1H20v3.5a.5.5 0 0 0 1 0V21h3.5a.5.5 0 0 0 0-1H21z" /></svg>
+                </button>
+            </div>
+            <div class="input-container import">
+                <a>Import </a>
+                <button class="btn btn-info" id="import-employee" title="Add New Employee" onclick="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="#205274" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M12 4v10m0 0l3-3m-3 3l-3-3" /><path d="M12 20a8 8 0 0 1-8-8m16 0a7.99 7.99 0 0 1-3 6.245" /></g></svg>
+                </button>
+            </div>
+            <div class="input-container export">
+                <a>Export </a>
+                <button class="btn btn-info" id="export-employee" title="Add New Employee" onclick="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="#205274" stroke-linecap="round" stroke-width="1.5"><path d="M12 20a8 8 0 0 1-8-8m16 0a7.99 7.99 0 0 1-3 6.245" /><path stroke-linejoin="round" d="M12 14V4m0 0l3 3m-3-3L9 7" /></g></svg>
+                </button>
+            </div> 
+            <div class="input-container delete-pos">
+                <a>Delete </a>
+                <button class="btn btn-info" id="delete-pos" title="Add New Employee" onclick="MultiDeleteEmployee()">
+                    @* <i class="fas fa-user-plus"></i> Create Position *@ 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="content-filter-tbl">
+        @* <table id="myTable"> *@
+        <table id="emp-table" class="table table-bordered table-hover w-100">
+            <thead>
+            </thead>
+            <tbody>
+            </tbody>
+
+        </table>
+        <div id="table-footer">
+        </div>
+
+    </div>
+</div>
+<div class="pencil-action" id="employeepencil-action" onclick="employeeActionFunction();">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M6.414 15.89L16.556 5.748l-1.414-1.414L5 14.476v1.414zm.829 2H3v-4.243L14.435 2.212a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414zM3 19.89h18v2H3z" /></svg>
+</div> 
+<script>
+
+</script>
