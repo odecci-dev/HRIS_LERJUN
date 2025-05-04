@@ -29,6 +29,7 @@ using API_HRIS.Manager;
 using System.Drawing.Imaging;
 using static AOPC.Controllers.LogInController;
 using API_HRIS.ApplicationModel;
+using NPOI.HPSF;
 
 namespace MVC_HRIS.Controllers
 {
@@ -153,11 +154,43 @@ namespace MVC_HRIS.Controllers
             List<TblStatusModel> models = JsonConvert.DeserializeObject<List<TblStatusModel>>(response);
             return new(models);
         }
+        public class EmployeeListViewModel
+        {
+
+            public int? Id { get; set; }
+            public string? Department { get; set; }
+            public string? UserType { get; set; }
+            public string? EmployeeType { get; set; }
+            public string? EmployeeId { get; set; }
+            public string? Lname { get; set; }
+            public string? Fname { get; set; }
+            public string? Mname { get; set; }
+            public string? Fullname { get; set; }
+            public string? Suffix { get; set; }
+            public string? Email { get; set; }
+            public string? Cno { get; set; }
+            public string? Gender { get; set; }
+            public string? DateStarted { get; set; }
+            public string? CreatedBy { get; set; }
+            public string? Address { get; set; }
+            public string? SalaryType { get; set; }
+            public string? PayrollType { get; set; }
+            public string? Status { get; set; }
+            public string? Position { get; set; }
+            public string? FilePath { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+            public int? PositionLevelId { get; set; }
+            public string? PositionLevel { get; set; }
+            public int? ManagerId { get; set; }
+            public string? Rate { get; set; }
+            public string? DaysInMonth { get; set; }
+        }
         [HttpPost]
         public async Task<IActionResult> GetDataRegistrationList( Filter data)
         {
             string result = "";
-            var list = new List<GetAllUserDetailsResult>();
+            var list = new List<EmployeeListViewModel>();
             try
             {
                 HttpClient client = new HttpClient();
@@ -167,7 +200,7 @@ namespace MVC_HRIS.Controllers
                 using (var response = await client.PostAsync(url, content))
                 {
                     string res = await response.Content.ReadAsStringAsync();
-                    list = JsonConvert.DeserializeObject<List<GetAllUserDetailsResult>>(res);
+                    list = JsonConvert.DeserializeObject<List<EmployeeListViewModel>>(res);
 
                 }
             }
@@ -207,6 +240,10 @@ namespace MVC_HRIS.Controllers
             public int? ManagerId { get; set; }
             public string Rate { get; set; }
             public string DaysInMonth { get; set; }
+            public string? SSS_Number { get; set; }
+            public string? PagIbig_MID_Number { get; set; }
+            public string? PhilHealth_Number { get; set; }
+            public string? Tax_Identification_Number { get; set; }
 
         }
         [HttpPost]
@@ -245,6 +282,84 @@ namespace MVC_HRIS.Controllers
             }
             return Json(new { status = res });
         }
+        [HttpPost]
+        public async Task<IActionResult> UploadDocuments()
+        {
+            var files = Request.Form.Files;
+            if (files != null && files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        var filePath = Path.Combine("wwwroot/employeedocuments", file.FileName);
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                }
+
+                return Ok("Files uploaded successfully.");
+            }
+
+            return BadRequest("No files selected.");
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadOtherDocuments()
+        {
+            var files = Request.Form.Files;
+
+            if (files == null || files.Count == 0)
+            {
+                return BadRequest("No files selected.");
+            }
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "employeedocuments");
+
+            // Ensure the directory exists
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var sanitizedFileName = Path.GetFileName(file.FileName); // prevent directory traversal
+                    var filePath = Path.Combine(uploadPath, sanitizedFileName);
+
+                    // Optional: Check allowed extensions
+                    var allowedExtensions = new[] { ".pdf", ".jpg", ".png", ".docx" }; // example
+                    var ext = Path.GetExtension(sanitizedFileName).ToLowerInvariant();
+                    if (!allowedExtensions.Contains(ext))
+                    {
+                        return BadRequest($"File extension {ext} is not allowed.");
+                    }
+
+                    // Optional: Avoid overwriting by renaming (if needed)
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+            }
+
+            return Ok("Files uploaded successfully.");
+        }
+
         public async Task<IActionResult> UploadFile(List<IFormFile> postedFiles)
         {
             int i;
@@ -448,6 +563,78 @@ namespace MVC_HRIS.Controllers
             }
             return Json(list);
             //return View();
+        }
+        
+        
+        [HttpPost]
+        public async Task<IActionResult> RequiredDocuments(List<tbl_UsersRequiredDocuments> data)
+        {
+            
+            if (data[0].FileType == "" || data[0].FileType == null)
+            {
+                if (string.IsNullOrWhiteSpace(data[0].FileName))
+                    return BadRequest("Invalid file name.");
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "employeedocuments", data[0].FileName);
+
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    //return Ok("File deleted successfully.");
+                }
+            }
+            string result = "";
+            var list = new List<tbl_UsersRequiredDocuments>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Employee/SaveRequiredDocuments";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<tbl_UsersRequiredDocuments>>(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(list);
+        }
+        public class RequiredDocumentsParam
+        {
+            public int UserId { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostRequiredDocuments(RequiredDocumentsParam data)
+        {
+            string result = "";
+            var list = new List<tbl_UsersRequiredDocuments>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/Employee/PostRequiredDocuments";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<tbl_UsersRequiredDocuments>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(list);
         }
     }
 }

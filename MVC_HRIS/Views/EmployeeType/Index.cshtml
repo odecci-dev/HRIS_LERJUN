@@ -80,7 +80,7 @@
                     <div class="input-holder-time">
                         <div class="input-holder">
                             <div class="input-container">
-                                <select id="schedule">
+                                <select id="schedules">
                                     <option>Select Schedule</option>
                                 </select>
                             </div>
@@ -103,7 +103,6 @@
         var uid = "@Accessor.HttpContext.Session.GetString("UserID")";
         scheduleDOM();
         $(document).ready(function () {
-
             initializeDataTable();
         });
         function initializeDataTable() {

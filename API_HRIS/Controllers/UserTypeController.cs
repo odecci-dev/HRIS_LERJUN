@@ -38,8 +38,6 @@ namespace API_HRIS.Controllers
         {
             return Ok(_context.TblUserTypes.Where(a => a.Status == 1).ToList());
         }
-
-
         [HttpPost]
         public async Task<IActionResult> UserTypePaginationList(FilterUserType data)
         {

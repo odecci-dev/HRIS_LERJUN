@@ -32,12 +32,12 @@ function initializeSSSDataTable() {
             {
                 "title": "Compensation From",
                 "data": "compensation_From",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Compensation To",
                 "data": "compensation_To",
-                "orderable": false
+                "orderable": true
             },
             {
                 "title": "Employer RegularSS",

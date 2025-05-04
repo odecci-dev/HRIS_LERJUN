@@ -32,6 +32,8 @@ using System.Drawing;
 using System.Net;
 using System.Web.Http.Services;
 using System.Linq;
+using System.Diagnostics.Metrics;
+using static API_HRIS.Controllers.DepartmentController;
 
 namespace API_HRIS.Controllers
 {
@@ -169,7 +171,11 @@ namespace API_HRIS.Controllers
                         a.DateStarted,
                         a.Position,
                         a.PositionLevelId,
-                        a.ManagerId
+                        a.ManagerId,
+                        a.SSS_Number,
+                        a.PagIbig_MID_Number,
+                        a.PhilHealth_Number,
+                        a.Tax_Identification_Number,
                         // skip IsActive, RoleId, etc. if they're problematic
                     })
                                     .ToList();
@@ -258,7 +264,38 @@ namespace API_HRIS.Controllers
         {
             return Ok(_context.TblStatusModels.ToList());
         }
+        public class EmployeeListViewModel
+        {
 
+            public int? Id { get; set; }
+            public string? Department { get; set; }
+            public string? UserType { get; set; }
+            public string? EmployeeType { get; set; }
+            public string? EmployeeId { get; set; }
+            public string? Lname { get; set; }
+            public string? Fname { get; set; }
+            public string? Mname { get; set; }
+            public string? Fullname { get; set; }
+            public string? Suffix { get; set; }
+            public string? Email { get; set; }
+            public string? Cno { get; set; }
+            public string? Gender { get; set; }
+            public string? DateStarted { get; set; }
+            public string? CreatedBy { get; set; }
+            public string? Address { get; set; }
+            public string? SalaryType { get; set; }
+            public string? PayrollType { get; set; }
+            public string? Status { get; set; }
+            public string? Position { get; set; }
+            public string? FilePath { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+            public int? PositionLevelId { get; set; }
+            public string? PositionLevel { get; set; }
+            public int? ManagerId { get; set; }
+            public string? Rate { get; set; }
+            public string? DaysInMonth { get; set; }
+        }
         [HttpPost]
         public async Task<IActionResult> EmployeePaginationList(FilterEmployee data)
         {
@@ -266,10 +303,65 @@ namespace API_HRIS.Controllers
             try
             {
 
-                var Member = _context.GetEmployees().ToList().OrderByDescending(a => a.Id);
-                string status = "Employee successfully viewed";
-                dbmet.InsertAuditTrail("View All Employee" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Employee Module", "User", "0");
-                return Ok(Member);
+                //var Member = _context.GetEmployees().ToList().OrderByDescending(a => a.Id);
+                //string status = "Employee successfully viewed";
+                //dbmet.InsertAuditTrail("View All Employee" + " " + status, DateTime.Now.ToString("yyyy-MM-dd"), "Employee Module", "User", "0");
+                //return Ok(Member);
+
+                var employeelistdb = _context.GetEmployees()
+                    .Where(a => a.Delete_Flag == false)
+                    .ToList()
+                    .OrderByDescending(a => a.Id);
+                var positiondb = _context.TblPositionModels
+                    .Where(a => a.DeleteFlag == 0)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
+                var departmentdb = _context.TblDeparmentModels
+                    .Where(a => a.DeleteFlag == 0)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
+                var employeetypedb = _context.TblEmployeeTypes
+                    .Where(a => a.DeleteFlag == 0)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
+                var positionleveldb = _context.TblPositionLevelModels
+                    .Where(a => a.DeleteFlag == false)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
+                var result = from employee in employeelistdb
+
+                             join position in positiondb
+                             on employee.Position equals position.Id into empdetails
+                             from ed in empdetails.DefaultIfEmpty()
+
+                             join department in departmentdb
+                             on employee.Department equals department.Id into departmentgroup
+                             from department in departmentgroup.DefaultIfEmpty()
+
+                             join etype in employeetypedb
+                             on employee.EmployeeType equals etype.Id into etypegroup
+                             from etype in etypegroup.DefaultIfEmpty()
+
+                             join plevel in positionleveldb
+                             on employee.PositionLevelId equals plevel.Id into plevelgroup
+                             from plevel in plevelgroup.DefaultIfEmpty()
+
+                             select new EmployeeListViewModel
+                             {
+                                 Id = employee.Id,
+                                 EmployeeId = employee.EmployeeID ?? "",
+                                 Fname = employee.Fname,
+                                 Lname = employee.Lname,
+                                 Fullname = employee.Fullname,
+                                 FilePath = employee.FilePath,
+                                 Email = employee.Email,
+                                 Gender = employee.Gender,
+                                 Position = ed != null ? ed.Name : "No Position",
+                                 Department = department != null ? department.DepartmentName : "No Department",
+                                 EmployeeType = etype != null ? etype.Title : "No Employee Type",
+                                 PositionLevel = plevel != null ? plevel.Level : "No Position Level",
+                             };
+                return Ok(result);
 
 
             }
@@ -309,6 +401,10 @@ namespace API_HRIS.Controllers
             public int? ManagerId { get; set; }
             public string Rate { get; set; }
             public string DaysInMonth { get; set; }
+            public string? SSS_Number { get; set; }
+            public string? PagIbig_MID_Number { get; set; }
+            public string? PhilHealth_Number { get; set; }
+            public string? Tax_Identification_Number { get; set; }
 
         }
         private TblUsersModel buildEmployee(EmployeeViewModel registrationModel)
@@ -342,7 +438,11 @@ namespace API_HRIS.Controllers
                 ManagerId = registrationModel.ManagerId,
                 Rate = registrationModel.Rate,
                 DaysInMonth = registrationModel.DaysInMonth,
-                Cno = registrationModel.Cno
+                Cno = registrationModel.Cno,
+                SSS_Number = registrationModel.SSS_Number,
+                PagIbig_MID_Number = registrationModel.PagIbig_MID_Number,
+                PhilHealth_Number = registrationModel.PhilHealth_Number,
+                Tax_Identification_Number = registrationModel.Tax_Identification_Number,
             };
 
             return BuffHerdModel;
@@ -398,12 +498,19 @@ namespace API_HRIS.Controllers
                     employee.PayrollType = int.Parse(data.PayrollType);
                     employee.SalaryType = int.Parse(data.SalaryType);
                     employee.Address = data.Address;
-                    employee.FilePath = data.FilePath;
+                    if(data.FilePath != null)
+                    {
+                        employee.FilePath = data.FilePath;
+                    }
                     employee.PositionLevelId = data.PositionLevelId;
                     employee.ManagerId = data.ManagerId;
                     employee.Rate = data.Rate;
                     employee.DaysInMonth = data.DaysInMonth;
                     employee.Cno = data.Cno;
+                    employee.SSS_Number = data.SSS_Number;
+                    employee.PagIbig_MID_Number = data.PagIbig_MID_Number;
+                    employee.PhilHealth_Number = data.PhilHealth_Number;
+                    employee.Tax_Identification_Number = data.Tax_Identification_Number;
                     _context.Entry(employee).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                 }
@@ -730,6 +837,72 @@ namespace API_HRIS.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        
+        
+        //Save Required Documents
+        [HttpPost]
+        public async Task<ActionResult> SaveRequiredDocuments(List<tbl_UsersRequiredDocuments> list)
+        {
+            try 
+            { 
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].FilePath == "" || list[i].FilePath == null)
+                    {
+                        var file = _context.tbl_UsersRequiredDocuments.SingleOrDefault(a => a.Id == list[i].Id);
+                        file.isDeleted = true;
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                
+                    var userId = list[i].UserId;
+                    if (userId == null || userId == 0)
+                    {
+                        string sql = $@"SELECT TOP 1 ID FROM tbl_usersmodel ORDER BY ID DESC";
+                        // Fetch the result as a DataTable
+                        DataTable table = db.SelectDb(sql).Tables[0];
+                        // Check if there are any rows in the result
+                        if (table.Rows.Count > 0)
+                        {
+                            // Parse and save the ID from the first row
+                            list[i].UserId = int.Parse(table.Rows[0]["Id"].ToString());
+                        }
+                    }
+                    if (list[i].Id == 0)
+                    {
+                        var item = new tbl_UsersRequiredDocuments();
+                        item.UserId = list[i].UserId;
+                        item.FileName = list[i].FileName;
+                        item.FilePath = list[i].FilePath;
+                        item.FileType = list[i].FileType;
+                        item.isDeleted = false;
+                        _context.tbl_UsersRequiredDocuments.Add(item);
+                    }
+                    else
+                    {
+                        _context.Entry(list).State = EntityState.Modified;
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.GetBaseException().ToString());
+            }
+            return Ok();
+        }
+        public class RequiredDocumentsParam
+        {
+            public int UserId { get; set; }
+        }
+        [HttpPost]
+        public async Task<ActionResult> PostRequiredDocuments(RequiredDocumentsParam data)
+        {
+            var result = _context.tbl_UsersRequiredDocuments.Where(a => a.UserId == data.UserId && a.isDeleted == false).ToList();
+            
+            return Ok(result);
+        }
         public class PositionLevel
         {
             public int Id { get; set; }
@@ -738,7 +911,7 @@ namespace API_HRIS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPositionLevels()
         {
-            string sql = $@"SELECT * FROM tbl_PositionLevel";
+            string sql = $@"SELECT * FROM tbl_PositionLevel where DeleteFlag = 0";
 
             // Assuming `db.SelectDb(sql)` executes the query and returns a DataSet
             DataTable table = db.SelectDb(sql).Tables[0];
@@ -767,7 +940,7 @@ namespace API_HRIS.Controllers
         [HttpGet]
         public async Task<IActionResult> GetManager()
         {
-            string sql = $@"SELECT Id ,Fullname FROM tbl_UsersModel with(nolock) where PositionLevelId = '5' or UserType = '2'";
+            string sql = $@"SELECT Id ,Fullname FROM tbl_UsersModel with(nolock) where Delete_Flag = 0 and PositionLevelId = '5' or UserType = '2'";
 
             // Assuming `db.SelectDb(sql)` executes the query and returns a DataSet
             DataTable table = db.SelectDb(sql).Tables[0];

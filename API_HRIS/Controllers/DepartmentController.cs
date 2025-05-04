@@ -91,7 +91,7 @@ namespace API_HRIS.Controllers
             try
             {
 
-                var postion = _context.TblDeparmentModels.ToList();
+                var postion = _context.TblDeparmentModels.Where(a => a.DeleteFlag == 0).ToList();
                 totalItems = postion.Count();
                 totalPages = (int)Math.Ceiling((double)totalItems / int.Parse(page_size.ToString()));
 

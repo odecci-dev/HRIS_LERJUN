@@ -51,7 +51,6 @@ function departmentDOM() {
         deletedepartmentmodal();
         $("#alertmodal").modal('show');
     });
-
     $("#add-department-form").on("submit", function (event) {
         event.preventDefault();
         var deptid = document.getElementById('departmentid').value;
@@ -114,7 +113,7 @@ function MultiDeleteDepartment() {
     actiondep.style.display = "none";
     pencildep.style.display = "flex";
     if (checkedCheckboxes.length == 0) {
-        notifyMsg('Warning!', 'Select Position First', 'yellow', 'fas fa-check');
+        notifyMsg('Warning!', 'Select Department First', 'yellow', 'fas fa-check');
     }
     else {
 
@@ -268,21 +267,38 @@ function initializeDepartmentDataTable() {
                 orderable: false,
             },
             {
-                targets: 1,
-                type: 'date' // Ensure DataTables recognizes this column as date type
+                targets: 0,
+                orderable: false,
             },
             {
                 width: '25%', targets: 1,
                 orderable: false,
             },
             {
-                targets: 0,
-                orderable: false,
-            },
-            {
                 targets: 2,
                 orderable: false,
+            }, 
+            {
+                targets: 3,
+                orderable: false,
+            }, 
+            {
+                width: '25%', targets: 4,
+                orderable: false,
+                type: 'date',
+                width: "10%",
+                render: function (data, type, row) {
+                    if (data && (type === 'display' || type === 'filter')) {
+                        let date = new Date(data);
+                        return date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                    }
+                    return data;
+                }
             },
+            {
+                targets: 5,
+                orderable: false,
+            }
         ]
     };
 

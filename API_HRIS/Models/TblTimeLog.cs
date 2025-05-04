@@ -18,14 +18,14 @@ public partial class TblTimeLog
     public decimal? TotalLunchHours { get; set; }
     public string? BreakInAm { get; set; }
     public string? BreakOutAm { get; set; }
-    public decimal TotalBreakAmHours { get; set; }
+    public decimal? TotalBreakAmHours { get; set; }
     public string? BreakInPm { get; set; }
     public string? BreakOutPm { get; set; }
     public decimal? TotalBreakPmHours { get; set; }
     public int? StatusId { get; set; }
     public int? DeleteFlag { get; set; }
-    public string Identifier { get; set; }
-    public string Remarks { get; set; }
+    public string? Identifier { get; set; }
+    public string? Remarks { get; set; }
     public int? TaskId { get; set; }
     public DateTime? DateCreated { get; set; }
     public DateTime? DateUpdated { get; set; }

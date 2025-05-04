@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    string message = "";
+    if (ViewData["Message"] != null)
+    {
+        message = ViewData["Message"].ToString();
+    }
+
+}
+@inject IHttpContextAccessor Accessor;
+
+<style>
+   
+</style>
+<div class="">
+    <div class="hrismodal-holder" id="payrollmodal" tabindex="-1" role="dialog" aria-labelledby="modal-title"
+         aria-hidden="true" style="display: none;" data-keyboard="false" data-backdrop="static">
+
+        <div class="hris-modal-content">
+            <div class="hris-modal-header">
+                <h4 class="modal-title" id="modal-name">Payroll Details Form</h4>
+                <button type="button" id="h-close" class="close" data-dismiss="modal" onclick="payrollModalClose()">x</button>
+            </div>
+            <div class="" style="margin:10px" >
+                <form id="add-payroll-form" class="mod-form">
+                    <div class="mod-form-row">
+                        <div class="input-container-whole" id="">
+                            <label class="label">Payroll Type</label>
+                            <input type="hidden" id="payrollid" class="mod-inputs-nw" value="0" required />
+                            <input type="hidden" id="payrollcreatedby" class="mod-inputs-nw" value="@Accessor.HttpContext.Session.GetString("UserID")" required />
+                            <input type="text" id="payrolltype" class="mod-inputs-nw" placeholder="" required />
+
+                        </div>
+                    </div>
+                    <div class="mod-form-row">
+                        <div class="input-container-whole" id="">
+                            <label class="label">Description</label>
+                            <input type="text" id="payrolldescription" class="mod-inputs-nw" placeholder="" required />
+                        </div>
+                    </div>
+                    <div class="actions" style="align-items: center;">
+                        <a data-dismiss="modal" aria-hidden="false" style="cursor:pointer" class="cancel btn" onclick="payrollModalClose()">Cancel</a>
+                        <input class="btn" type="submit" value="Submit" id="btn-save" />
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+</script>

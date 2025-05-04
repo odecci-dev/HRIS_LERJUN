@@ -61,6 +61,7 @@ public partial class ODC_HRISContext : DbContext
     public virtual DbSet<TblPagIbigModel> TblPagIbigModel { get; set; }
     public virtual DbSet<TblPayslipModel> TblPayslipModel { get; set; }
     public virtual DbSet<TblLeaveRequestModel> TblLeaveRequestModel { get; set; }
+    public virtual DbSet<tbl_UsersRequiredDocuments> tbl_UsersRequiredDocuments { get; set; }
     public List<GetAllUserDetailsResult> GetEmployees()
     {
         return AllUserDetails.FromSqlRaw("EXEC GetAllUserDetails").ToList();
