@@ -291,6 +291,7 @@ namespace API_HRIS.Controllers
             public string? Username { get; set; }
             public string? Password { get; set; }
             public int? PositionLevelId { get; set; }
+            public string? PositionLevel { get; set; }
             public int? ManagerId { get; set; }
             public string? Rate { get; set; }
             public string? DaysInMonth { get; set; }
@@ -315,10 +316,36 @@ namespace API_HRIS.Controllers
                     .Where(a => a.DeleteFlag == 0)
                     .OrderByDescending(a => a.Id)
                     .ToList();
+                var departmentdb = _context.TblDeparmentModels
+                    .Where(a => a.DeleteFlag == 0)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
+                var employeetypedb = _context.TblEmployeeTypes
+                    .Where(a => a.DeleteFlag == 0)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
+                var positionleveldb = _context.TblPositionLevelModels
+                    .Where(a => a.DeleteFlag == false)
+                    .OrderByDescending(a => a.Id)
+                    .ToList();
                 var result = from employee in employeelistdb
+
                              join position in positiondb
                              on employee.Position equals position.Id into empdetails
                              from ed in empdetails.DefaultIfEmpty()
+
+                             join department in departmentdb
+                             on employee.Department equals department.Id into departmentgroup
+                             from department in departmentgroup.DefaultIfEmpty()
+
+                             join etype in employeetypedb
+                             on employee.EmployeeType equals etype.Id into etypegroup
+                             from etype in etypegroup.DefaultIfEmpty()
+
+                             join plevel in positionleveldb
+                             on employee.PositionLevelId equals plevel.Id into plevelgroup
+                             from plevel in plevelgroup.DefaultIfEmpty()
+
                              select new EmployeeListViewModel
                              {
                                  Id = employee.Id,
@@ -329,7 +356,10 @@ namespace API_HRIS.Controllers
                                  FilePath = employee.FilePath,
                                  Email = employee.Email,
                                  Gender = employee.Gender,
-                                 Position = ed != null ? ed.Name : "No Position"
+                                 Position = ed != null ? ed.Name : "No Position",
+                                 Department = department != null ? department.DepartmentName : "No Department",
+                                 EmployeeType = etype != null ? etype.Title : "No Employee Type",
+                                 PositionLevel = plevel != null ? plevel.Level : "No Position Level",
                              };
                 return Ok(result);
 

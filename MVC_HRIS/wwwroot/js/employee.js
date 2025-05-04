@@ -301,7 +301,31 @@ function initializeEmployeeListDataTable() {
                     return profile;
                 }
             },
-
+            {
+                "title": "Employee ID",
+                "data": "employeeId",
+                "visible": false
+            },
+            {
+                "title": "Fullname",
+                "data": "fullname",
+                "visible": false
+            },
+            {
+                "title": "Department",
+                "data": "department",
+                "visible": true
+            },
+            {
+                "title": "Employee Type",
+                "data": "employeeType",
+                "visible": false
+            },
+            {
+                "title": "Position Level",
+                "data": "positionLevel",
+                "visible": false
+            },
             {
                 "title": "Position",
                 "data": "position"
@@ -341,7 +365,7 @@ function initializeEmployeeListDataTable() {
                 }
             }
         ], lengthChange: false,
-        dom: 'frtip',
+        dom: 'Bfrtip',
         responsive: true,
         pagingType: "simple_numbers",
         language: {
@@ -361,7 +385,24 @@ function initializeEmployeeListDataTable() {
                 },
                 orderable: false,
             }
-        ]
+        ],
+        buttons: [
+            
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Employee List', // Set custom title in the file
+                filename: 'Employee_List', // Custom file name
+                className: 'btn btn-info',
+                attr: {
+                    id: 'exportEmployee',
+                    style: 'display:none' // Hide button
+                },
+                exportOptions: {
+                    columns: [2, 3, 4, 5, 6, 7, 8, 9] // Specify column indexes to export
+                }
+            }
+        ],
     };
     $('#emp-table').on('page.dt', function () {
 
@@ -1805,4 +1846,21 @@ $(document).on('click', '.delete-file', function () {
     var filename = $(this).data('filename');
     deleteUploadedFile(id, filename);
 
+});
+
+
+$("#import-employee").click(function () {
+    document.getElementById('employee-filing-container').style.display = "block";
+    actionemployee.style.display = "none";
+    pencilemployee.style.display = "none";
+});
+$("#employee-close-filing-container").click(function () {
+    document.getElementById('employee-filing-container').style.display = "none";
+    pencilemployee.style.display = "flex";
+});
+document.getElementById("export-employee").addEventListener("click", function () {
+    document.getElementById("exportEmployee").click();
+    notifyMsg('Success!', 'Exported Successfully!', 'green', 'fas fa-check');
+    actionemployee.style.display = "none";
+    pencilemployee.style.display = "flex";
 });

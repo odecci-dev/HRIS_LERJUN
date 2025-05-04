@@ -181,6 +181,7 @@ namespace MVC_HRIS.Controllers
             public string? Username { get; set; }
             public string? Password { get; set; }
             public int? PositionLevelId { get; set; }
+            public string? PositionLevel { get; set; }
             public int? ManagerId { get; set; }
             public string? Rate { get; set; }
             public string? DaysInMonth { get; set; }
