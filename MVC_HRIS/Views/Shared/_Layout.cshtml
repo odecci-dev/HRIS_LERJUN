@@ -253,7 +253,8 @@
             }).done(function (response) {
                 status = response[0].status;
                 email = response[0].email;
-                empId = response[0].employeeId;
+                empId = response[0].employeeID;
+                // alert("Emp Id"+empId);
                 if (status == '6') {
                     changePassModal.style.display = "none ";
                 }
@@ -315,7 +316,7 @@
                     data.password = pass;
                     data.employeeId = empId;
                     data.email = email;
-                    console.log(data);
+                    console.log(data.stats);
                     $.ajax({
                         url: '/Registration/EmployeeRegistration',
                         data: data,
@@ -323,8 +324,16 @@
                         dataType: "json"
                     }).done(function (data) {
                         // console.log(data);
+                        if(data.stats == '200'){
+                            notifyMsg('Success!', 'Password successfully changed!', 'green', 'fa-solid fa-triangle-exclamation');
+                            window.location.reload();
+                        }
+                        else{
+                            notifyMsg('Error!', data.stats, 'red', 'fa-solid fa-triangle-exclamation');
+
+                        }
                         // location.reload();
-                        window.location.href = '@Url.Action("Index", "Timelogs")';
+                        // window.location.href = '@Url.Action("Index", "Timelogs")';
 
                     });
                 }
