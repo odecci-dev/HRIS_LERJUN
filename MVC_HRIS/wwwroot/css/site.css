@@ -31,7 +31,7 @@ body {
 }
 
 .change-password-modal-holder {
-    z-index: 1;
+    z-index: 2;
     color: red;
     position: absolute;
     width: 100vw;
