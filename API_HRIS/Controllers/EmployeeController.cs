@@ -215,12 +215,13 @@ namespace API_HRIS.Controllers
             var pass = Cryptography.Encrypt(data.Password);
             string status = "";
             //var result = _context.TblUsersModels.Where(a=>a.EmployeeId == data.EmployeeId && a.Email == data.Email && a.Status != 6 ).FirstOrDefault();
-            string userSql = $@"SELECT Id, Email, EmployeeID, Status FROM tbl_UsersModel WITH(NOLOCK) WHERE Email = '" + data.Email + "' AND EmployeeID = '" + data.EmployeeId + "' AND Status != 6";
+            string userSql = $@"SELECT Id, Email, EmployeeID, Status FROM tbl_UsersModel WITH(NOLOCK) WHERE Email = '" + data.Email + "' AND EmployeeID = '" + data.EmployeeId + "' AND Status != 6 AND Delete_Flag = 0";
             DataTable table = db.SelectDb(userSql).Tables[0];
             if (table.Rows.Count == 0)
             {
 
-                return NotFound();
+                //return NotFound();
+                return BadRequest("Account is not found");
             }
             //if (result == null)
             //{
@@ -252,7 +253,7 @@ namespace API_HRIS.Controllers
 
                     //result.Status = "OTP Matched!";
                     //return Ok(result);
-                    return Ok();
+                    return Ok("OK");
                 }
 
             }
@@ -455,7 +456,7 @@ namespace API_HRIS.Controllers
             {
                 return Problem("Entity set 'ODC_HRISContext.TblUsersModels'  is null.");
             }
-            bool hasDuplicateOnSave = (_context.TblUsersModels?.Any(userModel => userModel.Email == data.Email)).GetValueOrDefault();
+            bool hasDuplicateOnSave = (_context.TblUsersModels?.Any(userModel => userModel.Email == data.Email && userModel.DeleteFlag == false)).GetValueOrDefault();
 
             string filePath = @"C:\data\employeesave.json"; // Replace with your desired file path
             dbmet.insertlgos(filePath, JsonSerializer.Serialize(data));
