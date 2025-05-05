@@ -1569,7 +1569,7 @@ $('#employeeForm').submit(function (e) {
                     console.log(result);
                 },
                 error: function (xhr, status, error) {
-                    alert(`Error UploadDocuments: ${error}`);
+                    console.error(`Error UploadDocuments: ${error}`);
                 }
             });
             //Upload the other files
