@@ -1864,3 +1864,10 @@ document.getElementById("export-employee").addEventListener("click", function ()
     actionemployee.style.display = "none";
     pencilemployee.style.display = "flex";
 });
+
+
+//Import Employee
+function downloadEmployeeTemplate() {
+    // alert('Template Downloaded')
+    location.replace('../Employee/DownloadEmployeeHeader');
+}
