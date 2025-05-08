@@ -711,7 +711,7 @@ namespace API_HRIS.Controllers
             public string[] Username { get; set; }
             public string[] Password { get; set; }
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> EmailUnregisterUser(UnregisteredUserEmailRequest data)
         {
@@ -1132,6 +1132,109 @@ namespace API_HRIS.Controllers
             public string? PhoneNumber { get; set; }
 
         }
+        public class UnregisteredUserEmailRequestv2
+        {
+            public string? Name { get; set; }
+            public string? Email { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+        }
+        private async Task SendEmailUnregisterUser(UnregisteredUserEmailRequest data)
+        {
+            var registrationDomain = "http://localhost:64539/";//domain
+            var url = "https://eportal.odeccisolutions.com/";
+            var message = new MimeMessage();
+
+            message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
+            for (int x = 0; x < data.Name.Length; x++)
+            {
+                //url = registrationDomain + "registration?empid=" + data.EmployeeId[x] + "&compid=" + data.CompanyId[x] + "&email=" + data.Email[x];
+                message.To.Add(new MailboxAddress(data.Name[x], data.Email[x]));
+
+                //var recipients = data.Name.Zip(data.Email, (name, email) => new MailboxAddress(name, email)).ToList();
+
+                // Add all recipients at once
+                //message.To.AddRange(recipients);
+
+                message.Subject = "Email Registration Link";
+                var bodyBuilder = new BodyBuilder();
+
+                bodyBuilder.HtmlBody = @"<html>  
+                                            <head>
+                                                <style>
+                                                    @font-face {font-family: 'Montserrat-Reg';src: url('/fonts/Montserrat/Montserrat-Regular.ttf');}
+                                                    @font-face {
+                                                    font-family: 'Montserrat-Bold';
+                                                    src: url('/fonts/Montserrat/Montserrat-Bold.ttf');
+                                                    }
+                                                    @font-face {
+                                                    font-family: 'Montserrat-SemiBold';
+                                                    src: url('/fonts/Montserrat/Montserrat-SemiBold.ttf');
+                                                    }
+    
+                                                    body {
+                                                        margin: 0;
+                                                        box-sizing: border-box;
+                                                        font-family: ""Ubuntu"", Sans-serif;
+                                                        color: #fff;
+                                                    }
+                                                    .container {
+                                                        background-color: #102B3C;
+                                                        padding: 25px;
+                                                    }
+                                                    .gradient-border {
+                                                        background-color: transparent;
+                                                        border: 3px solid #fff;
+                                                        padding: 50px;
+                                                    }
+                                                    .container img {
+                                                        height: 100px;
+                                                    }
+                                                    h1 {
+                                                        font-size: 1rem;
+                                                        color: #fff;
+                                                    }
+                                                    h3 {
+                                                        font-size: 1.5rem;
+                                                        color: #fff;
+                
+                                                    }
+                                                    h4 {
+                                                        font-size: .8rem;
+                                                        text-decoration: none;
+                                                        color: #fff;
+                                                        padding: 0;
+                                                        margin: 0;
+                                                    }
+                                                </style>
+                                            </head>
+                                            <body>
+                                                <div class='container'>
+                                                    <div class='gradient-border'>
+                                                        <img src='http://ec2-54-251-135-135.ap-southeast-1.compute.amazonaws.com:8090/img/logo-04.png' alt='ODECCI' /> <br/><br/>
+                                                        <h1 style='color: #fff'>WELCOME TO ODECCI " + data.Name[x].ToUpper() + "</h1>"
+                                                        + "<h4 style='color: #fff'>To keep your account safe, we recommend you to change your password immediately.</h4> <br/><br/>"
+                                                        + "<h1 style='color: #fff'>"
+                                                           + "This is your Login Credentials: <br />"
+                                                        + "</h1>"
+                                                        + "<h4 style='color: #fff'>Username: " + data.Username[x] + "</h4>"
+                                                        + "<h4 style='color: #fff'>Password:" + data.Password[x] + "</h4> <br/><br/>"
+                                                    + "<a href='" + url + "'><h4> Click Here to Login </h4></a>"
+                                                    + "</div>"
+                                                + "</div> "
+                                            + "</body>"
+                                        + "</html>";
+                message.Body = bodyBuilder.ToMessageBody();
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync("info@odecci.com", "Roq30573");
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
+
+                }
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> ImportEmployee(List<ImportEmployeeViewModel> list)
         {
@@ -1165,7 +1268,7 @@ namespace API_HRIS.Controllers
                         Address = list[i].Address,
                         FilePath = "",
                         Username = list[i].Username,
-                        Password = list[i].Password,
+                        Password = Cryptography.Encrypt(list[i].Password),
                         PositionLevelId = list[i].PositionLevelId,
                         ManagerId = list[i].ManagerId,
                         Rate = list[i].Rate,
@@ -1192,8 +1295,24 @@ namespace API_HRIS.Controllers
 
                         };
                         _context.TblEmergencyContactsModel.Add(EmployeeEmergenctContactModel);
+                        _context.SaveChanges();
+                    }
+
+                    //EmailUnregisterUser(UnregisteredUserEmailRequest
+                    if (list[i].Name != null || list[i].Name != "")
+                    {
+                        var data = new UnregisteredUserEmailRequest
+                        {
+                            Name = new[] { list[i].Fname },
+                            Email = new[] { list[i].Email },
+                            Password = new[] { list[i].Password },
+                            Username = new[] { list[i].Username },
+                        };
+                        await EmailUnregisterUser(data);
+
                     }
                 }
+                
                 status = "Inserted Successfully";
             }
             catch (Exception ex)

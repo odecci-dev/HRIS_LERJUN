@@ -700,7 +700,47 @@ namespace MVC_HRIS.Controllers
                 ws.Cells["AM1:AM2"].Style.Font.Color.SetColor(Color.Red);
                 ws.Cells["AM1"].Value = "All Fields are required";
                 ws.Cells["AM2"].Value = "Please follow the format shown in the first row.";
+                // Barangay Start
+                ws.Cells["BF1"].Value = "Region";
+                //ws.Cells["BG1"].Value = "Municipality";
+                //ws.Cells["BH1"].Value = "Province";
+                //ws.Cells["BI1"].Value = "Region";
 
+                var barangayFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/excel/barangay_files/refregion.csv");
+                if (System.IO.File.Exists(barangayFilePath))
+                {
+                    int row = 2;
+                    using (var reader = new StreamReader(barangayFilePath))
+                    {
+                        // Skip header
+                        string headerLine = reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            var line = reader.ReadLine();
+                            var values = line.Split(','); // Assuming CSV is comma-separated
+
+                            if (values.Length >= 4)
+                            {
+                                ws.Cells["BF" + row].Value = values[2]; // Region
+                                //ws.Cells["BG" + row].Value = values[1]; // Municipality
+                                //ws.Cells["BH" + row].Value = values[2]; // Province
+                                //ws.Cells["BI" + row].Value = values[3]; // Barangay
+                                row++;
+                            }
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    return BadRequest("Barangay CSV file not found.");
+                }
+                var barangayValidation = ws.DataValidations.AddListValidation("AE2:AE1000");
+                barangayValidation.Formula.ExcelFormula = "BF2:BF20";
+                barangayValidation.ShowErrorMessage = true;
+                barangayValidation.ErrorTitle = "Invalid Selection";
+                barangayValidation.Error = "Please select a valid option from the dropdown list.";
+                // Barangay End
                 //Department Start
                 ws.Cells["AP1"].Value = "DepartmentName";
                 ws.Cells["AQ1"].Value = "DepartmentID";
@@ -852,8 +892,6 @@ namespace MVC_HRIS.Controllers
 
                 }
                 //Employee Type End
-
-
                 //Manager Start
                 ws.Cells["AZ1"].Value = "Manager";
                 ws.Cells["BA1"].Value = "ManagerID";
@@ -949,7 +987,7 @@ namespace MVC_HRIS.Controllers
 
                 ws.Cells.AutoFitColumns();
 
-                int[] hideColumns = { 8, 10, 12, 14, 16, 18, 25, 27, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                int[] hideColumns = { 8, 10, 12, 14, 16, 18, 25, 27, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58 };
 
                 foreach (int col in hideColumns)
                 {
