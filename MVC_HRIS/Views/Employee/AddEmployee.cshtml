@@ -616,7 +616,7 @@
                             // getProvinceData();
                             // document.getElementById('region').value = array[1].replace(' ', '');
                             // console.log(array[2].replace('/t', '').replace(' ', ''));
-                            if ($('#region').val() != '0') {
+                            if ($('#region').val() != '0' || $('#region').val() != '' || $('#region').val() != null) {
                                 // alert($('#region').val());
                                 // getProvinceData();
                                 var region = $("#region option:selected").data('id').toString().trim();
