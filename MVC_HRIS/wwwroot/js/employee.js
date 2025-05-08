@@ -1864,3 +1864,77 @@ document.getElementById("export-employee").addEventListener("click", function ()
     actionemployee.style.display = "none";
     pencilemployee.style.display = "flex";
 });
+
+
+//Import Employee
+function downloadEmployeeTemplate() {
+    // alert('Template Downloaded')
+    location.replace('../Employee/DownloadEmployeeHeader');
+}
+function employeeFileDrag() {
+    const dropZone = document.getElementById("employee-drop-zone");
+    const fileInput = document.getElementById("employee-upload-excel");
+
+    // Open file picker on click
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    // Highlight drop area on drag over
+    dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+        employeehandleFiles(files);
+        if (files.length > 0) {
+            console.log('Dropped file:', files[0]);
+
+            // Optional: simulate setting the input's file list
+            const dataTransfer = new DataTransfer(); // or ClipboardEvent().clipboardData
+            for (let i = 0; i < files.length; i++) {
+                dataTransfer.items.add(files[i]);
+            }
+            fileInput.files = dataTransfer.files;
+
+            // Now fileInput.files has the dropped file(s)
+            // You can trigger a function to handle upload or preview
+        }
+    });
+
+    // Handle files from input
+    fileInput.addEventListener("change", () => {
+        employeehandleFiles(fileInput.files);
+    });
+}
+function employeehandleFiles(files) {
+    // You can upload the files here or just log them
+    console.log("Files uploaded:", files[0].name);
+    tlfilename = files[0].name;
+    // Example: Upload to server or display preview
+    document.getElementById("employee-drag-file-label").textContent = tlfilename;
+    const text = document.getElementById("employee-drag-file-label");
+    const colors = ["green"];
+    let colorIndex = 0;
+    let visible = true;
+    text.style.fontWeight = "800";
+    setInterval(() => {
+        // Toggle visibility
+        text.style.visibility = visible ? "hidden" : "visible";
+        visible = !visible;
+
+        // Change color on each blink
+        if (visible) {
+            text.style.color = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+        }
+    }, 500); // Blink interval: 500ms
+
+}

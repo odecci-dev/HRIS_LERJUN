@@ -458,7 +458,15 @@
                                                         <div>
                                                             <a href="../../TimeLogs/ManagerIndex" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20a8 8 0 0 0 8-8a8 8 0 0 0-8-8a8 8 0 0 0-8 8a8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10a10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67l-.75 1.23L11 13V7z"/></svg>
-                                                                <span>TimeSheet</span>
+                                                                <span>Timelogs</span>
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div>
+                                                            <a href="../../TimeLogs/Index" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+                                                                <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+                                                                <span style="color: white;">TimeSheet</span>
                                                             </a>
                                                         </div>
                                                     </li>
@@ -488,55 +496,55 @@
                                                     </li>
                                                     <ul class="sub-nav-approval"></ul>
                                                     `;
-            const topbarhtmlContent = `
-                                                            <li>
-                                                                <div>
-                                                                    <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
-                                                                        <i class="fa-solid fa-chart-column" style="font-size: 20px;margin-right:5px"></i>
-                                                                        <span style="color: white;">Dashboard</span>
-                                                                    </a>
-                                                                </div>
-                                                            </li>
-                                                                    <li class="maintenance" id="topbarmaintenance">
-                                                                <div>
-                                                                    <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
-                                                                        <i class="fa-sharp fa-solid fa-screwdriver-wrench" style="font-size: 20px;margin-right:5px"></i>
-                                                                        <span style="color: white;">Maintenance</span>
-                                                                        <i class="fa-solid fa-chevron-down" id="topbarmaintenanceArrow"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </li>
-                                                            <ul class="sub-nav" id="topbarsubnav">
-                                                                <li><a href="../../Employee/Index" style="display: flex; align-items: center; gap: 13px;"><i class="fa-solid fa-users"></i> Employee</a></li>
-                                                                <li><a href="../../Position/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-user"></i> Position</a></li>
-                                                                <li><a href="../../Department/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-sitemap"></i> Department</a></li>
-                                                                <li><a href="../../Payroll/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-hand-holding-dollar"></i> Payroll Type</a></li>
-                                                                <li><a href="../../Salary/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-money-bill-wave"></i> Salary Type</a></li>
-                                                                <li><a href="../../Schedule/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-clock"></i> Schedule</a></li>
-                                                                <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
-                                                                <li><a href="../../Deduction/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-circle-minus"></i> Deduction</a></li>
-                                                            </ul>
-                                                            <li>
-                                                                <div>
-                                                                    <a href="../../TimeLogs/ManagerIndex" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-                                                                        <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
-                                                                        <span style="color: white;">TimeSheet</span>
-                                                                    </a>
-                                                                </div>
-                                                            </li>
-                                                            <li class="approval">
-                                                                <div>
-                                                                    <a href="#" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
-                                                                        <i class="fa-sharp fa-solid fa-check-to-slot" style="font-size: 20px;"></i>
-                                                                        <span style="color: white;">Approvals</span>
-                                                                    </a>
-                                                                </div>
-                                                            </li>
-                                                            <ul class="sub-nav-approval"></ul>
-                                                            `;
+            // const topbarhtmlContent = `
+            //                                                 <li>
+            //                                                     <div>
+            //                                                         <a href="../../Dashboard/Index" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
+            //                                                             <i class="fa-solid fa-chart-column" style="font-size: 20px;margin-right:5px"></i>
+            //                                                             <span style="color: white;">Dashboard</span>
+            //                                                         </a>
+            //                                                     </div>
+            //                                                 </li>
+            //                                                         <li class="maintenance" id="topbarmaintenance">
+            //                                                     <div>
+            //                                                         <a href="#" style="display: flex; align-items: center; gap: 8px;" class="nav-item">
+            //                                                             <i class="fa-sharp fa-solid fa-screwdriver-wrench" style="font-size: 20px;margin-right:5px"></i>
+            //                                                             <span style="color: white;">Maintenance</span>
+            //                                                             <i class="fa-solid fa-chevron-down" id="topbarmaintenanceArrow"></i>
+            //                                                         </a>
+            //                                                     </div>
+            //                                                 </li>
+            //                                                 <ul class="sub-nav" id="topbarsubnav">
+            //                                                     <li><a href="../../Employee/Index" style="display: flex; align-items: center; gap: 13px;"><i class="fa-solid fa-users"></i> Employee</a></li>
+            //                                                     <li><a href="../../Position/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-user"></i> Position</a></li>
+            //                                                     <li><a href="../../Department/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-sitemap"></i> Department</a></li>
+            //                                                     <li><a href="../../Payroll/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-hand-holding-dollar"></i> Payroll Type</a></li>
+            //                                                     <li><a href="../../Salary/Index" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-money-bill-wave"></i> Salary Type</a></li>
+            //                                                     <li><a href="../../Schedule/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-clock"></i> Schedule</a></li>
+            //                                                     <li><a href="../../EmployeeType/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-users"></i> Employee Type</a></li>
+            //                                                     <li><a href="../../Deduction/" style="display: flex; align-items: center; gap: 15px;"><i class="fa-solid fa-circle-minus"></i> Deduction</a></li>
+            //                                                 </ul>
+            //                                                 <li>
+            //                                                     <div>
+            //                                                         <a href="../../TimeLogs/ManagerIndex" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+            //                                                             <i class="fa-solid fa-clock" style="font-size: 20px;"></i>
+            //                                                             <span style="color: white;">TimeSheet</span>
+            //                                                         </a>
+            //                                                     </div>
+            //                                                 </li>
+            //                                                 <li class="approval">
+            //                                                     <div>
+            //                                                         <a href="#" style="display: flex; align-items: center; gap: 13px;" class="nav-item">
+            //                                                             <i class="fa-sharp fa-solid fa-check-to-slot" style="font-size: 20px;"></i>
+            //                                                             <span style="color: white;">Approvals</span>
+            //                                                         </a>
+            //                                                     </div>
+            //                                                 </li>
+            //                                                 <ul class="sub-nav-approval"></ul>
+            //                                                 `;
 
             $(".content-item").html(htmlContent);
-            $(".top-bar-content-item").html(topbarhtmlContent);
+            // $(".top-bar-content-item").html(topbarhtmlContent);
 
         }
         const listItems = document.querySelectorAll("#mysidebar li");
