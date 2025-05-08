@@ -310,12 +310,19 @@ namespace MVC_HRIS.Controllers
                 EmployementStatus= result.EmployementStatus
 
             };
-            decimal grossPay = result.GrossPay  ;      // Example value, fetch this from your data/model
-            decimal overtimePay = result.OvertimePay;    // Example value, fetch this from your data/model
+            decimal grossPay = result.GrossPay  ;      
+            decimal overtimePay = result.OvertimePay;
+            decimal tax = result.Tax;
+            decimal SSS = result.SSS;   
+            decimal PhilHealth = result.PhilHealth;   
+            decimal PagIbig = result.PagIbig;   
+            decimal absences = result.AbsentDeduction;   
 
             decimal totalPay = grossPay + overtimePay;
+            decimal totalDeduction = tax + SSS + PhilHealth + absences + PagIbig;
 
             ViewBag.TotalPay = totalPay;
+            ViewBag.TotalDeduction = totalDeduction;
             DateTime df = DateTime.Parse(datefrom);
             DateTime dt = DateTime.Parse(dateto);
             ViewBag.DateFrom = df.ToString("MMM dd yyyy");

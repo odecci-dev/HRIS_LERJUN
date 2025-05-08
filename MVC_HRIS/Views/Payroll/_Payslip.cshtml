@@ -453,8 +453,31 @@
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
-                                <td colspan="3"><strong>Total Earnings</strong></td>
-                                <td id="totalAmount"><strong>@($"P {@ViewBag.TotalPay:N2}") </strong></td>
+                                <td colspan="3"><strong>Total Deduction</strong></td>
+                                <td id="totalAmount"><strong>@($"P {@ViewBag.TotalDeduction:N2}") </strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="d-flex-row w-100 f-start">
+                    <table border="1" cellspacing="0" cellpadding="5" style="border-collapse: collapse; width: 100%; text-align: left;">
+                        <thead>
+                            <tr>
+                                <td style="width: 25%;">Days Absent</td>
+                                <td style="width: 25%;">Absences Deduction</td>
+                                <td style="width: 25%;">Days Present</td>
+                                <td style="width: 25%;">Rendered Hours</td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td><strong>@($" {Model.DaysAbsent:N2}")</strong></td>
+                                <td><strong>@($"P {Model.AbsentDeduction:N2}")</strong></td>
+                                <td><strong>@($" {Model.DaysPresent:N2}")</strong></td>
+                                <td><strong>@($" {Model.RenderedHours:N2}")</strong></td>
                             </tr>
                         </tbody>
                     </table>
@@ -475,29 +498,7 @@
                     </table>
 
                 </div>
-                <div class="d-flex-row w-100 f-start">
-                    <table border="1" cellspacing="0" cellpadding="5" style="border-collapse: collapse; width: 100%; text-align: left;">
-                        <thead>
-                            <tr>
-                                <td  style="width: 25%;">Days Absent</td>
-                                <td style="width: 25%;">Absences Deduction</td>
-                                <td  style="width: 25%;">Days Present</td>
-                                <td  style="width: 25%;">Rendered Hours</td>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td><strong>@($" {Model.DaysAbsent:N2}")</strong></td>
-                                <td><strong>@($"P {Model.AbsentDeduction:N2}")</strong></td>
-                                <td><strong>@($" {Model.DaysPresent:N2}")</strong></td>
-                                <td><strong>@($"P {Model.RenderedHours:N2}")</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                </div>
+                
 
         </div>
         @* </div> *@
