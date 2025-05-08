@@ -92,10 +92,10 @@
             <div class="tab">
                 <button class="tablinks active" onclick="openTab(event, 'Tab1')">OverTime Filing</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab2')" id="leavefiling">Leave Filing</button>
-                <button class="tablinks" onclick="openTab(event, 'Tab3')">Leave Balance</button>
+@*                 <button class="tablinks" onclick="openTab(event, 'Tab3')">Leave Balance</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab4')">Leave Ledger</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab5')">Leave Maintenance</button>
-                <button class="tablinks" onclick="openTab(event, 'Tab6')">Leave Ledger Maintenance</button>
+                <button class="tablinks" onclick="openTab(event, 'Tab6')">Leave Ledger Maintenance</button> *@
             </div>
             <div id="Tab1" class="tab-content active">
                 @await Html.PartialAsync("~/Views/OverTime/_OverTime.cshtml")
@@ -105,7 +105,7 @@
                 @await Html.PartialAsync("~/Views/Leave/_Leave.cshtml")
             </div>
 
-            <div id="Tab3" class="tab-content">
+          @*   <div id="Tab3" class="tab-content">
             </div>
             <div id="Tab4" class="tab-content">
             </div>
@@ -116,7 +116,7 @@
             <div id="Tab6" class="tab-content">
 
                 @await Html.PartialAsync("~/Views/Leave/_LeaveTypeMaintenance.cshtml")
-            </div>
+            </div> *@
         </div>
         <div class="content-filter-tbl">
             <table id="filing-table" class="table table-bordered table-hover w-100">

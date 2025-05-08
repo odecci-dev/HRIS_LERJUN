@@ -54,6 +54,9 @@ namespace API_HRIS.Migrations
                     b.Property<DateTime?>("Date_Updated")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DaysInMonth")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("Delete_Flag")
                         .HasColumnType("bit");
 
@@ -68,6 +71,9 @@ namespace API_HRIS.Migrations
 
                     b.Property<string>("EmployeeID")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EmployeeType")
+                        .HasColumnType("int");
 
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
@@ -90,6 +96,9 @@ namespace API_HRIS.Migrations
                     b.Property<string>("Lname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Mname")
                         .HasColumnType("nvarchar(max)");
 
@@ -98,6 +107,15 @@ namespace API_HRIS.Migrations
 
                     b.Property<string>("PayrollType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PayrollTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PositionLevelId")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Rate")
                         .HasColumnType("decimal(18,2)")
@@ -111,6 +129,9 @@ namespace API_HRIS.Migrations
 
                     b.Property<string>("SalaryType")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SalaryTypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
@@ -637,6 +658,30 @@ namespace API_HRIS.Migrations
                     b.ToTable("tbl_EmploymentStatusModel", (string)null);
                 });
 
+            modelBuilder.Entity("API_HRIS.Models.TblHolidayModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TblHolidayModel");
+                });
+
             modelBuilder.Entity("API_HRIS.Models.TblLeaveLedgerModel", b =>
                 {
                     b.Property<int>("Id")
@@ -693,6 +738,70 @@ namespace API_HRIS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TblLeaveLedgerModel");
+                });
+
+            modelBuilder.Entity("API_HRIS.Models.TblLeaveRequestModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ApprovalReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateDeleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("DaysFiled")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EmployeeNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LeaveRequestNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LeaveTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TblLeaveRequestModel");
                 });
 
             modelBuilder.Entity("API_HRIS.Models.TblLeaveTypeModel", b =>
@@ -802,7 +911,13 @@ namespace API_HRIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ApprovalReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("ConvertToLeave")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("ConvertToOffset")
                         .HasColumnType("bit");
 
                     b.Property<int?>("CreatedBy")
@@ -1048,6 +1163,9 @@ namespace API_HRIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PayslipId"), 1L, 1);
 
+                    b.Property<decimal>("AbsentDeduction")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
@@ -1056,6 +1174,12 @@ namespace API_HRIS.Migrations
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DaysAbsent")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DaysPresent")
+                        .HasColumnType("int");
 
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
@@ -1071,6 +1195,12 @@ namespace API_HRIS.Migrations
                     b.Property<decimal>("NetSalary")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("OTHours")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OTPay")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("PagIbigDeduction")
                         .HasColumnType("decimal(18,2)");
 
@@ -1079,6 +1209,9 @@ namespace API_HRIS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PhilHealthDeduction")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("RenderedHours")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SSSDeduction")
@@ -1142,6 +1275,22 @@ namespace API_HRIS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TblPhilHealthModel");
+                });
+
+            modelBuilder.Entity("API_HRIS.Models.TblPositionLevelModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Level")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_PositionLevel", (string)null);
                 });
 
             modelBuilder.Entity("API_HRIS.Models.TblPositionModel", b =>
@@ -1216,6 +1365,31 @@ namespace API_HRIS.Migrations
                     b.ToTable("tbl_SalaryType", (string)null);
                 });
 
+            modelBuilder.Entity("API_HRIS.Models.TblScheduleDayModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EndTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SchceduleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StartTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TblScheduleDayModels");
+                });
+
             modelBuilder.Entity("API_HRIS.Models.TblScheduleModel", b =>
                 {
                     b.Property<int>("Id")
@@ -1233,55 +1407,13 @@ namespace API_HRIS.Migrations
                     b.Property<DateTime?>("DateUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool?>("DeleteFlag")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FridayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FridayS")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MondayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MondayS")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SaturdayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SaturdayS")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StatusID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SundayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SundayS")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThursdayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThursdayS")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TuesdayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TuesdayS")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WednesdayE")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("WednesdayS")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1500,6 +1632,9 @@ namespace API_HRIS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ApprovalReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("BreakInAm")
                         .HasColumnType("nvarchar(max)");
 
@@ -1591,7 +1726,7 @@ namespace API_HRIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TblTimeLogStatus");
+                    b.ToTable("tbl_TimeLogStatus", (string)null);
                 });
 
             modelBuilder.Entity("API_HRIS.Models.TblUsersModel", b =>
@@ -1748,6 +1883,15 @@ namespace API_HRIS.Migrations
                     b.Property<string>("Username")
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
+
+                    b.Property<bool>("isLoggedIn")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isOnline")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("verificationCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id")
                         .HasName("PK_UsersModel");

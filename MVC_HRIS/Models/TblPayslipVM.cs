@@ -9,6 +9,7 @@ namespace MVC_HRIS.Models;
 
 public partial class TblPayslipVM
 {
+    public int Id { get; set; }
     public string EmployeeName { get; set; }
     public string EmployeeNumber { get; set; }
     public string UserId { get; set; }
@@ -19,7 +20,7 @@ public partial class TblPayslipVM
     // Job Info
     public string PayslipNumber { get; set; }
     public string JobTitle { get; set; }
-    public string EmploymentStatus { get; set; }
+    public string EmployementStatus { get; set; }
     public string SSSNumber { get; set; }
     public DateTime PayDate { get; set; }
 
@@ -40,5 +41,9 @@ public partial class TblPayslipVM
     public decimal AbsentDeduction { get; set; }
     public int? DaysPresent { get; set; }
     public int? DaysAbsent { get; set; }
+    public string SSSNo { get; set; }
+    public string PhilNo { get; set; }
+    public string HMDF { get; set; }
+    public string TIN { get; set; }
 
 }
