@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MVC_HRIS.Manager;
 using MVC_HRIS.Models;
-
+IConfiguration config = new ConfigurationBuilder()
+        .SetBasePath(Path.GetPathRoot(Environment.SystemDirectory))
+        .AddJsonFile("app/hris/appconfig.json", optional: true, reloadOnChange: true)
+        .Build();
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
 
@@ -11,6 +14,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllersWithViews();
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
+builder.Configuration.AddJsonFile("appconfig.json", optional: true, reloadOnChange: true);
 // Register IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(

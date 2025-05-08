@@ -9,22 +9,28 @@ namespace API_HRIS.Models;
 
 public partial class TblPayslipVM
 {
+    public int Id { get; set; }
     public string EmployeeName { get; set; }
     public string EmployeeNumber { get; set; }
+    public string UserId { get; set; }
     public string Department { get; set; }
     public string TaxNumber { get; set; }
     public string PayPeriod { get; set; }
+    public int  P_GenID { get; set; }
 
     // Job Info
     public string PayslipNumber { get; set; }
     public string JobTitle { get; set; }
-    public string EmploymentStatus { get; set; }
+    public string EmployementStatus { get; set; }
     public string SSSNumber { get; set; }
     public DateTime PayDate { get; set; }
 
     // Salary Details
+    public decimal RenderedHours { get; set; }
+    public decimal OvertimeHours { get; set; }
     public decimal GrossPay { get; set; }
     public decimal NetPay { get; set; }
+    public decimal OvertimePay { get; set; }
 
     // Deductions
     public decimal Tax { get; set; }
@@ -33,4 +39,7 @@ public partial class TblPayslipVM
     public decimal PagIbig { get; set; }
     public decimal OtherDeductions { get; set; }
     public decimal TotalDeductions { get; set; }
+    public decimal AbsentDeduction { get; set; }
+    public int? DaysPresent { get; set; }
+    public int? DaysAbsent { get; set; }
 }

@@ -304,10 +304,9 @@
      
         var usertype = "@Accessor.HttpContext.Session.GetString("UserTypeName")";
         var data = {
-            employeeID: 3066,
             employeeID: @Accessor.HttpContext.Session.GetString("Id"),
             datefrom: $("#datefrom").val(),
-            dateto: $("#dateto").val()
+            dateto: $("#dateto").val(),
         };
         console.log(usertype);
         var urls = usertype == "Admin" ? "/Payroll/PayslipAdmin" : "/Payroll/Payslip";

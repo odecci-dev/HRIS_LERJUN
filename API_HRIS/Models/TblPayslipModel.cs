@@ -40,6 +40,7 @@ public partial class TblPayslipModel
     [Column(TypeName = "decimal(18,2)")]
     public decimal AbsentDeduction { get; set; }
     public int? DaysPresent { get; set; }
+    public int? P_GenID { get; set; }
     public int? DaysAbsent { get; set; }
     public int? Status { get; set; }
     public DateTime? DateCreated { get; set; } = DateTime.Now;
