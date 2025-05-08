@@ -34,6 +34,8 @@ using System.Web.Http.Services;
 using System.Linq;
 using System.Diagnostics.Metrics;
 using static API_HRIS.Controllers.DepartmentController;
+using static API_HRIS.Controllers.DeductionController;
+using PeterO.Numbers;
 
 namespace API_HRIS.Controllers
 {
@@ -408,7 +410,7 @@ namespace API_HRIS.Controllers
             public string? Tax_Identification_Number { get; set; }
 
         }
-        private TblUsersModel buildEmployee(EmployeeViewModel registrationModel)
+        private TblUsersModel  buildEmployee(EmployeeViewModel registrationModel)
         {
             var pass = Cryptography.Encrypt(registrationModel.Password);
             var filepath = registrationModel.FilePath == null ? "" : registrationModel.FilePath;
@@ -558,7 +560,7 @@ namespace API_HRIS.Controllers
                 return Problem("Entity set 'ODC_HRISContext.TblUsersModels'  is null.");
             }
 
-            var userModel = _context.TblUsersModels.AsNoTracking().Where(userModel => !userModel.DeleteFlag && userModel.Id == id).FirstOrDefault();
+            var userModel = _context.TblUsersModels.AsNoTracking().Where(userModel => userModel.DeleteFlag && userModel.Id == id).FirstOrDefault();
 
             if (userModel == null)
             {
@@ -1088,6 +1090,119 @@ namespace API_HRIS.Controllers
             {
                 return Problem(ex.GetBaseException().ToString());
             }
+        }
+
+        public class ImportEmployeeViewModel
+        {
+
+            public string? Id { get; set; }
+            public string? Department { get; set; }
+            public string? UserType { get; set; }
+            public string? EmployeeType { get; set; }
+            public string? Position { get; set; }
+            public string? Lname { get; set; }
+            public string? Fname { get; set; }
+            public string? Mname { get; set; }
+            public string? Suffix { get; set; }
+            public string? Email { get; set; }
+            public string? Cno { get; set; }
+            public string? Gender { get; set; }
+            public string? DateStarted { get; set; }
+            public string? CreatedBy { get; set; }
+            public string? Address { get; set; }
+            public string? SalaryType { get; set; }
+            public string? PayrollType { get; set; }
+            public string? Status { get; set; }
+            public string? FilePath { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+            public int? PositionLevelId { get; set; }
+            public int? ManagerId { get; set; }
+            public string Rate { get; set; }
+            public string DaysInMonth { get; set; }
+            public string? SSS_Number { get; set; }
+            public string? PagIbig_MID_Number { get; set; }
+            public string? PhilHealth_Number { get; set; }
+            public string? Tax_Identification_Number { get; set; }
+            //EmergencyContacts
+            public string? Name { get; set; }
+
+            public string? Relationship { get; set; }
+
+            public string? PhoneNumber { get; set; }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> ImportEmployee(List<ImportEmployeeViewModel> list)
+        {
+            string result = "";
+            string status = ""; 
+            try
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    
+                    var Employee = new TblUsersModel()
+                    {
+                        UserType = int.Parse(list[i].UserType),
+                        Fullname = list[i].Fname + " " + list[i].Mname + " " + list[i].Lname + " " + list[i].Suffix,
+                        Active = 1,
+                        Fname = list[i].Fname,
+                        Lname = list[i].Lname,
+                        Mname = list[i].Mname,
+                        Position = int.Parse(list[i].Position),
+                        Suffix = list[i].Suffix,
+                        Status = int.Parse(list[i]?.Status),
+                        Department = int.Parse(list[i].Department),
+                        Email = list[i].Email,
+                        Gender = list[i].Gender,
+                        //DateStarted = Convert.ToDateTime(list[i].DateStarted),
+                        DateStarted = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")),
+                        DateCreated = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd")),
+                        CreatedBy = list[i].CreatedBy,
+                        PayrollType = int.Parse(list[i].PayrollType),
+                        SalaryType = int.Parse(list[i].SalaryType),
+                        Address = list[i].Address,
+                        FilePath = "",
+                        Username = list[i].Username,
+                        Password = list[i].Password,
+                        PositionLevelId = list[i].PositionLevelId,
+                        ManagerId = list[i].ManagerId,
+                        Rate = list[i].Rate,
+                        DaysInMonth = list[i].DaysInMonth,
+                        Cno = list[i].Cno,
+                        SSS_Number = list[i].SSS_Number,
+                        PagIbig_MID_Number = list[i].PagIbig_MID_Number,
+                        PhilHealth_Number = list[i].PhilHealth_Number,
+                        Tax_Identification_Number = list[i].Tax_Identification_Number,
+                    };
+                    _context.TblUsersModels.Add(Employee);
+                    _context.SaveChanges();
+                    if (list[i].Name != null || list[i].Name != "")
+                    {
+                        var latestUser = _context.TblUsersModels
+                                        .OrderByDescending(x => x.Id)
+                                        .FirstOrDefault();
+                        var EmployeeEmergenctContactModel = new TblEmergencyContactsModel()
+                        {
+                            Name = list[i].Name,
+                            PhoneNumber = list[i].PhoneNumber,
+                            UserId = latestUser.Id,
+                            Relationship = list[i].Relationship,
+
+                        };
+                        _context.TblEmergencyContactsModel.Add(EmployeeEmergenctContactModel);
+                    }
+                }
+                status = "Inserted Successfully";
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.GetBaseException().ToString());
+
+            }
+
+            return Content(status);
         }
     }
 }
