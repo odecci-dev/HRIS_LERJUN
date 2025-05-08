@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_HRIS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c4807e6384cbc187e0a1d0caa5604858f399af2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+281d16758a1a3173a56b5f0224a57b2474009b2b")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_HRIS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_HRIS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

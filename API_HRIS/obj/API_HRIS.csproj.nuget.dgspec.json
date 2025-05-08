@@ -1,20 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\DEVELOPMENT\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj": {}
+    "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj": {}
   },
   "projects": {
-    "C:\\DEVELOPMENT\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj": {
+    "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\DEVELOPMENT\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj",
+        "projectUniqueName": "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj",
         "projectName": "API_HRIS",
-        "projectPath": "C:\\DEVELOPMENT\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj",
+        "projectPath": "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\HRIS_LERJUN\\API_HRIS\\API_HRIS.csproj",
         "packagesPath": "C:\\Users\\Lerjun\\.nuget\\packages\\",
-        "outputPath": "C:\\DEVELOPMENT\\HRIS_LERJUN\\API_HRIS\\obj\\",
+        "outputPath": "D:\\DEVELOPMENT\\ODC_HRIS_V2_LERJUN\\HRIS_LERJUN\\API_HRIS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
           "C:\\Users\\Lerjun\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -133,19 +134,19 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.36, 6.0.36]"
+              "version": "[6.0.29, 6.0.29]"
             },
             {
               "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[6.0.36, 6.0.36]"
+              "version": "[6.0.29, 6.0.29]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.36, 6.0.36]"
+              "version": "[6.0.29, 6.0.29]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[6.0.36, 6.0.36]"
+              "version": "[6.0.29, 6.0.29]"
             }
           ],
           "frameworkReferences": {
@@ -156,7 +157,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.406\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }

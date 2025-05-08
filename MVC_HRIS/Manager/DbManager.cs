@@ -7,6 +7,11 @@ namespace API_HRIS.Manager
 {
     public class DbManager
     {
+        IConfiguration config = new ConfigurationBuilder()
+          .SetBasePath(Path.GetPathRoot(Environment.SystemDirectory))
+          .AddJsonFile("app/hris/appconfig.json", optional: true, reloadOnChange: true)
+          .Build();
+
         public SqlConnection Connection { get; set; }
         public SqlConnection conn = new SqlConnection();
         public SqlCommand cmd = new SqlCommand();
@@ -14,34 +19,11 @@ namespace API_HRIS.Manager
         string cnnstr = "";
         DBConn db = new DBConn();
 
-        public bool InitializeConnection()
-        {
-            bool isSuccess = false;
-            try
-            {
-                this.Connection = new SqlConnection(DBConn.ConnectionString);
-                this.Connection.Open();
-                isSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                isSuccess = false;
-                throw ex;
-            }
-            finally
-            {
-                this.Connection.Close();
-            }
-            return isSuccess;
-        }
-
+       
         public void ConnectioStr()
         {
-
-            cnnstr = "Data Source=LAPTOP-3191GBJB\\SQLEXPRESS;Initial Catalog=ODC_HRIS;User ID=test;Password=1234;"; // France
-            //cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS;User ID=test;Password=1234"; //  odc-hris
-            //cnnstr = "Data Source=EC2AMAZ-V52FJK1;Initial Catalog=ODC_HRIS_STAGING;User ID=test;Password=1234"; //  odc-hris staging
-            conn = new SqlConnection(cnnstr);
+            var url = config["ConnectionStrings:Hris_Constrings"];
+            conn = new SqlConnection(url);
         }
         public DataSet SelectDb(string value)
         {
@@ -81,38 +63,7 @@ namespace API_HRIS.Manager
             cmd.CommandType = CommandType.Text;
         }
 
-        public string AUIDB(string strSql)
-        {
-            string result = "";
-            int ctr = 0;
-        retry:
-            try
-            {
-                InitializeConnection();
-                SqlCommand cmd = new SqlCommand(strSql, conn);
-
-                conn.Open();
-
-                cmd.Connection = conn;
-                cmd.CommandTimeout = 0;
-                cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                result = "";
-            }
-            catch (Exception ex)
-            {
-                ctr += 1;
-                result = ex.Message + "!";
-
-                if (ctr <= 3)
-                {
-                    goto retry;
-                }
-
-            }
-            return result;
-        }
+      
         public DataSet SelectDb_SP(string strSql, params IDataParameter[] sqlParams)
         {
             DataSet ds = new DataSet();

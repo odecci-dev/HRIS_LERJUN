@@ -1652,6 +1652,7 @@
     <None Include="wwwroot\plugins\uplot\uPlot.iife.min.js" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="excellupload" Version="1.0.0" />

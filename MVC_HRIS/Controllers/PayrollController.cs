@@ -78,6 +78,7 @@ namespace MVC_HRIS.Controllers
             var result = payslipData
                 .Select(p => new TblPayslipVM
                 {
+                    Id = p.Id,
                     EmployeeNumber = p.EmployeeNumber,
                     UserId = p.UserId,
                     EmployeeName = p.EmployeeName,
@@ -269,18 +270,22 @@ namespace MVC_HRIS.Controllers
             }
         }
 
-        public IActionResult Payslip(int employeeid , string datefrom, string dateto)
+        public IActionResult Payslip(int id , string datefrom, string dateto)
         {
             var data = new EmployeeFilters
             {
-                EmployeeID = employeeid,
+                id = id,
                 datefrom = datefrom,
                 dateto = dateto
             };
             var result = GetPayslip(data).GetAwaiter().GetResult().FirstOrDefault();
             var model = new TblPayslipVM
             {
-                RenderedHours=result.RenderedHours,
+                SSSNo = result.SSSNo,
+                PhilNo = result.PhilNo,
+                HMDF =result.HMDF,
+                TIN =result.TIN,
+                RenderedHours =result.RenderedHours,
                 EmployeeName=result.EmployeeName,
                 UserId = result.UserId,
                 EmployeeNumber = result.EmployeeNumber,
@@ -301,13 +306,25 @@ namespace MVC_HRIS.Controllers
                 OvertimePay = result.OvertimePay,
                 DaysAbsent= result.DaysAbsent,
                 DaysPresent= result.DaysPresent,
-                AbsentDeduction= result.AbsentDeduction
+                AbsentDeduction= result.AbsentDeduction,
+                EmployementStatus= result.EmployementStatus
+
             };
+            decimal grossPay = result.GrossPay  ;      // Example value, fetch this from your data/model
+            decimal overtimePay = result.OvertimePay;    // Example value, fetch this from your data/model
+
+            decimal totalPay = grossPay + overtimePay;
+
+            ViewBag.TotalPay = totalPay;
+            DateTime df = DateTime.Parse(datefrom);
+            DateTime dt = DateTime.Parse(dateto);
+            ViewBag.DateFrom = df.ToString("MMM dd yyyy");
+            ViewBag.DateTo = dt.ToString("MMM dd yyyy");
             return PartialView("_Payslip", model);
         }
         public class EmployeeFilters
         {
-            public int EmployeeID { get; set; }
+            public int id { get; set; }
             public string datefrom { get; set; }
             public string dateto { get; set; }
         }
