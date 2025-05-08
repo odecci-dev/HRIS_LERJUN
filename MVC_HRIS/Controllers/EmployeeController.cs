@@ -30,6 +30,9 @@ using System.Drawing.Imaging;
 using static AOPC.Controllers.LogInController;
 using API_HRIS.ApplicationModel;
 using NPOI.HPSF;
+using static MVC_HRIS.Controllers.DeductionController;
+using DocumentFormat.OpenXml.Presentation;
+using System.Globalization;
 
 namespace MVC_HRIS.Controllers
 {
@@ -647,7 +650,7 @@ namespace MVC_HRIS.Controllers
                 ws.Cells["C1"].Value = "Middle Name";
                 ws.Cells["D1"].Value = "Suffix";
                 ws.Cells["E1"].Value = "Gender";
-                ws.Cells["F1"].Value = "Email Without Domain";
+                ws.Cells["F1"].Value = "Email";
                 ws.Cells["G1"].Value = "Department";
                 ws.Cells["H1"].Value = "Department Id";
                 ws.Cells["I1"].Value = "Position";
@@ -679,6 +682,7 @@ namespace MVC_HRIS.Controllers
                 ws.Cells["AI1"].Value = "Emergency Contact Name";
                 ws.Cells["AJ1"].Value = "Relationship";
                 ws.Cells["AK1"].Value = "Emergency Contact Number";
+                ws.Cells["AL1"].Value = "Employee Contact Number";
 
 
                 ws.Cells["AN1"].Value = "Employee No.";
@@ -952,7 +956,7 @@ namespace MVC_HRIS.Controllers
                     ws.Column(col).Hidden = true; // Hide column
                     ws.Column(col).Style.Locked = true; // Lock column
                 }
-                ws.Cells["A:AK"].Style.Locked = false;
+                ws.Cells["A:AL"].Style.Locked = false;
                 //// Protect the worksheet to enforce the lock
                 ws.Protection.IsProtected = true;
                 pck.Save();
@@ -961,6 +965,179 @@ namespace MVC_HRIS.Controllers
             stream.Position = 0;
             string excelName = "Employee-Template.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+        public class ImportEmployeeViewModel
+        {
+
+            public string? Id { get; set; }
+            public string? Department { get; set; }
+            public string? UserType { get; set; }
+            public string? EmployeeType { get; set; }
+            public string? Position { get; set; }
+            public string? Lname { get; set; }
+            public string? Fname { get; set; }
+            public string? Mname { get; set; }
+            public string? Suffix { get; set; }
+            public string? Email { get; set; }
+            public string? Cno { get; set; }
+            public string? Gender { get; set; }
+            public string? DateStarted { get; set; }
+            public string? CreatedBy { get; set; }
+            public string? Address { get; set; }
+            public string? SalaryType { get; set; }
+            public string? PayrollType { get; set; }
+            public string? Status { get; set; }
+            public string? FilePath { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
+            public int? PositionLevelId { get; set; }
+            public int? ManagerId { get; set; }
+            public string Rate { get; set; }
+            public string DaysInMonth { get; set; }
+            public string? SSS_Number { get; set; }
+            public string? PagIbig_MID_Number { get; set; }
+            public string? PhilHealth_Number { get; set; }
+            public string? Tax_Identification_Number { get; set; }
+            //EmergencyContacts
+            public string? Name { get; set; }
+
+            public string? Relationship { get; set; }
+
+            public string? PhoneNumber { get; set; }
+
+        }
+        static string GetRandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            Random random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        [HttpPost]
+        public async Task<IActionResult> ImportEmployee(IFormFile file, [FromServices] IWebHostEnvironment hostingEnvironment)
+        {
+            System.Text.Encoding.RegisterProvider(
+            System.Text.CodePagesEncodingProvider.Instance);
+            try
+            {
+                if (file == null)
+                {
+                    ViewData["Message"] = "Error: Please select a file.";
+                }
+                else
+                {
+                    if (file.FileName.EndsWith("xls") || file.FileName.EndsWith("xlsx"))
+                    {
+                        ViewData["Message"] = "Error: Invalid file.";
+                        string filename = $"{hostingEnvironment.WebRootPath}\\excel\\{file.FileName}";
+                        using (FileStream fileStream = System.IO.File.Create(filename))
+                        {
+                            file.CopyTo(fileStream);
+                            fileStream.Flush();
+                        }
+
+                        IExcelDataReader reader = null;
+                        FileStream stream = System.IO.File.Open(filename, FileMode.Open, FileAccess.Read);
+
+                        if (file.FileName.EndsWith("xls"))
+                        {
+                            reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                        }
+                        if (file.FileName.EndsWith("xlsx"))
+                        {
+                            reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                        }
+                        int i = 0;
+                        var data = new List<ImportEmployeeViewModel>();
+                        
+                        //var EmergencyContactData = new List<EmployeeViewModel>();
+                        while (reader.Read())
+                        {
+                            i++;
+                            
+                            if (i > 1) // Skipping header row
+                            {
+                                // Check if at least one column has data
+                                if (string.IsNullOrWhiteSpace(reader.GetValue(0)?.ToString()) &&
+                                    string.IsNullOrWhiteSpace(reader.GetValue(1)?.ToString())
+                                    )
+                                {
+                                    continue; // Skip this row
+                                }
+
+                                var address =
+                                    (reader.GetValue(29)?.ToString().Trim() ?? "") + ", " +
+                                    (reader.GetValue(30)?.ToString().Trim() ?? "") + ", " +
+                                    (reader.GetValue(31)?.ToString().Trim() ?? "") + ", " +
+                                    (reader.GetValue(32)?.ToString().Trim() ?? "") + ", " +
+                                    (reader.GetValue(33)?.ToString().Trim() ?? "");
+                                string pass = GetRandomString(8);
+                                var username =
+                                (reader.GetValue(0)?.ToString().Trim().ToLower(CultureInfo.InvariantCulture) ?? "") + "." +
+                                (reader.GetValue(1)?.ToString().Trim().ToLower(CultureInfo.InvariantCulture) ?? "");// Process the row
+                                data.Add(new ImportEmployeeViewModel
+                                {
+                                    Fname = reader.GetValue(0)?.ToString().Trim() ?? "",
+                                    Lname = reader.GetValue(1)?.ToString().Trim() ?? "",
+                                    Mname = reader.GetValue(2)?.ToString().Trim() ?? "",
+                                    Suffix = reader.GetValue(3)?.ToString().Trim() ?? "",
+                                    Gender = reader.GetValue(4)?.ToString().Trim() ?? "",
+                                    Username = username,
+                                    Password = pass,
+                                    Email = reader.GetValue(5)?.ToString().Trim() ?? "",
+                                    Department = reader.GetValue(7)?.ToString().Trim() ?? "",
+                                    Position = reader.GetValue(9)?.ToString().Trim() ?? "",
+                                    PositionLevelId = reader.IsDBNull(11) ? null : Convert.ToInt32(reader.GetValue(11)),
+                                    UserType = reader.GetValue(13)?.ToString().Trim() ?? "",
+                                    EmployeeType = reader.GetValue(15)?.ToString().Trim() ?? "",
+                                    ManagerId = reader.IsDBNull(17) ? null : Convert.ToInt32(reader.GetValue(17)),
+                                    DateStarted = reader.GetValue(18)?.ToString().Trim() ?? "",
+                                    SSS_Number = reader.GetValue(19)?.ToString().Trim() ?? "",
+                                    PagIbig_MID_Number = reader.GetValue(20)?.ToString().Trim() ?? "",
+                                    PhilHealth_Number = reader.GetValue(21)?.ToString().Trim() ?? "",
+                                    Tax_Identification_Number = reader.GetValue(22)?.ToString().Trim() ?? "",
+                                    SalaryType = reader.GetValue(24)?.ToString().Trim() ?? "",
+                                    PayrollType = reader.GetValue(26)?.ToString().Trim() ?? "",
+                                    Rate = reader.GetValue(27)?.ToString().Trim() ?? "",
+                                    DaysInMonth = reader.GetValue(28)?.ToString() ?? "",
+                                    Address = address,
+                                    Name = reader.GetValue(34)?.ToString() ?? "",
+                                    Relationship = reader.GetValue(35)?.ToString() ?? "",
+                                    PhoneNumber = reader.GetValue(36)?.ToString() ?? "",
+                                    Cno = reader.GetValue(37)?.ToString() ?? "",
+                                    Status = "1003"
+                                });
+                            }
+
+                        }
+                        reader.Close();
+                        System.IO.File.Delete(filename);
+                        //Send Data to API
+                        var status = "";
+                        HttpClient client = new HttpClient();
+                        var url = DBConn.HttpString + "/Employee/ImportEmployee";
+
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token_.GetValue());
+                        StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                        using (var response = await client.PostAsync(url, content))
+                        {
+                            status = await response.Content.ReadAsStringAsync();
+                        }
+
+                        ViewData["Message"] = "New Entry" + status;
+                    }
+                    else
+                    {
+                        ViewData["Message"] = "Error: Invalid file.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.GetBaseException().ToString());
+            }
+            return View("Index");
         }
     }
 }
