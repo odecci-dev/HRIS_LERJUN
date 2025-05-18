@@ -220,7 +220,8 @@
 #employeeForm .mod-form-row .input-container-whole input[type="text"]:focus ~ .label,
 #employeeForm .mod-form-row .input-container-whole input[type="text"]:valid ~ .label,
 #employeeForm .mod-form-row .input-container-whole input[type="number"]:focus ~ .label,
-#employeeForm .mod-form-row .input-container-whole input[type="number"]:valid ~ .label, #employeeForm .mod-form-row .input-container-whole select:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:valid ~ .label,
+#employeeForm .mod-form-row .input-container-whole select:focus ~ .label,
 #employeeForm .mod-form-row .input-container-whole select:valid ~ .label,
 #employeeForm .mod-form-row .input-container-whole.focus-field .label,
 #employeeForm .mod-form-row .input-container-whole.date .label {

@@ -23,7 +23,8 @@
     --secondary-light: rgba(100, 150, 200, 0.5);
     --secondary-dark: #979699;
     --secondary-brown: #887861;
-    --accent: #c89328;
+    --accent: #205375;
+    --danger: #EC1C24;
     --shade: rgba(125, 125, 125, 0.5);
     --shadow: rgba(200, 200, 200, 0.5);
     --sidebarwidth: 60px;

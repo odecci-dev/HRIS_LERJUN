@@ -69,7 +69,12 @@ public partial class ODC_HRISContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
+        modelBuilder.Entity<TblLeaveRequestModel>()
+        .Property(r => r.LeaveRequestNo)
+        .HasComputedColumnSql(
+            "('LR' + CONVERT(nvarchar(10), [Id]) + FORMAT([Date], 'yyyyMMdd'))",
+            stored: false // set to true if you want it stored in the table
+        );
         modelBuilder.Entity<TblTimeLog>(entity =>
         {
             entity.ToTable("tbl_TimeLogs");

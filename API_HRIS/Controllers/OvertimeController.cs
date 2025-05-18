@@ -479,6 +479,11 @@ namespace API_HRIS.Controllers
         {
             public string employeeId { get; set; }
         }
+        public class OverTimeNotificationParam
+        {
+            public string? employeeId { get; set; }
+            public string? overtimeId { get; set; }
+        }
         [HttpPost]
         public async Task<IActionResult> NewOverTimeNotification(NewOverTimeNotificationParam data)
         {
@@ -501,7 +506,7 @@ namespace API_HRIS.Controllers
                             from status in statusgroup.DefaultIfEmpty()
 
                             where ot.isDeleted == false && ot.EmployeeNo == data.employeeId
-                            orderby ot.Date descending // Or whichever column you want to sort by
+                            orderby ot.Id descending // Or whichever column you want to sort by
                             select new
                             {
                                 ot.Id,
@@ -529,27 +534,36 @@ namespace API_HRIS.Controllers
 
                             }).FirstOrDefault();
             var message = new MimeMessage();
+            var message2 = new MimeMessage();
             
-            message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
+            message.From.Add(new MailboxAddress("Odecci", "info@odecci.com")); 
+            message2.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
             //url = registrationDomain + "registration?empid=" + data.EmployeeId[x] + "&compid=" + data.CompanyId[x] + "&email=" + data.Email[x];
-            message.To.Add(new MailboxAddress(overtime.Fullname, overtime.Email));
-            message.To.Add(new MailboxAddress(overtime.ManagerName, overtime.ManagerEmail));
-            message.To.Add(new MailboxAddress("John Alfred Abalos", "john.abalos@odecci.com"));
-            message.To.Add(new MailboxAddress("Odecci Payroll", "payroll@odecci.com"));
-            message.To.Add(new MailboxAddress("Ann Santos", "ann.santos@odecci.com"));
+            message2.To.Add(new MailboxAddress(overtime.Fullname, overtime.Email));
+            if(overtime.ManagerEmail != null || overtime.ManagerEmail != "" && overtime.ManagerName != null || overtime.ManagerName != "")
+            {
+                message.To.Add(new MailboxAddress(overtime.ManagerName, overtime.ManagerEmail));
+            }
+            //Email to Payroll
+            //message.To.Add(new MailboxAddress("John Alfred Abalos", "john.abalos@odecci.com"));
+            //message.To.Add(new MailboxAddress("Odecci Payroll", "payroll@odecci.com"));
+            //message.To.Add(new MailboxAddress("Ann Santos", "ann.santos@odecci.com"));
+
             //var recipients = data.Name.Zip(data.Email, (name, email) => new MailboxAddress(name, email)).ToList();
 
             // Add all recipients at once
             //message.To.AddRange(recipients);
-
-            message.Subject = "Overtime Filing Notification";
+            string ConvertToLeave = overtime.ConvertToLeave == true ? "Yes" : "No";
+            string ConvertToOffset = overtime.ConvertToOffset == true ? "Yes" : "No";
+            message.Subject = "New Overtime["+ overtime.Fullname+"]"; 
+            message2.Subject = "New Overtime[" + overtime.Fullname + "]";
             var bodyBuilder = new BodyBuilder();
-
+            var bodyBuilder2 = new BodyBuilder();
             bodyBuilder.HtmlBody = @"
                                     <html>
                                         <head>
                                         <meta charset='UTF-8' />
-                                        <title>Overtime Filing Notification</title>
+                                        <title>New Overtime</title>
                                         </head>
                                         <body style='margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;'>
                                         <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #f4f4f4; padding: 30px 0;'>
@@ -560,14 +574,106 @@ namespace API_HRIS.Controllers
                                                 <!-- Header -->
                                                 <tr>
                                                     <td style='background-color: #205375; padding: 20px; color: #ffffff; text-align: center; font-size: 20px; font-weight: bold;'>
-                                                    Overtime Filing Notification
+                                                    New Overtime
                                                     </td>
                                                 </tr>
                                                 <!-- Body -->
                                                 <tr>
                                                     <td style='padding: 30px; color: #333333; font-size: 16px; line-height: 1.6;'>
-                                                    <p style='margin-top: 0;'>Hello Team,</p>
-                                                    <p><strong>"+ overtime.Fullname + "</strong> has submitted an overtime request. Please see the details below:</p>"
+                                                    <p style='margin-top: 0;'>Hello " + overtime.ManagerName + ",</p>"
+                                                    + "<p><strong>" + overtime.Fullname + "</strong> has submitted an overtime request. Please see the details below:</p>"
+
+                                                    + "<!-- List-style Details -->"
+                                                    + "<table width='100%' cellpadding='8' cellspacing='0' style='font-size: 14px;'>"
+                                                        + "<tr>"
+                                                        + "<td width='40%' style='font-weight: bold;'>OT-Number:</td>"
+                                                        + "<td>" + overtime.OTNo + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr style='background-color: #f9f9f9;'>"
+                                                        + "<td style='font-weight: bold;'>Date:</td>"
+                                                        + "<td>" + overtime.Date + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr>"
+                                                        + "<td style='font-weight: bold;'>Start Date:</td>"
+                                                        + "<td>" + overtime.StartDate + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr>"
+                                                        + "<td style='font-weight: bold;'>Start Time:</td>"
+                                                        + "<td>" + overtime.StartTime + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr style='background-color: #f9f9f9;'>"
+                                                        + "<td style='font-weight: bold;'>End Date:</td>"
+                                                        + "<td>" + overtime.EndDate + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr style='background-color: #f9f9f9;'>"
+                                                        + "<td style='font-weight: bold;'>End Time:</td>"
+                                                        + "<td>" + overtime.EndTime + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr>"
+                                                        + "<td style='font-weight: bold;'>Hours Filed:</td>"
+                                                        + "<td>" + overtime.HoursFiled + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr style='background-color: #f9f9f9;'>"
+                                                        + "<td style='font-weight: bold;'>Reason:</td>"
+                                                        + "<td>" + overtime.Remarks + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr>"
+                                                        + "<td style='font-weight: bold;'>Convert To Leave:</td>"
+                                                        + "<td>" + ConvertToLeave + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr style='background-color: #f9f9f9;'>"
+                                                        + "<td style='font-weight: bold;'>Convert To Offset:</td>"
+                                                        + "<td>" + ConvertToOffset + "</td>"
+                                                        + "</tr>"
+                                                        + "<tr>"
+                                                        + "<td style='font-weight: bold;'>Status:</td>"
+                                                        + "<td>" + overtime.StatusName + "</td>"
+                                                        + "</tr>"
+                                                    + "</table>"
+
+                                                    + "<!-- CTA Button -->"
+                                                    + "<p style='text-align: center; margin: 30px 0;'>"
+                                                        + "<a href='https://eportal.odeccisolutions.com/Approval/' style='background-color: #EC1C24; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;'>Review & Approve</a>"
+                                                    + "</p>"
+                                                    + "</td>"
+                                                + "</tr>"
+
+                                                + "<!-- Footer -->"
+                                                + "<tr>"
+                                                    + "<td style='background-color: #f0f0f0; text-align: center; padding: 15px; font-size: 12px; color: #777777;'>"
+                                                    + "&copy; 2025 Odecci Solution Inc. All rights reserved."
+                                                    + "</td>"
+                                                + "</tr>"
+
+                                                + "</table>"
+                                            + "</td>"
+                                            + "</tr>"
+                                        + "</table>"
+                                        + "</body>"
+                                    + "</html>";
+            bodyBuilder2.HtmlBody = @"
+                                    <html>
+                                        <head>
+                                        <meta charset='UTF-8' />
+                                        <title>New Overtime</title>
+                                        </head>
+                                        <body style='margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;'>
+                                        <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #f4f4f4; padding: 30px 0;'>
+                                            <tr>
+                                            <td align='center'>
+                                                <table width='600' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.08);'>
+            
+                                                <!-- Header -->
+                                                <tr>
+                                                    <td style='background-color: #205375; padding: 20px; color: #ffffff; text-align: center; font-size: 20px; font-weight: bold;'>
+                                                    New Overtime
+                                                    </td>
+                                                </tr>
+                                                <!-- Body -->
+                                                <tr>
+                                                    <td style='padding: 30px; color: #333333; font-size: 16px; line-height: 1.6;'>
+                                                    <p style='margin-top: 0;'>Hello "+ overtime.Fullname +",</p>"
+                                                    + "<p>Review the overtime you submitted below:</p>"
 
                                                     + "<!-- List-style Details -->"
                                                     + "<table width='100%' cellpadding='8' cellspacing='0' style='font-size: 14px;'>"
@@ -605,22 +711,17 @@ namespace API_HRIS.Controllers
                                                         + "</tr>"
                                                         + "<tr>"
                                                         + "<td style='font-weight: bold;'>Convert To Leave:</td>"
-                                                        + "<td>"+ overtime.ConvertToLeave + "</td>"
+                                                        + "<td>"+ ConvertToLeave + "</td>"
                                                         + "</tr>"
                                                         + "<tr style='background-color: #f9f9f9;'>"
                                                         + "<td style='font-weight: bold;'>Convert To Offset:</td>"
-                                                        + "<td>"+ overtime.ConvertToOffset + "</td>"
+                                                        + "<td>"+ ConvertToOffset + "</td>"
                                                         + "</tr>"
                                                         + "<tr>"
                                                         + "<td style='font-weight: bold;'>Status:</td>"
                                                         + "<td>"+ overtime.StatusName + "</td>"
                                                         + "</tr>"
                                                     + "</table>"
-
-                                                    + "<!-- CTA Button -->"
-                                                    + "<p style='text-align: center; margin: 30px 0;'>"
-                                                        + "<a href='https://eportal.odeccisolutions.com/Approval/' style='background-color: #EC1C24; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;'>Review & Approve</a>"
-                                                    + "</p>"
                                                     + "</td>"
                                                 + "</tr>"
 
@@ -637,16 +738,193 @@ namespace API_HRIS.Controllers
                                         + "</table>"
                                         + "</body>"
                                     + "</html>";
-            message.Body = bodyBuilder.ToMessageBody();
+            message.Body = bodyBuilder.ToMessageBody(); 
+            message2.Body = bodyBuilder2.ToMessageBody();
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync("info@odecci.com", "Roq30573");
                 await client.SendAsync(message);
+                await client.SendAsync(message2);
                 await client.DisconnectAsync(true);
             }
             return Ok();
         }
+        [HttpPost]
+        public async Task<IActionResult> OverTimeApprovalNotification(multiOTApprovalParam data)
+        {
+            try
+            {
+                for (int i = 0; i < data.otapproval.Count; i++)
+                {
+                    var overtime = (from ot in _context.TblOvertimeModel
+                                    join leave in _context.TblLeaveTypeModel
+                                    on ot.LeaveId equals leave.Id into leavegroup
+                                    from leave in leavegroup.DefaultIfEmpty()
 
+                                    join employee in _context.TblUsersModels
+                                    on ot.EmployeeNo equals employee.EmployeeId into employeegroup
+                                    from employee in employeegroup.DefaultIfEmpty()
+
+
+                                    join manager in _context.TblUsersModels
+                                    on employee.ManagerId equals manager.Id into managergroup
+                                    from manager in managergroup.DefaultIfEmpty()
+
+                                    join status in _context.TblStatusModels
+                                    on ot.Status equals status.Id into statusgroup
+                                    from status in statusgroup.DefaultIfEmpty()
+
+                                    where ot.isDeleted == false && ot.Id == data.otapproval[i].Id
+                                    orderby ot.Id descending // Or whichever column you want to sort by
+                                    select new
+                                    {
+                                        ot.Id,
+                                        ot.OTNo,
+                                        ot.EmployeeNo,
+                                        Date = ot.Date != null ? ot.Date.Value.ToString("yyyy-MM-dd") : null,
+                                        ot.StartTime,
+                                        ot.EndTime,
+                                        StartDate = ot.StartDate != null ? ot.StartDate.Value.ToString("yyyy-MM-dd") : null,
+                                        EndDate = ot.EndDate != null ? ot.EndDate.Value.ToString("yyyy-MM-dd") : null,
+                                        ot.HoursFiled,
+                                        ot.HoursApproved,
+                                        ot.Remarks,
+                                        ot.ConvertToLeave,
+                                        ot.ConvertToOffset,
+                                        leave.Name,
+                                        LeaveName = leave != null ? leave.Name : "No Leave",
+                                        LeaveRemarks = leave != null ? leave.Remarks : "",
+                                        StatusName = status != null ? status.Status : "Unknown",
+                                        ot.Status,
+                                        Fullname = employee.Fullname,
+                                        Email = employee.Email,
+                                        ManagerName = manager.Fullname,
+                                        ManagerEmail = manager.Email
+
+                                    }).FirstOrDefault();
+                    string otstatus = "";
+                    if(overtime.StatusName == "APPROVED")
+                    {
+                        otstatus = "<span style='color: green'>" + overtime.StatusName + "</span>";
+                    }
+                    else
+                    {
+                        otstatus = "<span style='color: red'>" + overtime.StatusName + "</span>";
+                    }
+                        var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
+                    message.To.Add(new MailboxAddress(overtime.Fullname, overtime.Email));
+
+                    string ConvertToLeave = overtime.ConvertToLeave == true ? "Yes" : "No";
+                    string ConvertToOffset = overtime.ConvertToOffset == true ? "Yes" : "No";
+                    message.Subject = "New Overtime[" + overtime.Fullname + "]";
+                    var bodyBuilder = new BodyBuilder();
+                    bodyBuilder.HtmlBody = @"
+                                        <html>
+                                            <head>
+                                            <meta charset='UTF-8' />
+                                            <title>Overtime Status Updated</title>
+                                            </head>
+                                            <body style='margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;'>
+                                            <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #f4f4f4; padding: 30px 0;'>
+                                                <tr>
+                                                <td align='center'>
+                                                    <table width='600' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.08);'>
+            
+                                                    <!-- Header -->
+                                                    <tr>
+                                                        <td style='background-color: #205375; padding: 20px; color: #ffffff; text-align: center; font-size: 20px; font-weight: bold;'>
+                                                        Overtime Status Updated
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Body -->
+                                                    <tr>
+                                                        <td style='padding: 30px; color: #333333; font-size: 16px; line-height: 1.6;'>
+                                                        <p style='margin-top: 0;'>Hello " + overtime.Fullname + ",</p>"
+                                                            + "<p>Your Overtime has been <strong>" + otstatus + "</strong>. Please see the details below:</p>"
+
+                                                            + "<!-- List-style Details -->"
+                                                            + "<table width='100%' cellpadding='8' cellspacing='0' style='font-size: 14px;'>"
+                                                                + "<tr>"
+                                                                + "<td width='40%' style='font-weight: bold;'>OT-Number:</td>"
+                                                                + "<td>" + overtime.OTNo + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr style='background-color: #f9f9f9;'>"
+                                                                + "<td style='font-weight: bold;'>Date:</td>"
+                                                                + "<td>" + overtime.Date + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr>"
+                                                                + "<td style='font-weight: bold;'>Start Date:</td>"
+                                                                + "<td>" + overtime.StartDate + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr>"
+                                                                + "<td style='font-weight: bold;'>Start Time:</td>"
+                                                                + "<td>" + overtime.StartTime + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr style='background-color: #f9f9f9;'>"
+                                                                + "<td style='font-weight: bold;'>End Date:</td>"
+                                                                + "<td>" + overtime.EndDate + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr style='background-color: #f9f9f9;'>"
+                                                                + "<td style='font-weight: bold;'>End Time:</td>"
+                                                                + "<td>" + overtime.EndTime + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr>"
+                                                                + "<td style='font-weight: bold;'>Hours Aprroved:</td>"
+                                                                + "<td>" + overtime.HoursApproved + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr style='background-color: #f9f9f9;'>"
+                                                                + "<td style='font-weight: bold;'>Reason:</td>"
+                                                                + "<td>" + overtime.Remarks + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr>"
+                                                                + "<td style='font-weight: bold;'>Convert To Leave:</td>"
+                                                                + "<td>" + ConvertToLeave + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr style='background-color: #f9f9f9;'>"
+                                                                + "<td style='font-weight: bold;'>Convert To Offset:</td>"
+                                                                + "<td>" + ConvertToOffset + "</td>"
+                                                                + "</tr>"
+                                                                + "<tr>"
+                                                                + "<td style='font-weight: bold;'>Status:</td>"
+                                                                + "<td>" + overtime.StatusName + "</td>"
+                                                                + "</tr>"
+                                                            + "</table>"
+                                                            + "</td>"
+                                                        + "</tr>"
+
+                                                        + "<!-- Footer -->"
+                                                        + "<tr>"
+                                                            + "<td style='background-color: #f0f0f0; text-align: center; padding: 15px; font-size: 12px; color: #777777;'>"
+                                                            + "&copy; 2025 Odecci Solution Inc. All rights reserved."
+                                                            + "</td>"
+                                                        + "</tr>"
+
+                                                        + "</table>"
+                                                    + "</td>"
+                                                    + "</tr>"
+                                                + "</table>"
+                                                + "</body>"
+                                            + "</html>";
+                    message.Body = bodyBuilder.ToMessageBody();
+                    using (var client = new SmtpClient())
+                    {
+                        await client.ConnectAsync("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                        await client.AuthenticateAsync("info@odecci.com", "Roq30573");
+                        await client.SendAsync(message);
+                        await client.DisconnectAsync(true);
+                    }
+
+
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                dbmet.InsertAuditTrail("Overtime Approval Notification" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Overtime Module", "User", "0");
+                return Problem(ex.GetBaseException().ToString());
+            }
+        }
     }
 }

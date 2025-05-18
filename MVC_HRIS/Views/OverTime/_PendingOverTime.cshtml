@@ -14,56 +14,90 @@
         @* <div>
         <h1>Pending Timelogs</h1>
         </div> *@
+        <div class="select-date-container" id="pot-select-date-container">
+            <div class="date-range-card">
+                <div class="card-header">
+                    <h4 class="card-title">Select Custom Date Range</h4>
+                </div>
+                <div class="card-body">
+                    <div class="input-container-whole select">
+                        <select id="pot-quick-select-date" class="mod-input" style="width:100%" required>
+                            <option value="" disabled selected></option>
+                            <option value="1">Today</option>
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 1 Month</option>
+                            <option value="12">Last 12 Months</option>
+                        </select>
+                        <label class="label-color label" for="selectday">Quick Select </label>
+                        <div class="underline"></div>
+                    </div>
+                    <div class="input-container-whole date">
+                        <label class="label-color label" for="datehired">From</label>
+                        <input type="date" id="pot-datefrom" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
+                        <div class="underline"></div>
+                    </div>
+                    <div class="input-container-whole date">
+                        <label class="label-color label" for="datehired">To</label>
+                        <input type="date" id="pot-dateto" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
+                        <div class="underline"></div>
+                    </div>
+                </div>
+                <div class="card-footer">
+
+                    <button class="btn btn-danger" id="close-pot-select-date">Cancel</button>
+                    <button class="btn btn-info" id="pot-apply-date">Apply</button>
+                </div>
+            </div>
+        </div>
         <div class="content-filter">
             <div class="sub-content">
                 <div class="mod-form">
-
-                    <div class="action-navbar">
-                        <div class="layer">
-                            <div class="input-holder">
-                                <span class="text-left text-dark">From:</span>
-                                <div class="date-input">
-                                    <input type="date" id="pot-datefrom" class="mod-inputs-nw" placeholder="Date" />
-                                </div>
-                            </div>
-                            <div class="input-holder">
-                                <span class="text-left text-dark">To:</span>
-                                <div class="date-input">
-                                    <input type="date" id="pot-dateto" class="mod-inputs-nw" placeholder="Date" />
-                                </div>
-                            </div>
-                            @* <div class="input-holder">
-                                <button class="btn btn-success" id="export-pot" title="Time Out" onclick="POTExportFunction()">
-                                    <i class="fa-solid fa-file-arrow-down"></i> Export
-                                </button>
-                            </div> *@
-                            @* <div class="input-holder">
-                                <a href="#" class="text-white" id="" title="View" onclick="viewRejectedOT()">
-                                    View <span id="StatusLabel" style="font-weight: 400">Rejected</span> Overtime <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div> *@
-                            <div class="input-holder">
-                                @* <span class="text-left text-dark">Months:</span> *@
-                                <div class="date-input">
-                                    <select id="pot-monthSelect" class="form-control"></select>
-                                </div>
-                            </div>
-
-                            <div class="input-holder">
-                                @* <span class="text-left">Filter User:</span> *@
-                                <select id="potCuttOff">
-                                    <option value="0" selected> First Cutt-off</option>
-                                    <option value="1"> Second Cutt-off</option>
-                                </select>
-                            </div
-                            <div class="input-holder">
-                                <a href="#" class="text-white" id="" title="View" onclick="viewRejectedOT()">
-                                    View <span id="StatusLabel" style="color: #fff;font-weight: 400">Rejected</span> Overtime <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
+                    <div class="d-flex action-navbarv2">
                         <div class="layer"> 
+                            <div class="input-holder">
+                                <div class="date-input">
+                                    <button id="pot-select-date" class="form-control" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="var(--light)" d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z" /></svg>
+                                        Select Date Range
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="input-holder">
+                                <div class="date-input select">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="var(--light)" d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z" /></svg>
+                                    <select id="pot-monthSelect" class="form-control"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="var(--light)" d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z" /></svg>
+                                        </select>
+                                </div>
+                            </div>
+
+                            <div class="input-holder">
+                                <div class="date-input select">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="25" viewBox="0 0 28 25" fill="none">
+                                        <path d="M19.875 16.025L22.925 17.7875L21.9875 19.4125L18 17.1125V12.5H19.875V16.025ZM28 16.25C28 21.0875 24.0875 25 19.25 25C14.4125 25 10.5 21.0875 10.5 16.25C10.5 15.825 10.5375 15.4125 10.6 15H0.5V0H23V8.35C25.95 9.7625 28 12.7625 28 16.25ZM11.35 12.5C11.575 12.05 11.8125 11.625 12.1 11.2125C11.9875 11.25 11.875 11.25 11.75 11.25C9.675 11.25 8 9.575 8 7.5C8 5.425 9.675 3.75 11.75 3.75C13.825 3.75 15.5 5.425 15.5 7.5C15.5 7.8125 15.45 8.125 15.375 8.4125C16.55 7.8375 17.8625 7.5 19.25 7.5C19.675 7.5 20.0875 7.5375 20.5 7.6V5C19.837 5 19.2011 4.73661 18.7322 4.26777C18.2634 3.79893 18 3.16304 18 2.5H5.5C5.5 3.8875 4.3875 5 3 5V10C3.66304 10 4.29893 10.2634 4.76777 10.7322C5.23661 11.2011 5.5 11.837 5.5 12.5H11.35ZM25.5 16.25C25.5 12.8 22.7 10 19.25 10C15.8 10 13 12.8 13 16.25C13 19.7 15.8 22.5 19.25 22.5C22.7 22.5 25.5 19.7 25.5 16.25Z" fill="white" />
+                                    </svg>
+                                    <select id="potCuttOff">
+                                        <option value="0" selected> First Cutt-off</option>
+                                        <option value="1"> Second Cutt-off</option>
+                                    </select>
+                                </div>
+                            </div>
                             
+                        </div>
+                        <div class="layer layer-filter">
+                            <div class="input-holder">
+                                <a href="#" class="" style="color: var(--dark)" id="" title="View" onclick="viewRejectedOT()">
+                                    View <span id="StatusLabel" style="color: var(--dark);font-weight: 400">Rejected</span> Overtime <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </div>
+                            <div class="input-holder">
+                                <div class="filter-input">
+                                    <button id="pot-show-filter" class="form-control">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="#6C6C6C" d="M19 2H5a3 3 0 0 0-3 3v1.17a3 3 0 0 0 .25 1.2v.06a2.8 2.8 0 0 0 .59.86L9 14.41V21a1 1 0 0 0 .47.85A1 1 0 0 0 10 22a1 1 0 0 0 .45-.11l4-2A1 1 0 0 0 15 19v-4.59l6.12-6.12a2.8 2.8 0 0 0 .59-.86v-.06a3 3 0 0 0 .29-1.2V5a3 3 0 0 0-3-3m-5.71 11.29A1 1 0 0 0 13 14v4.38l-2 1V14a1 1 0 0 0-.29-.71L5.41 8h13.18ZM20 6H4V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z" /></svg>
+                                        Filter
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" stroke="#6C6C6C" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m7 10l5 5l5-5" /></svg>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

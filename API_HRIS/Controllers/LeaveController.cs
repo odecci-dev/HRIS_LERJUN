@@ -249,7 +249,7 @@ namespace API_HRIS.Controllers
 
                     var leaveRequest = new TblLeaveRequestModel
                     {
-                        LeaveRequestNo = leaveno,
+                        //LeaveRequestNo = leaveno,
                         EmployeeNo = data.EmployeeNo,
                         Date = DateTime.Now,
                         StartDate = data.StartDate,

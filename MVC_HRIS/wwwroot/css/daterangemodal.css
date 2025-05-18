@@ -1,0 +1,101 @@
+.select-date-container
+{
+    min-width: 100dvw;
+    min-height: 100dvh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    display: flex;
+    background: rgba(0,0,0, .8) !important;
+    display: none
+}
+.date-range-card {
+    width: 350px;
+    background: var(--light);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+.select-date-container .date-range-card .input-container-whole {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 40px;
+    z-index: 1;
+}
+.date-range-card .input-container-whole.date .label,
+.date-range-card .input-container-whole select:focus ~ .label,
+.date-range-card .input-container-whole select:valid ~ .label {
+    top: -15px;
+    background: var(--light) !important;
+    z-index: 2;
+    padding: 5px;
+    color: var(--dark) !important;
+}
+.date-range-card .input-container-whole .label {
+    position: absolute;
+    left: 15px;
+    top: 18px;
+    color: #A7A7A7;
+    font-weight: 400;
+    z-index: 1;
+}
+
+.date-range-card .input-container-whole.date .underline,
+.date-range-card .input-container-whole select:focus ~ .underline,
+.date-range-card .input-container-whole select:valid ~ .underline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #333;
+    border-radius: 4px;
+    pointer-events: none;
+    border-color: var(--accent);
+    background: var(--light) !important;
+}
+.date-range-card .input-container-whole input,
+.date-range-card .input-container-whole select{
+    background-color: transparent !important;
+    z-index: 3;
+}
+.date-range-card .input-container-whole input,
+.date-range-card .input-container-whole select {
+    box-shadow: none;
+    border: none;
+    border-bottom: 2px solid var(--dark) !important;
+    border-radius: 0;
+    margin: 0;
+    height: 60px;
+    z-index: 5;
+    background: transparent;
+}
+
+.date-range-card .input-container-whole.select{
+    margin: 0;
+}
+.date-range-card .card-title{
+    font-weight: 700;
+    color: var(--accent)
+}
+.date-range-card .card-body{
+    background: var(--light);
+
+}
+.date-range-card .card-footer{
+    display: flex;
+    justify-content: flex-end;
+}
+.date-range-card .card-footer button.btn-info{
+    background: var(--accent)
+}
+.date-range-card .card-footer button.btn-danger{
+    background: var(--danger);
+}

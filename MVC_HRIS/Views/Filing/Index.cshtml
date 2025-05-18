@@ -90,7 +90,7 @@
     <div class="main-container">
         <div class="content-filter">
             <div class="tab">
-                <button class="tablinks active" onclick="openTab(event, 'Tab1')">OverTime Filing</button>
+                <button class="tablinks active" onclick="openTab(event, 'Tab1')" id="otfiling">OverTime Filing</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab2')" id="leavefiling">Leave Filing</button>
 @*                 <button class="tablinks" onclick="openTab(event, 'Tab3')">Leave Balance</button>
                 <button class="tablinks" onclick="openTab(event, 'Tab4')">Leave Ledger</button>
@@ -146,6 +146,10 @@
                 document.getElementById('leavefiling').click();
                 alertMessage();
                 FetchLeaveRequestList();
+            }
+            else if(sessionStorage.getItem("OTFlag") === "true") {
+                sessionStorage.removeItem("OTFlag"); // Remove flag to avoid repeat execution
+                document.getElementById('otfiling').click();
             }
         });
         $(document).ready(function () {

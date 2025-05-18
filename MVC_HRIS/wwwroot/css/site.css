@@ -16,6 +16,7 @@
 @import "position.css";
 @import "topbar.css";
 @import "tab.css";
+@import "daterangemodal.css";
 * {
     margin: 0;
     box-sizing: border-box;
