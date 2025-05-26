@@ -452,14 +452,16 @@ function initializeDataTable() {
             serverSide: true,
             complete: function (xhr) {
                 // Compute total rendered hours after data is loaded
+                console.log("True: Load")
                 computeTotalRenderedHoursEmp();
             },
             error: function (err) {
                 setTimeout(function () {
-                    alert(err.responseText);
+                    //alert(err.responseText);
+                    console.log(err.responseText);
                 }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
             }
-        },
+        }, paging: true,
         columns: [
             // {
             //     "title": "Profile",
@@ -531,8 +533,9 @@ function initializeDataTable() {
                 "data": "timeOut",
                 "render": function (data, type, row) {
                     if (data == '') {
-                        var noValue = "";
-                        return noValue;
+                        var timeout = new Date().toLocaleString('en-US');
+                        timeout = timeout.replace(',', '').replaceAll('/', '-');
+                        return timeout;
                     }
                     else {
                         // var timeout = new Date(data).toLocaleTimeString('en-US');
@@ -547,12 +550,21 @@ function initializeDataTable() {
                 "title": "Total Rendered Hours",
                 "data": "renderedHours", "orderable": false,
                 "render": function (data, type, row) {
-                    if (data != '' || data != null) {
-                        return data;
+                    if (data == "") {
+                        function calculateHoursDifference(date1, date2) {
+                            const diffInMs = Math.abs(date2.getTime() - date1.getTime());
+                            return diffInMs / (1000 * 60 * 60);
+                        }
+
+                        const date1 = new Date(row.timeIn);
+                        const date2 = new Date();
+
+                        const hoursDifference = calculateHoursDifference(date1, date2);
+                        return hoursDifference.toFixed(2);
                     }
                     else {
-                        
-                        return 0;
+                       
+                        return data;
                     }
 
                 }
@@ -772,6 +784,9 @@ function initializeDataTable() {
     };
 
     var table = $(tableId).DataTable(dtProperties);
+    setInterval(function () {
+        table.ajax.reload();
+    }, 100000);
     // France Function
     $(tableId).on('mouseenter', 'tbody tr', function () {
         var data = table.row(this).data();

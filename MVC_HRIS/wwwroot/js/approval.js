@@ -690,7 +690,27 @@ function initializeOTDataTable() {
                 "title": "OT-Number",
                 "data": "otNo", "orderable": false,
             },
-
+            {
+                "title": "Profile",
+                "data": "id", "orderable": false,
+                "render": function (data, type, row) {
+                    var fullname = row['fullname'];
+                    var splitsFullname = fullname.split(" ");
+                    var initial = splitsFullname[0].charAt(0) + splitsFullname[2].charAt(0);
+                    initial = initial.toUpperCase();     
+                    result = `<div style="display: flex;flex-direction: row;gap: 15px;align-items: center;">
+                                <div class="data-img">
+                                    <div class="initial"> ${initial} </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span>${row.fullname}</span>
+                                    <p style="margin:0">${row.employeeNo}</p>
+                                </div>
+                            </div>`;
+                    
+                    return result;
+                }
+            },
             {
                 "title": "Date",
                 "data": "date", "orderable": true
@@ -716,7 +736,7 @@ function initializeOTDataTable() {
                 "data": "hoursFiled", "orderable": false
             },
             {
-                "title": "Reason:",
+                "title": "Reason",
                 "data": "remarks", "orderable": false
             }
             ,
@@ -824,10 +844,15 @@ function initializeOTDataTable() {
             },
             {
                 targets: [1], // OT-Number column
-                width: "20%"
+                width: "10%"
             },
             {
-                targets: [2], // Date column (only sortable column)
+                targets: [2], // OT-Number column
+                width: "20%",
+                "className": "text-left",
+            },
+            {
+                targets: [3], // Date column (only sortable column)
                 type: 'date',
                 width: "10%",
                 render: function (data, type, row) {
@@ -839,12 +864,12 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [3, 4, 8], // Start Time, End Time
+                targets: [4, 5], // Start Time, End Time
                 orderable: false,
                 className: 'none'
             },
             {
-                targets: [5, 6], // Start Date, End Date
+                targets: [6, 7], // Start Date, End Date
                 orderable: false,
                 className: 'none',
                 render: function (data, type, row) {
@@ -856,23 +881,23 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [7], // Hours Filed, Hours Approved
+                targets: [8], // Hours Filed, Hours Approved
                 orderable: false,
                 width: "10%"
             },
             {
-                targets: [8], // Remarks column
+                targets: [9], // Remarks column
                 orderable: false,
                 width: "10%"
             },
             {
-                targets: [9], // Convert To Leave Column
+                targets: [10], // Convert To Leave Column
                 orderable: false,
                 width: "10%"
 
             },
             {
-                targets: [10], // Status Column
+                targets: [11], // Status Column
                 orderable: false,
                 width: "10%",
                 createdCell: function (td, cellData, rowData, row, col) {
@@ -886,7 +911,7 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [11], // Convert To Leave Column
+                targets: [12], // Convert To Leave Column
                 orderable: false,
                 width: "100px", "className": "text-center", "targets": "7"
 

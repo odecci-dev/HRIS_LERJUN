@@ -926,5 +926,60 @@ namespace API_HRIS.Controllers
                 return Problem(ex.GetBaseException().ToString());
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> OverTimeReport()
+        {
+            try
+            {
+                
+                    var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
+                    message.To.Add(new MailboxAddress("France Samaniego", "france.samaniego@odecci.com"));
+                    message.Subject = "New Overtime[France Samaniego]";
+                    var bodyBuilder = new BodyBuilder();
+                    bodyBuilder.HtmlBody = @"
+                                        <html>
+                                            <head>
+                                            <meta charset='UTF-8' />
+                                            <title>Overtime Status Updated</title>
+                                            </head>
+                                                <body style='margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;'>
+                                                    <h1>Hi</h1>
+                                                </body>
+                                            </html>";
+                    message.Body = bodyBuilder.ToMessageBody();
+                    using (var client = new SmtpClient())
+                    {
+                        await client.ConnectAsync("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                        await client.AuthenticateAsync("info@odecci.com", "Roq30573");
+                        await client.SendAsync(message);
+                        await client.DisconnectAsync(true);
+                    }
+
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                dbmet.InsertAuditTrail("Overtime Approval Notification" + " " + ex.Message, DateTime.Now.ToString("yyyy-MM-dd"), "Overtime Module", "User", "0");
+                return Problem(ex.GetBaseException().ToString());
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> OverTimeReportList()
+        {
+            try
+            {
+                var ot = _context.TblOvertimeModel.ToList();
+                
+                return Ok(ot);
+            }
+            catch (Exception ex)
+            {
+                
+                return Problem(ex.GetBaseException().ToString());
+            }
+        }
+
     }
 }
