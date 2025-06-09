@@ -143,7 +143,7 @@ function MultiDeletePayroll() {
 
         for (var checkbox of checkedCheckboxes) {
             var value = checkbox.value;
-            
+
             var data = {};
             data.id = value;
             data.deleteFlag = 1;
@@ -159,9 +159,9 @@ function MultiDeletePayroll() {
                 //notifyMsg('Success!', 'Successfully Deleted', 'green', 'fas fa-check');
                 //initializePayrollDataTable();
             });
-            
+
         }
-        
+
         notifyMsg('Success!', 'Successfully Deleted', 'green', 'fas fa-check');
         window.location.reload();
     }
@@ -220,8 +220,6 @@ function initializePayrollDataTable() {
                 "title": "Action",
                 "data": "id",
                 "render": function (data, type, row) {
-                    
-
                     var button = `<label class="popup">
                                     <input type="checkbox">
                                     <div class="burger" tabindex="0">
@@ -290,7 +288,7 @@ function initializePayrollDataTable() {
                     }
                     return data;
                 }
-            }, 
+            },
             {
                 targets: 4,
                 orderable: false,

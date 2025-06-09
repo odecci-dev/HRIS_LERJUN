@@ -293,7 +293,7 @@ namespace MVC_HRIS.Controllers
         public class multiOTApprovalParam
         {
             public int? Status { get; set; }
-            public List<multiOTApprovalParamList> otapproval { get; set; }
+            public List<multiOTApprovalParamList>? otapproval { get; set; }
         }
         [HttpPost]
         public async Task<IActionResult> MultiApproval(multiOTApprovalParam data)
@@ -525,6 +525,39 @@ namespace MVC_HRIS.Controllers
             {
                 HttpClient client = new HttpClient();
                 var url = DBConn.HttpString + "/OverTime/NewOverTimeNotification";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                using (var response = await client.PostAsync(url, content))
+                {
+                    HttpStatusCode statusCode = response.StatusCode;
+                    int numericStatusCode = (int)statusCode;
+                    string res = await response.Content.ReadAsStringAsync();
+                    list = JsonConvert.DeserializeObject<List<TblOvertimeModel>>(res);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string status = ex.GetBaseException().ToString();
+            }
+            return Json(list);
+            //return View();
+        }
+        public class OverTimeNotificationParam
+        {
+            public string? employeeId { get; set; }
+            public string? overtimeId { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> OverTimeApprovalNotification(multiOTApprovalParam data)
+        {
+            string result = "";
+            var list = new List<TblOvertimeModel>();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = DBConn.HttpString + "/OverTime/OverTimeApprovalNotification";
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token_.GetValue());
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 using (var response = await client.PostAsync(url, content))

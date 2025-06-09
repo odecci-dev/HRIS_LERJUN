@@ -284,9 +284,9 @@ footer {
     display: flex;
 }
 
-.float-btn {
+/*.float-btn {
     display: none;
-}
+}*/
 
 table span {
 /*    color: var(--dark);*/
@@ -385,7 +385,7 @@ table .child ul li .dtr-data .action {
         height: 100% !important;
         font-weight: 700;
     }
-@media only screen and (max-width: 1024px) {
+/*@media only screen and (max-width: 1024px) {
     #dashboard-main-container.active {
         width: 100vw !important;
     }
@@ -405,12 +405,12 @@ table .child ul li .dtr-data .action {
 
         .content-container h4 {
             font-size: 22px !important;
-        }
+        }*/
     /*.date-input,
     .time-btn {
         width: 100% !important;
     }*/
-    .date-input input {
+    /*.date-input input {
         width: 150px !important;
     }
 
@@ -421,9 +421,9 @@ table .child ul li .dtr-data .action {
     .modal-holder {
         position: fixed;
         top: 0;
-        left: 0;
+        left: 0;*/
         /*    width: calc(100vw - var(--sidebarwidth-active));*/
-        width: 100vw;
+        /*width: 100vw;
         height: 100vh;
         display: flex;
         align-items: center;
@@ -609,7 +609,7 @@ table .child ul li .dtr-data .action {
     #time-table span {
         color: var(--dark) !important;
     }
-}
+}*/
 
 
 /*Timelogs Summary*/

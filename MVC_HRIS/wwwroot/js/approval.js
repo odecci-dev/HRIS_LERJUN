@@ -690,7 +690,27 @@ function initializeOTDataTable() {
                 "title": "OT-Number",
                 "data": "otNo", "orderable": false,
             },
-
+            {
+                "title": "Profile",
+                "data": "id", "orderable": false,
+                "render": function (data, type, row) {
+                    var fullname = row['fullname'];
+                    var splitsFullname = fullname.split(" ");
+                    var initial = splitsFullname[0].charAt(0) + splitsFullname[2].charAt(0);
+                    initial = initial.toUpperCase();     
+                    result = `<div style="display: flex;flex-direction: row;gap: 15px;align-items: center;">
+                                <div class="data-img">
+                                    <div class="initial"> ${initial} </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column;">
+                                    <span>${row.fullname}</span>
+                                    <p style="margin:0">${row.employeeNo}</p>
+                                </div>
+                            </div>`;
+                    
+                    return result;
+                }
+            },
             {
                 "title": "Date",
                 "data": "date", "orderable": true
@@ -716,7 +736,7 @@ function initializeOTDataTable() {
                 "data": "hoursFiled", "orderable": false
             },
             {
-                "title": "Reason:",
+                "title": "Reason",
                 "data": "remarks", "orderable": false
             }
             ,
@@ -756,14 +776,16 @@ function initializeOTDataTable() {
                                     <nav class="popup-window">
                                            <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
                                                     data-id="${data}"
-                                                    data-status="1005"
+                                                    data-status="1"
+                                                    data-approvedhours="0"
                                                     style="width: 100px; font-size:13px; padding: 5px 5px"
                                                 >
                                                 <i class="fa-solid fa-circle-xmark"></i> Decline
                                             </button>
                                             <button class="tbl-approve btn btn-success" id="add-timeout" title="Time Out"
                                                     data-id="${data}"
-                                                    data-status="5"          
+                                                    data-status="1"
+                                                    data-approvedhours="${row.hoursFiled}"          
                                                     style="width: 100px; font-size:13px; padding: 5px 5px"
                                                 >
                                                 <i class="fa-solid fa-circle-check"></i> Approve
@@ -822,10 +844,15 @@ function initializeOTDataTable() {
             },
             {
                 targets: [1], // OT-Number column
-                width: "20%"
+                width: "10%"
             },
             {
-                targets: [2], // Date column (only sortable column)
+                targets: [2], // OT-Number column
+                width: "20%",
+                "className": "text-left",
+            },
+            {
+                targets: [3], // Date column (only sortable column)
                 type: 'date',
                 width: "10%",
                 render: function (data, type, row) {
@@ -837,12 +864,12 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [3, 4, 8], // Start Time, End Time
+                targets: [4, 5], // Start Time, End Time
                 orderable: false,
                 className: 'none'
             },
             {
-                targets: [5, 6], // Start Date, End Date
+                targets: [6, 7], // Start Date, End Date
                 orderable: false,
                 className: 'none',
                 render: function (data, type, row) {
@@ -854,23 +881,23 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [7], // Hours Filed, Hours Approved
+                targets: [8], // Hours Filed, Hours Approved
                 orderable: false,
                 width: "10%"
             },
             {
-                targets: [8], // Remarks column
+                targets: [9], // Remarks column
                 orderable: false,
                 width: "10%"
             },
             {
-                targets: [9], // Convert To Leave Column
+                targets: [10], // Convert To Leave Column
                 orderable: false,
                 width: "10%"
 
             },
             {
-                targets: [10], // Status Column
+                targets: [11], // Status Column
                 orderable: false,
                 width: "10%",
                 createdCell: function (td, cellData, rowData, row, col) {
@@ -884,7 +911,7 @@ function initializeOTDataTable() {
                 }
             },
             {
-                targets: [11], // Convert To Leave Column
+                targets: [12], // Convert To Leave Column
                 orderable: false,
                 width: "100px", "className": "text-center", "targets": "7"
 
@@ -921,6 +948,10 @@ function initializeOTDataTable() {
             //},
             {
                 text: 'Filters',
+                className: 'pot-filter',
+                attr: {
+                    id: 'pot-filter' // Your custom ID here
+                },
                 action: function () { },
                 init: function (api, node, config) {
                     let filterUI = "";
@@ -1028,23 +1059,25 @@ function OTTableMOD() {
 
         initializeOTDataTable();
     });
-    $('#pending-overtime-table').on('click', '.tbl-decline', function () {
-        var id = $(this).data('id');
-        var status = $(this).data('status');
+    //$('#pending-overtime-table').on('click', '.tbl-decline', function () {
+    //    var id = $(this).data('id');
+    //    var status = $(this).data('status');
 
-        localStorage.setItem('id', id);
-        localStorage.setItem('status', status);
-        //declinemodal();
-        //$("#alertmodal").modal('show');
-        OTdeclinemodal();
-        $("#alertmodal").modal('show');
-    });
+    //    localStorage.setItem('id', id);
+    //    localStorage.setItem('status', status);
+    //    //declinemodal();
+    //    //$("#alertmodal").modal('show');
+    //    OTdeclinemodal();
+    //    $("#alertmodal").modal('show');
+    //});
     $('#pending-overtime-table').on('click', '.tbl-approve', function () {
         var id = $(this).data('id');
         var status = $(this).data('status');
+        var approvedHours = $(this).data('approvedhours');
 
         localStorage.setItem('id', id);
         localStorage.setItem('status', status);
+        localStorage.setItem('approvedHours', approvedHours);
         //approvemodal();
         OTapprovemodal();
         $("#alertmodal").modal('show');
@@ -1128,15 +1161,49 @@ function OTdeclinemodal() {
     $('.img-header').append('<img id="modalImage" src="/img/OPTION.webp" alt="Modal Image" />');
 }
 function changeStatus_item() {
+   //alert("Update");
     var id = localStorage.getItem('id');
     var status = localStorage.getItem('status');
-    var data = {};
-    data.id = id;
-    data.status = status;
+    var approvedHours = localStorage.getItem('approvedHours');
+    //var data = {};
+    //data.id = id;
+    //data.status = status;
 
+    //$.ajax({
+    //    url: '/OverTime/updateStatus',
+    //    data: data,
+    //    type: "POST",
+    //    dataType: "json"
+    //}).done(function (data) {
+    //    var status = data.status;
+    //    console.log(status);
+    //    if (status === 'Entity already exists') {
+    //        notifyMsg('Warning!', 'OT already exists', 'yellow', 'fas fa-check');
+    //    }
+    //    else {
+    //        notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+    //    }
+
+    //    $("#alertmodal").modal('hide');
+    //    initializeOTDataTable();
+    //});
+    otapproval = [];
+    otapproval.push({
+        Id: id,
+        reason: '',
+        HoursApproved: approvedHours ? approvedHours : 0  // Use input value, default to 0 if not found
+    });
+    var data = {};
+    var emaildata = {};
+    data.otapproval = otapproval;
+    data.status = status;
+    console.log(data);
+    var emaildata = {};
+    emaildata.otapproval = otapproval;
+    emaildata.status = status;
 
     $.ajax({
-        url: '/OverTime/updateStatus',
+        url: '/Overtime/MultiApproval',
         data: data,
         type: "POST",
         dataType: "json"
@@ -1148,12 +1215,37 @@ function changeStatus_item() {
         }
         else {
             notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+
+            $.ajax({
+                url: '/Overtime/OverTimeApprovalNotification',
+                data: emaildata,
+                type: "POST",
+                dataType: "json"
+            }).done(function (data) {
+                console.log(data);
+            });
         }
 
-        $("#alertmodal").modal('hide');
-        initializeOTDataTable();
+        modal = document.getElementById('defaultmodal');
+        modal.style.display = "none";
+        // window.location.reload();
+        sessionStorage.setItem("LeaveFlag", "false");
+        sessionStorage.setItem("TLFlag", "false");
+        sessionStorage.setItem("OTFlag", "true");
+        window.location.reload();
     });
 }
+
+$('#pending-overtime-table').on('click', '.tbl-decline', function () {
+    otStatusIdentifier = 0;
+    var id = $(this).data('id');
+    var status = $(this).data('status');
+    
+    loadModal('/Overtime/OTApproval', '#defaultmodal', '<i class="fa-solid fa-business-time"></i> Decline Overtime ', 'l', false);
+    selectedRequest.length = 0;
+    selectedRequest.push(id);
+    console.log(selectedRequest);
+});
 
 //Leave Tab
 function initializeLeaveDataTable() {
@@ -1558,3 +1650,13 @@ function viewRejectedLR() {
         }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
     }
 }
+document.addEventListener('keydown', function (event) {
+    if (event.keyCode === 27) {
+        //actionotfiling.style.display = "none";
+        //pencilotfiling.style.display = "block";
+        //document.getElementById('ot-filing-container').style.display = "none";
+        //document.getElementById('select-date-container').style.display = "none";
+        document.getElementById('pot-filter').style.display = "none";
+
+    }
+});

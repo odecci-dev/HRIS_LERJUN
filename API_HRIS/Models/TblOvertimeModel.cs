@@ -12,7 +12,7 @@ public partial class TblOvertimeModel
     public int Id { get; set; }
     [Column(TypeName = "varchar(255)")]
     [MaxLength(255)]
-    public string? OTNo { get; set; }
+    public string? OTNo { get; private set; }
     [Column(TypeName = "varchar(255)")]
     [MaxLength(255)]
     public string? EmployeeNo { get; set; }
