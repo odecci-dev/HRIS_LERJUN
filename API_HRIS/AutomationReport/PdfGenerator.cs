@@ -52,6 +52,7 @@ namespace API_HRIS.AutomationReport
             public string? PositionLevel { get; set; }
             public int? ManagerId { get; set; }
             public string? Manager { get; set; }
+            public string? ManagerEmail { get; set; }
             public string? Rate { get; set; }
             public string? DaysInMonth { get; set; }
             
@@ -65,22 +66,32 @@ namespace API_HRIS.AutomationReport
                 DateTime today = DateTime.Today;
                 DateTime dateFrom = DateTime.Today;
                 DateTime dateTo = DateTime.Today;
-                if (today.Day <= 26)
+                if (today.Month == 1 && today.Day < 26 && today.Day > 10)
                 {
-                    dateTo = new DateTime(today.Year, today.Month, 26);
+                    dateFrom = new DateTime((today.Year - 1), 12, 26);
+                    dateTo = new DateTime((today.Year), today.Month, 11);
+                }
+                else if (today.Month == 1 && today.Day < 11)
+                {
+                    dateFrom = new DateTime((today.Year - 1), (today.Month - 1), 11);
+                    dateTo = new DateTime((today.Year - 1), (today.Month - 1), 26);
+                }
+                else if (today.Day < 26 && today.Day > 10)
+                {
+                    dateTo = new DateTime(today.Year, today.Month - 1, 26);
                     dateFrom = new DateTime(today.Year, today.Month, 11);
                 }
-                else if (today.Day <= 11)
+                else if (today.Day > 25)
                 {
-                    dateFrom = new DateTime(today.Year, (today.Month - 1), 26);
-                    dateTo = new DateTime(today.Year, today.Month, 11);
+                    dateFrom = new DateTime(today.Year, (today.Month), 11);
+                    dateTo = new DateTime(today.Year, today.Month, 26);
                 }
                 else
                 {
-                    dateFrom = new DateTime(today.Year, (today.Month - 1), 26);
-                    dateTo = new DateTime(today.Year, today.Month, 11);
+                    dateFrom = new DateTime(today.Year, (today.Month - 1), 11);
+                    dateTo = new DateTime(today.Year, today.Month - 1, 26);
                 }
-                    ot = ot
+                ot = ot
                         .Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.isDeleted == false)
                         .ToList();
 
@@ -148,6 +159,7 @@ namespace API_HRIS.AutomationReport
                                   Gender = employee.Gender,
                                   Position = position != null ? position.Name : "No Position",
                                   Manager = manager != null ? manager.Fullname : "No Supervisor Assigned",
+                                  ManagerEmail = manager != null ? manager.Email : "No Supervisor Assigned",
                                   Department = department != null ? department.DepartmentName : "No Department",
                                   EmployeeType = etype != null ? etype.Title : "No Employee Type",
                                   PositionLevel = plevel != null ? plevel.Level : "No Position Level",
@@ -174,43 +186,75 @@ namespace API_HRIS.AutomationReport
             DateTime today = DateTime.Today;
             DateTime dateFrom = DateTime.Today;
             DateTime dateTo = DateTime.Today;
-            if (today.Day <= 26)
+            if (today.Month == 1 && today.Day < 26 && today.Day > 10)
             {
-                dateTo = new DateTime(today.Year, today.Month, 26);
+                dateFrom = new DateTime((today.Year - 1), 12, 26);
+                dateTo = new DateTime((today.Year), today.Month, 11);
+            }
+            else if (today.Month == 1 && today.Day < 11)
+            {
+                dateFrom = new DateTime((today.Year - 1), (today.Month - 1), 11);
+                dateTo = new DateTime((today.Year - 1), (today.Month - 1), 26);
+            }
+            else if (today.Day < 26 && today.Day > 10)
+            {
+                dateTo = new DateTime(today.Year, today.Month - 1, 26);
                 dateFrom = new DateTime(today.Year, today.Month, 11);
             }
-            else if(today.Day <= 11)
+            else if (today.Day > 25)
             {
-                dateFrom = new DateTime(today.Year, (today.Month-1), 26);
-                dateTo = new DateTime(today.Year, today.Month, 11);
+                dateFrom = new DateTime(today.Year, (today.Month), 11);
+                dateTo = new DateTime(today.Year, today.Month, 26);
             }
             else
             {
-                dateFrom = new DateTime(today.Year, (today.Month - 1), 26);
-                dateTo = new DateTime(today.Year, today.Month, 11);
+                dateFrom = new DateTime(today.Year, (today.Month - 1), 11);
+                dateTo = new DateTime(today.Year, today.Month - 1, 26);
             }
             ot = ot.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.EmployeeNo == employeeNo && x.isDeleted == false).ToList();
             int count = ot?.Count() ?? 0;
-            var ApprovedOT = ot.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.EmployeeNo == employeeNo && x.isDeleted == false && x.Status == 5).ToList();
-            int ApprovedOTCount = ApprovedOT.Count;
+            var OvertimeHours = ot.Where(x => x.Date >= dateFrom && x.Date <= dateTo && x.EmployeeNo == employeeNo && x.isDeleted == false).ToList();
+            int ApprovedOTCount = OvertimeHours.Count;
             decimal ApprovedHours = 0;
-            string TotalHour = "";
-            if(ApprovedOTCount != 0)
+            string ApprovedTotalHour = "";
+            decimal PendingHours = 0;
+            string PendingTotalHour = "";
+            decimal RejectedHours = 0;
+            string RejectedTotalHour = "";
+            if (ApprovedOTCount != 0)
             {
-                for (int i = 0; i < ApprovedOT.Count; i++)
+                for (int i = 0; i < OvertimeHours.Count; i++)
                 {
-                    string ha = "";
-                    if (ApprovedOT[i].HoursApproved != null)
+                    string hf = "";
+                    if (OvertimeHours[i].HoursFiled != null)
                     {
-                        ha = ApprovedOT[i].HoursApproved.ToString();
-
-                        if (decimal.TryParse(ha, out decimal hoursApproved))
+                        hf = OvertimeHours[i].HoursFiled.ToString();
+                        if(OvertimeHours[i].Status == 5)
                         {
-                            ApprovedHours = (ApprovedHours + hoursApproved);
+                            if (decimal.TryParse(hf, out decimal hoursApproved))
+                            {
+                                ApprovedHours = (ApprovedHours + hoursApproved);
+                            }
+                        }
+                        else if (OvertimeHours[i].Status == 1004)
+                        {
+                            if (decimal.TryParse(hf, out decimal hoursPending))
+                            {
+                                PendingHours = (PendingHours + hoursPending);
+                            }
+                        }
+                        else
+                        {
+                            if (decimal.TryParse(hf, out decimal hoursRejected))
+                            {
+                                RejectedHours = (RejectedHours + hoursRejected);
+                            }
                         }
                     }
                 }
-                TotalHour = ApprovedHours.ToString();
+                ApprovedTotalHour = ApprovedHours.ToString() == null ? "0" : ApprovedHours.ToString();
+                PendingTotalHour = PendingHours.ToString() == null ? "0" : PendingHours.ToString();
+                RejectedTotalHour = RejectedHours.ToString() == null ? "0" : RejectedHours.ToString();
             }
             
             string formattedDateToday = today.ToString("yyyy-MM-dd"); // or your preferred format
@@ -222,20 +266,27 @@ namespace API_HRIS.AutomationReport
                     page.Margin(40);
                     page.Size(PageSizes.A4);
                     page.DefaultTextStyle(x => x.FontSize(12));
+                    // 3) a stream
+                    using var stream = new FileStream("AutomationReport/odecciLogo.png", FileMode.Open);
 
-                    //page.Header().Text("Event Registration Form").FontSize(20).Bold().AlignCenter();
-                    page.Header().Column(column =>
+                    //page.Header().AlignMiddle().Column(column =>
+                    //{
+                    //    column.Item().Row(row =>
+                    //    {
+                    //        row.RelativeItem().Text("OVERTIME REQUEST FORM")
+                    //        .AlignLeft();
+                    //        row.ConstantItem(96).AlignRight().Element(x =>
+                    //        {
+                    //            x.Image(stream);
+                    //        });
+                    //    });
+                    //});
+                    page.Header().AlignMiddle().Row(row =>
                     {
-                        column.Item().Row(row =>
-                        {
-                            row.RelativeItem().Text("OVERTIME REQUEST FORM")
-                            .AlignLeft();
+                        row.RelativeItem().AlignLeft().AlignBottom().Text("OVERTIME REQUEST FORM")
+                            .FontSize(10).Bold();
 
-                            row.RelativeItem().Text("ODECCI")
-                            .FontSize(24)
-                            .Bold()
-                            .AlignRight();
-                        });
+                        row.ConstantItem(96).AlignRight().Image(stream);
                     });
                     page.Content().Column(column =>
                     {
@@ -378,6 +429,7 @@ namespace API_HRIS.AutomationReport
                                 columns.RelativeColumn(); // Column 3
                                 columns.RelativeColumn(); // Column 4
                                 columns.RelativeColumn(); // Column 5
+                                columns.RelativeColumn(); // Column 5
                             });
 
                             // Header row
@@ -412,6 +464,10 @@ namespace API_HRIS.AutomationReport
                             .Bold();
                             table.Cell().Element(CellStyleTitle)
                             .Text("END TIME")
+                            .FontSize(10)
+                            .Bold();
+                            table.Cell().Element(CellStyleTitle)
+                            .Text("Hours Filed")
                             .FontSize(10)
                             .Bold();
                             table.Cell().Element(CellStyleTitle)
@@ -474,6 +530,9 @@ namespace API_HRIS.AutomationReport
                                     .Text(formattedEndTime)
                                     .FontSize(10);
                                     table.Cell().Element(CellStyle)
+                                    .Text(ot[i].HoursFiled.ToString().Split(' ')[0])
+                                    .FontSize(10);
+                                    table.Cell().Element(CellStyle)
                                     .Text(status)
                                     .FontSize(10);
                                 }
@@ -529,7 +588,25 @@ namespace API_HRIS.AutomationReport
                                 .FontSize(10)
                                 .Bold();
                                 header.Cell().ColumnSpan(1).Element(CellStyleTitle)
-                                .Text(TotalHour)
+                                .Text(ApprovedTotalHour)
+                                .FontSize(10)
+                                .Bold();
+
+                                header.Cell().ColumnSpan(2).Element(CellStyle)
+                                .Text("PENDING NUMBER OF OVERTIME HOURS")
+                                .FontSize(10)
+                                .Bold();
+                                header.Cell().ColumnSpan(1).Element(CellStyleTitle)
+                                .Text(PendingTotalHour)
+                                .FontSize(10)
+                                .Bold();
+
+                                header.Cell().ColumnSpan(2).Element(CellStyle)
+                                .Text("REJECTED NUMBER OF OVERTIME HOURS")
+                                .FontSize(10)
+                                .Bold();
+                                header.Cell().ColumnSpan(1).Element(CellStyleTitle)
+                                .Text(RejectedTotalHour)
                                 .FontSize(10)
                                 .Bold();
                             });
@@ -544,7 +621,7 @@ namespace API_HRIS.AutomationReport
                                     .BorderColor(Colors.Grey.Medium)
                                     .Background(Colors.Grey.Lighten2)
                                     .Padding(2)
-                                    .AlignCenter()
+                                    .AlignRight()
                                     ;
                             }
                             IContainer CellStyle(IContainer container)
@@ -553,7 +630,7 @@ namespace API_HRIS.AutomationReport
                                     .Border(1)
                                     .BorderColor(Colors.Grey.Medium)
                                     .Padding(2)
-                                    .AlignCenter()
+                                    .AlignLeft()
                                     ;
                             }
                             // Styling helper
@@ -628,7 +705,7 @@ namespace API_HRIS.AutomationReport
 
                     page.Footer().AlignCenter().Text(x =>
                     {
-                        x.Span("Generated by QuestPDF • ");
+                        x.Span("For any overtime related concerns or queries please contact your Immedate Supervisor/Representative.");
                         x.Span(DateTime.Now.ToShortDateString());
                     });
                 });

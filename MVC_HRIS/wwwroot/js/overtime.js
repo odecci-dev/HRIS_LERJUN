@@ -472,7 +472,6 @@ document.addEventListener('keydown', function (event) {
 });
 $("#ot-apply-date").click(function () {
 
-
     document.getElementById('select-date-container').style.display = "none";
     pencilotfiling.style.display = "block";
     FetchOvertimeList();
@@ -597,7 +596,6 @@ $("#pot-select-date").click(function () {
 $("#close-pot-select-date").click(function () {
 
     document.getElementById('pot-select-date-container').style.display = "none";
-    //pencilotfiling.style.display = "block";
 });
 
 var otFilterIdentifier = 0;
