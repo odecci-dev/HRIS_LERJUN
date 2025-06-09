@@ -10,7 +10,7 @@ namespace API_HRIS.Models;
 public partial class TblLeaveRequestModel
 {
     public int Id { get; set; }
-    public string? LeaveRequestNo { get; set; }
+    public string? LeaveRequestNo { get; private set; }
     public string? EmployeeNo { get; set; }
     public string? ApprovalReason { get; set; }
     public DateTime? Date { get; set; }

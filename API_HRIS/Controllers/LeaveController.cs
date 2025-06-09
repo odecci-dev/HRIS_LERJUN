@@ -1,15 +1,18 @@
 ﻿using API_HRIS.Manager;
 using API_HRIS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
-using System.Globalization;
-using System;
 using Microsoft.IdentityModel.Tokens;
-using System.Drawing;
+using MimeKit;
 using PeterO.Numbers;
+using System;
 using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace API_HRIS.Controllers
 {
@@ -249,7 +252,7 @@ namespace API_HRIS.Controllers
 
                     var leaveRequest = new TblLeaveRequestModel
                     {
-                        LeaveRequestNo = leaveno,
+                        //LeaveRequestNo = leaveno,
                         EmployeeNo = data.EmployeeNo,
                         Date = DateTime.Now,
                         StartDate = data.StartDate,
@@ -454,6 +457,233 @@ namespace API_HRIS.Controllers
             }
 
             return Content(status);
+        }
+        public class NewLeaveNotificationParam
+        {
+            public string employeeId { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> NewLeaveNotification(List<NewLeaveNotificationParam> data)
+        {
+            for(int i = 0; i < data.Count; i++)
+            {
+            var _leave = _context.TblLeaveRequestModel
+                .Where(a => a.EmployeeNo == data[i].employeeId)
+                .ToList();
+            var _user = _context.TblUsersModels.ToList();
+
+            var newLeave = (from lr in _leave
+
+                            join user in _user
+                            on lr.EmployeeNo equals user.EmployeeId into usergroup
+                            from user in usergroup.DefaultIfEmpty()
+
+                            join manager in _user
+                            on user.ManagerId equals manager.Id into managergroup
+                            from manager in managergroup.DefaultIfEmpty()
+
+                            join lt in _context.TblLeaveTypeModel
+                            on lr.LeaveTypeId equals lt.Id into ltgroup
+                            from lt in ltgroup.DefaultIfEmpty()
+
+                            join status in _context.TblStatusModels
+                            on lr.Status equals status.Id into statusgroup
+                            from status in statusgroup.DefaultIfEmpty()
+                            select new
+                            {
+                                Id = lr.Id,
+                                LeaveRequestNo = lr?.LeaveRequestNo,
+                                Date = lr?.Date,
+                                EmployeeNo = lr?.EmployeeNo,
+                                EmployeeName = user?.Fullname,
+                                EmployeeEmail = user?.Email,
+                                StartDate = lr?.StartDate,
+                                EndDate = lr?.EndDate,
+                                DaysFiled = lr?.DaysFiled,
+                                leaveType = lt?.Name ?? "No Leave Type",
+                                Reason = lr?.Reason,
+                                Status = status?.Status,
+                                Manager = manager?.Fullname,
+                                ManagerEmail = manager?.Email
+
+
+                            }).OrderByDescending(a => a.Id).FirstOrDefault();
+                var message = new MimeMessage();
+                var message2 = new MimeMessage();
+
+                message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
+                message2.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
+                //url = registrationDomain + "registration?empid=" + data.EmployeeId[x] + "&compid=" + data.CompanyId[x] + "&email=" + data.Email[x];
+                message2.To.Add(new MailboxAddress(newLeave.EmployeeName, newLeave.EmployeeEmail));
+                if (newLeave.ManagerEmail != null || newLeave.ManagerEmail != "" && newLeave.Manager != null || newLeave.Manager != "")
+                {
+                    message.To.Add(new MailboxAddress(newLeave.Manager, newLeave.ManagerEmail));
+                }
+                
+                message.Subject = "New Leave[" + newLeave.EmployeeName + "]";
+                message2.Subject = "New Leave[" + newLeave.EmployeeName + "]";
+                var bodyBuilder = new BodyBuilder();
+                var bodyBuilder2 = new BodyBuilder();
+                bodyBuilder.HtmlBody = @"
+                                        <html>
+                                            <head>
+                                            <meta charset='UTF-8' />
+                                            <title>New Leave</title>
+                                            </head>
+                                            <body style='margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;'>
+                                            <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #f4f4f4; padding: 30px 0;'>
+                                                <tr>
+                                                <td align='center'>
+                                                    <table width='600' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.08);'>
+
+                                                    <!-- Header -->
+                                                    <tr>
+                                                        <td style='background-color: #205375; padding: 20px; color: #ffffff; text-align: center; font-size: 20px; font-weight: bold;'>
+                                                        New Overtime
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Body -->
+                                                    <tr>
+                                                        <td style='padding: 30px; color: #333333; font-size: 16px; line-height: 1.6;'>
+                                                        <p style='margin-top: 0;'>Hello " + newLeave.Manager + ",</p>"
+                                                        + "<p><strong>" + newLeave.EmployeeName + "</strong> has submitted an leave request. Please see the details below:</p>"
+
+                                                        + "<!-- List-style Details -->"
+                                                        + "<table width='100%' cellpadding='8' cellspacing='0' style='font-size: 14px;'>"
+                                                            + "<tr>"
+                                                            + "<td width='40%' style='font-weight: bold;'>LR-Number:</td>"
+                                                            + "<td>" + newLeave.LeaveRequestNo + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr style='background-color: #f9f9f9;'>"
+                                                            + "<td style='font-weight: bold;'>Date:</td>"
+                                                            + "<td>" + newLeave.Date.ToString().Split(' ')[0] + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr>"
+                                                            + "<td style='font-weight: bold;'>Start Date:</td>"
+                                                            + "<td>" + newLeave.StartDate.ToString().Split(' ')[0] + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr style='background-color: #f9f9f9;'>"
+                                                            + "<td style='font-weight: bold;'>End Date:</td>"
+                                                            + "<td>" + newLeave.EndDate.ToString().Split(' ')[0] + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr>"
+                                                            + "<td style='font-weight: bold;'>Days Filed:</td>"
+                                                            + "<td>" + newLeave.DaysFiled + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr style='background-color: #f9f9f9;'>"
+                                                            + "<td style='font-weight: bold;'>Reason:</td>"
+                                                            + "<td>" + newLeave.Reason + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr>"
+                                                            + "<td style='font-weight: bold;'>Status:</td>"
+                                                            + "<td>" + newLeave.Status + "</td>"
+                                                            + "</tr>"
+                                                        + "</table>"
+
+                                                        + "<!-- CTA Button -->"
+                                                        + "<p style='text-align: center; margin: 30px 0;'>"
+                                                            + "<a href='https://eportal.odeccisolutions.com/Approval/' style='background-color: #EC1C24; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-weight: bold;'>Review & Approve</a>"
+                                                        + "</p>"
+                                                        + "</td>"
+                                                    + "</tr>"
+
+                                                    + "<!-- Footer -->"
+                                                    + "<tr>"
+                                                        + "<td style='background-color: #f0f0f0; text-align: center; padding: 15px; font-size: 12px; color: #777777;'>"
+                                                        + "&copy; 2025 Odecci Solution Inc. All rights reserved."
+                                                        + "</td>"
+                                                    + "</tr>"
+
+                                                    + "</table>"
+                                                + "</td>"
+                                                + "</tr>"
+                                            + "</table>"
+                                            + "</body>"
+                                        + "</html>";
+                bodyBuilder2.HtmlBody = @"
+                                        <html>
+                                            <head>
+                                            <meta charset='UTF-8' />
+                                            <title>New Leave</title>
+                                            </head>
+                                            <body style='margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;'>
+                                            <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #f4f4f4; padding: 30px 0;'>
+                                                <tr>
+                                                <td align='center'>
+                                                    <table width='600' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.08);'>
+
+                                                    <!-- Header -->
+                                                    <tr>
+                                                        <td style='background-color: #205375; padding: 20px; color: #ffffff; text-align: center; font-size: 20px; font-weight: bold;'>
+                                                        New Leave
+                                                        </td>
+                                                    </tr>
+                                                    <!-- Body -->
+                                                    <tr>
+                                                        <td style='padding: 30px; color: #333333; font-size: 16px; line-height: 1.6;'>
+                                                        <p style='margin-top: 0;'>Hello " + newLeave.EmployeeName + ",</p>"
+                                                        + "<p>Review the leave you submitted below:</p>"
+
+                                                        + "<!-- List-style Details -->"
+                                                        + "<table width='100%' cellpadding='8' cellspacing='0' style='font-size: 14px;'>"
+                                                            + "<tr>"
+                                                            + "<td width='40%' style='font-weight: bold;'>LR-Number:</td>"
+                                                            + "<td>" + newLeave.LeaveRequestNo + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr style='background-color: #f9f9f9;'>"
+                                                            + "<td style='font-weight: bold;'>Date:</td>"
+                                                            + "<td>" + newLeave.Date.ToString().Split(' ')[0] + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr>"
+                                                            + "<td style='font-weight: bold;'>Start Date:</td>"
+                                                            + "<td>" + newLeave.StartDate.ToString().Split(' ')[0] + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr style='background-color: #f9f9f9;'>"
+                                                            + "<td style='font-weight: bold;'>End Date:</td>"
+                                                            + "<td>" + newLeave.EndDate.ToString().Split(' ')[0] + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr>"
+                                                            + "<td style='font-weight: bold;'>Days Filed:</td>"
+                                                            + "<td>" + newLeave.DaysFiled + "</td>"
+                                                            + "</tr>"
+                                                            + "<tr style='background-color: #f9f9f9;'>"
+                                                            + "<td style='font-weight: bold;'>Reason:</td>"
+                                                            + "<td>" + newLeave.Reason + "</td>"
+                                                            + "</tr>"
+                                                            + "<td style='font-weight: bold;'>Status:</td>"
+                                                            + "<td>" + newLeave.Status + "</td>"
+                                                            + "</tr>"
+                                                        + "</table>"
+                                                        + "</td>"
+                                                    + "</tr>"
+
+                                                    + "<!-- Footer -->"
+                                                    + "<tr>"
+                                                        + "<td style='background-color: #f0f0f0; text-align: center; padding: 15px; font-size: 12px; color: #777777;'>"
+                                                        + "&copy; 2025 Odecci Solution Inc. All rights reserved."
+                                                        + "</td>"
+                                                    + "</tr>"
+
+                                                    + "</table>"
+                                                + "</td>"
+                                                + "</tr>"
+                                            + "</table>"
+                                            + "</body>"
+                                        + "</html>";
+                message.Body = bodyBuilder.ToMessageBody();
+                message2.Body = bodyBuilder2.ToMessageBody();
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync("smtp.office365.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                    await client.AuthenticateAsync("info@odecci.com", "Roq30573");
+                    await client.SendAsync(message);
+                    await client.SendAsync(message2);
+                    await client.DisconnectAsync(true);
+                }
+
+            }
+
+            return Ok("Email Sent");
         }
     }
 }

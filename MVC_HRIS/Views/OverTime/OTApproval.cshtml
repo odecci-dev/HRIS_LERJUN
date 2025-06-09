@@ -195,6 +195,7 @@
                 var data = table.row(this).data();
             });
             const inputs = document.querySelectorAll('input[type="number"].approve-hours');
+            const inputsReason = document.querySelectorAll('.approval-reason');
             if(otStatusIdentifier == 0){
 
                 inputs.forEach(function(input) {
@@ -203,6 +204,14 @@
                     input.style.border ="none";
                     input.style.background = "transparent"
                 });
+                inputsReason.forEach(function(input) {
+                    input.disabled = false;  // Disable the input
+                    input.style.border ="1px solid black";
+                    input.style.background = "transparent";
+                    input.style.padding = "10px";
+                    input.style.borderRadius = "0";
+                });
+
             }
             else{
                  inputs.forEach(function(input) {
@@ -211,6 +220,12 @@
                     input.style.background = "transparent";
                     input.style.padding = "10px";
                     input.style.borderRadius = "0";
+                });
+                inputsReason.forEach(function(input) {
+                    input.disabled = true;  // Disable the input
+                    input.value = 'Approved';
+                    input.style.border ="none";
+                    input.style.background = "transparent"
                 });
             }
         }
@@ -221,15 +236,19 @@
                 let hoursInput = document.querySelector(`input[data-id="${el.dataset.id}"]`); // Find the matching input field
                 // otapproval.push({ id: el.dataset.id, reason: el.value, hoursApproved: hoursInput });
                 otapproval.push({
-                    id: el.dataset.id,
+                    Id: el.dataset.id,
                     reason: el.value,
-                    hoursApproved: hoursInput ? hoursInput.value : 0  // Use input value, default to 0 if not found
+                    HoursApproved: hoursInput ? hoursInput.value : 0  // Use input value, default to 0 if not found
                 });
             });
             var data = {};
+            var emaildata = {};
             data.otapproval = otapproval;
             data.status = otStatusIdentifier;
-            console.log(data)
+            console.log(data);
+            var emaildata = {};
+            emaildata.otapproval = otapproval;
+            emaildata.status = otStatusIdentifier;
 
             $.ajax({
                 url: '/Overtime/MultiApproval',
@@ -244,6 +263,15 @@
                 }
                 else {
                     notifyMsg('Success!', 'Successfully Saved', 'green', 'fas fa-check');
+
+                    $.ajax({
+                        url: '/Overtime/OverTimeApprovalNotification',
+                        data: emaildata,
+                        type: "POST",
+                        dataType: "json"
+                    }).done(function (data) {
+                        console.log(data);
+                    });
                 }
 
                 modal = document.getElementById('defaultmodal');

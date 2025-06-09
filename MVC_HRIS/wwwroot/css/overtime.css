@@ -173,3 +173,63 @@
     align-items: center;
     border-radius: 50%;
 }
+.action-navbarv2 {
+    background: #F0F1F2;
+    padding: 10px;
+    border-radius: 0;
+    display: flex;
+    justify-content: space-between
+}
+.action-navbarv2 *{
+    margin: 0 !important;
+}
+.action-navbarv2 select,
+.action-navbarv2 button,
+.action-navbarv2 .select{
+    background: var(--accent) !important;
+    color: var(--light) !important
+}
+.action-navbarv2 .select select,
+.action-navbarv2 .select select#otCuttOff{
+    background: transparent;
+    border: none !important;
+    box-shadow: none
+}
+.action-navbarv2 .select,
+.action-navbarv2 button{
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    height: 50px;
+}
+.action-navbarv2 button{
+    gap:15px;
+    border-radius: 0;
+}
+.action-navbarv2 .layer{
+     gap: 2px;
+ }
+.action-navbarv2 .layer-filter{
+     display: flex;
+     align-items: center;
+     gap: 20px !important;
+ }
+.pot-filter{
+    border:0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: none;
+}
+.pot-filter .gap-2{
+    
+    display: flex;
+    flex-direction: column-reverse !important
+}
+.action-navbarv2 .layer-filter button {
+    background: transparent !important;
+    color: #6C6C6C !important;
+    padding: 5px 30px !important;
+    border: 1px solid #6C6C6C;
+    border-radius: 8px;
+}

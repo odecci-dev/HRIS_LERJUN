@@ -385,37 +385,37 @@ function renderedHours() {
     });
 }
 
-function floatButtonDOM() {
-    $('#open-float-btn').click(function () {
-        document.getElementById('open-float-btn').style.display = "none";
-        document.getElementById('close-float-btn').style.display = "block";
-        document.getElementById('time-btn-holder').style.display = "flex";
+//function floatButtonDOM() {
+//    $('#open-float-btn').click(function () {
+//        document.getElementById('open-float-btn').style.display = "none";
+//        document.getElementById('close-float-btn').style.display = "block";
+//        document.getElementById('time-btn-holder').style.display = "flex";
 
-    });
-    $('#close-float-btn').click(function () {
-        document.getElementById('open-float-btn').style.display = "block";
-        document.getElementById('close-float-btn').style.display = "none";
-        document.getElementById('time-btn-holder').style.display = "none";
-    });
-    $(window).resize(function () {
-        //initializeDataTable();
-        if (screen.width > 790) {
-            var res = document.querySelectorAll('.taskDesc');
-            for (var i = 0; i < res.length; i++) {
-                res[i].style.display = "none";
-            }
-            document.getElementById('time-btn-holder').style.display = "flex";
-        }
-        else {
-            var res = document.querySelectorAll('.taskDesc');
-            for (var i = 0; i < res.length; i++) {
-                res[i].style.display = "flex";
-            }
-            document.getElementById('time-btn-holder').style.display = "none";
+//    });
+//    $('#close-float-btn').click(function () {
+//        document.getElementById('open-float-btn').style.display = "block";
+//        document.getElementById('close-float-btn').style.display = "none";
+//        document.getElementById('time-btn-holder').style.display = "none";
+//    });
+//    $(window).resize(function () {
+//        //initializeDataTable();
+//        if (screen.width > 790) {
+//            var res = document.querySelectorAll('.taskDesc');
+//            for (var i = 0; i < res.length; i++) {
+//                res[i].style.display = "none";
+//            }
+//            document.getElementById('time-btn-holder').style.display = "flex";
+//        }
+//        else {
+//            var res = document.querySelectorAll('.taskDesc');
+//            for (var i = 0; i < res.length; i++) {
+//                res[i].style.display = "flex";
+//            }
+//            document.getElementById('time-btn-holder').style.display = "none";
 
-        }
-    });
-}
+//        }
+//    });
+//}
 function initializeDataTable() {
     var tableId = '#time-table';
     var lastSelectedRow = null;
@@ -452,14 +452,16 @@ function initializeDataTable() {
             serverSide: true,
             complete: function (xhr) {
                 // Compute total rendered hours after data is loaded
+                console.log("True: Load")
                 computeTotalRenderedHoursEmp();
             },
             error: function (err) {
                 setTimeout(function () {
-                    alert(err.responseText);
+                    //alert(err.responseText);
+                    console.log(err.responseText);
                 }, 2000); // Delay execution by 2 seconds (2000 milliseconds)
             }
-        },
+        }, paging: true,
         columns: [
             // {
             //     "title": "Profile",
@@ -531,8 +533,9 @@ function initializeDataTable() {
                 "data": "timeOut",
                 "render": function (data, type, row) {
                     if (data == '') {
-                        var noValue = "";
-                        return noValue;
+                        var timeout = new Date().toLocaleString('en-US');
+                        timeout = timeout.replace(',', '').replaceAll('/', '-');
+                        return timeout;
                     }
                     else {
                         // var timeout = new Date(data).toLocaleTimeString('en-US');
@@ -547,12 +550,21 @@ function initializeDataTable() {
                 "title": "Total Rendered Hours",
                 "data": "renderedHours", "orderable": false,
                 "render": function (data, type, row) {
-                    if (data != '' || data != null) {
-                        return data;
+                    if (data == "") {
+                        function calculateHoursDifference(date1, date2) {
+                            const diffInMs = Math.abs(date2.getTime() - date1.getTime());
+                            return diffInMs / (1000 * 60 * 60);
+                        }
+
+                        const date1 = new Date(row.timeIn);
+                        const date2 = new Date();
+
+                        const hoursDifference = calculateHoursDifference(date1, date2);
+                        return hoursDifference.toFixed(2);
                     }
                     else {
-                        
-                        return 0;
+                       
+                        return data;
                     }
 
                 }
@@ -723,7 +735,12 @@ function initializeDataTable() {
                     return button;
                 }
             }
-        ], "dom": 'rtip'
+        ], "dom": 'frtip',
+        pagingType: "simple_numbers",
+        language: {
+            searchPlaceholder: "Type to search...",
+            search: ""
+        }
         , responsive: true
         // , columnDefs:  columnDefsConfig
         , columnDefs: [
@@ -772,6 +789,9 @@ function initializeDataTable() {
     };
 
     var table = $(tableId).DataTable(dtProperties);
+    setInterval(function () {
+        table.ajax.reload();
+    }, 100000);
     // France Function
     $(tableId).on('mouseenter', 'tbody tr', function () {
         var data = table.row(this).data();
@@ -1248,3 +1268,98 @@ async function STLExportFunction() {
     /*window.location = "/TimeLogs/ExportSummaryTimelogsList?Usertype=0" + "&UserId=" + userid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&Department=0";*/
 
 }
+
+
+function tsActionFunction() {
+    actionts.style.display = "flex";
+    pencilts.style.display = "none";
+}
+//Quick Close Action Container
+$("#action-navbar-ts").click(function () {
+
+    actionts.style.display = "none";
+    pencilts.style.display = "block";
+
+});
+document.addEventListener('keydown', function (event) {
+    if (event.keyCode === 27) {
+        actionts.style.display = "none";
+        pencilts.style.display = "block";
+        //document.getElementById('ot-filing-container').style.display = "none";
+        document.getElementById('ts-select-date-container').style.display = "none";
+    }
+});
+
+/*** Show Date Range*/
+function showSelectDateRange() {
+
+    document.getElementById('ts-select-date-container').style.display = "block";
+}
+/*** Close Date Range*/
+$("#close-ts-select-date").click(function () {
+
+    document.getElementById('ts-select-date-container').style.display = "none";
+});
+/*** Apply Date Range*/
+$("#ts-apply-date").click(function () {
+
+    document.getElementById('ts-select-date-container').style.display = "none";
+    pencilts.style.display = "block";
+    initializeDataTable();
+
+});
+/*** Quick Date Selection*/
+$('#ts-quick-select-date').on('change', function () {
+    var value = document.getElementById('ts-quick-select-date').value;
+    //alert(value)
+    ottoDate = new Date();
+    const formatOTToDate = (ottoDate) => {
+        let year = ottoDate.getFullYear();
+        let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = ottoDate.getDate();
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        return `${year}-${month}-${day}`;
+    };
+    document.getElementById('dateto').value = formatOTToDate(ottoDate);
+    if (value == 1) {
+        document.getElementById('datefrom').value = formatOTToDate(ottoDate);
+    }
+    else if (value == 7) {
+        var formatOTFromDate = (ottoDate) => {
+            let year = ottoDate.getFullYear();
+            let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+            let day = ottoDate.getDate() - 7;
+            // Ensure month and day are always two digits
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return `${year}-${month}-${day}`;
+        };
+        document.getElementById('datefrom').value = formatOTFromDate(ottoDate);
+    }
+    else if (value == 30) {
+        var formatOTFromDate = (ottoDate) => {
+            let year = ottoDate.getFullYear();
+            let month = ottoDate.getMonth(); // Month is zero-indexed, so add 1
+            let day = ottoDate.getDate();
+            // Ensure month and day are always two digits
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return `${year}-${month}-${day}`;
+        };
+        document.getElementById('datefrom').value = formatOTFromDate(ottoDate);
+    }
+    else if (value == 12) {
+        var formatOTFromDate = (ottoDate) => {
+            let year = ottoDate.getFullYear() - 1;
+            let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+            let day = ottoDate.getDate();
+            // Ensure month and day are always two digits
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return `${year}-${month}-${day}`;
+        };
+        document.getElementById('datefrom').value = formatOTFromDate(ottoDate);
+    }
+});

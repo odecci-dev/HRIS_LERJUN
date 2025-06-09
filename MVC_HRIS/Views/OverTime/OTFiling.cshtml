@@ -157,10 +157,30 @@
         var EmployeeID = '@Accessor.HttpContext.Session.GetString("EmployeeID")';
         var defaultCreatedBy = '@Accessor.HttpContext.Session.GetString("UserID")';
         $(document).ready(function () {
+            document.getElementById('startdate').value = otsdate;
+            document.getElementById('enddate').value = otedate;
+            document.getElementById('shiftdate').value = otshdate;
+            document.getElementById('starttime').value = otstime;
+            document.getElementById('endtime').value = otetime;
+            document.getElementById('hoursfiled').value = othoursfiled;
+            document.getElementById('remarks').value = otremarks;
+            document.getElementById('toggleCheckbox').checked = tocompensatory;
+            document.getElementById('toggleCheckbox2').checked = tooffset;
+
+        // otremarks = $(this).data('remarks');
+        // tocompensatory = $(this).data('toleave');
+        // tooffset = $(this).data('tooffset');
+
+
+
+
+
+
+
             let today = new Date().toISOString().split("T")[0];
             document.getElementById("shiftdate").setAttribute("max", today);
             document.getElementById("startdate").setAttribute("max", today);
-            document.getElementById("endate").setAttribute("max", today);
+            document.getElementById("enddate").setAttribute("max", today);
         });
         function preventInvalidInput(event) {
             if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
@@ -204,7 +224,7 @@
                     text2.innerText = "NO";
                     text2.classList.remove("toggle-text-left");
                     text2.classList.add("toggle-text-right");
-                } 
+                }
             });
             checkbox2.addEventListener("change", function() {
                 if (this.checked) {
@@ -212,13 +232,15 @@
                     text.innerText = "NO";
                     text.classList.remove("toggle-text-left");
                     text.classList.add("toggle-text-right");
-                } 
+                }
             });
 
         }
         function calculateTimeDifference() {
             let startTime = document.getElementById("starttime").value;
             let endTime = document.getElementById("endtime").value;
+            let startDate = document.getElementById("startdate").value;
+            let endDate = document.getElementById("enddate").value;
             let hoursFiled = document.getElementById("hoursfiled");
 
             if (!startTime || !endTime) {
@@ -226,9 +248,10 @@
                 return;
             }
 
-            let start = new Date(`1970-01-01T${startTime}:00`);
-            let end = new Date(`1970-01-01T${endTime}:00`);
-
+            let start = new Date(`${startDate}T${startTime}:00`);
+            let end = new Date(`${endDate}T${endTime}:00`);
+            console.log(start);
+            console.log(end);
             let diffInMinutes = (end - start) / (1000 * 60);
 
             if (diffInMinutes < 0) {
