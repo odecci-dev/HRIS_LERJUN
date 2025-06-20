@@ -204,7 +204,7 @@ namespace API_HRIS.Controllers
                         .Where(a => a.EmployeeNo == emplist[x].EmployeeId
                                     && a.Date >= fromDate
                                     && a.Date <= toDate)
-                        .Sum(a => a.HoursFiled ?? 0);
+                        .Sum(a => a.HoursApproved ?? 0);
 
                     var excludedTaskIds = new List<int> { 10, 11, 12 };
                     var empid = emplist[x].EmployeeId;
@@ -324,7 +324,7 @@ namespace API_HRIS.Controllers
                     .Select(g => new
                     {
                         EmployeeNo = g.Key,
-                        TotalOvertimeHours = g.Sum(a => a.HoursFiled) ?? 0
+                        TotalOvertimeHours = g.Sum(a => a.HoursApproved) ?? 0
                     })
                     .ToDictionary(o => o.EmployeeNo, o => o.TotalOvertimeHours);
 

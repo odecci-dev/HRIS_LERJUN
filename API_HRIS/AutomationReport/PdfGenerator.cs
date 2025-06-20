@@ -507,7 +507,7 @@ namespace API_HRIS.AutomationReport
                                     string formattedEndTime;
                                     if (DateTime.TryParse(endTimeString, out DateTime endTime))
                                     {
-                                        formattedEndTime = startTime.ToString("hh:mm tt");  // e.g. "02:30 PM"
+                                        formattedEndTime = endTime.ToString("hh:mm tt");  // e.g. "02:30 PM"
                                                                                               // Use formattedTime
                                     }
                                     else
