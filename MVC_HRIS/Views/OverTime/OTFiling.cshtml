@@ -178,9 +178,12 @@
 
 
             let today = new Date().toISOString().split("T")[0];
+            let tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            let tomorrowStr = tomorrow.toISOString().split("T")[0];
             document.getElementById("shiftdate").setAttribute("max", today);
             document.getElementById("startdate").setAttribute("max", today);
-            document.getElementById("enddate").setAttribute("max", today);
+            document.getElementById("enddate").setAttribute("max", tomorrowStr);
         });
         function preventInvalidInput(event) {
             if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {

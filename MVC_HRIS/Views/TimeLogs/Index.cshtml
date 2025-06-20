@@ -53,7 +53,6 @@
                             </div>
                         </div>
                         <div class="card-footer">
-
                             <button class="btn btn-danger" id="close-ts-select-date">Cancel</button>
                             <button class="btn btn-info" id="ts-apply-date">Apply</button>
                         </div>
@@ -450,7 +449,6 @@
             document.getElementById('add-timeout-regular-btn').style.display = "none";
             document.getElementById('break-regular').style.display = "none";
         }
-
         $('#add-timeout-regular').on('click', function () {
             $('#add-timeout-regular').attr('disabled', 'disabled');
             event.preventDefault();
@@ -1148,5 +1146,19 @@
            setCutOffDatests();
            initializeDataTable();
         });
+
+        setCutOffSelectedTimelogs();
+        function setCutOffSelectedTimelogs() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0'); // Ensures two digits
+
+            if (dd > 10 && dd < 26) {
+                document.getElementById("tsCuttOff").value = 1;
+            }
+            else {
+                document.getElementById("tsCuttOff").value = 0;
+            }
+
+        }
     </script>
 }

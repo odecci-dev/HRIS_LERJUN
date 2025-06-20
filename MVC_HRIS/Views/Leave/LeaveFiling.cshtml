@@ -229,7 +229,7 @@
                 return;
             }
 
-            let totalHours = (diffInMinutes / 60 / 24).toFixed(0); // Convert to decimal format
+            let totalHours = (diffInMinutes / 60 / 24+1).toFixed(0); // Convert to decimal format
 
             daysFiled.value = totalHours; // Update the input field with the computed value
         }

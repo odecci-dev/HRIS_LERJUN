@@ -375,3 +375,69 @@ $('#lr-quick-select-date').on('change', function () {
         document.getElementById('lr-datefrom').value = formatOTFromDate(ottoDate);
     }
 });
+
+
+$("#plr-select-date").click(function () {
+
+    document.getElementById('plr-select-date-container').style.display = "block";
+
+    //pencilotfiling.style.display = "none";
+});
+$("#close-plr-select-date").click(function () {
+
+    document.getElementById('plr-select-date-container').style.display = "none";
+});
+$('#plr-quick-select-date').on('change', function () {
+    var value = document.getElementById('plr-quick-select-date').value;
+    //alert(value)
+    ottoDate = new Date();
+    const formatOTToDate = (ottoDate) => {
+        let year = ottoDate.getFullYear();
+        let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+        let day = ottoDate.getDate();
+        // Ensure month and day are always two digits
+        if (month < 10) month = '0' + month;
+        if (day < 10) day = '0' + day;
+        return `${year}-${month}-${day}`;
+    };
+    document.getElementById('plr-dateto').value = formatOTToDate(ottoDate);
+    if (value == 1) {
+        document.getElementById('plr-datefrom').value = formatOTToDate(ottoDate);
+    }
+    else if (value == 7) {
+        var formatOTFromDate = (ottoDate) => {
+            let year = ottoDate.getFullYear();
+            let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+            let day = ottoDate.getDate() - 7;
+            // Ensure month and day are always two digits
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return `${year}-${month}-${day}`;
+        };
+        document.getElementById('plr-datefrom').value = formatOTFromDate(ottoDate);
+    }
+    else if (value == 30) {
+        var formatOTFromDate = (ottoDate) => {
+            let year = ottoDate.getFullYear();
+            let month = ottoDate.getMonth(); // Month is zero-indexed, so add 1
+            let day = ottoDate.getDate();
+            // Ensure month and day are always two digits
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return `${year}-${month}-${day}`;
+        };
+        document.getElementById('plr-datefrom').value = formatOTFromDate(ottoDate);
+    }
+    else if (value == 12) {
+        var formatOTFromDate = (ottoDate) => {
+            let year = ottoDate.getFullYear() - 1;
+            let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+            let day = ottoDate.getDate();
+            // Ensure month and day are always two digits
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            return `${year}-${month}-${day}`;
+        };
+        document.getElementById('plr-datefrom').value = formatOTFromDate(ottoDate);
+    }
+});

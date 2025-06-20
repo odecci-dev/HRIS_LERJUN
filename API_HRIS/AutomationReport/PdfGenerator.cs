@@ -5,9 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Net;
 using System.Reflection;
 using static API_HRIS.ApplicationModel.EntityModels;
 using static System.Net.Mime.MediaTypeNames;
+// Somewhere in your async method
+//using var httpClient = new HttpClient();
+
+//// Replace this with your actual image URL
+//var imageUrl = "https://eportal.odeccisolutions.com/img/odecciLogo.png";
+
+//// Download image as a stream
+//await using var stream = await httpClient.GetStreamAsync(imageUrl);
 
 namespace API_HRIS.AutomationReport
 {
@@ -78,8 +87,8 @@ namespace API_HRIS.AutomationReport
                 }
                 else if (today.Day < 26 && today.Day > 10)
                 {
-                    dateTo = new DateTime(today.Year, today.Month - 1, 26);
-                    dateFrom = new DateTime(today.Year, today.Month, 11);
+                    dateFrom = new DateTime(today.Year, today.Month - 1, 26);
+                    dateTo = new DateTime(today.Year, today.Month, 11);
                 }
                 else if (today.Day > 25)
                 {
@@ -198,8 +207,8 @@ namespace API_HRIS.AutomationReport
             }
             else if (today.Day < 26 && today.Day > 10)
             {
-                dateTo = new DateTime(today.Year, today.Month - 1, 26);
-                dateFrom = new DateTime(today.Year, today.Month, 11);
+                dateFrom = new DateTime(today.Year, today.Month - 1, 26);
+                dateTo = new DateTime(today.Year, today.Month, 11);
             }
             else if (today.Day > 25)
             {
@@ -267,8 +276,10 @@ namespace API_HRIS.AutomationReport
                     page.Size(PageSizes.A4);
                     page.DefaultTextStyle(x => x.FontSize(12));
                     // 3) a stream
-                    using var stream = new FileStream("AutomationReport/odecciLogo.png", FileMode.Open);
-
+                    //using var stream = new FileStream("AutomationReport/odecciLogo.png", FileMode.Open);
+                    using var webClient = new WebClient();
+                    byte[] imageBytes = webClient.DownloadData("https://eportal.odeccisolutions.com/img/odecciLogo.png");
+                    using var stream = new MemoryStream(imageBytes);
                     //page.Header().AlignMiddle().Column(column =>
                     //{
                     //    column.Item().Row(row =>
@@ -287,6 +298,7 @@ namespace API_HRIS.AutomationReport
                             .FontSize(10).Bold();
 
                         row.ConstantItem(96).AlignRight().Image(stream);
+
                     });
                     page.Content().Column(column =>
                     {

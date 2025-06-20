@@ -31,7 +31,7 @@ namespace API_HRIS.AutomationReport
                 DateTime now = DateTime.Now;
 
                 // If today is the 11th and it's a suitable time to run
-                if (now.Day == 11 && now.Hour == 6 && now.Minute == 0 || now.Day == 26 && now.Hour == 6 && now.Minute == 0)
+                if (now.Day == 11 && now.Hour == 12 && now.Minute == 55 || now.Day == 26 && now.Hour == 12 && now.Minute == 55)
                 {
                     await OverTimeReport();
                     // Wait a day to avoid running multiple times within the same day
@@ -90,7 +90,7 @@ namespace API_HRIS.AutomationReport
                     var message = new MimeMessage();
                     message.From.Add(new MailboxAddress("Odecci", "info@odecci.com"));
                     //Email to Employee
-                    if(_employeeList[i].Fullname != null || _employeeList[i].Fullname != "" && _employeeList[i].Email != null || _employeeList[i].Email != "")
+                    if (_employeeList[i].Fullname != null || _employeeList[i].Fullname != "" && _employeeList[i].Email != null || _employeeList[i].Email != "")
                     {
                         message.To.Add(new MailboxAddress(_employeeList[i].Fullname, _employeeList[i].Email));
                     }

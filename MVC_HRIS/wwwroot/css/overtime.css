@@ -197,7 +197,7 @@
 }
 .action-navbarv2 .select,
 .action-navbarv2 button{
-    display: flex;
+    display: flex !important;
     align-items: center;
     padding: 5px;
     height: 50px;

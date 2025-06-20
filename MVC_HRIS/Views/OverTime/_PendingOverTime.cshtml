@@ -92,7 +92,7 @@
                                 <div class="filter-input">
                                     <button id="pot-show-filter" class="form-control">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="#6C6C6C" d="M19 2H5a3 3 0 0 0-3 3v1.17a3 3 0 0 0 .25 1.2v.06a2.8 2.8 0 0 0 .59.86L9 14.41V21a1 1 0 0 0 .47.85A1 1 0 0 0 10 22a1 1 0 0 0 .45-.11l4-2A1 1 0 0 0 15 19v-4.59l6.12-6.12a2.8 2.8 0 0 0 .59-.86v-.06a3 3 0 0 0 .29-1.2V5a3 3 0 0 0-3-3m-5.71 11.29A1 1 0 0 0 13 14v4.38l-2 1V14a1 1 0 0 0-.29-.71L5.41 8h13.18ZM20 6H4V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z" /></svg>
-                                        Filter
+                                        Filters
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" stroke="#6C6C6C" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m7 10l5 5l5-5" /></svg>
                                     </button>
                                 </div>
@@ -113,6 +113,10 @@
                 <div id="table-footer">
                     <div class="customFilterButtonsContainer" id="">
                         <div class="customFilterButtons" id="customFilterButtons">
+
+                            <div class="pencil-action" id="otfiling-pencil-action" onclick="otfilingActionFunction();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M6.414 15.89L16.556 5.748l-1.414-1.414L5 14.476v1.414zm.829 2H3v-4.243L14.435 2.212a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414zM3 19.89h18v2H3z" /></svg>
+                            </div>
                             <button class="refresh-btn" id="refresh-ot" title="Refresh" onclick="initializeOTDataTable()">
                                 <i class="fa-solid fa-arrow-rotate-right" style="color: #ffffff;"></i> Refresh
                             </button>

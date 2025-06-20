@@ -16,7 +16,7 @@
     <div class="title-main-container" id="timelogs-table">
         <div class="content-container" style="display:flex;flex-direction: row;justify-content: space-between;align-items: center;">
             <h4 style="font-size: 26px;" class="text-left">  <i class="fa-solid fa-clock" style="margin: 10px;"></i> @ViewData["Title"].ToString()</h4>
-            <a href="../../TimeLogs/ManagerNotification" style="font-size: 18px;" class="m-notification" id="m-notification"><span class="mnoticount" id="mnoticount"></span>  <i class="fa-solid fa-bell" style="margin: 10px;"></i> Notification</a>
+            @* <a href="../../TimeLogs/ManagerNotification" style="font-size: 18px;" class="m-notification" id="m-notification"><span class="mnoticount" id="mnoticount"></span>  <i class="fa-solid fa-bell" style="margin: 10px;"></i> Notification</a> *@
 
         </div>
         <div class="top-main-container ">
@@ -25,68 +25,158 @@
             <div class="content-filter">
                 <div class="sub-content">
                     <div class="mod-form">
-
-                        <div class="action-navbar">
+                        @* ** date range car start *@
+                        <div class="select-date-container" id="mts-select-date-container">
+                            <div class="date-range-card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Select Custom Date Range</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="input-container-whole select">
+                                        <select id="mts-quick-select-date" class="mod-input" style="width:100%" required>
+                                            <option value="" disabled selected></option>
+                                            <option value="1">Today</option>
+                                            <option value="7">Last 7 Days</option>
+                                            <option value="30">Last 1 Month</option>
+                                            <option value="12">Last 12 Months</option>
+                                        </select>
+                                        <label class="label-color label" for="selectday">Quick Select </label>
+                                        <div class="underline"></div>
+                                    </div>
+                                    <div class="input-container-whole date">
+                                        <label class="label-color label" for="datehired">From</label>
+                                        <input type="date" id="datefrom" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
+                                        <div class="underline"></div>
+                                    </div>
+                                    <div class="input-container-whole date">
+                                        <label class="label-color label" for="datehired">To</label>
+                                        <input type="date" id="dateto" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="mod-input" />
+                                        <div class="underline"></div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-danger" id="close-mts-select-date">Cancel</button>
+                                    <button class="btn btn-info" id="mts-apply-date">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                        @* ** date range car end *@
+                        <div class="action-navbarv2" style="position: relative">
                             <div class="layer">
+                                @* Date Range *@
                                 <div class="input-holder">
+                                    <div class="date-input" onclick="showSelectDateRangeMTS()">
+                                        <button id="ts-select-date" class="form-control">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="var(--light)" d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z" /></svg>
+                                            Select Date Range
+                                        </button>
+                                    </div>
+                                </div>
+                                @* Select Month *@
+                                <div class="input-holder">
+                                    <div class="date-input select">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="var(--light)" d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z" /></svg>
+                                        <select id="mts-monthSelect" class="form-control">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="var(--light)" d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z" /></svg>
+                                        </select>
+                                    </div>
+                                </div>
+                                @* Select Cutt Off *@
+                                <div class="input-holder">
+                                    <div class="date-input select">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="25" viewBox="0 0 28 25" fill="none">
+                                            <path d="M19.875 16.025L22.925 17.7875L21.9875 19.4125L18 17.1125V12.5H19.875V16.025ZM28 16.25C28 21.0875 24.0875 25 19.25 25C14.4125 25 10.5 21.0875 10.5 16.25C10.5 15.825 10.5375 15.4125 10.6 15H0.5V0H23V8.35C25.95 9.7625 28 12.7625 28 16.25ZM11.35 12.5C11.575 12.05 11.8125 11.625 12.1 11.2125C11.9875 11.25 11.875 11.25 11.75 11.25C9.675 11.25 8 9.575 8 7.5C8 5.425 9.675 3.75 11.75 3.75C13.825 3.75 15.5 5.425 15.5 7.5C15.5 7.8125 15.45 8.125 15.375 8.4125C16.55 7.8375 17.8625 7.5 19.25 7.5C19.675 7.5 20.0875 7.5375 20.5 7.6V5C19.837 5 19.2011 4.73661 18.7322 4.26777C18.2634 3.79893 18 3.16304 18 2.5H5.5C5.5 3.8875 4.3875 5 3 5V10C3.66304 10 4.29893 10.2634 4.76777 10.7322C5.23661 11.2011 5.5 11.837 5.5 12.5H11.35ZM25.5 16.25C25.5 12.8 22.7 10 19.25 10C15.8 10 13 12.8 13 16.25C13 19.7 15.8 22.5 19.25 22.5C22.7 22.5 25.5 19.7 25.5 16.25Z" fill="white" />
+                                        </svg>
+                                        <select id="mtsCuttOff">
+                                            <option value="0" selected> First Cutt-off</option>
+                                            <option value="1"> Second Cutt-off</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                @* <div class="input-holder">
                                     <span class="text-left text-dark">From:</span>
                                     <div class="date-input">
-                                        <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" />
+                                        <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" /> *@
                                         @* <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" /> *@
-                                    </div>
+                                @*     </div>
                                 </div>
                                 <div class="input-holder">
                                     <span class="text-left text-dark">To:</span>
-                                    <div class="date-input">
+                                    <div class="date-input"> *@
                                         @* <input type="date" id="datefrom" class="mod-inputs-nw" placeholder="Date" /> *@
-                                        <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" />
-                                    </div>
+                                    @*     <input type="date" id="dateto" class="mod-inputs-nw" placeholder="Date" />
+                                    </div> *@
+                                @* </div> *@
+                            </div><div class="layer">
+                                
+                                <div class="input-holder">
+                                    <button id="mts-filter" class="form-control" 
+                                        style="
+                                            background: transparent !important;
+                                            color: #6C6C6C !important;
+                                            padding: 5px 30px !important;
+                                            border: 1px solid #6C6C6C;
+                                            border-radius: 8px;
+                                    ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="#6C6C6C" d="M19 2H5a3 3 0 0 0-3 3v1.17a3 3 0 0 0 .25 1.2v.06a2.8 2.8 0 0 0 .59.86L9 14.41V21a1 1 0 0 0 .47.85A1 1 0 0 0 10 22a1 1 0 0 0 .45-.11l4-2A1 1 0 0 0 15 19v-4.59l6.12-6.12a2.8 2.8 0 0 0 .59-.86v-.06a3 3 0 0 0 .29-1.2V5a3 3 0 0 0-3-3m-5.71 11.29A1 1 0 0 0 13 14v4.38l-2 1V14a1 1 0 0 0-.29-.71L5.41 8h13.18ZM20 6H4V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z"/></svg>
+                                        Filters
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="none" stroke="#6C6C6C" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m7 10l5 5l5-5" /></svg>
+
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="layer">
+                            @* Filters *@
+                            <div class="layer filter" style="
+                                        background: #fff;
+                                        display: flex;
+                                        flex-direction: column;
+                                        padding: 10px;
+                                        border-radius: 8px;
+                                        box-shadow: var(--shadow);
+                                        position: absolute;
+                                        right: 10px;
+                                        top: 65px;
+                                        z-index: 9999;
+                                        display: none;
+                                    " id="mts-filter-container">
                                 <div class="input-holder">
-                                    <select id="selectDay">
-                                        <option value="x" selected disabled> Select Filter Day</option>
-                                        <option value="1">Today</option>
-                                        <option value="7">Last 7 days</option>
-                                        <option value="30">Last 30 days</option>
-                                        <option value="0">Month Today</option>
-                                    </select>
-                                </div>
-                                <div class="input-holder">
-                                    <select id="selectDap">
+                                    <select id="selectDap" style="width: 100% !important;background: transparent !important;box-shadow: none;color: var(--accent) !important;border: none;border-bottom: 2px solid;border-top: 2px solid;border-radius: 0;padding: 5px 0;">
                                         <option value="" selected disabled> Select Department</option>
 
                                     </select>
                                 </div>
                                 <div class="input-holder">
-                                    <select id="selectUser">
+                                    <select id="selectUser" 
+                                        style="width: 100% !important;background: transparent !important;box-shadow: none;color: var(--accent) !important;border: none;border-bottom: 2px solid;border-top: 0;border-radius: 0;padding: 5px 0;" ">
                                         <option value="" selected disabled> Select User</option>
 
                                     </select>
                                 </div>
-                                <div class="input-holder">
+                                @* <div class="input-holder">
                                     <button class="btn btn-success" id="export-timelogs" title="Time Out" onclick="ExportFunction()" style="font-size: .8rem;">
                                         <i class="fa-solid fa-file-arrow-down"></i> Export
                                     </button>
-                                </div>
+                                </div> *@
                             </div>
                         </div>
-                        <div class="input-container">
-                            <div class="time-btn">
-                                <button class="btn btn-info" id="add-timein" title="Time In">
-                                    <i class="fa-solid fa-clock"></i> Time In
-                                </button>
-                                <button class="btn btn-info" id="add-timeout" title="Time Out">
-                                    <i class="fa-solid fa-clock"></i> Time Out
-                                </button>
-                                <button class="btn btn-info" id="add-timelogs" title="Time Out" onclick="myFunctionOpen()">
-                                    <i class="fa-solid fa-plus"></i> Manual Entry
-                                </button>
+                        <div class="mod-form action-navbar pos" id="action-navbar-mts" style="margin-bottom: 2px;">
+                            <div class="action-btns">
+                                <div class="input-container" id="">
+                                    <a>Export </a>
+                                    <button class="btn btn-info" id="add-timein-regular" title="Time In" onclick="ExportFunction()">
+                                        @* <i class="fas fa-user-plus"></i> Create Position *@ 
+                                    @* <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 28 28"><path fill="currentColor" d="M9.5 4a4.5 4.5 0 1 0 0 9a4.5 4.5 0 0 0 0-9m-3 4.5a3 3 0 1 1 6 0a3 3 0 0 1-6 0M20 6a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7m-2 3.5a2 2 0 1 1 4 0a2 2 0 0 1-4 0M4.25 15A2.25 2.25 0 0 0 2 17.25v.531a2 2 0 0 0 .017.242c.017.153.049.363.11.612a5.1 5.1 0 0 0 .867 1.815C4.008 21.803 5.942 23 9.5 23c1.531 0 2.762-.222 3.747-.582a7.5 7.5 0 0 1-.236-1.518c-.836.355-1.97.6-3.511.6c-3.192 0-4.633-1.053-5.306-1.95a3.6 3.6 0 0 1-.61-1.279a3 3 0 0 1-.083-.508l-.001-.018v-.495a.75.75 0 0 1 .75-.75h9.905a7.5 7.5 0 0 1 1.168-1.426A2.3 2.3 0 0 0 14.75 15zM27 20.5a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0m-6-4a.5.5 0 0 0-1 0V20h-3.5a.5.5 0 0 0 0 1H20v3.5a.5.5 0 0 0 1 0V21h3.5a.5.5 0 0 0 0-1H21z" /></svg> *@
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="#fff" d="M12 1C8.14 1 5 4.14 5 8a7 7 0 0 0 7 7c3.86 0 7-3.13 7-7c0-3.86-3.14-7-7-7m0 2.15c2.67 0 4.85 2.17 4.85 4.85s-2.18 4.85-4.85 4.85A4.85 4.85 0 0 1 7.15 8A4.85 4.85 0 0 1 12 3.15M11 5v3.69l3.19 1.84l.75-1.3l-2.44-1.41V5M4 16v8h2v-3h12v3l4-4l-4-4v3H6v-3" /></svg>
+                                    </button>
+                                </div>
+                                <div class="input-container ">
+                                    <a>View Updates </a>
+                                    <button class="btn btn-info white-bg" id="" title="Add New Employee" onclick="window.location.href = '../../TimeLogs/ManagerNotification';">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><g fill="none" stroke="#205274" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M12 4v10m0 0l3-3m-3 3l-3-3" /><path d="M12 20a8 8 0 0 1-8-8m16 0a7.99 7.99 0 0 1-3 6.245" /></g></svg>
+                                    </button>
+                                </div>
+
                             </div>
-
-
                         </div>
                     </div>
 
@@ -189,9 +279,24 @@
             </form>
         </div>
     </div>
+    <div class="pencil-action" id="mts-pencil-action" onclick="mtsActionFunction();">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M6.414 15.89L16.556 5.748l-1.414-1.414L5 14.476v1.414zm.829 2H3v-4.243L14.435 2.212a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414zM3 19.89h18v2H3z" /></svg>
+    </div>
 </div>
 @section Scripts {
     <script>
+        var actionmts = document.getElementById('action-navbar-mts');
+        var pencilmts = document.getElementById('mts-pencil-action');
+
+        document.addEventListener('keydown', function (event) {
+            if (event.keyCode === 27) {
+
+                //document.getElementById('ot-filing-container').style.display = "none";
+                document.getElementById('mts-select-date-container').style.display = "none";
+                actionmts.style.display = "none";
+                pencilmts.style.display = "block";
+            }
+        });
         fetchdepartmentselect();
         document.getElementById("selectUser").onchange = function () {
             initializeDataTable();
@@ -201,62 +306,62 @@
             initializeDataTable();
             renderedHours();
         }
-        document.getElementById("selectDay").onchange = function () {
-            var days = document.getElementById("selectDay").value;
-            // alert("Selected Day: " + days);
-            // Get today's date
-            const today = new Date();
-            // Calculate the date for the last 7 days
-            const last7Days = new Date();
-            last7Days.setDate(today.getDate() - 7);
-            const last30Days = new Date();
-            last30Days.setDate(today.getDate() - 30);
-            // Format the date as YYYY-MM-DD
-            const formattedDateTo = today.toISOString().split('T')[0];
-            switch (days) {
-                case '1':
+        // document.getElementById("selectDay").onchange = function () {
+        //     var days = document.getElementById("selectDay").value;
+        //     // alert("Selected Day: " + days);
+        //     // Get today's date
+        //     const today = new Date();
+        //     // Calculate the date for the last 7 days
+        //     const last7Days = new Date();
+        //     last7Days.setDate(today.getDate() - 7);
+        //     const last30Days = new Date();
+        //     last30Days.setDate(today.getDate() - 30);
+        //     // Format the date as YYYY-MM-DD
+        //     const formattedDateTo = today.toISOString().split('T')[0];
+        //     switch (days) {
+        //         case '1':
 
-                    // Set the value of the input field
-                    document.getElementById('datefrom').value = formattedDateTo;
-                    document.getElementById('dateto').value = formattedDateTo;
-                    break;
-                case '7':
-                    var formattedDateFrom = last7Days.toISOString().split('T')[0];
-                    // Set the value of the input field
-                    document.getElementById('datefrom').value = formattedDateFrom;
-                    document.getElementById('dateto').value = formattedDateTo;
-                    break;
-                case '30':
-                    var formattedDateFrom = last30Days.toISOString().split('T')[0];
-                    // Set the value of the input field
-                    document.getElementById('datefrom').value = formattedDateFrom;
-                    document.getElementById('dateto').value = formattedDateTo;
-                    break;
-                case '0':
-                    const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-                    const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
-                    const formatDate = (date) => {
-                        let year = date.getFullYear();
-                        let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
-                        let day = date.getDate();
+        //             // Set the value of the input field
+        //             document.getElementById('datefrom').value = formattedDateTo;
+        //             document.getElementById('dateto').value = formattedDateTo;
+        //             break;
+        //         case '7':
+        //             var formattedDateFrom = last7Days.toISOString().split('T')[0];
+        //             // Set the value of the input field
+        //             document.getElementById('datefrom').value = formattedDateFrom;
+        //             document.getElementById('dateto').value = formattedDateTo;
+        //             break;
+        //         case '30':
+        //             var formattedDateFrom = last30Days.toISOString().split('T')[0];
+        //             // Set the value of the input field
+        //             document.getElementById('datefrom').value = formattedDateFrom;
+        //             document.getElementById('dateto').value = formattedDateTo;
+        //             break;
+        //         case '0':
+        //             const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+        //             const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+        //             const formatDate = (date) => {
+        //                 let year = date.getFullYear();
+        //                 let month = date.getMonth() + 1; // Month is zero-indexed, so add 1
+        //                 let day = date.getDate();
 
-                        // Ensure month and day are always two digits
-                        if (month < 10) month = '0' + month;
-                        if (day < 10) day = '0' + day;
+        //                 // Ensure month and day are always two digits
+        //                 if (month < 10) month = '0' + month;
+        //                 if (day < 10) day = '0' + day;
 
-                        return `${year}-${month}-${day}`;
-                    };
-                    document.getElementById('datefrom').value = formatDate(firstDayOfMonth);
-                    document.getElementById('dateto').value = formatDate(lastDayOfMonth);
-                    break;
+        //                 return `${year}-${month}-${day}`;
+        //             };
+        //             document.getElementById('datefrom').value = formatDate(firstDayOfMonth);
+        //             document.getElementById('dateto').value = formatDate(lastDayOfMonth);
+        //             break;
 
-            }
+        //     }
 
 
-            initializeDataTable();
-            renderedHours();
+        //     initializeDataTable();
+        //     renderedHours();
 
-        };
+        // };
         var uid = "@Accessor.HttpContext.Session.GetString("UserID")";
         var tlmodal = document.getElementById('tlmodal')
         defaultdate();
@@ -529,7 +634,13 @@
                             return badge;
                         }
                     }
-                ], responsive: true
+                ], 
+                "dom": 'frtip',
+                pagingType: "simple_numbers",
+                language: {
+                    searchPlaceholder: "Type to search...",
+                    search: ""
+                }, responsive: true
                 // , columnDefs:  columnDefsConfig
                 , columnDefs: [
                     { targets: 1, className: 'left-align' },
@@ -719,21 +830,21 @@
             return moment(dateString, 'DD-MM-YYYY', true).isValid() ||
                 moment(dateString, 'YYYY-MM-DD', true).isValid();
         }
-        $('#datefrom, #dateto').on('change', function () {
-            var dateFrom = document.getElementById('datefrom').value;
-            var dateTo = document.getElementById('dateto').value;
-            // console.log(isValidDate(dateFrom));
-            if (!isValidDate(dateFrom) || !isValidDate(dateTo)) {
-                // console.log('Invalid date format. Please enter a valid date (dd-MM-yyyy).');
-                event.preventDefault(); // Prevent form submission
-            }
-            else {
-                document.getElementById("selectDay").value = "x";
-                initializeDataTable();
-                renderedHours();
-            }
+        // $('#datefrom, #dateto').on('change', function () {
+        //     var dateFrom = document.getElementById('datefrom').value;
+        //     var dateTo = document.getElementById('dateto').value;
+        //     // console.log(isValidDate(dateFrom));
+        //     if (!isValidDate(dateFrom) || !isValidDate(dateTo)) {
+        //         // console.log('Invalid date format. Please enter a valid date (dd-MM-yyyy).');
+        //         event.preventDefault(); // Prevent form submission
+        //     }
+        //     else {
+        //         document.getElementById("selectDay").value = "x";
+        //         initializeDataTable();
+        //         renderedHours();
+        //     }
 
-        });
+        // });
 
         function myFunction() {
             tlmodal.style.display = "none";
@@ -812,5 +923,136 @@
         });
 
         renderedHours();
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const mtsmonthSelect = document.getElementById("mts-monthSelect");
+            const mtscurrentYear = new Date().getFullYear();
+            for (let mtsmonth = 0; mtsmonth < 12; mtsmonth++) {
+               const mtsmonthName = new Date(mtscurrentYear, mtsmonth).toLocaleString('default', { month: 'long' });
+               const mtsoption = document.createElement("option");
+               mtsoption.value = `${mtscurrentYear}-${String(mtsmonth + 1).padStart(2, '0')}`;
+               mtsoption.text = `${mtsmonthName} ${mtscurrentYear}`;
+               mtsmonthSelect.appendChild(mtsoption);
+            }
+            mtsmonthSelect.value = `${mtscurrentYear}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+            setCutOffDatesmts();
+        });
+        function setCutOffDatesmts() {
+            const mtsselectedMonth = document.getElementById("mts-monthSelect").value;
+            const mtsCuttOff = document.getElementById("mtsCuttOff").value;
+            const [mtsyear, mtsmonth] = mtsselectedMonth.split('-').map(Number);
+            if (mtsCuttOff == 0) {
+               mtsfromDate = new Date(mtsyear, mtsmonth - 2, 26);
+               mtstoDate = new Date(mtsyear, mtsmonth - 1, 10);
+            } else if (mtsCuttOff == 1) {
+               mtsfromDate = new Date(mtsyear, mtsmonth - 1, 11);
+               mtstoDate = new Date(mtsyear, mtsmonth - 1, 25);
+            }
+            const formatmtsFromDate = (mtsfromDate) => {
+               let year = mtsfromDate.getFullYear();
+               let month = mtsfromDate.getMonth() + 1; // Month is zero-indexed, so add 1
+               let day = mtsfromDate.getDate();
+               // Ensure month and day are always two digimts
+               if (month < 10) month = '0' + month;
+               if (day < 10) day = '0' + day;
+               return `${year}-${month}-${day}`;
+            };
+            const formatmtsToDate = (mtstoDate) => {
+               let year = mtstoDate.getFullYear();
+               let month = mtstoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+               let day = mtstoDate.getDate();
+               // Ensure month and day are always two digimts
+               if (month < 10) month = '0' + month;
+               if (day < 10) day = '0' + day;
+               return `${year}-${month}-${day}`;
+            };
+            document.getElementById('datefrom').value = formatmtsFromDate(mtsfromDate);
+            document.getElementById('dateto').value = formatmtsToDate(mtstoDate);
+        }$('#mtsCuttOff').on('change', function () {
+           setCutOffDatesmts();
+           initializeDataTable();
+        });
+        $('#mts-monthSelect').on('change', function () {
+           setCutOffDatesmts();
+           initializeDataTable();
+        });
+        // /*** Quick Date Selection
+        $('#mts-quick-select-date').on('change', function () {
+            var value = document.getElementById('mts-quick-select-date').value;
+            //alert(value)
+            ottoDate = new Date();
+            const formatOTToDate = (ottoDate) => {
+                let year = ottoDate.getFullYear();
+                let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                let day = ottoDate.getDate();
+                // Ensure month and day are always two digits
+                if (month < 10) month = '0' + month;
+                if (day < 10) day = '0' + day;
+                return `${year}-${month}-${day}`;
+            };
+            document.getElementById('dateto').value = formatOTToDate(ottoDate);
+            if (value == 1) {
+                document.getElementById('datefrom').value = formatOTToDate(ottoDate);
+            }
+            else if (value == 7) {
+                var formatOTFromDate = (ottoDate) => {
+                    let year = ottoDate.getFullYear();
+                    let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                    let day = ottoDate.getDate() - 7;
+                    // Ensure month and day are always two digits
+                    if (month < 10) month = '0' + month;
+                    if (day < 10) day = '0' + day;
+                    return `${year}-${month}-${day}`;
+                };
+                document.getElementById('datefrom').value = formatOTFromDate(ottoDate);
+            }
+            else if (value == 30) {
+                var formatOTFromDate = (ottoDate) => {
+                    let year = ottoDate.getFullYear();
+                    let month = ottoDate.getMonth(); // Month is zero-indexed, so add 1
+                    let day = ottoDate.getDate();
+                    // Ensure month and day are always two digits
+                    if (month < 10) month = '0' + month;
+                    if (day < 10) day = '0' + day;
+                    return `${year}-${month}-${day}`;
+                };
+                document.getElementById('datefrom').value = formatOTFromDate(ottoDate);
+            }
+            else if (value == 12) {
+                var formatOTFromDate = (ottoDate) => {
+                    let year = ottoDate.getFullYear() - 1;
+                    let month = ottoDate.getMonth() + 1; // Month is zero-indexed, so add 1
+                    let day = ottoDate.getDate();
+                    // Ensure month and day are always two digits
+                    if (month < 10) month = '0' + month;
+                    if (day < 10) day = '0' + day;
+                    return `${year}-${month}-${day}`;
+                };
+                document.getElementById('datefrom').value = formatOTFromDate(ottoDate);
+            }
+        });
+        // /*** Apply Date Range
+        $("#mts-apply-date").click(function () {
+
+            document.getElementById('mts-select-date-container').style.display = "none";
+            pencilmts.style.display = "block";
+            initializeDataTable();
+
+        });
+        setCutOffSelectedManagerTimelogs();
+        function setCutOffSelectedManagerTimelogs() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0'); // Ensures two digits
+
+            if (dd > 10 && dd < 26) {
+                document.getElementById("mtsCuttOff").value = 1;
+            }
+            else {
+                document.getElementById("mtsCuttOff").value = 0;
+            }
+
+        }
+
     </script>
 }
